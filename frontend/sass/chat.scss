@@ -71,10 +71,11 @@ li.ui-menu-item {
     font-weight:bold;
     color:#204d74;
 }
-button#logout {
+button.headerbtns {
     margin-top: 8px;
     margin-left:20px;
 }
+button.headerbtns:focus { background-color: #003874; outline: none; }
 .autolist .highlighted { 
     color:#000;
     font-weight:bold;
@@ -163,7 +164,7 @@ background-color: #fafafa;
 .clickImage{
     /*display:none;*/
     width: auto;
-    height: 200px;
+    height: 175px;
     margin: auto;
     position: absolute;
     z-index: 10;
@@ -171,7 +172,7 @@ background-color: #fafafa;
     bottom: -25px;
     cursor:pointer;
 }
-.chat-body div{
+.chat-body div {
     cursor: pointer;
     text-decoration: underline;
     background: #eee;

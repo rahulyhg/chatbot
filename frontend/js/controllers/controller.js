@@ -1,48 +1,87 @@
-myApp.controller('HomeCtrl', function ($scope, TemplateService, NavigationService,ChatwindowService, $timeout,$http,apiService,$state) {
+myApp.controller('HomeCtrl', function ($scope, TemplateService, NavigationService,CsrfTokenService, $timeout,$http,apiService,$state) {
         $scope.template = TemplateService.getHTML("content/home.html");
         TemplateService.title = "Home"; //This is the Title of the Website
         $scope.navigation = NavigationService.getNavigation();
+
+        $scope.crnSubmit = function(crnno) {
+            //console.log(crnno,"crnno");
+            $scope.userid=$.jStorage.get("id");
+            var datatype = 'CRN';
+            // $.ajax({
+            
+            //     url : "",
+            //     data: {user_input: crnno, user_id:$scope.userid, number_type:datatype,'csrfmiddlewaretoken': CsrfTokenService.getCookie("csrftoken")},
+            //     headers: {'X-CSRFToken': CsrfTokenService.getCookie("csrftoken")},
+            //     type: "POST",
+            //     dataType: "json",
+            //     success: function(data){
+            //         var output = data.Output.Result;
+            //         $scope.result_crn(output);
+            //     }
+            // });
+        };
+        $scope.srnSubmit = function(srno,crnno) { 
+            //console.log(crnno+"crnno,sr"+srno);
+            $scope.userid=$.jStorage.get("id");
+            var datatype = 'SR';
+            // $.ajax({
+            //     // url: "/srandcrn/",
+            //     data: {user_input: srno, user_id:$scope.userid, number_type:datatype,'csrfmiddlewaretoken': CsrfTokenService.getCookie("csrftoken")},
+            //     headers: {'X-CSRFToken': CsrfTokenService.getCookie("csrftoken")},
+            //     type: "POST",
+            //     dataType: "json",
+            //     success: function(data){
+            //         var output = data.Output.Result;
+            //         $scope.result_sr(output);
+            //     }
+            // });
+        };
+        $scope.result_sr = function(output) {
+            $timeout(function () {
+                $('#sr_details').html(output);
+            },200);
+        };
+        $scope.result_crn = function(output) {
+            $timeout(function () {
+                $('#crn_details').html(output);
+            },200);
+        };
+        
+
         $timeout(function () {
             $('.toggler').click(function () {
                 $(this).parent().children('ul.tree').toggle(300);
                 $(this).parent().find('.triangle').toggleClass('glyphicon-triangle-bottom').toggleClass('glyphicon-triangle-right');
                 //return false;
             });
+            $('#myTabs a').click(function (e) {
+                e.preventDefault()
+                $(this).tab('show')
+            });
         });
         
     })
     
-    .controller('LoginCtrl', function ($scope, TemplateService, NavigationService, $timeout, toastr, $http,$state,apiService) {
+    .controller('LoginCtrl', function ($scope, TemplateService, NavigationService,CsrfTokenService, $timeout, toastr, $http,$state,apiService) {
         $scope.template = TemplateService.getHTML("login.html");
         TemplateService.title = "Login"; //This is the Title of the Website
         //$scope.navigation = NavigationService.getNavigation();
+        
+        
+
         $scope.loginbg = 1;
         $scope.iframeHeight = window.innerHeight;
         $scope.uipage="login";
         $scope.formSubmitted = false;
-        // $scope.data = {
-        //     name: "Chintan",
-        //     "age": 20,
-        //     "email": "chinyan@wohlig.com",
-        //     "query": "query"
-        // };
-        // $scope.submitForm = function (data) {
-        //     console.log("This is it");
-        //     return new Promise(function (callback) {
-        //         $timeout(function () {
-        //             callback();
-        //         }, 5000);
-        //     });
-        // };
         $scope.loginerror=0;
         $scope.notLoggedin = false;
         if($.jStorage.get("notloggedin"))
             $scope.notLoggedin = true;
         $scope.login = function(username,password)
         {
-            $scope.formData = {username:username,password:sha256_digest(password)};
+            $scope.formData = {username:username,password:sha256_digest(password),csrfmiddlewaretoken: CsrfTokenService.getCookie("csrftoken")};
             apiService.login($scope.formData).then(function (callback){
-                $scope.csrftoken=$scope.getCookie("csrftoken");
+                $scope.csrftoken=CsrfTokenService.getCookie("csrftoken");
                 console.log($scope.csrftoken,"csrf");
                 if(callback.data == -1)
                     $scope.loginerror = -1;
@@ -90,27 +129,62 @@ myApp.controller('HomeCtrl', function ($scope, TemplateService, NavigationServic
             });
             return false;*/
         }; 
-        $scope.getCookie = function(c_name)
-		{
-			if (document.cookie.length > 0)
-			{
-				c_start = document.cookie.indexOf(c_name + "=");
-				if (c_start != -1)
-				{
-					c_start = c_start + c_name.length + 1;
-					c_end = document.cookie.indexOf(";", c_start);
-					if (c_end == -1) c_end = document.cookie.length;
-					return unescape(document.cookie.substring(c_start,c_end));
-				}
-			}
-			return "";
-        };
+        
         
     })
-    .controller('CommonCtrl', function ($scope, TemplateService, NavigationService, $timeout, toastr, $http,$state,apiService) {
+    .controller('CommonCtrl', function ($scope, TemplateService, NavigationService,CsrfTokenService, $timeout,$uibModal, toastr, $http,$state,apiService,$cookies) {
         $scope.logout = function() {
             $.jStorage.flush();
             $state.go("login");
+        };
+        $scope.$modalInstance = {};
+        $scope.openChangePwd = function() {
+            $scope.$modalInstance = $uibModal.open({
+                scope: $scope,
+                animation: true,
+                //size: 'sm',
+                templateUrl: 'views/modal/changepassword.html',
+                //controller: 'CommonCtrl'
+            });
+        };
+        $scope.changePwdcancel = function() {
+            //console.log("dismissing");
+            $scope.$modalInstance.dismiss('cancel');
+            //$scope.$modalInstance.close();
+        };
+        $scope.passworderror=0
+        $scope.changepasswordSuccess=0;
+          
+        $scope.changepassword = function(currentpassword,newpassword,newpassword2) {
+            if(sha256_digest(currentpassword)=="f0e4c2f76c58916ec258f246851bea091d14d4247a2fc3e18694461b1816e13b")
+            {
+                //console.log(newpassword);
+                userid = $.jStorage.get("id");
+                $scope.token="";
+                CsrfTokenService.getCookie("csrftoken").then(function(done) {
+                    $scope.token=done;
+                    console.log(done);
+                });
+
+                $scope.formData = {userid:userid,password:sha256_digest(newpassword),csrfmiddlewaretoken:$scope.token };
+                
+                console.log($scope.formData);
+                // apiService.changepassword($scope.formData).then(function (callback){
+                //     if(callback.data==1)
+                //     {    
+                //         $scope.changepasswordSuccess=1;
+                //         $timeout(function () {
+                //             $scope.$modalInstance.dismiss('cancel');
+                //             $scope.changepasswordSuccess=0;
+                //         },500);
+                //     }
+                // });
+            }
+            else 
+            {
+                $scope.passworderror=-1;
+            }
+            
         };
         $timeout(function () {
         
@@ -137,6 +211,10 @@ myApp.controller('HomeCtrl', function ($scope, TemplateService, NavigationServic
             $scope.fullname = $.jStorage.get("fname")+" "+$.jStorage.get("lname");
             $scope.branch = $.jStorage.get("branch");
         }
+        
+    })
+    .controller('ChangePasswordCtrl', function ($scope, TemplateService, NavigationService, $timeout, toastr, $http,$state,apiService) {
+        
         
     })
     
@@ -169,7 +247,7 @@ myApp.controller('HomeCtrl', function ($scope, TemplateService, NavigationServic
             return $sce.trustAsHtml(text)
         }
     })
-    .controller('ChatCtrl', function ($scope, $rootScope,TemplateService, NavigationService,ChatwindowService, $timeout,$http,apiService,$state) {
+    .controller('ChatCtrl', function ($scope, $rootScope,TemplateService, NavigationService, $timeout,$http,apiService,$state) {
         
         $rootScope.autocompletelist = [];
         $rootScope.chatOpen = false;
@@ -239,6 +317,7 @@ myApp.controller('HomeCtrl', function ($scope, TemplateService, NavigationServic
             $rootScope.autocompletelist = [];
             $rootScope.chatlist.push({id:"id",msg:value,position:"right",curTime: $rootScope.getDatetime()});
             //console.log("msgid="+id+"chatmsg="+$rootScope.msgSelected);
+            
             $rootScope.msgSelected = false;
             $rootScope.showMsgLoader=true;
         };
@@ -248,6 +327,16 @@ myApp.controller('HomeCtrl', function ($scope, TemplateService, NavigationServic
             $rootScope.chatlist.push({id:"id",msg:value,position:"left",curTime: $rootScope.getDatetime()});
         };
 
+        $rootScope.create_tabs = function(data){
+            $timeout(function() {
+                for(i=0; i<data.node_data.elements.length;i++){
+                    
+                        $('#tab_data').append('<li role="presentation"><a href="#tab'+i+'" aria-controls="tab'+i+'" role="tab" data-toggle="tab">'+data.node_data.elements[i]+'</a></li>');
+                        $('#tab-content').append('<div role="tabpanel" class="tab-pane" id="tab'+i+'"><p class="tab-con">'+data.node_data.element_values[i]+'</p></div>');
+                    
+                }
+            },200);
+        };
 
         $rootScope.tappedKeys = '';
 

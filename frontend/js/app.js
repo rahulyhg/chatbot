@@ -10,13 +10,15 @@ var myApp = angular.module('myApp', [
     'angular-flexslider',
     'ui.swiper',
     'angularPromiseButtons',
-    'toastr'
+    'toastr',
+    'ngCookies'
 ]);
 
 // Define all the routes below
 myApp.config(function ($stateProvider, $urlRouterProvider, $httpProvider, $locationProvider) {
     var tempateURL = "views/template/template.html"; //Default Template URL
 
+    
     // for http request with session
     $httpProvider.defaults.withCredentials = true;
     $stateProvider
@@ -44,6 +46,20 @@ myApp.config(function ($stateProvider, $urlRouterProvider, $httpProvider, $locat
     $locationProvider.html5Mode(isproduction);
 });
 
+/*var xhRequest = new XMLHttpRequest();
+xhRequest.open("GET", "http://localhost:8080", false);
+xhRequest.send(null);
+
+myApp.constant("CSRF_TOKEN", xhRequest.responseText);
+myApp.run(['$http', 'CSRF_TOKEN', function($http, CSRF_TOKEN) {    
+    $http.defaults.headers.common['X-Csrf-Token'] = CSRF_TOKEN;
+}]);*/
+
+
+myApp.run(['$http','$cookies', function run(  $http, $cookies ){
+    // For CSRF token compatibility with Django
+    $http.defaults.headers.post['X-CSRFToken'] = $cookies['csrftoken'];
+}])
 // For Language JS
 myApp.config(function ($translateProvider) {
     $translateProvider.translations('en', LanguageEnglish);

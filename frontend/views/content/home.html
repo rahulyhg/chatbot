@@ -1,0 +1,45 @@
+<div class="col-lg-5">
+    <div class="content">
+        <marquee direction="left" speed="normal" behavior="loop" BGCOLOR="Gold">Important Notice : Please update your personal details before 1st July 2017</marquee>
+        <div>
+            <!-- Nav tabs -->
+            <ul class="nav nav-tabs" role="tablist" id="tab_data"></ul>
+            <!-- Tab panes -->
+            <div class="tab-content" id="tab-content"></div>
+        </div>
+    </div>
+</div>
+<div class="col-lg-4">
+    <div class="col-md-12">
+        <div class="inputs">
+            <!-- Nav tabs -->
+            <ul class="nav nav-tabs" role="tablist" id="myTabs">
+                <li role="presentation" class="active col-md-6"><a href="#home" aria-controls="home" role="tab" data-toggle="tab">CRN No.</a></li>
+                <li role="presentation"  class="col-md-6"><a href="#profile" aria-controls="profile" role="tab" data-toggle="tab">SR No.</a></li>
+            </ul>
+            <!-- Tab panes -->
+            <div class="tab-content">
+                <div role="tabpanel" class="tab-pane active" id="home">
+                    <div class="form-inline input-group-sm">
+                        <input type="text" class="form-control" placeholder="CRN no" ng-model="crnno" name="crn" required>
+                        <button id="crnsr1" type="submit" class="btn btn-primary btn-sm" ng-click="crnSubmit(crnno);">Query</button>
+                        <button id="" type="submit" class="btn btn-primary btn-sm">Tag with CRN</button>
+                    </div>
+                    <div class="crn">
+                        <p id="crn_details"></p>
+                    </div>
+                </div>
+                <div role="tabpanel" class="tab-pane" id="profile">
+                    <div class="form-inline input-group-sm">
+                        <input type="text" class="form-control" placeholder="SR no" name="sr" ng-model="srno">
+                        <button id="crnsr" type="submit" class="btn btn-primary btn-sm" ng-click="srnSubmit(srno,crnno);">Query</button>
+                        <button id="" type="submit" class="btn btn-primary btn-sm srbtn" >Create SR</button>
+                    </div>
+                    <div class="crn">
+                        <p id="sr_details"></p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

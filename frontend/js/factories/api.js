@@ -1,4 +1,4 @@
-myApp.factory('apiService', function ($http, $q, $timeout) {
+myApp.factory('apiService', function ($http, $q, $timeout,CsrfTokenService) {
     //var adminurl = "http://localhost/chatbotapi/api.php/";
     //var adminurl = "//35.161.160.7:3306/";
     adminurl = "http://wohlig.co.in/chatbotapi/index.php/json/";
@@ -22,6 +22,7 @@ myApp.factory('apiService', function ($http, $q, $timeout) {
             // });
             return $http({
                 url: adminurl + 'getautocomplete',
+                headers: {'X-CSRFToken': CsrfTokenService.getCookie("csrftoken")},
                 method: 'POST',
                 data: formData
             })
@@ -34,9 +35,26 @@ myApp.factory('apiService', function ($http, $q, $timeout) {
             // });
             return $http({
                 url: adminurl + 'login',
+                headers: {'X-CSRFToken': CsrfTokenService.getCookie("csrftoken")},
                 method: 'POST',
                 data: formData
             });
+        },
+        changepassword:function(formData, callback) {
+            
+            return $http({
+                url: adminurl + 'changepassword',
+                method: 'POST',
+                data: formData
+            });
+            // $.ajax({
+            //     url : adminurl+"changepassword",
+            //     data: formData,
+            //     headers: {'X-CSRFToken': CsrfTokenService.getCookie("csrftoken")},
+            //     type: "POST",
+            //     dataType: "json",
+                
+            // });
         },
     };
     //return responsedata;

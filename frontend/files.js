@@ -41,7 +41,10 @@ module.exports = [
   // Services
   'frontend/js/services/template.js',
   'frontend/js/services/chatwindow.js',
+  'frontend/js/services/csrftoken.js',
   'frontend/js/services/sha256.js',
+  'frontend/js/services/angular-cookies.min.js',
+  
 
   //Factories
   'frontend/js/factories/navigation.js',

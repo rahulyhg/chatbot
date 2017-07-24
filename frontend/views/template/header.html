@@ -35,7 +35,9 @@
             <!--              <img src="{% static 'images/logo7.png' %}" class="img-responsive pull-left img-circle" style="height:35px; margin-top:8px;">-->
                     <li class="profileDetail" ng-controller="LoginDetCtrl"><a><small>Name: </small><span >{{fullname}}</span></a></li>
                     <li class="profileDetail" ng-controller="LoginDetCtrl"><a><small>Branch: </small><span >{{branch}} Branch</span></a></li>
-                    <li><button id="logout" type="submit" class="btn btn-primary" ng-controller="CommonCtrl" ng-click="logout();">Log Out</button></li>
+                    <li><button id="logout" type="submit" class="btn btn-primary headerbtns" ng-controller="CommonCtrl" ng-click="logout();">Log Out</button></li>
+                    <li><button id="changepwd" type="submit" class="btn btn-primary headerbtns" ng-controller="CommonCtrl" ng-click="openChangePwd();">Change Password</button></li>
+                    
                 </ul>
                 </div><!-- /.navbar-collapse -->
             </div><!-- /.container-fluid -->
