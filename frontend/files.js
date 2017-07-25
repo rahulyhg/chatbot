@@ -44,7 +44,7 @@ module.exports = [
   'frontend/js/services/csrftoken.js',
   'frontend/js/services/sha256.js',
   'frontend/js/services/angular-cookies.min.js',
-  
+  'frontend/js/services/angular-resource.js',
 
   //Factories
   'frontend/js/factories/navigation.js',

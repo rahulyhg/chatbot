@@ -7,11 +7,16 @@ myApp.controller('HomeCtrl', function ($scope, TemplateService, NavigationServic
             //console.log(crnno,"crnno");
             $scope.userid=$.jStorage.get("id");
             var datatype = 'CRN';
+            CsrfTokenService.getCookie("csrftoken").then(function(token) {
+                apiService.crnsubmit($scope.formData).then(function (callback){
+                    console.log(callback,"crn");
+                });
+                    
             // $.ajax({
             
             //     url : "",
-            //     data: {user_input: crnno, user_id:$scope.userid, number_type:datatype,'csrfmiddlewaretoken': CsrfTokenService.getCookie("csrftoken")},
-            //     headers: {'X-CSRFToken': CsrfTokenService.getCookie("csrftoken")},
+            //     data: {user_input: crnno, user_id:$scope.userid, number_type:datatype,'csrfmiddlewaretoken': token,
+            //     headers: {'X-CSRFToken': token},
             //     type: "POST",
             //     dataType: "json",
             //     success: function(data){
@@ -19,15 +24,17 @@ myApp.controller('HomeCtrl', function ($scope, TemplateService, NavigationServic
             //         $scope.result_crn(output);
             //     }
             // });
+            });
         };
         $scope.srnSubmit = function(srno,crnno) { 
             //console.log(crnno+"crnno,sr"+srno);
             $scope.userid=$.jStorage.get("id");
             var datatype = 'SR';
+            CsrfTokenService.getCookie("csrftoken").then(function(token) {
             // $.ajax({
             //     // url: "/srandcrn/",
-            //     data: {user_input: srno, user_id:$scope.userid, number_type:datatype,'csrfmiddlewaretoken': CsrfTokenService.getCookie("csrftoken")},
-            //     headers: {'X-CSRFToken': CsrfTokenService.getCookie("csrftoken")},
+            //     data: {user_input: srno, user_id:$scope.userid, number_type:datatype,'csrfmiddlewaretoken': token},
+            //     headers: {'X-CSRFToken': token},
             //     type: "POST",
             //     dataType: "json",
             //     success: function(data){
@@ -35,6 +42,7 @@ myApp.controller('HomeCtrl', function ($scope, TemplateService, NavigationServic
             //         $scope.result_sr(output);
             //     }
             // });
+            });
         };
         $scope.result_sr = function(output) {
             $timeout(function () {
@@ -47,6 +55,18 @@ myApp.controller('HomeCtrl', function ($scope, TemplateService, NavigationServic
             },200);
         };
         
+        $scope.create_tabs = function(data){
+            $timeout(function() {
+                $('#tab_data li').first().addClass('active');
+                $('#tab-content .tab-pane').first().addClass('active');
+                for(i=0; i<data.node_data.elements.length;i++){
+                    
+                        $('#tab_data').append('<li role="presentation"><a href="#tab'+i+'" aria-controls="tab'+i+'" role="tab" data-toggle="tab">'+data.node_data.elements[i]+'</a></li>');
+                        $('#tab-content').append('<div role="tabpanel" class="tab-pane" id="tab'+i+'"><p class="tab-con">'+data.node_data.element_values[i]+'</p></div>');
+                    
+                }
+            },200);
+        };
 
         $timeout(function () {
             $('.toggler').click(function () {
@@ -58,6 +78,17 @@ myApp.controller('HomeCtrl', function ($scope, TemplateService, NavigationServic
                 e.preventDefault()
                 $(this).tab('show')
             });
+            $(".section_last").click(function(){
+                $scope.nodevalue=$(this).attr("data-value");
+                CsrfTokenService.getCookie("csrftoken").then(function(token) {
+                    $scope.tabData = {user_id:1137,node_value:$scope.nodevalue,csrfmiddlewaretoken:token};
+                    //console.log($scope.tabData);
+                    apiService.gettabdata($scope.tabData).then(function (callback){
+                        //console.log(callback,"nodedata");
+                        $scope.create_tabs(callback);
+                    });
+                });
+            });
         });
         
     })
@@ -67,7 +98,7 @@ myApp.controller('HomeCtrl', function ($scope, TemplateService, NavigationServic
         TemplateService.title = "Login"; //This is the Title of the Website
         //$scope.navigation = NavigationService.getNavigation();
         
-        
+        CsrfTokenService.getCookie("csrftoken");
 
         $scope.loginbg = 1;
         $scope.iframeHeight = window.innerHeight;
@@ -79,26 +110,33 @@ myApp.controller('HomeCtrl', function ($scope, TemplateService, NavigationServic
             $scope.notLoggedin = true;
         $scope.login = function(username,password)
         {
-            $scope.formData = {username:username,password:sha256_digest(password),csrfmiddlewaretoken: CsrfTokenService.getCookie("csrftoken")};
-            apiService.login($scope.formData).then(function (callback){
-                $scope.csrftoken=CsrfTokenService.getCookie("csrftoken");
-                console.log($scope.csrftoken,"csrf");
-                if(callback.data == -1)
-                    $scope.loginerror = -1;
-                else
-                {
-                    $.jStorage.flush();
-                    $.jStorage.set("id", callback.data.id);
-                    $.jStorage.set("fname", callback.data.fname);
-                    $.jStorage.set("lname", callback.data.lname);
-                    $.jStorage.set("email", callback.data.email);
-                    $.jStorage.set("branch", callback.data.branch);
-                    $.jStorage.set("access_role", callback.data.access_role);
-                    $state.go("home");
-                }
-            });
-            
+            CsrfTokenService.getCookie("csrftoken").then(function(token) {
+                $scope.formData = {username:username,password:sha256_digest(password),csrfmiddlewaretoken:token};
             /*
+            apiService.login($scope.formData).then(function (callback){
+                //console.log(callback);
+            });*/
+            
+                apiService.login($scope.formData).then(function (callback){
+                    $scope.csrftoken=CsrfTokenService.getCookie("csrftoken");
+                    if(callback.data == -1)
+                        $scope.loginerror = -1;
+                    else
+                    {
+                        $.jStorage.flush();
+                        $.jStorage.set("id", callback.data.id);
+                        $.jStorage.set("fname", callback.data.fname);
+                        $.jStorage.set("lname", callback.data.lname);
+                        $.jStorage.set("email", callback.data.email);
+                        $.jStorage.set("branch", callback.data.branch);
+                        $.jStorage.set("access_role", callback.data.access_role);
+                        $state.go("home");
+                    }
+                });
+            });
+           
+        }; 
+         /*
             if(username=="pratik" && password == "asdf")
             {
                 var pwd =sha256_digest(password);
@@ -127,9 +165,7 @@ myApp.controller('HomeCtrl', function ($scope, TemplateService, NavigationServic
                                     alert("ERROR");
                 }
             });
-            return false;*/
-        }; 
-        
+            return false;*/ 
         
     })
     .controller('CommonCtrl', function ($scope, TemplateService, NavigationService,CsrfTokenService, $timeout,$uibModal, toastr, $http,$state,apiService,$cookies) {
@@ -163,22 +199,23 @@ myApp.controller('HomeCtrl', function ($scope, TemplateService, NavigationServic
                 $scope.token="";
                 CsrfTokenService.getCookie("csrftoken").then(function(done) {
                     $scope.token=done;
-                    console.log(done);
+                    $scope.formData = {userid:userid,password:sha256_digest(newpassword),csrfmiddlewaretoken:$scope.token };
+                    console.log($scope.formData);
+                    // apiService.changepassword($scope.formData).then(function (callback){
+                    //     if(callback.data==1)
+                    //     {    
+                    //         $scope.changepasswordSuccess=1;
+                    //         $timeout(function () {
+                    //             $scope.$modalInstance.dismiss('cancel');
+                    //             $scope.changepasswordSuccess=0;
+                    //         },500);
+                    //     }
+                    // })    
                 });
 
-                $scope.formData = {userid:userid,password:sha256_digest(newpassword),csrfmiddlewaretoken:$scope.token };
                 
-                console.log($scope.formData);
-                // apiService.changepassword($scope.formData).then(function (callback){
-                //     if(callback.data==1)
-                //     {    
-                //         $scope.changepasswordSuccess=1;
-                //         $timeout(function () {
-                //             $scope.$modalInstance.dismiss('cancel');
-                //             $scope.changepasswordSuccess=0;
-                //         },500);
-                //     }
-                // });
+                
+                ;
             }
             else 
             {
@@ -247,7 +284,7 @@ myApp.controller('HomeCtrl', function ($scope, TemplateService, NavigationServic
             return $sce.trustAsHtml(text)
         }
     })
-    .controller('ChatCtrl', function ($scope, $rootScope,TemplateService, NavigationService, $timeout,$http,apiService,$state) {
+    .controller('ChatCtrl', function ($scope, $rootScope,TemplateService, NavigationService,CsrfTokenService, $timeout,$http,apiService,$state) {
         
         $rootScope.autocompletelist = [];
         $rootScope.chatOpen = false;
@@ -284,6 +321,7 @@ myApp.controller('HomeCtrl', function ($scope, TemplateService, NavigationServic
             //return (new Date).toLocaleFormat("%A, %B %e, %Y");
             return currentTime = new Date();
         };
+        $rootScope.chatText = "";
         $rootScope.getAutocomplete = function(chatText) {
             $rootScope.showTimeoutmsg = false;
             if($rootScope.showTimeoutmsg == false && chatText=="") 
@@ -317,9 +355,20 @@ myApp.controller('HomeCtrl', function ($scope, TemplateService, NavigationServic
             $rootScope.autocompletelist = [];
             $rootScope.chatlist.push({id:"id",msg:value,position:"right",curTime: $rootScope.getDatetime()});
             //console.log("msgid="+id+"chatmsg="+$rootScope.msgSelected);
-            
+            $rootScope.getSystemMsg(id,value);
             $rootScope.msgSelected = false;
             $rootScope.showMsgLoader=true;
+        };
+        $rootScope.getSystemMsg = function(id,value){
+            console.log("id",id);
+            CsrfTokenService.getCookie("csrftoken").then(function(token) {
+                $rootScope.formData = {user_id:1146,user_input:value,auto_id:parseInt(id),auto_value:value,'csrfmiddlewaretoken':token};
+                //console.log($rootScope.formData);
+                apiService.getSysMsg($rootScope.formData).then(function (callback){
+                    //console.log(callback,"nodedata");
+                    //$scope.create_tabs(callback);
+                });
+            });
         };
         $rootScope.pushSystemMsg = function(id,value) {
             $rootScope.chatmsgid = id;
@@ -384,8 +433,10 @@ myApp.controller('HomeCtrl', function ($scope, TemplateService, NavigationServic
             }
             if(e.which == 13)
             {
-                $rootScope.pushMsg($rootScope.autolistid,$rootScope.autolistvalue);
-
+                if($rootScope.autolistid=="")
+                    $rootScope.pushMsg("",$rootScope.chatText);
+                else
+                    $rootScope.pushMsg($rootScope.autolistid,$rootScope.autolistvalue);
             }
         };
        

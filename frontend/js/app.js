@@ -11,14 +11,16 @@ var myApp = angular.module('myApp', [
     'ui.swiper',
     'angularPromiseButtons',
     'toastr',
-    'ngCookies'
+    'ngCookies',
+    'ngResource',
 ]);
-
+//angular.module('manage', ['ngResource']);
 // Define all the routes below
-myApp.config(function ($stateProvider, $urlRouterProvider, $httpProvider, $locationProvider) {
+myApp.config(function ($stateProvider, $urlRouterProvider, $httpProvider, $locationProvider,$resourceProvider) {
     var tempateURL = "views/template/template.html"; //Default Template URL
-
-    
+    $resourceProvider.defaults.stripTrailingSlashes = false;
+    $httpProvider.defaults.xsrfCookieName = 'csrftoken';
+    $httpProvider.defaults.xsrfHeaderName = 'X-CSRFToken';
     // for http request with session
     $httpProvider.defaults.withCredentials = true;
     $stateProvider
@@ -58,7 +60,13 @@ myApp.run(['$http', 'CSRF_TOKEN', function($http, CSRF_TOKEN) {
 
 myApp.run(['$http','$cookies', function run(  $http, $cookies ){
     // For CSRF token compatibility with Django
-    $http.defaults.headers.post['X-CSRFToken'] = $cookies['csrftoken'];
+    
+    $http.defaults.xsrfCookieName = 'csrftoken';
+    $http.defaults.xsrfHeaderName = 'X-CSRFToken';
+    //$http.defaults.headers.post['X-CSRFToken'] = $cookies.get('csrftoken');
+    //** django urls loves trailling slashes which angularjs removes by default.
+    //$resourceProvider.defaults.stripTrailingSlashes = false;
+
 }])
 // For Language JS
 myApp.config(function ($translateProvider) {
