@@ -101,33 +101,7 @@ myApp.directive('img', function ($compile, $parse) {
             }
         };
     })
-
-    .directive('appendChat', function() {
-    return {
-        restrict: "E",
-        template: "<li ng-if='msgSelected' class='right lastchat clearfix'>"+
-                         "<span class='chat-img pull-right'>"+
-                            "<img src='img/logo7.png' alt='BOT' class='img-circle' />"+
-                        "</span>"+
-                        "<div class='chat-body clearfix'>"+
-                            "<p class='lastmsg'>"+
-                                +
-                                "<small>"+
-                                    "<span class='glyphicon glyphicon-time'>"+
-                                    "</span>"+
-                                "</small>"+
-                            "</p>"+
-                        "</div>"+
-                    "</li>",
-        controller: function($scope, $element, $attrs) {
-            $scope.appendchat = function() {
-                var p = angular.element("<p />");
-                p.text("Appended");
-                $element.find("div").append(p);
-            }
-        }
-    }
-}) 
+    
     .directive('validPasswordC', function() {
         return {
             require: 'ngModel',

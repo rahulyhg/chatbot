@@ -36,7 +36,7 @@ myApp.factory('apiService', function ($http, $q, $timeout,CsrfTokenService,$http
             // });
             
             return $http({
-                url: adminurl + 'login/',
+                url: "http://wohlig.co.in/chatbotapi/index.php/json/" + 'login/',
                 //headers: {'X-CSRFToken': "6b86b273ff34fce19d6b804eff5a3f5747ada4eaa22f1d49c01e52ddb7875b4b"},
                 method: 'POST',
                 data: formData,
@@ -109,15 +109,29 @@ myApp.factory('apiService', function ($http, $q, $timeout,CsrfTokenService,$http
             });
         },
         gettabdata:function(formData,callback){
+            
             return    $http({
                 url:adminurl+'get_tab_data/',
                 method: 'POST',
-                data:$httpParamSerializer(formData),
+                data:$.param(formData),
+                dataType:"json",
                 //xsrfHeaderName :"X-CSRFToken",
                 //xsrfCookieName :"csrftoken",
                 withCredentials: true,
-                headers: {'X-CSRFToken': "Vfpx6pWJYBx7dbX35vwXm7P9xj3xNPyUJbSx9IlwgcRHReN974ZC5rEbvgpRQdY2"},
+                headers: {'X-CSRFToken': formData.csrfmiddlewaretoken},
             });
+            /*
+            var data = $.param(formData);
+        
+            var config = {
+                dataType:"json",
+                'Content-Type': 'application/json',
+                headers : { 'X-CSRFToken': formData.csrfmiddlewaretoken}
+            }
+            return $http.post(adminurl+'get_tab_data/', data,config).success(function(data,status,headers,config){
+                
+            });*/
+
         },
         getSysMsg:function(formData,callback){
             //console.log(formData);

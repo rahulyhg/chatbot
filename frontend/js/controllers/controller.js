@@ -1,4 +1,4 @@
-myApp.controller('HomeCtrl', function ($scope, TemplateService, NavigationService,CsrfTokenService, $timeout,$http,apiService,$state) {
+myApp.controller('HomeCtrl', function ($scope,$rootScope, TemplateService, NavigationService,CsrfTokenService,Menuservice, $timeout,$http,apiService,$state) {
         $scope.template = TemplateService.getHTML("content/home.html");
         TemplateService.title = "Home"; //This is the Title of the Website
         $scope.navigation = NavigationService.getNavigation();
@@ -55,19 +55,9 @@ myApp.controller('HomeCtrl', function ($scope, TemplateService, NavigationServic
             },200);
         };
         
-        $scope.create_tabs = function(data){
-            $timeout(function() {
-                $('#tab_data li').first().addClass('active');
-                $('#tab-content .tab-pane').first().addClass('active');
-                for(i=0; i<data.node_data.elements.length;i++){
-                    
-                        $('#tab_data').append('<li role="presentation"><a href="#tab'+i+'" aria-controls="tab'+i+'" role="tab" data-toggle="tab">'+data.node_data.elements[i]+'</a></li>');
-                        $('#tab-content').append('<div role="tabpanel" class="tab-pane" id="tab'+i+'"><p class="tab-con">'+data.node_data.element_values[i]+'</p></div>');
-                    
-                }
-            },200);
-        };
-
+        
+        $rootScope.tabheading = [];
+        $rootScope.tabvalue = [];
         $timeout(function () {
             $('.toggler').click(function () {
                 $(this).parent().children('ul.tree').toggle(300);
@@ -80,14 +70,8 @@ myApp.controller('HomeCtrl', function ($scope, TemplateService, NavigationServic
             });
             $(".section_last").click(function(){
                 $scope.nodevalue=$(this).attr("data-value");
-                CsrfTokenService.getCookie("csrftoken").then(function(token) {
-                    $scope.tabData = {user_id:1137,node_value:$scope.nodevalue,csrfmiddlewaretoken:token};
-                    //console.log($scope.tabData);
-                    apiService.gettabdata($scope.tabData).then(function (callback){
-                        //console.log(callback,"nodedata");
-                        $scope.create_tabs(callback);
-                    });
-                });
+                Menuservice.create_tabs($scope.nodevalue);
+                
             });
         });
         
@@ -360,13 +344,33 @@ myApp.controller('HomeCtrl', function ($scope, TemplateService, NavigationServic
             $rootScope.showMsgLoader=true;
         };
         $rootScope.getSystemMsg = function(id,value){
-            console.log("id",id);
+            //console.log("id",id);
             CsrfTokenService.getCookie("csrftoken").then(function(token) {
-                $rootScope.formData = {user_id:1146,user_input:value,auto_id:parseInt(id),auto_value:value,'csrfmiddlewaretoken':token};
+                $rootScope.formData = {user_id:1164,user_input:value,auto_id:parseInt(id),auto_value:value,'csrfmiddlewaretoken':token};
                 //console.log($rootScope.formData);
-                apiService.getSysMsg($rootScope.formData).then(function (callback){
-                    //console.log(callback,"nodedata");
-                    //$scope.create_tabs(callback);
+                apiService.getSysMsg($rootScope.formData).then(function (data){
+                    angular.forEach(data.data.tiledlist, function(value, key) {
+                        if(value.type=="text")
+                        {
+                        //	alert("Successfultext");
+                            $rootScope.ajaxTiledList2(data.data);
+                            $rootScope.showMsgLoader = false;
+                            return false;
+                        }
+                        else if(value.type == "Instruction")
+                        {
+                            console.log("inside instruction");
+                            $.each(data.tiledlist.tiledlist, function(index,tiledlist){
+                                if(tiledlist.type=="Image")
+                                {
+                                    console.log(tiledlist);
+                                    $rootScope.ajaxTiledList1(data.data);
+                                    $rootScope.showMsgLoader = false;
+                                }
+                                return false;
+                            });
+                        }
+                    });
                 });
             });
         };
@@ -376,16 +380,7 @@ myApp.controller('HomeCtrl', function ($scope, TemplateService, NavigationServic
             $rootScope.chatlist.push({id:"id",msg:value,position:"left",curTime: $rootScope.getDatetime()});
         };
 
-        $rootScope.create_tabs = function(data){
-            $timeout(function() {
-                for(i=0; i<data.node_data.elements.length;i++){
-                    
-                        $('#tab_data').append('<li role="presentation"><a href="#tab'+i+'" aria-controls="tab'+i+'" role="tab" data-toggle="tab">'+data.node_data.elements[i]+'</a></li>');
-                        $('#tab-content').append('<div role="tabpanel" class="tab-pane" id="tab'+i+'"><p class="tab-con">'+data.node_data.element_values[i]+'</p></div>');
-                    
-                }
-            },200);
-        };
+        
 
         $rootScope.tappedKeys = '';
 

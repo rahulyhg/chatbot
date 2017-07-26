@@ -10201,7 +10201,7 @@ button.headerbtns:focus {
 .clickImage {
   /*display:none;*/
   width: auto;
-  height: 175px;
+  height: 140px;
   margin: auto;
   position: absolute;
   z-index: 10;
