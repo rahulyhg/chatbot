@@ -1,3 +1,5 @@
+var globalLocale = moment.locale('hi');
+var localLocale = moment();
 myApp.controller('HomeCtrl', function ($scope,$rootScope, TemplateService, NavigationService,CsrfTokenService,Menuservice, $timeout,$http,apiService,$state) {
         $scope.template = TemplateService.getHTML("content/home.html");
         TemplateService.title = "Home"; //This is the Title of the Website
@@ -103,19 +105,23 @@ myApp.controller('HomeCtrl', function ($scope,$rootScope, TemplateService, Navig
             
                 apiService.login($scope.formData).then(function (callback){
                     $scope.csrftoken=CsrfTokenService.getCookie("csrftoken");
-                    if(callback.data == -1)
-                        $scope.loginerror = -1;
-                    else
+                    
+                    
+                    //if(angular.isUndefined(callback.data.error.message))
+                    if(callback.data.value)
                     {
+                        console.log(callback);
                         $.jStorage.flush();
-                        $.jStorage.set("id", callback.data.id);
-                        $.jStorage.set("fname", callback.data.fname);
-                        $.jStorage.set("lname", callback.data.lname);
-                        $.jStorage.set("email", callback.data.email);
-                        $.jStorage.set("branch", callback.data.branch);
-                        $.jStorage.set("access_role", callback.data.access_role);
+                        $.jStorage.set("id", callback.data.data._id);
+                        $.jStorage.set("fname", callback.data.data.fname);
+                        $.jStorage.set("lname", callback.data.data.lname);
+                        $.jStorage.set("email", callback.data.data.email);
+                        $.jStorage.set("branch", callback.data.data.branch);
+                        $.jStorage.set("access_role", callback.data.data.accessrole);
                         $state.go("home");
                     }
+                    else if(callback.data.error.message == -1)
+                        $scope.loginerror = -1;
                 });
             });
            
@@ -152,6 +158,73 @@ myApp.controller('HomeCtrl', function ($scope,$rootScope, TemplateService, Navig
             return false;*/ 
         
     })
+    .controller('ForgotPasswordCtrl', function ($scope, TemplateService, NavigationService,CsrfTokenService, $timeout, toastr, $http,$state,apiService,$stateParams,$interval) {
+        $scope.template = TemplateService.getHTML("forgotpassword.html");
+        TemplateService.title = "Forgot Password"; //This is the Title of the Website
+        //$scope.navigation = NavigationService.getNavigation();
+        
+        //CsrfTokenService.getCookie("csrftoken");
+        $scope.uipage="forgotpassword";
+        $scope.userid=$stateParams.id;
+        $scope.expired = false;
+        $scope.loginbg = 1;
+        $scope.iframeHeight = window.innerHeight;
+        
+        $scope.loginerror=0;
+        $scope.countdown = {};
+        $scope.refreshTimer = function(expiryTime) 
+        {
+               
+            expiryTime = new Date(expiryTime);
+            $scope.rightNow = new Date();
+            $scope.diffTime = expiryTime - $scope.rightNow;
+            var duration = moment.duration($scope.diffTime, 'milliseconds');
+            
+            $interval(function() {
+
+                duration = moment.duration(duration - 1000, 'milliseconds');
+                
+                if (duration._milliseconds > 0) {
+
+                    $scope.expired = false;
+                } else {
+
+                    $scope.expired = true;
+                }
+                $scope.countdown.months = duration.months();
+                $scope.countdown.days = duration.days();
+                $scope.countdown.hours = duration.hours();
+                $scope.countdown.minutes = duration.minutes();
+                $scope.countdown.seconds = duration.seconds();
+
+            }, 1000);
+        };
+
+        $scope.refreshTimer("2017-07-27 13:17:00");
+
+        
+
+        $scope.changepassword = function(password)
+        {
+            /*
+            $scope.formData = {username:username,password:sha256_digest(password)};
+            
+            
+            apiService.changepassword2($scope.formData).then(function (callback){
+                if(callback.data == -1)
+                    $scope.loginerror = -1;
+                else
+                {
+                    $.jStorage.flush();
+                    $state.go("login");
+                }
+            });
+            */
+        }; 
+        
+    })
+
+
     .controller('CommonCtrl', function ($scope, TemplateService, NavigationService,CsrfTokenService, $timeout,$uibModal, toastr, $http,$state,apiService,$cookies) {
         $scope.logout = function() {
             $.jStorage.flush();
@@ -176,35 +249,31 @@ myApp.controller('HomeCtrl', function ($scope,$rootScope, TemplateService, Navig
         $scope.changepasswordSuccess=0;
           
         $scope.changepassword = function(currentpassword,newpassword,newpassword2) {
-            if(sha256_digest(currentpassword)=="f0e4c2f76c58916ec258f246851bea091d14d4247a2fc3e18694461b1816e13b")
-            {
-                //console.log(newpassword);
-                userid = $.jStorage.get("id");
-                $scope.token="";
-                CsrfTokenService.getCookie("csrftoken").then(function(done) {
-                    $scope.token=done;
-                    $scope.formData = {userid:userid,password:sha256_digest(newpassword),csrfmiddlewaretoken:$scope.token };
-                    console.log($scope.formData);
-                    // apiService.changepassword($scope.formData).then(function (callback){
-                    //     if(callback.data==1)
-                    //     {    
-                    //         $scope.changepasswordSuccess=1;
-                    //         $timeout(function () {
-                    //             $scope.$modalInstance.dismiss('cancel');
-                    //             $scope.changepasswordSuccess=0;
-                    //         },500);
-                    //     }
-                    // })    
-                });
+             //console.log(newpassword);
+            userid = $.jStorage.get("id");
+            $scope.token="";
+            CsrfTokenService.getCookie("csrftoken").then(function(done) {
+                $scope.token=done;
+                $scope.formData = {userid:userid,oldpassword:sha256_digest(currentpassword),newpassword:sha256_digest(newpassword),csrfmiddlewaretoken:$scope.token };
+                console.log($scope.formData);
+                apiService.changepassword($scope.formData).then(function (callback){
+                    if(callback.data.value)
+                    {    
+                        $scope.changepasswordSuccess=1;
+                        $timeout(function () {
+                            $scope.$modalInstance.dismiss('cancel');
+                            $scope.changepasswordSuccess=0;
+                        },500);
+                    }
+                    else if (callback.data.error.message==-1)
+                        $scope.passworderror =-1;
+                })    
+            });
 
                 
                 
-                ;
-            }
-            else 
-            {
-                $scope.passworderror=-1;
-            }
+                
+           
             
         };
         $timeout(function () {
@@ -321,7 +390,8 @@ myApp.controller('HomeCtrl', function ($scope,$rootScope, TemplateService, Navig
             
             $rootScope.chatdata = { string:$rootScope.chatText};
             apiService.getautocomplete($rootScope.chatdata).then(function (response){
-                $rootScope.autocompletelist = response.data;
+                    console.log(response.data);
+                $rootScope.autocompletelist = response.data.data;
             });
             
         };

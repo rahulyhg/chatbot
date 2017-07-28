@@ -34,6 +34,11 @@ myApp.config(function ($stateProvider, $urlRouterProvider, $httpProvider, $locat
             templateUrl: tempateURL,
             controller: 'LoginCtrl'
         })
+        .state('forgotpassword', {
+            url: "/forgotpassword/:id",
+            templateUrl: tempateURL,
+            controller: 'ForgotPasswordCtrl'
+        })
         .state('form', {
             url: "/form",
             templateUrl: tempateURL,

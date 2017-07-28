@@ -1,8 +1,8 @@
 myApp.factory('apiService', function ($http, $q, $timeout,CsrfTokenService,$httpParamSerializer) {
-    //var adminurl = "http://localhost/chatbotapi/api.php/";
-    //var adminurl = "//35.161.160.7:3306/";
     //adminurl = "http://wohlig.co.in/chatbotapi/index.php/json/";
     adminurl = "http://35.161.160.7:8091/";
+    var adminUrl2 = "http://wohlig.io/api/";
+    var adminUrl3 = "http://localhost/api/"
     //return
     return {
 
@@ -22,7 +22,8 @@ myApp.factory('apiService', function ($http, $q, $timeout,CsrfTokenService,$http
             //     return response;
             // });
             return $http({
-                url: "http://wohlig.co.in/chatbotapi/index.php/json/" + 'getautocomplete',
+                url:adminUrl3+ "Chatbotautocomplete/getautocomplete",
+                //url: "http://wohlig.co.in/chatbotapi/index.php/json/" + 'getautocomplete',
                 //headers: {'X-CSRFToken': "6b86b273ff34fce19d6b804eff5a3f5747ada4eaa22f1d49c01e52ddb7875b4b"},
                 method: 'POST',
                 data: formData
@@ -36,39 +37,14 @@ myApp.factory('apiService', function ($http, $q, $timeout,CsrfTokenService,$http
             // });
             
             return $http({
-                url: "http://wohlig.co.in/chatbotapi/index.php/json/" + 'login/',
+                //url: "http://wohlig.co.in/chatbotapi/index.php/json/" + 'login/',
+                url:adminUrl3+ "ChatbotUser/loginuser",
                 //headers: {'X-CSRFToken': "6b86b273ff34fce19d6b804eff5a3f5747ada4eaa22f1d49c01e52ddb7875b4b"},
                 method: 'POST',
                 data: formData,
+                withCredentials: true,
                 //dataType:"json",
             });
-            
-            //console.log("hi");
-            //return
-            /*
-            $timeout(function(){
-             $.ajax({
-                url: adminurl + 'authenticate/',						
-                // url: "/authenticate/",						
-                data: {username : "pratik", password : "asdf",'csrfmiddlewaretoken': "6b86b273ff34fce19d6b804eff5a3f5747ada4eaa22f1d49c01e52ddb7875b4b"},
-                //headers: {'X-CSRFToken': "6b86b273ff34fce19d6b804eff5a3f5747ada4eaa22f1d49c01e52ddb7875b4b"},
-                type: "POST",
-                dataType: "json",
-                cookie:"csrftoken=6b86b273ff34fce19d6b804eff5a3f5747ada4eaa22f1d49c01e52ddb7875b4b",
-                "X-CSRFToken":"6b86b273ff34fce19d6b804eff5a3f5747ada4eaa22f1d49c01e52ddb7875b4b"
-                success: function(data){
-                    if(data.Message == 'Successful'){
-                        window.location.href = "{% url 'post_list' %}"
-                    }
-                    else{
-                        alert(data.Message);
-                    }
-                    },
-                    error: function(jqXHR, exception){
-                                        alert("ERROR");
-                    }
-            });
-            });*/
             /*
             return    $http({
                 url:adminurl+'authenticate/',
@@ -84,7 +60,7 @@ myApp.factory('apiService', function ($http, $q, $timeout,CsrfTokenService,$http
         changepassword:function(formData, callback) {
             
             return $http({
-                url: adminurl + 'changepassword',
+                url: adminUrl3 + 'ChatbotUser/changepassword',
                 method: 'POST',
                 data: formData
             });

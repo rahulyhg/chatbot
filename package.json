@@ -38,7 +38,7 @@
     "lodash": "^4.14.2",
     "md5": "^2.1.0",
     "moment": "^2.18.1",
-    "mongodb": "2.1.7",
+    "mongodb": "^2.1.7",
     "mongoose": "^4.5.5",
     "mongoose-deep-populate": "^3.0.0",
     "mongoose-middleware": "^0.2.19",
@@ -85,6 +85,7 @@
     "grunt-ejs-compile": "0.0.1",
     "grunt-ejs-locals": "^0.1.1",
     "grunt-http": "^2.0.1",
-    "grunt-postcss": "^0.8.0"
+    "grunt-postcss": "^0.8.0",
+    "nodemon": "^1.11.0"
   }
 }

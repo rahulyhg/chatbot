@@ -6,7 +6,7 @@ myApp.factory('Menuservice', function($rootScope,$http, $q, $timeout,apiService,
         create_tabs : function(nodevalue){
             //console.log(nodevalue);
             CsrfTokenService.getCookie("csrftoken").then(function(token) {
-                tabData = {user_id:1177,node_value:nodevalue,csrfmiddlewaretoken:token};
+                tabData = {user_id:1196,node_value:nodevalue,csrfmiddlewaretoken:token};
                 $rootScope.tabvalue = [];
                 $rootScope.selectTabIndex = 0;
                 apiService.gettabdata(tabData).then(function (data){
