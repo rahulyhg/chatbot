@@ -79,7 +79,7 @@ myApp.controller('HomeCtrl', function ($scope,$rootScope, TemplateService, Navig
         
     })
     
-    .controller('LoginCtrl', function ($scope, TemplateService, NavigationService,CsrfTokenService, $timeout, toastr, $http,$state,apiService) {
+    .controller('LoginCtrl', function ($scope, TemplateService, NavigationService,CsrfTokenService, $timeout, toastr, $http,$state,apiService,$uibModal,$filter) {
         $scope.template = TemplateService.getHTML("login.html");
         TemplateService.title = "Login"; //This is the Title of the Website
         //$scope.navigation = NavigationService.getNavigation();
@@ -126,37 +126,36 @@ myApp.controller('HomeCtrl', function ($scope,$rootScope, TemplateService, Navig
             });
            
         }; 
-         /*
-            if(username=="pratik" && password == "asdf")
-            {
-                var pwd =sha256_digest(password);
-                $state.go("home");
-            }
-            else {
-                $scope.loginerror = -1;
-            }*/
-            /*
-            $.ajax({
-                    url: "{% url 'authenticate' %}", 						
-                    // url: "/authenticate/",						
-                    data: {username : username, password : password,'csrfmiddlewaretoken': getCookie("csrftoken")},
-                    headers: {'X-CSRFToken': getCookie("csrftoken")},
-                    type: "POST",
-                    dataType: "json",
-                    success: function(data){
-                        if(data.Message == 'Successful'){
-                            window.location.href = "{% url 'post_list' %}"
-                        }
-                        else{
-                            alert(data.Message);
-                        }
-                },
-                error: function(jqXHR, exception){
-                                    alert("ERROR");
-                }
+        $scope.openForgotpassword = function() {
+            $scope.$modalInstance = $uibModal.open({
+                scope: $scope,
+                animation: true,
+                size: 'sm',
+                templateUrl: 'views/modal/forgotpassword.html',
+                //controller: 'CommonCtrl'
             });
-            return false;*/ 
-        
+        };
+        $scope.changePwdcancel = function() {
+            //console.log("dismissing");
+            $scope.$modalInstance.dismiss('cancel');
+            //$scope.$modalInstance.close();
+        };
+        $scope.forgotpasswordreq = function(email) {
+            str = $filter('date')(new Date(), 'hh:mm:ss a')+email;
+            $scope.formData = {email:email,resettoken:sha256_digest(str) };
+            apiService.forgotpassword($scope.formData).then(function (callback){
+                if(callback.data.value)
+                {    
+                    $scope.forgotpasswordSuccess=1;
+                    $timeout(function () {
+                        $scope.$modalInstance.dismiss('cancel');
+                        $scope.forgotpasswordSuccess=0;
+                    },1000);
+                }
+                else if (callback.data.error.message==-1)
+                    $scope.forgotpassworderror =-1;
+            })
+        };
     })
     .controller('ForgotPasswordCtrl', function ($scope, TemplateService, NavigationService,CsrfTokenService, $timeout, toastr, $http,$state,apiService,$stateParams,$interval) {
         $scope.template = TemplateService.getHTML("forgotpassword.html");
@@ -166,16 +165,44 @@ myApp.controller('HomeCtrl', function ($scope,$rootScope, TemplateService, Navig
         //CsrfTokenService.getCookie("csrftoken");
         $scope.uipage="forgotpassword";
         $scope.userid=$stateParams.id;
-        $scope.expired = false;
         $scope.loginbg = 1;
+        //console.log($stateParams);
+        $scope.expired = false;
+        
         $scope.iframeHeight = window.innerHeight;
         
         $scope.loginerror=0;
         $scope.countdown = {};
+        $scope.isvalidpasswordresetreq = function()
+        {
+            $scope.formData = { resettoken:$stateParams.id };
+            apiService.isvalidpasswordresetreq($scope.formData).then(function (callback){
+                if(!callback.data.value)
+                {
+                    $scope.loginerror = -1;
+                    $timeout(function(){
+                        $state.go("login");
+                    },1000);
+                }
+                else
+                {
+                    $scope.refreshTimer(callback.data.data.expirydate);
+                }
+            });   
+        };
+        
+
+        $scope.isvalidpasswordresetreq();
         $scope.refreshTimer = function(expiryTime) 
         {
-               
+            
             expiryTime = new Date(expiryTime);
+            t = expiryTime.getTime();
+            var tempTime = moment.duration(t);
+            var y = tempTime.hours() +":"+ tempTime.minutes();
+            
+            expiryDate = moment(expiryTime).format("YYYY-MM-DD");
+            expiryTime = new Date(expiryDate+" "+y);
             $scope.rightNow = new Date();
             $scope.diffTime = expiryTime - $scope.rightNow;
             var duration = moment.duration($scope.diffTime, 'milliseconds');
@@ -196,30 +223,28 @@ myApp.controller('HomeCtrl', function ($scope,$rootScope, TemplateService, Navig
                 $scope.countdown.hours = duration.hours();
                 $scope.countdown.minutes = duration.minutes();
                 $scope.countdown.seconds = duration.seconds();
-
+                
             }, 1000);
         };
-
-        $scope.refreshTimer("2017-07-27 13:17:00");
-
-        
-
         $scope.changepassword = function(password)
         {
-            /*
-            $scope.formData = {username:username,password:sha256_digest(password)};
+            
+            $scope.formData = {resettoken:$scope.userid,password:sha256_digest(password)};
             
             
             apiService.changepassword2($scope.formData).then(function (callback){
-                if(callback.data == -1)
-                    $scope.loginerror = -1;
+                if(!callback.data.value)
+                    $scope.loginsuccesserror = -1;
                 else
                 {
-                    $.jStorage.flush();
-                    $state.go("login");
+                    $scope.changepasswordSuccess = 1;
+                    $timeout(function(){
+                        $.jStorage.flush();
+                        $state.go("login");
+                    },1000);
                 }
             });
-            */
+            
         }; 
         
     })

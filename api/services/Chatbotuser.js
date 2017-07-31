@@ -34,6 +34,33 @@ var schema = new Schema({
     branch: {
         type: String,
         required: true,
+    },
+    expirydate: {
+        type: Date,
+    },
+    resetpasswordtoken: {
+        type: String,
+    }
+});
+
+
+var userlogschema = new Schema({
+    id: {
+        type: Number,
+        required: true,
+    },
+    user: {
+        type: String,
+        required: true,
+    },
+    login_date: {
+        type: Date,
+    },
+    logout_date: {
+        type: Date,
+    },
+    ip_address: {
+        type: String,
     }
 });
 
@@ -46,7 +73,13 @@ schema.plugin(deepPopulate, {
 });
 schema.plugin(uniqueValidator);
 schema.plugin(timestamps);
-
+// userlogschema.plugin(uniqueValidator);
+// userlogschema.plugin(timestamps);
+// userlogschema = require('userlogschema');
+// var userModel = mongoose.model('chatbot_user_logs', userlogschema,"chatbot_user_logs");
+var PythonShell = require('python-shell');
+var pythonpath = "http://35.161.160.7:8091/";
+var pythonpath = "http://localhost:8080/script/";
 module.exports = mongoose.model('Chatbotuser', schema,'chatbotuser');
 
 var exports = _.cloneDeep(require("sails-wohlig-service")(schema, "Chatbotuser", "Chatbotuser"));
@@ -62,7 +95,10 @@ var model = {
             } 
             else {
                 if (found) {
-                    callback(null, found);
+                    PythonShell.run(pythonpath+'my_script.py', { mode: 'json ',args:[data]}, function (err, results) { 
+                        callback(null, found);
+                    });
+                    
                 } else {
                     callback({
                         message: "-1"
@@ -83,6 +119,80 @@ var model = {
             else {
                 if (found) {
                     callback(null, found);
+                } else {
+                    callback({
+                        message: "-1"
+                    }, null);
+                }
+            }
+
+        });
+    },
+    forgotpassword: function (data, callback) {
+        var today = new Date();
+        var tomorrow = new Date();
+        tomorrow.setDate(today.getDate()+1);
+        var d = new Date(tomorrow),
+        month = '' + (d.getMonth() + 1),
+        day = '' + d.getDate(),
+        year = d.getFullYear();
+
+        if (month.length < 2) month = '0' + month;
+        if (day.length < 2) day = '0' + day;
+
+        expiry= [year, month, day].join('-');
+        expiry=new Date(expiry+"T23:59:59");
+        Chatbotuser.findOneAndUpdate({
+            email: data.email,
+        },{ $set: { resetpasswordtoken: data.resettoken,expirydate:expiry }}).exec(function (err, found) {
+            if (err) {
+                callback(err, null);
+            } 
+            else {
+                if (found) {
+                    callback(null, found.email);
+                } else {
+                    callback({
+                        message: "-1"
+                    }, null);
+                }
+            }
+
+        });
+    },
+    isvalidpasswordresetreq: function (data, callback) {
+        
+        Chatbotuser.findOne({
+            resetpasswordtoken: data.resettoken,
+            
+        },{ expirydate: 1, _id:0 }).limit(1).exec(function (err, found) {
+            if (err) {
+                callback(err, null);
+            } 
+            else {
+                if (found) {
+                    callback(null, found);
+                } else {
+                    callback({
+                        message: "-1"
+                    }, null);
+                }
+            }
+
+        });
+    },
+    resetpassword:function (data, callback) {
+        
+        Chatbotuser.findOneAndUpdate({
+            resetpasswordtoken: data.resettoken,
+            
+        },{$set : {resetpasswordtoken: "",password:data.password}}).exec(function (err, found) {
+            if (err) {
+                callback(err, null);
+            } 
+            else {
+                if (found) {
+                    callback(null, found.email);
                 } else {
                     callback({
                         message: "-1"

@@ -136,6 +136,30 @@ myApp.factory('apiService', function ($http, $q, $timeout,CsrfTokenService,$http
                 headers: {'X-CSRFToken': formData.csrfmiddlewaretoken},
             });*/
         },
+        forgotpassword:function(formData, callback) {
+            
+            return $http({
+                url: adminUrl3 + 'ChatbotUser/forgotpassword',
+                method: 'POST',
+                data: formData
+            });
+        },
+        isvalidpasswordresetreq:function(formData, callback) {
+            
+            return $http({
+                url: adminUrl3 + 'ChatbotUser/isvalidpasswordresetreq',
+                method: 'POST',
+                data: formData
+            });
+        },
+        changepassword2:function(formData, callback) {
+            
+            return $http({
+                url: adminUrl3 + 'ChatbotUser/resetpassword',
+                method: 'POST',
+                data: formData
+            });
+        },
     };
     //return responsedata;
 });
