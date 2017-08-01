@@ -73,19 +73,19 @@ schema.plugin(deepPopulate, {
 });
 schema.plugin(uniqueValidator);
 schema.plugin(timestamps);
-// userlogschema.plugin(uniqueValidator);
-// userlogschema.plugin(timestamps);
-// userlogschema = require('userlogschema');
-// var userModel = mongoose.model('chatbot_user_logs', userlogschema,"chatbot_user_logs");
+//userlogschema.plugin(uniqueValidator);
+//userlogschema.plugin(timestamps);
+//userlogschema = require('userlogschema');
+
 var PythonShell = require('python-shell');
 var pythonpath = "http://35.161.160.7:8091/";
 var pythonpath = "http://localhost:8080/script/";
 module.exports = mongoose.model('Chatbotuser', schema,'chatbotuser');
-
+//var chatbot_user_logs = mongoose.model('chatbot_user_logs', userlogschema,"chatbot_user_logs");
 var exports = _.cloneDeep(require("sails-wohlig-service")(schema, "Chatbotuser", "Chatbotuser"));
 var model = {
     loginuser: function (data, callback) {
-        console.log("data", data)
+       // console.log("data", data)
         Chatbotuser.findOne({
             email: data.username,
             password: data.password,
@@ -95,9 +95,33 @@ var model = {
             } 
             else {
                 if (found) {
-                    PythonShell.run(pythonpath+'my_script.py', { mode: 'json ',args:[data]}, function (err, results) { 
-                        callback(null, found);
+                    var ip = require('ip');
+                    var ip_address = ip.address();
+                    var userLogs = require("./Chatbotuserlogs");
+                    var sessiondata = userLogs({user:found._id,login_date:(new Date()),ip_address:ip_address,logout_date:new Date()});
+                    sessiondata.save(function (err,result) {
+                        if (err) {
+                                return err;
+                        }
+                        else {
+                            // found2 = {};
+                            
+                            // found2 = found;
+                            // found2.sessionid = result._id;
+                            found = found.toObject();
+                            var r = result.toObject();
+                            found.sessionid = r._id;
+                            //console.log("Post saved",r);
+                            PythonShell.run(pythonpath+'my_script.py', { mode: 'json ',args:[data]}, function (err, results) { 
+                                //found.set('sessionid', result._id)
+                                
+                                
+                                callback(null, found);
+                            });
+                            //callback(null, found);
+                        }
                     });
+                    
                     
                 } else {
                     callback({
@@ -202,5 +226,6 @@ var model = {
 
         });
     },
+    
 };
 module.exports = _.assign(module.exports, exports, model);

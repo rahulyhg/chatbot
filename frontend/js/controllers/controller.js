@@ -118,6 +118,7 @@ myApp.controller('HomeCtrl', function ($scope,$rootScope, TemplateService, Navig
                         $.jStorage.set("email", callback.data.data.email);
                         $.jStorage.set("branch", callback.data.data.branch);
                         $.jStorage.set("access_role", callback.data.data.accessrole);
+                        $.jStorage.set("sessionid", callback.data.data.sessionid);
                         $state.go("home");
                     }
                     else if(callback.data.error.message == -1)
@@ -252,8 +253,15 @@ myApp.controller('HomeCtrl', function ($scope,$rootScope, TemplateService, Navig
 
     .controller('CommonCtrl', function ($scope, TemplateService, NavigationService,CsrfTokenService, $timeout,$uibModal, toastr, $http,$state,apiService,$cookies) {
         $scope.logout = function() {
-            $.jStorage.flush();
-            $state.go("login");
+
+            CsrfTokenService.getCookie("csrftoken").then(function(token) {
+                $scope.formData = {sessionid:$.jStorage.get("sessionid"),user:$.jStorage.get("id"),csrfmiddlewaretoken:token};
+                apiService.logout($scope.formData).then(function (callback){
+                    $.jStorage.flush();
+                    $state.go("login");
+                });
+            
+            });
         };
         $scope.$modalInstance = {};
         $scope.openChangePwd = function() {

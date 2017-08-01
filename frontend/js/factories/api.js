@@ -57,6 +57,20 @@ myApp.factory('apiService', function ($http, $q, $timeout,CsrfTokenService,$http
             });
              */
         },
+        logout:function(formData, callback) {
+            
+           
+            return $http({
+                //url: "http://wohlig.co.in/chatbotapi/index.php/json/" + 'login/',
+                url:adminUrl3+ "Chatbotuserlogs/logoutuser",
+                //headers: {'X-CSRFToken': "6b86b273ff34fce19d6b804eff5a3f5747ada4eaa22f1d49c01e52ddb7875b4b"},
+                method: 'POST',
+                data: formData,
+                withCredentials: true,
+                //dataType:"json",
+            });
+            
+        },
         changepassword:function(formData, callback) {
             
             return $http({
