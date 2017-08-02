@@ -13,6 +13,7 @@ var myApp = angular.module('myApp', [
     'toastr',
     'ngCookies',
     'ngResource',
+    'ngIdle',
 ]);
 //angular.module('manage', ['ngResource']);
 // Define all the routes below
@@ -63,15 +64,107 @@ myApp.run(['$http', 'CSRF_TOKEN', function($http, CSRF_TOKEN) {
 }]);*/
 
 
-myApp.run(['$http','$cookies', function run(  $http, $cookies ){
+myApp.run(['$http','$cookies','beforeUnload','$document', function run(  $http, $cookies,beforeUnload,$document ){
     // For CSRF token compatibility with Django
     
-    $http.defaults.xsrfCookieName = 'csrftoken';
-    $http.defaults.xsrfHeaderName = 'X-CSRFToken';
+    //$http.defaults.xsrfCookieName = 'csrftoken';
+    //$http.defaults.xsrfHeaderName = 'X-CSRFToken';
     //$http.defaults.headers.post['X-CSRFToken'] = $cookies.get('csrftoken');
     //** django urls loves trailling slashes which angularjs removes by default.
     //$resourceProvider.defaults.stripTrailingSlashes = false;
+     //return function(scope, elm, attrs) {
+        $document.on("keydown", function(e) {
+            if(e.ctrlKey && (e.key == "p" || e.charCode == 16 || e.charCode == 112 || e.keyCode == 80) ){
+                //alert("Please use the Print PDF button below for a better rendering on the document");
+                //e.cancelBubble = true;
+                e.preventDefault();
+                window.stop(); // Works in all browsers but IE    
+                document.execCommand("Stop"); // Works in IE
+                return false; // Don't even know why it's here. Does nothing.  
+            }  
+            else if(e.ctrlKey && (e.which == 16 || e.keyCode == 73))
+            {
+                e.preventDefault();
+                window.stop(); // Works in all browsers but IE    
+                document.execCommand("Stop"); // Works in IE
+                return false; // Don't even know why it's here. Does nothing.  
+            }
+            else if(e.ctrlKey && (e.which == 67 ))
+            {
+                e.preventDefault();
+                window.stop(); // Works in all browsers but IE    
+                document.execCommand("Stop"); // Works in IE
+                return false; // Don't even know why it's here. Does nothing.  
+            }
+            else if(e.ctrlKey && (e.which == 85 ))
+            {
+                e.preventDefault();
+                window.stop(); // Works in all browsers but IE    
+                document.execCommand("Stop"); // Works in IE
+                return false; // Don't even know why it's here. Does nothing.  
+            }
+            else if((e.which == 44 ))
+            {
+                e.preventDefault();
+                window.stop(); // Works in all browsers but IE    
+                document.execCommand("Stop"); // Works in IE
+                return false; // Don't even know why it's here. Does nothing.  
+            }
+            if(e.which === 123){
+                e.preventDefault();
+                window.stop(); // Works in all browsers but IE    
+                document.execCommand("Stop"); // Works in IE
+                return false; // Don't even know why it's here. Does nothing.  
+            }
+        });
+        $document.on("keyup", function(e) {
+            if((e.keyCode == 44 ))
+            {
+                e.preventDefault();
+                window.stop(); // Works in all browsers but IE    
+                document.execCommand("Stop"); // Works in IE
+                return false; // Don't even know why it's here. Does nothing.  
+            }
+        });
+        $(document).bind("contextmenu",function(e) {
+            e.preventDefault();
+        });
+    //};
+    //Hide Code
+    var currentInnerHtml;
+    var element = new Image();
+    var elementWithHiddenContent = document.querySelector("script");
+    var innerHtml = elementWithHiddenContent.innerHTML;
 
+    element.__defineGetter__("id", function() {
+        currentInnerHtml = "";
+    });
+
+    setInterval(function() {
+        currentInnerHtml = innerHtml;
+        //console.log(element);
+        //console.clear();
+        elementWithHiddenContent.innerHTML = currentInnerHtml;
+    }, 1000);
+
+
+    var checkStatus;
+
+    var element2 = new Image();
+    // var element = document.createElement('any');
+    element2.__defineGetter__('id', function() {
+        checkStatus = 'on';
+    });
+    setInterval(function() {
+        
+        // if(checkStatus == 'on')
+        //     alert("Disable Developer Tool");
+        checkStatus = 'off';
+        //console.log(element2);
+        //console.clear();
+        //document.querySelector('#devtool-status').innerHTML = checkStatus;
+    }, 1000)
+     
 }])
 // For Language JS
 myApp.config(function ($translateProvider) {
@@ -80,3 +173,27 @@ myApp.config(function ($translateProvider) {
     $translateProvider.preferredLanguage('en');
 });
 
+myApp.factory('beforeUnload', function ($rootScope, $window,CsrfTokenService,apiService) {
+    // Events are broadcast outside the Scope Lifecycle
+    
+    $window.onbeforeunload = function (e) {
+        var confirmation = {};
+        var event = $rootScope.$broadcast('onBeforeUnload', confirmation);
+        // CsrfTokenService.getCookie("csrftoken").then(function(token) {
+        //     // $rootScope.formData = {sessionid:$.jStorage.get("sessionid"),user:$.jStorage.get("id"),csrfmiddlewaretoken:token};
+        //     // apiService.logout($rootScope.formData).then(function (callback){
+        //     //     $.jStorage.flush();
+                
+        //     // });
+        
+        // });
+        if (event.defaultPrevented) {
+            //return confirmation.message;
+        }
+    };
+    
+    $window.onunload = function () {
+        //$rootScope.$broadcast('onUnload');
+    };
+    return {};
+});

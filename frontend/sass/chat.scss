@@ -1,8 +1,24 @@
+
 #chat_panel{
     display: none;
-}
-#chat_panel{
     font-family: 'Roboto', sans-serif;
+    height:455px;
+}
+#chatTabs li a {
+    padding: 0px 10px;
+}
+
+ul#chatTabs {
+    border-bottom: 0px !important;
+    width: auto;
+    float: left;
+}
+.chatbody { background:#FAFAFA; }
+.panel-footer {
+    padding-bottom: 0px;
+}
+.chattab-content {
+    padding-top:5px; 
 }
 .cals{
     text-align: center;
@@ -46,7 +62,7 @@ li.ui-menu-item:hover > .highlighted , li.ui-menu-item.active > .highlighted
 li.ui-menu-item {
     padding-bottom:5px;
 }
-.thumbsup {
+.thumbsup , .thumbsdown {
     cursor:pointer;
 }
 .thumbsIcon

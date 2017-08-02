@@ -1,7 +1,12 @@
 <div id="chat_window_1" ng-controller="ChatCtrl">
-        <div class="panel panel-primary " id="chat_panel">
-            <div class="panel-heading" id="accordion">
-                <span class="glyphicon glyphicon-comment"></span> Chat
+        <div class="panel panel-primary " id="chat_panel" ng-init="chat_tab = 1">
+            <div class="panel-heading container-fluid" id="accordion">
+                <!--<span class="glyphicon glyphicon-comment"></span> Chat-->
+                <ul class="nav nav-tabs" id="chatTabs">
+                    <li class="active" data-toggle="tab" ng-click="chat_tab=1"><a href="#chattab">Chat</a></li>
+                    <li><a href="#crntab" data-toggle="tab" ng-click="chat_tab=2">CRN NO.</a></li>
+                    <li><a href="#srtab" data-toggle="tab" ng-click="chat_tab=3">SR NO.</a></li>
+                </ul>
                 <div class="btn-group pull-right">
                     <a type="button" class="btn btn-default btn-xs hidden" href="#">
                         <span id="minim_chat_window " class="glyphicon glyphicon-minus icon_minim"></span>
@@ -11,57 +16,78 @@
                     </a>
                 </div>
             </div>
-            <div>
-                <div class="panel-body"> 
-                    <ul class="chat">
-                        
-                        <!--<appendChat>
-                        </appendChat>-->
-                        <li class="{{list.position}} lastchat clearfix" ng-repeat="list in chatlist">
-                            <span class="chat-img pull-{{list.position}}">
-                                <img ng-src="img/{{list.position == 'left' && 'logo5.jpg' || 'logo7.png'}}" alt="BOT" class="img-circle " />
-                            </span>
-                            <div class="chat-body clearfix">
-                                <p class="lastmsg">
-                                    {{list.msg}}
-                                    <br>
-                                    <small>
-                                        <span class="glyphicon glyphicon-time">
-                                        </span>
-                                        {{list.curTime | date: 'HH:mm:ss'}}
-                                    </small>
-                                </p>
-                            </div>
-                        </li>    
-
-                    </ul>
-                </div>
-                <div class="panel-footer">
-                    <div class="form-group">
-                        <span  class="thumbsIcon">
-                            <span class="chatbottomtext">Was this information useful ? 
-                                <span class="thumbsup glyphicon glyphicon-thumbs-up"></span>&nbsp; 
-                                <span class="thumbsdown glyphicon glyphicon-thumbs-down"></span>
-                            </span>
-                        </span>
+            <div class="container-fluid chatbody">
+                <div class="tab-content chattab-content">
                     
-                        <div class="loader_msg" ng-show="showMsgLoader">
-                            <div class="loading">Typing</div>
+                    <div class="tab-pane active" id="chattab" ng-if="chat_tab === 1">
+                        <div class="panel-body"> 
+                            <ul class="chat">
+                                <li class="{{list.position}} lastchat clearfix" ng-repeat="list in chatlist track by $index">
+                                    <span class="chat-img pull-{{list.position}}">
+                                        <img ng-src="img/{{list.position == 'left' && 'logo5.jpg' || 'logo7.png'}}" alt="BOT" class="img-circle " />
+                                    </span>
+                                    <div class="chat-body clearfix">
+                                        <p class="lastmsg" ng-bind-html = "list.msg">
+                                            {{list.msg}}
+                                            <br>
+                                            <small>
+                                                <span class="glyphicon glyphicon-time">
+                                                </span>
+                                                {{list.curTime | date: 'HH:mm:ss'}}
+                                            </small>
+                                        </p>
+                                    </div>
+                                </li>    
+                            </ul>
                         </div>
-                        
-                        <input type="text" class="form-control chatinput" ng-change="getAutocomplete(chatText);" ng-model="chatText" id="userMsg" placeholder="Type your message here..." autofocus  typeahead="list for list in autocompletelist" ng-keyup="onKeyUp($event)" />
-                        
-                        <input type="hidden"  name="user_id" id="user_id"  value="{{sessionId}}" />
-                        <div id="autocomplete_field"></div>
-                        <div id="field_val"></div>
-                        <div id="field_id"></div>
-                    </div>
-                    <div id= "suggestionList">
-                        <ul ng-if="autocompletelist.length > 0" class="{{autocompletelist.length}}  ui-menu ui-widget ui-widget-content ui-autocomplete ui-front" id="ui-id-1">
-                            <div class="ui-menu-item-wrapper">
-                                <li class="ui-menu-item autolist" data-id="{{list.id}}" data-value="{{list.value}}"  ng-repeat="list in autocompletelist | filter:chatText  " ng-click="pushMsg(list.id,list.value);"  ng-bind-html="list.value | highlight:chatText" >{{list.value}}</li>
+                        <div class="panel-footer row">
+                            <div class="form-group">
+                                <span  class="thumbsIcon">
+                                    <span class="chatbottomtext">Was this information useful ? 
+                                        <span class="thumbsup glyphicon glyphicon-thumbs-up" ng-click="likeChatClick();"></span>&nbsp; 
+                                        <span class="thumbsdown glyphicon glyphicon-thumbs-down" ng-click="dislikeChatClick();"></span>
+                                    </span>
+                                </span>
+                            
+                                <div class="loader_msg" ng-show="showMsgLoader">
+                                    <div class="loading">Typing</div>
+                                </div>
+                                
+                                <input type="text" class="form-control chatinput" ng-change="getAutocomplete(chatText);" ng-model="chatText" id="userMsg" placeholder="Type your message here..." autofocus  typeahead="list for list in autocompletelist" ng-keyup="onKeyUp($event)" />
+                                
+                                <input type="hidden"  name="user_id" id="user_id"  value="{{sessionId}}" />
+                                <div id="autocomplete_field"></div>
+                                <div id="field_val"></div>
+                                <div id="field_id"></div>
                             </div>
-                        </ul>
+                            <div id= "suggestionList">
+                                <ul ng-if="autocompletelist.length > 0" class="{{autocompletelist.length}}  ui-menu ui-widget ui-widget-content ui-autocomplete ui-front" id="ui-id-1">
+                                    <div class="ui-menu-item-wrapper">
+                                        <li class="ui-menu-item autolist" data-id="{{list.id}}" data-value="{{list.value}}"  ng-repeat="list in autocompletelist | filter:chatText  " ng-click="pushMsg(list.id,list.value);"  ng-bind-html="list.value | highlight:chatText" >{{list.value}}</li>
+                                    </div>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="tab-pane" id="crntab" ng-show="chat_tab === 2">
+                        <div class="form-inline input-group-sm">
+                            <input type="text" class="form-control" placeholder="CRN no" ng-model="crnno" name="crn" required>
+                            <button id="crnsr1" type="submit" class="btn btn-primary btn-sm" ng-click="crnSubmit(crnno);">Query</button>
+                            <button id="" type="submit" class="btn btn-primary btn-sm">Tag with CRN</button>
+                        </div>
+                        <div class="crn">
+                            <p id="crn_details"></p>
+                        </div>
+                    </div>
+                    <div class="tab-pane" id="srtab" ng-show="chat_tab === 3">
+                        <div class="form-inline input-group-sm">
+                            <input type="text" class="form-control" placeholder="SR no" name="sr" ng-model="srno">
+                            <button id="crnsr" type="submit" class="btn btn-primary btn-sm" ng-click="srnSubmit(srno,crnno);">Query</button>
+                            <button id="" type="submit" class="btn btn-primary btn-sm srbtn" >Create SR</button>
+                        </div>
+                        <div class="crn">
+                            <p id="sr_details"></p>
+                        </div>
                     </div>
                 </div>
             </div>

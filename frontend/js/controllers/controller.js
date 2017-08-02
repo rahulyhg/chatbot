@@ -5,59 +5,6 @@ myApp.controller('HomeCtrl', function ($scope,$rootScope, TemplateService, Navig
         TemplateService.title = "Home"; //This is the Title of the Website
         $scope.navigation = NavigationService.getNavigation();
 
-        $scope.crnSubmit = function(crnno) {
-            //console.log(crnno,"crnno");
-            $scope.userid=$.jStorage.get("id");
-            var datatype = 'CRN';
-            CsrfTokenService.getCookie("csrftoken").then(function(token) {
-                apiService.crnsubmit($scope.formData).then(function (callback){
-                    console.log(callback,"crn");
-                });
-                    
-            // $.ajax({
-            
-            //     url : "",
-            //     data: {user_input: crnno, user_id:$scope.userid, number_type:datatype,'csrfmiddlewaretoken': token,
-            //     headers: {'X-CSRFToken': token},
-            //     type: "POST",
-            //     dataType: "json",
-            //     success: function(data){
-            //         var output = data.Output.Result;
-            //         $scope.result_crn(output);
-            //     }
-            // });
-            });
-        };
-        $scope.srnSubmit = function(srno,crnno) { 
-            //console.log(crnno+"crnno,sr"+srno);
-            $scope.userid=$.jStorage.get("id");
-            var datatype = 'SR';
-            CsrfTokenService.getCookie("csrftoken").then(function(token) {
-            // $.ajax({
-            //     // url: "/srandcrn/",
-            //     data: {user_input: srno, user_id:$scope.userid, number_type:datatype,'csrfmiddlewaretoken': token},
-            //     headers: {'X-CSRFToken': token},
-            //     type: "POST",
-            //     dataType: "json",
-            //     success: function(data){
-            //         var output = data.Output.Result;
-            //         $scope.result_sr(output);
-            //     }
-            // });
-            });
-        };
-        $scope.result_sr = function(output) {
-            $timeout(function () {
-                $('#sr_details').html(output);
-            },200);
-        };
-        $scope.result_crn = function(output) {
-            $timeout(function () {
-                $('#crn_details').html(output);
-            },200);
-        };
-        
-        
         $rootScope.tabheading = [];
         $rootScope.tabvalue = [];
         $timeout(function () {
@@ -74,6 +21,25 @@ myApp.controller('HomeCtrl', function ($scope,$rootScope, TemplateService, Navig
                 $scope.nodevalue=$(this).attr("data-value");
                 Menuservice.create_tabs($scope.nodevalue);
                 
+            });
+            // $(function(){
+
+            //     $('#slide-submenu').on('click',function() {			        
+            //         $(this).closest('.list-group').fadeOut('slide',function(){
+            //             $('.mini-submenu').fadeIn();	
+            //         });
+                    
+            //     });
+
+            //     $('.mini-submenu').on('click',function(){		
+            //         $(this).next('.list-group').toggle('slide');
+            //         //$('.mini-submenu').hide();
+            //     })
+            // });
+            $('.mini-submenu').on('click',function(){		
+                console.log("clicked");
+                $('.list-group').toggle('slide');
+                //$('.mini-submenu').hide();
             });
         });
         
@@ -119,6 +85,44 @@ myApp.controller('HomeCtrl', function ($scope,$rootScope, TemplateService, Navig
                         $.jStorage.set("branch", callback.data.data.branch);
                         $.jStorage.set("access_role", callback.data.data.accessrole);
                         $.jStorage.set("sessionid", callback.data.data.sessionid);
+
+                        $scope.sessiondata = {
+                            id_string : callback.data.data._id,
+                            data : {},
+                            DTHyperlink : '',
+                            LineNo : '',
+                            options : '',
+                            opts : '',
+                            row_by_framework_level : '',
+                            framework_level : 1,
+                            response:{},
+                            response_type :'',
+                            form_input_type : '',
+                            form_input_dict : {} , 
+                            form_input_list : []  ,  
+                            form_category : '',
+                            Context:'',
+                            Context_1:'',
+                            Context_2:'',
+                            Context_3:'',
+                            Context_4:'',
+                            Context_5:'',
+                            gb_dt_start_row:-1,
+                            gb_dt_end_row:-1,
+                            gb_dt_current_cursor_row:-1,
+                            gb_dt_current_cursor_col:-1,
+                            gb_dt_file_name:'',
+                            gb_sub_topic_list : [],
+                            gb_step_list : [],
+                            gb_current_step : '',
+                            tooltip : [],
+                            gb_topic_tuple_array:[],
+                            gb_max_ratio_index_in_tuple:[],
+                            gb_topic:'',
+                            gb_matched_row_values:[],
+                            gb_matched_col_values:[],
+                        };
+                        $.jStorage.set("sessiondata",$scope.sessiondata);
                         $state.go("home");
                     }
                     else if(callback.data.error.message == -1)
@@ -301,25 +305,20 @@ myApp.controller('HomeCtrl', function ($scope,$rootScope, TemplateService, Navig
                     else if (callback.data.error.message==-1)
                         $scope.passworderror =-1;
                 })    
-            });
-
-                
-                
-                
-           
-            
+            });  
         };
-        $timeout(function () {
         
-            $('span.thumbsup').click(function (event) {
-                $(this).css("color", "#ed232b");
-                $('.thumbsdown').css("color", "#444");
-            });
-            $('span.thumbsdown').click(function (event) {
-                $(this).css("color", "#ed232b");
-                $('.thumbsup').css("color", "#444");
-            });
-        },200); 
+        // $timeout(function () {
+        
+        //     $('span.thumbsup').click(function (event) {
+        //         $(this).css("color", "#ed232b");
+        //         $('.thumbsdown').css("color", "#444");
+        //     });
+        //     $('span.thumbsdown').click(function (event) {
+        //         $(this).css("color", "#ed232b");
+        //         $('.thumbsup').css("color", "#444");
+        //     });
+        // },200); 
     })
     .controller('LoginDetCtrl', function ($scope, TemplateService, NavigationService, $timeout, toastr, $http,$state,apiService) {
         $scope.fullname = "";
@@ -370,37 +369,25 @@ myApp.controller('HomeCtrl', function ($scope,$rootScope, TemplateService, Navig
             return $sce.trustAsHtml(text)
         }
     })
-    .controller('ChatCtrl', function ($scope, $rootScope,TemplateService, NavigationService,CsrfTokenService, $timeout,$http,apiService,$state) {
+    .controller('ChatCtrl', function ($scope, $rootScope,TemplateService, NavigationService,CsrfTokenService, $timeout,$http,apiService,$state,$uibModal) {
         
         $rootScope.autocompletelist = [];
         $rootScope.chatOpen = false;
         $rootScope.showTimeoutmsg = false;
         $rootScope.firstMsg=false;
-        $rootScope.showChatwindow = function () {
-            if(!$rootScope.firstMsg)
-            {
-                $rootScope.firstMsg = true;
-                $rootScope.pushSystemMsg(0,"Hi, How may I help you ?");  
-            }
-            $('#chat_panel').slideDown();
-            $('#chat_panel').find('.panel-body').slideDown("slow");
-            $('#chat_panel').find('.panel-footer').slideDown("slow");
-            $('.panel-heading span.icon_minim').removeClass('panel-collapsed');
-            $('.panel-heading span.icon_minim').removeClass('glyphicon-plus').addClass('glyphicon-minus');
-            $(".clickImage").hide();
-            $rootScope.chatOpen = true;
-        };
-        $rootScope.minimizeChatwindow = function() {
-            $rootScope.showTimeoutmsg = false;
-            $rootScope.autocompletelist = [];
-            $('#chat_panel').slideUp();
-            $('#chat_panel').find('.panel-body').slideUp("fast");
-            $('#chat_panel').find('.panel-footer').slideUp("fast");
-            $('.panel-heading span.icon_minim').addClass('panel-collapsed');
-            $('.panel-heading span.icon_minim').addClass('glyphicon-plus').removeClass('glyphicon-minus');
-            $(".clickImage").show( "fadeIn");
-        };
-
+        $rootScope.chatmsg = "";
+        $rootScope.chatmsgid = "";
+        $rootScope.msgSelected = false;
+        var mylist = $.jStorage.get("chatlist");
+        if(!mylist || mylist == null)
+            $rootScope.chatlist = [];
+        else
+            $rootScope.chatlist = $.jStorage.get("chatlist");
+        $rootScope.autolistid="";
+        $rootScope.autolistvalue="";
+        $rootScope.showMsgLoader=false;
+        
+        
         $rootScope.iframeHeight = window.innerHeight-53;
         
         $rootScope.getDatetime = function() {
@@ -418,23 +405,57 @@ myApp.controller('HomeCtrl', function ($scope,$rootScope, TemplateService, Navig
                 },60000);
             }
             $rootScope.chatText = chatText;
-            if(chatText == "")
+            if(chatText == "" || chatText == " " || chatText == null)
                 $rootScope.autocompletelist = [];
-            
-            $rootScope.chatdata = { string:$rootScope.chatText};
-            apiService.getautocomplete($rootScope.chatdata).then(function (response){
-                    console.log(response.data);
-                $rootScope.autocompletelist = response.data.data;
-            });
-            
+            else {
+                $rootScope.chatdata = { string:$rootScope.chatText};
+                apiService.getautocomplete($rootScope.chatdata).then(function (response){
+                        console.log(response.data);
+                    $rootScope.autocompletelist = response.data.data;
+                });
+            }
         };
-        $rootScope.chatmsg = "";
-        $rootScope.chatmsgid = "";
-        $rootScope.msgSelected = false;
-        $rootScope.chatlist = [];
-        $rootScope.autolistid="";
-        $rootScope.autolistvalue="";
-        $rootScope.showMsgLoader=false;
+        $rootScope.pushSystemMsg = function(id,value) {
+            $rootScope.chatmsgid = id;
+            $rootScope.chatmsg = value;
+            $rootScope.chatlist.push({id:"id",msg:value,position:"left",curTime: $rootScope.getDatetime()});
+            $.jStorage.set("chatlist",$rootScope.chatlist);
+        };
+        $rootScope.showChatwindow = function () {
+            newlist = $.jStorage.get("chatlist");
+            if(!newlist || newlist == null)
+            {
+                $rootScope.firstMsg = false;
+            }
+            else
+            { 
+                $rootScope.firstMsg = true;
+            }
+            $.jStorage.set("showchat",true);
+            if(!$rootScope.firstMsg)
+            {
+                $rootScope.firstMsg = true;
+                $rootScope.pushSystemMsg(0,"Hi, How may I help you ?");  
+            }
+            $('#chat_panel').slideDown("slow");
+            //$('#chat_panel').find('.panel-body').slideDown("fast");
+            //$('#chat_panel').find('.panel-footer').slideDown("slow");
+            $('.panel-heading span.icon_minim').removeClass('panel-collapsed');
+            $('.panel-heading span.icon_minim').removeClass('glyphicon-plus').addClass('glyphicon-minus');
+            $(".clickImage").hide();
+            $rootScope.chatOpen = true;
+        };
+        $rootScope.minimizeChatwindow = function() {
+            $.jStorage.set("showchat",false);
+            $rootScope.showTimeoutmsg = false;
+            $rootScope.autocompletelist = [];
+            $('#chat_panel').slideUp();
+            //$('#chat_panel').find('.panel-body').slideUp("fast");
+            //$('#chat_panel').find('.panel-footer').slideUp("fast");
+            $('.panel-heading span.icon_minim').addClass('panel-collapsed');
+            $('.panel-heading span.icon_minim').addClass('glyphicon-plus').removeClass('glyphicon-minus');
+            $(".clickImage").show( "fadeIn");
+        };
         $rootScope.pushMsg = function(id,value) {
             $rootScope.msgSelected = true;
             $rootScope.chatmsgid = id;
@@ -443,45 +464,63 @@ myApp.controller('HomeCtrl', function ($scope,$rootScope, TemplateService, Navig
             $rootScope.chatlist.push({id:"id",msg:value,position:"right",curTime: $rootScope.getDatetime()});
             //console.log("msgid="+id+"chatmsg="+$rootScope.msgSelected);
             $rootScope.getSystemMsg(id,value);
+            $.jStorage.set("chatlist",$rootScope.chatlist);
             $rootScope.msgSelected = false;
             $rootScope.showMsgLoader=true;
         };
+        if($.jStorage.get("showchat"))
+            $rootScope.showChatwindow();
+        else
+            $rootScope.minimizeChatwindow();
         $rootScope.getSystemMsg = function(id,value){
             //console.log("id",id);
-            CsrfTokenService.getCookie("csrftoken").then(function(token) {
-                $rootScope.formData = {user_id:1164,user_input:value,auto_id:parseInt(id),auto_value:value,'csrfmiddlewaretoken':token};
+            //CsrfTokenService.getCookie("csrftoken").then(function(token) {
+                //$rootScope.formData = {user_id:1164,user_input:value,auto_id:parseInt(id),auto_value:value,'csrfmiddlewaretoken':token};
+                var mysessiondata = $.jStorage.get("sessiondata");
+                //mysessiondata = mysessiondata.toObject();
+                mysessiondata.data = {auto_id:parseInt(id),Text:value};
+                $rootScope.formData = mysessiondata;
                 //console.log($rootScope.formData);
                 apiService.getSysMsg($rootScope.formData).then(function (data){
-                    angular.forEach(data.data.tiledlist, function(value, key) {
+                    console.log(data.data.data.tiledlist);
+                    console.log(data.data.data.tiledlist[0].Text);
+                    //return false;
+                    angular.forEach(data.data.data.tiledlist, function(value, key) {
+                        console.log(value);
                         if(value.type=="text")
                         {
-                        //	alert("Successfultext");
-                            $rootScope.ajaxTiledList2(data.data);
+                        	//alert("Successfultext");
+                            //$rootScope.ajaxTiledList2(data.data);
+                            //$rootScope.pushSystemMsg(0,data.data.data.tiledlist[0].Text);
+                            var res = data.data.data.tiledlist[0].Text.split("\n");
+                                //alert(res.length);
+                            var chatT = "";
+                            for(var i=0;i<res.length;i++){
+                                //alert(res[i])
+                                chatT += "<p class='lastMsg'&nbsp;&nbsp;>"+ res[i] +"<br></p>";
+                            }
+                            $rootScope.pushSystemMsg(0,chatT);
                             $rootScope.showMsgLoader = false;
                             return false;
                         }
-                        else if(value.type == "Instruction")
-                        {
-                            console.log("inside instruction");
-                            $.each(data.tiledlist.tiledlist, function(index,tiledlist){
-                                if(tiledlist.type=="Image")
-                                {
-                                    console.log(tiledlist);
-                                    $rootScope.ajaxTiledList1(data.data);
-                                    $rootScope.showMsgLoader = false;
-                                }
-                                return false;
-                            });
-                        }
+                        // else if(value.type == "Instruction")
+                        // {
+                        //     console.log("inside instruction");
+                        //     $.each(data.tiledlist.tiledlist, function(index,tiledlist){
+                        //         if(tiledlist.type=="Image")
+                        //         {
+                        //             console.log(tiledlist);
+                        //             $rootScope.ajaxTiledList1(data.data);
+                        //             $rootScope.showMsgLoader = false;
+                        //         }
+                        //         return false;
+                        //     });
+                        // }
                     });
                 });
-            });
+            //});
         };
-        $rootScope.pushSystemMsg = function(id,value) {
-            $rootScope.chatmsgid = id;
-            $rootScope.chatmsg = value;
-            $rootScope.chatlist.push({id:"id",msg:value,position:"left",curTime: $rootScope.getDatetime()});
-        };
+        
 
         
 
@@ -537,7 +576,94 @@ myApp.controller('HomeCtrl', function ($scope,$rootScope, TemplateService, Navig
                     $rootScope.pushMsg($rootScope.autolistid,$rootScope.autolistvalue);
             }
         };
-       
+        $rootScope.crnSubmit = function(crnno) {
+            //console.log(crnno,"crnno");
+            $rootScope.userid=$.jStorage.get("id");
+            var datatype = 'CRN';
+            CsrfTokenService.getCookie("csrftoken").then(function(token) {
+                apiService.crnsubmit($rootScope.formData).then(function (callback){
+                    console.log(callback,"crn");
+                });
+                    
+            // $.ajax({
+            
+            //     url : "",
+            //     data: {user_input: crnno, user_id:$scope.userid, number_type:datatype,'csrfmiddlewaretoken': token,
+            //     headers: {'X-CSRFToken': token},
+            //     type: "POST",
+            //     dataType: "json",
+            //     success: function(data){
+            //         var output = data.Output.Result;
+            //         $scope.result_crn(output);
+            //     }
+            // });
+            });
+        };
+        $rootScope.srnSubmit = function(srno,crnno) { 
+            //console.log(crnno+"crnno,sr"+srno);
+            $rootScope.userid=$.jStorage.get("id");
+            var datatype = 'SR';
+            CsrfTokenService.getCookie("csrftoken").then(function(token) {
+            // $.ajax({
+            //     // url: "/srandcrn/",
+            //     data: {user_input: srno, user_id:$scope.userid, number_type:datatype,'csrfmiddlewaretoken': token},
+            //     headers: {'X-CSRFToken': token},
+            //     type: "POST",
+            //     dataType: "json",
+            //     success: function(data){
+            //         var output = data.Output.Result;
+            //         $scope.result_sr(output);
+            //     }
+            // });
+            });
+        };
+        $rootScope.result_sr = function(output) {
+            $timeout(function () {
+                $('#sr_details').html(output);
+            },200);
+        };
+        $rootScope.result_crn = function(output) {
+            $timeout(function () {
+                $('#crn_details').html(output);
+            },200);
+        };
+        $rootScope.likeChatClick = function(){
+            $timeout(function(){
+                $('span.thumbsup').css("color", "#ed232b");
+                $('.thumbsdown').css("color", "#444");
+            },200);
+        };
+        $rootScope.$dislikemodalInstance = {};
+        $rootScope.dislikesuggestionerror = 0;
+        $rootScope.dislikeChatClick = function(){
+            $rootScope.$dislikemodalInstance = $uibModal.open({
+                scope: $rootScope,
+                animation: true,
+                size: 'sm',
+                templateUrl: 'views/modal/dislikechat.html',
+                //controller: 'CommonCtrl'
+            });
+            $timeout(function(){ 
+                $('span.thumbsdown').css("color", "#ed232b");
+                $('.thumbsup').css("color", "#444");
+            },200);
+        };
+        $rootScope.dislikeCancel = function() {
+            //console.log("dismissing");
+            $scope.$dislikemodalInstance.dismiss('cancel');
+        };
+        $rootScope.dislikesuggestionsubmit = function(suggestion){
+            console.log("suggestion",suggestion);
+            $rootScope.dislikesuggestionSuccess = 1;
+            $timeout(function(){
+                $rootScope.dislikesuggestionSuccess = 0;
+                $rootScope.dislikeCancel();
+            },500);
+        };
+        
+       $timeout(function(){
+            //$('#chatTabs a:last').tab('show');
+       },200);
     })
     // Example API Controller
     .controller('DemoAPICtrl', function ($scope, TemplateService, apiService, NavigationService, $timeout) {

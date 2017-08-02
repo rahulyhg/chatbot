@@ -126,29 +126,15 @@ myApp.factory('apiService', function ($http, $q, $timeout,CsrfTokenService,$http
         getSysMsg:function(formData,callback){
             //console.log(formData);
             return    $http({
-                url:adminurl+'out/'+formData.user_id+"/",
+                //url:adminurl+'out/'+formData.user_id+"/",
+                url: adminUrl3 + 'Chatbotautolist/getSysMsg',
                 method: 'POST',
-                //type:"POST",
-                data:JSON.stringify(formData),
-                //data:{user_id:1137,user_input:"Revised SweepIn Limit Trader Pro rent Account",auto_id:1,auto_value:"Revised SweepIn Limit Trader Pro rent Account",'csrfmiddlewaretoken':token,csrf_token:formData.token},
-                //xsrfHeaderName :"X-CSRFToken",
-                //xsrfCookieName :"csrftoken",
+                data:(formData),
                 withCredentials: true,
-                headers: {'Content-Type': 'application/json','X-CSRFToken': "Vfpx6pWJYBx7dbX35vwXm7P9xj3xNPyUJbSx9IlwgcRHReN974ZC5rEbvgpRQdY2"},
+                //headers: {'Content-Type': 'application/json','X-CSRFToken': "Vfpx6pWJYBx7dbX35vwXm7P9xj3xNPyUJbSx9IlwgcRHReN974ZC5rEbvgpRQdY2"},
             });
             
-            /*
-            $.ajax({
-                url:adminurl+'out/'+formData.user_id+"/",
-                method: 'POST',
-                //type:"POST",
-                data:formData,
-                dataType: "json",
-                //xsrfHeaderName :"X-CSRFToken",
-                //xsrfCookieName :"csrftoken",
-                withCredentials: true,
-                headers: {'X-CSRFToken': formData.csrfmiddlewaretoken},
-            });*/
+            
         },
         forgotpassword:function(formData, callback) {
             
