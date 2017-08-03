@@ -136,6 +136,18 @@ myApp.factory('apiService', function ($http, $q, $timeout,CsrfTokenService,$http
             
             
         },
+        getDthlinkRes:function(formData,callback){
+            //console.log(formData);
+            return    $http({
+                //url:adminurl+'out/'+formData.user_id+"/",
+                url: adminUrl3 + 'Chatbotautolist/getSysMsg',
+                method: 'POST',
+                data:(formData),
+                withCredentials: true
+            });
+            
+            
+        },
         forgotpassword:function(formData, callback) {
             
             return $http({

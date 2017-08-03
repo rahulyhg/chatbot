@@ -17,13 +17,16 @@ var myApp = angular.module('myApp', [
 ]);
 //angular.module('manage', ['ngResource']);
 // Define all the routes below
-myApp.config(function ($stateProvider, $urlRouterProvider, $httpProvider, $locationProvider,$resourceProvider) {
+myApp.config(function ($stateProvider, $urlRouterProvider, $httpProvider, $locationProvider,$resourceProvider,IdleProvider) {
     var tempateURL = "views/template/template.html"; //Default Template URL
     $resourceProvider.defaults.stripTrailingSlashes = false;
     $httpProvider.defaults.xsrfCookieName = 'csrftoken';
     $httpProvider.defaults.xsrfHeaderName = 'X-CSRFToken';
     // for http request with session
     $httpProvider.defaults.withCredentials = true;
+
+
+    IdleProvider.idle(1*60); // 1 minutes idle
     $stateProvider
         .state('home', {
             url: "/",
@@ -64,7 +67,7 @@ myApp.run(['$http', 'CSRF_TOKEN', function($http, CSRF_TOKEN) {
 }]);*/
 
 
-myApp.run(['$http','$cookies','beforeUnload','$document', function run(  $http, $cookies,beforeUnload,$document ){
+myApp.run(['$http','$cookies','beforeUnload','$document','$rootScope','Idle', function run(  $http, $cookies,beforeUnload,$document,$rootScope,Idle ){
     // For CSRF token compatibility with Django
     
     //$http.defaults.xsrfCookieName = 'csrftoken';
@@ -73,6 +76,7 @@ myApp.run(['$http','$cookies','beforeUnload','$document', function run(  $http, 
     //** django urls loves trailling slashes which angularjs removes by default.
     //$resourceProvider.defaults.stripTrailingSlashes = false;
      //return function(scope, elm, attrs) {
+         Idle.watch();
         $document.on("keydown", function(e) {
             if(e.ctrlKey && (e.key == "p" || e.charCode == 16 || e.charCode == 112 || e.keyCode == 80) ){
                 //alert("Please use the Print PDF button below for a better rendering on the document");
@@ -129,23 +133,28 @@ myApp.run(['$http','$cookies','beforeUnload','$document', function run(  $http, 
         $(document).bind("contextmenu",function(e) {
             e.preventDefault();
         });
+        $rootScope.$on('IdleTimeout', function() {
+            var scope = angular.element(document.getElementById('changepwd')).scope();
+            scope.logout();
+            // end their session and redirect to login
+        });
     //};
     //Hide Code
-    var currentInnerHtml;
-    var element = new Image();
-    var elementWithHiddenContent = document.querySelector("script");
-    var innerHtml = elementWithHiddenContent.innerHTML;
+    // var currentInnerHtml;
+    // var element = new Image();
+    // var elementWithHiddenContent = document.querySelector("script");
+    // var innerHtml = elementWithHiddenContent.innerHTML;
 
-    element.__defineGetter__("id", function() {
-        currentInnerHtml = "";
-    });
+    // element.__defineGetter__("id", function() {
+    //     currentInnerHtml = "";
+    // });
 
-    setInterval(function() {
-        currentInnerHtml = innerHtml;
-        //console.log(element);
-        //console.clear();
-        elementWithHiddenContent.innerHTML = currentInnerHtml;
-    }, 1000);
+    // setInterval(function() {
+    //     currentInnerHtml = innerHtml;
+    //     //console.log(element);
+    //     //console.clear();
+    //     elementWithHiddenContent.innerHTML = currentInnerHtml;
+    // }, 1000);
 
 
     var checkStatus;

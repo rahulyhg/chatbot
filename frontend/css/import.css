@@ -9484,18 +9484,69 @@ body {
 .login {
   margin-top: 30%; }
 
+.c-hamburger {
+  display: block;
+  position: relative;
+  overflow: hidden;
+  margin-top: 2px;
+  padding: 5px 5px;
+  width: 45px;
+  height: 45px;
+  font-size: 0;
+  text-indent: -9999px;
+  -webkit-appearance: none;
+     -moz-appearance: none;
+          appearance: none;
+  box-shadow: none;
+  border-radius: none;
+  border: none;
+  cursor: pointer;
+  transition: background 0.5s; }
+
+.c-hamburger:focus {
+  outline: none; }
+
+.c-hamburger span {
+  display: block;
+  position: absolute;
+  top: 21px;
+  left: 6px;
+  right: 6px;
+  height: 4px;
+  background: white; }
+
+.c-hamburger span::before,
+.c-hamburger span::after {
+  position: absolute;
+  display: block;
+  left: 0;
+  width: 100%;
+  height: 4px;
+  background-color: #fff;
+  content: ""; }
+
+.c-hamburger span::before {
+  top: -10px; }
+
+.c-hamburger span::after {
+  bottom: -10px; }
+
+.c-hamburger--rot {
+  background-color: #003874;
+  /*transition: -webkit-transform 3s ease;*/ }
+
 .mini-submenu {
   display: block;
-  background-color: transparent;
-  border: 1px solid rgba(0, 0, 0, 0.9);
-  border-radius: 4px;
-  padding: 9px;
+  /* background-color: transparent; */
+  /* border: 1px solid rgba(0, 0, 0, 0.9); */
+  /* border-radius: 4px; */
+  /* padding: 9px; */
   cursor: pointer;
-  /*position: relative;*/
-  width: 42px;
-  float: left;
+  /* position: relative; */
+  /* width: 42px; */
+  /* float: left; */
   margin-right: 10px;
-  margin-top: 7px; }
+  /* margin-top: 7px; */ }
 
 .mini-submenu .icon-bar {
   border-radius: 1px;
@@ -9910,6 +9961,10 @@ ul#chatTabs {
 .chatbody {
   background: #FAFAFA; }
 
+.chatTime {
+  width: 100%;
+  float: left; }
+
 .panel-footer {
   padding-bottom: 0px; }
 
@@ -10088,7 +10143,10 @@ button.headerbtns:focus {
   bottom: -25px;
   cursor: pointer; }
 
-.chat-body div {
+.redtext {
+  color: red; }
+
+.chat-body .dthyperlink {
   cursor: pointer;
   text-decoration: underline;
   background: #eee;

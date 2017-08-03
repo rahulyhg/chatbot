@@ -14,6 +14,10 @@ ul#chatTabs {
     float: left;
 }
 .chatbody { background:#FAFAFA; }
+.chatTime {     
+    width: 100%;
+    float: left; 
+}
 .panel-footer {
     padding-bottom: 0px;
 }
@@ -188,7 +192,8 @@ background-color: #fafafa;
     bottom: -25px;
     cursor:pointer;
 }
-.chat-body div {
+.redtext { color:red; }
+.chat-body .dthyperlink {
     cursor: pointer;
     text-decoration: underline;
     background: #eee;

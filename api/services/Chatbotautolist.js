@@ -6,7 +6,9 @@ var model = {
         var util = require("util");
         //var data={a:5,b:5};
         var spawn = require("child_process").spawn;
-        var process = spawn('python',["./script/get_name_cmdline.py"], {detached: true});
+        //get_name_cmdline
+        //get_DH_cmdline
+        var process = spawn('python',["./script/get_DH_cmdline.py"], {detached: true});
         process.unref();
         util.log('readingin');
 
