@@ -145,7 +145,7 @@ body { font-family: "Helvetica Neue",Helvetica,Arial,sans-serif; font-size: 14px
 .carousel-inner .prev        { left: -33%; }
 .carousel-control.left,.carousel-control.right {background-image:none;}
 
-div.img-box { height: 100px; background: #ccc; display: table-cell; vertical-align: middle; }
+div.img-box { height: 100px; /*background: #ccc;*/ display: table-cell; vertical-align: middle; }
 	.thumbsup,.thumbsdown{
 		font-size: 1.3em;
 	}
@@ -253,6 +253,14 @@ body{
 .inputs .form-control{
     margin: 10px auto;
 }
+div#tab_data {
+    height: 300px;
+    overflow-y: scroll;
+    border-bottom: 1px solid #ccc;
+}
+div.scriptData {
+    padding-top:5px;
+}
 .tooltips {
     background: #d9edf7;
     width: 100%;
@@ -264,6 +272,32 @@ body{
     border-radius: 10px;
     min-height: 100px;
     }
+.searchTerm {
+  float: left;
+  width: 85%;
+  border: 3px solid #003874;
+  margin-top: 5px;
+  padding: 5px;
+  height: 30px;
+  border-top-left-radius: 4px;
+  border-bottom-left-radius: 4px;
+  outline: none;
+  color: black;
+}
+
+.searchButton {
+    margin-top: 5px;
+    width: 30px;
+    height: 30px;
+    border: 1px solid #003874;
+    background: #003874;
+    text-align: center;
+    color: #fff;
+    border-top-right-radius: 4px;
+    border-bottom-right-radius: 4px;
+    cursor: pointer;
+    font-size: 16px;
+}
 /*.tooltips:after {
     border-top: solid transparent 20px;
     border-bottom: solid transparent 0px;

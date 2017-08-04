@@ -5,8 +5,26 @@ myApp.controller('HomeCtrl', function ($scope,$rootScope, TemplateService, Navig
         TemplateService.title = "Home"; //This is the Title of the Website
         $scope.navigation = NavigationService.getNavigation();
 
-        $rootScope.tabheading = [];
-        $rootScope.tabvalue = [];
+
+        $scope.mySlides = [
+            'http://flexslider.woothemes.com/images/kitchen_adventurer_cheesecake_brownie.jpg',
+            'http://flexslider.woothemes.com/images/kitchen_adventurer_lemon.jpg',
+            'http://flexslider.woothemes.com/images/kitchen_adventurer_donut.jpg',
+            'http://flexslider.woothemes.com/images/kitchen_adventurer_caramel.jpg'
+        ];
+        
+        // $rootScope.$on("setTabData", function(event, args){
+        //     $rootScope.tabvalue = event;
+        //     //$scope.tabvalue = event;
+        //     if(!$scope.$$phase) {
+        //         $scope.$apply(function() {
+        //             $rootScope.tabvalue = event;
+        //         });
+        //     }
+        //     console.log(event);
+        // });
+        // $rootScope.tabheading = [];
+        // $rootScope.tabvalue = [];
         $timeout(function () {
             $('.toggler').click(function () {
                 $(this).parent().children('ul.tree').toggle(300);
@@ -39,7 +57,6 @@ myApp.controller('HomeCtrl', function ($scope,$rootScope, TemplateService, Navig
             $rotated = false;
 
             $('.c-hamburger').click(function(){
-                console.log($rotated);
                 if($rotated == false) 
                 {
                     $('.c-hamburger span').css("transform", "rotate(90deg)");				
@@ -397,7 +414,7 @@ myApp.controller('HomeCtrl', function ($scope,$rootScope, TemplateService, Navig
             return $sce.trustAsHtml(text)
         }
     })
-    .controller('ChatCtrl', function ($scope, $rootScope,TemplateService, NavigationService,CsrfTokenService, $timeout,$http,apiService,$state,$uibModal) {
+    .controller('ChatCtrl', function ($scope, $rootScope,TemplateService, NavigationService,CsrfTokenService, $timeout,$http,apiService,$state,$uibModal,Menuservice) {
         
         $rootScope.autocompletelist = [];
         $rootScope.chatOpen = false;
@@ -405,6 +422,7 @@ myApp.controller('HomeCtrl', function ($scope,$rootScope, TemplateService, Navig
         $rootScope.firstMsg=false;
         $rootScope.chatmsg = "";
         $rootScope.chatmsgid = "";
+        
         $rootScope.msgSelected = false;
         var mylist = $.jStorage.get("chatlist");
         if(!mylist || mylist == null)
@@ -529,12 +547,51 @@ myApp.controller('HomeCtrl', function ($scope,$rootScope, TemplateService, Navig
             apiService.getDthlinkRes(formData).then(function (data){
                 angular.forEach(data.data.data.tiledlist, function(value, key) {
                     if(value.type=="DTHyperlink")
+                    {
                         $rootScope.DthResponse(0,data.data.data);
+                        
+                        $("#topic").text(data.data.data.tiledlist[0].topic);
+                        $.jStorage.set("sessiondata",data.data.data.session_obj_data);
+                    }
                 });
             });
         };
         $rootScope.DthResponse = function(id,data) {
             $rootScope.pushSystemMsg(id,data);
+            $rootScope.showMsgLoader = false; 
+            $rootScope.selectTabIndex = 0;
+            
+            //var node_data = {"node_data": {"elements": ["Guidelines", "Shifting", "Accessibility", "Charges"], "element_values": ["<br>To define general guidelines to be followed by Branches while processing Account Closure. <br><br> Branch should attempt for retention of account before closing the account as opening a new account is expensive. <br><br> Channels through which Account Closure request is received: <br> 1. Customers In Person (CIP) who walk in to the Branch <br>\n2. Representatives/Bearer of customers who walk in to the Branch <br>\n3. Mail / Drop Box <br><br> Check Documentation and Signature Protocol <br><br> Check Mode of Payment for closure Proceeds <br><br> Check for Customer Handling on receipt of request <br><br> Check Process at Branch \u2013Checks during acceptance of closure form <br><br> Check Process at Branch- Post acceptance of Closure form <br><br> ", "<br>Customer is unwilling to give us another chance  <br>\n1) In case of Issues expressed by the customer where he / she is willing to give the Bank another chance. <br><br>\n2) Branch to attempt fix the problem within 48 hours or 7 days on the outside for extreme cases and revert to the customer. This TAT for revert to be communicated to the customer upfront. <br><br>\n3) Customers to be sent a personalised letter thanking them for their time and an acknowledgement, that we value their business and have remedied whatever caused them to want to leave in the first place. A list of all reasons for closure with the action taken, to be stated.  <br><br>\n4) Once the customer has been retained, the customer letter / form duly marked \u201cNOT FOR CLOSURE \u2013 RETAINED\u201d, along with a copy of the resolution letter to be sent to CPC for filing in the customer record.  <br><br>\n5) Siebel to be updated with the same comment and closed.  <br><br>In case the BOM/SM/BM/ RBM / AM or the branch staff are able / Not able  to retain the customer, then protthe SR which has been created needs to be closed with the Closure Description in Siebel as, \u201cCustomer Retained\u201d. This needs to be done diligently and would be subject to audits.\nCustomer will pay the  necessary amount to regularize the account <br>\nCustomer is unwilling to regularize the account after all attempts then branch user to follow the protocol as detailed in chapter \u201cAccount closure requests with debit balance/TBMS lien.\u201d <br><br>\n1) Where the customer is not willing to continue, Branch to ensure that the complete details on Account closure form and all the checks to be made as detailed in the chapter  \u201cGeneral Guidelines to be followed for Account closure\u201d <br><br>\n2) In case of any incomplete request, the customer needs to be apprised of the requirements and Siebel to be updated accordingly. <br><br>\n3) If the a/c closure request is complete in all respects / once the complete request is received from the customer, the same needs to be sent to CPC, post updating the Siebel <br><br>\n4) Branch to journal of the attempts made to retain the customer. <br><br>\nIn case the BOM/SM/BM/ RBM / AM or the branch staff are able / Not able  to retain the customer, then protthe SR which has been created needs to be closed with the Closure Description in Siebel as, \u201cCustomer Retained\u201d. This needs to be done diligently and would be subject to audits.", "<br>If customer is closing his/ her account due to inconvenient accessibility, solutions like Home Banking, Beat Pick up facility, etc. should be re-iterated. <br>\nIn case customer has an account which he/ she is not eligible for an accessibility offering he/ she is interested in, an upgraded account should be offered especially if account balances justify it (ensure that new AMB/AQBs and NMCs are communicated clearly).Customer is unwilling to give us another chance  <br><br>\n1) In case of Issues expressed by the customer where he / she is willing to give the Bank another chance.  <br><br>\n2) Branch to attempt fix the problem within 48 hours or 7 days on the outside for extreme cases and revert to the customer. This TAT for revert to be communicated to the customer upfront. <br><br>\n3) Customers to be sent a personalised letter thanking them for their time and an acknowledgement, that we value their business and have remedied whatever caused them to want to leave in the first place. A list of all reasons for closure with the action taken, to be stated.  <br><br>\n4) Once the customer has been retained, the customer letter / form duly marked \u201cNOT FOR CLOSURE \u2013 RETAINED\u201d, along with a copy of the resolution letter to be sent to CPC for filing in the customer record.  <br><br>\n5) Siebel to be updated with the same comment and closed.  <br><br>\nIn case the BOM/SM/BM/ RBM / AM or the branch staff are able / Not able  to retain the customer, then protthe SR which has been created needs to be closed with the Closure Description in Siebel as, \u201cCustomer Retained\u201d.  <br><br> This needs to be done diligently and would be subject to audits.  <br><br>\nCustomer is unwilling to give another chance: < <br><br>> Customer will pay the  necessary amount to regularize the account  <br><br>\nCustomer is unwilling to regularize the account after all attempts then branch user to follow the protocol as detailed in chapter \u201cAccount closure requests with debit balance/TBMS lien.\u201d  <br><br>\n1) Where the customer is not willing to continue, Branch to ensure that the complete details on Account closure form and all the checks to be made as detailed in the chapter  \u201cGeneral Guidelines to be followed for Account closure\u201d  <br><br>\n2) In case of any incomplete request, the customer needs to be apprised of the requirements and Siebel to be updated accordingly.  <br><br>\n3) If the a/c closure request is complete in all respects / once the complete request is received from the customer, the same needs to be sent to CPC, post updating the Siebel  <br><br> \n4) Branch to journal of the attempts made to retain the customer.  <br><br>\nIn case the BOM/SM/BM/ RBM / AM or the branch staff are able / Not able  to retain the customer, then protthe SR which has been created needs to be closed with the Closure Description in Siebel as, \u201cCustomer Retained\u201d. This needs to be done diligently and would be subject to audits.C2", "<br>1) Customer expresses concerns on high charges, ascertain the nature of charges levied and recommend an upgraded account where required (e.g. if customer finds DD charges high, up-sell to an account with a higher free DD limit or an account offering At Par cheque facility if usage is on our locations). Communicate the AMB/AQB and NMC to customer clearly. <br><br>\n2) The account can be upgraded/downgrade as per customer requirement by retaining the same account Number  <br><br>\n3) Branch can also explain the benefits of Basic/Small Account and offer conversion to the said  account as it will address their inability to maintain the account.  <br><br>\nCustomer is unwilling to give us another chance  <br><br>\n1) In case of Issues expressed by the customer where he / she is willing to give the Bank another chance.  <br><br>\n2) Branch to attempt fix the problem within 48 hours or 7 days on the outside for extreme cases and revert to the customer. This TAT for revert to be communicated to the customer upfront.  <br><br>\n3) Customers to be sent a personalised letter thanking them for their time and an acknowledgement, that we value their business and have remedied whatever caused them to want to leave in the first place. A list of all reasons for closure with the action taken, to be stated.   <br><br>\n4) Once the customer has been retained, the customer letter / form duly marked \u201cNOT FOR CLOSURE \u2013 RETAINED\u201d, along with a copy of the resolution letter to be sent to CPC for filing in the customer record.  <br><br>\n5) Siebel to be updated with the same comment and closed.  <br><br>\nIn case the BOM/SM/BM/ RBM / AM or the branch staff are able / Not able  to retain the customer, then protthe SR which has been created needs to be closed with the Closure Description in Siebel as, \u201cCustomer Retained\u201d. This needs to be done diligently and would be subject to audits.  <br><br>\nCustomer will pay the  necessary amount to regularize the account   <br><br>\nCustomer is unwilling to regularize the account after all attempts then branch user to follow the protocol as detailed in chapter \u201cAccount closure requests with debit balance/TBMS lien.\u201d  <br><br>\n1) Where the customer is not willing to continue, Branch to ensure that the complete details on Account closure form and all the checks to be made as detailed in the chapter  \u201cGeneral Guidelines to be followed for Account closure\u201d  <br><br>\n2) In case of any incomplete request, the customer needs to be apprised of the requirements and Siebel to be updated accordingly.  <br><br>\n3) If the a/c closure request is complete in all respects / once the complete request is received from the customer, the same needs to be sent to CPC, post updating the Siebel  <br><br>\n4) Branch to journal of the attempts made to retain the customer.  <br><br>\nIn case the BOM/SM/BM/ RBM / AM or the branch staff are able / Not able  to retain the customer, then protthe SR which has been created needs to be closed with the Closure Description in Siebel as, \u201cCustomer Retained\u201d. This needs to be done diligently and would be subject to audits.\n"]}};
+            var ele = new Array("Process");
+            ele2 = [  
+                        "Guidelines",
+                        "Shifting",
+                        "Accessibility",
+                        "Charges"
+                    ];
+            ele=ele.concat(ele2);
+            var ele_val = new Array(data.tiledlist[0]);
+            element_values = [  
+                        "<br>To define general guidelines to be followed by Branches while processing Account Closure. <br><br> Branch should attempt for retention of account before closing the account as opening a new account is expensive. <br><br> Channels through which Account Closure request is received: <br> 1. Customers In Person (CIP) who walk in to the Branch <br>\n2. Representatives/Bearer of customers who walk in to the Branch <br>\n3. Mail / Drop Box <br><br> Check Documentation and Signature Protocol <br><br> Check Mode of Payment for closure Proceeds <br><br> Check for Customer Handling on receipt of request <br><br> Check Process at Branch \u2013Checks during acceptance of closure form <br><br> Check Process at Branch- Post acceptance of Closure form <br><br> ",
+                        "<br>Customer is unwilling to give us another chance  <br>\n1) In case of Issues expressed by the customer where he / she is willing to give the Bank another chance. <br><br>\n2) Branch to attempt fix the problem within 48 hours or 7 days on the outside for extreme cases and revert to the customer. This TAT for revert to be communicated to the customer upfront. <br><br>\n3) Customers to be sent a personalised letter thanking them for their time and an acknowledgement, that we value their business and have remedied whatever caused them to want to leave in the first place. A list of all reasons for closure with the action taken, to be stated.  <br><br>\n4) Once the customer has been retained, the customer letter / form duly marked \u201cNOT FOR CLOSURE \u2013 RETAINED\u201d, along with a copy of the resolution letter to be sent to CPC for filing in the customer record.  <br><br>\n5) Siebel to be updated with the same comment and closed.  <br><br>In case the BOM/SM/BM/ RBM / AM or the branch staff are able / Not able  to retain the customer, then protthe SR which has been created needs to be closed with the Closure Description in Siebel as, \u201cCustomer Retained\u201d. This needs to be done diligently and would be subject to audits.\nCustomer will pay the  necessary amount to regularize the account <br>\nCustomer is unwilling to regularize the account after all attempts then branch user to follow the protocol as detailed in chapter \u201cAccount closure requests with debit balance/TBMS lien.\u201d <br><br>\n1) Where the customer is not willing to continue, Branch to ensure that the complete details on Account closure form and all the checks to be made as detailed in the chapter  \u201cGeneral Guidelines to be followed for Account closure\u201d <br><br>\n2) In case of any incomplete request, the customer needs to be apprised of the requirements and Siebel to be updated accordingly. <br><br>\n3) If the a/c closure request is complete in all respects / once the complete request is received from the customer, the same needs to be sent to CPC, post updating the Siebel <br><br>\n4) Branch to journal of the attempts made to retain the customer. <br><br>\nIn case the BOM/SM/BM/ RBM / AM or the branch staff are able / Not able  to retain the customer, then protthe SR which has been created needs to be closed with the Closure Description in Siebel as, \u201cCustomer Retained\u201d. This needs to be done diligently and would be subject to audits.",
+                        "<br>If customer is closing his/ her account due to inconvenient accessibility, solutions like Home Banking, Beat Pick up facility, etc. should be re-iterated. <br>\nIn case customer has an account which he/ she is not eligible for an accessibility offering he/ she is interested in, an upgraded account should be offered especially if account balances justify it (ensure that new AMB/AQBs and NMCs are communicated clearly).Customer is unwilling to give us another chance  <br><br>\n1) In case of Issues expressed by the customer where he / she is willing to give the Bank another chance.  <br><br>\n2) Branch to attempt fix the problem within 48 hours or 7 days on the outside for extreme cases and revert to the customer. This TAT for revert to be communicated to the customer upfront. <br><br>\n3) Customers to be sent a personalised letter thanking them for their time and an acknowledgement, that we value their business and have remedied whatever caused them to want to leave in the first place. A list of all reasons for closure with the action taken, to be stated.  <br><br>\n4) Once the customer has been retained, the customer letter / form duly marked \u201cNOT FOR CLOSURE \u2013 RETAINED\u201d, along with a copy of the resolution letter to be sent to CPC for filing in the customer record.  <br><br>\n5) Siebel to be updated with the same comment and closed.  <br><br>\nIn case the BOM/SM/BM/ RBM / AM or the branch staff are able / Not able  to retain the customer, then protthe SR which has been created needs to be closed with the Closure Description in Siebel as, \u201cCustomer Retained\u201d.  <br><br> This needs to be done diligently and would be subject to audits.  <br><br>\nCustomer is unwilling to give another chance: < <br><br>> Customer will pay the  necessary amount to regularize the account  <br><br>\nCustomer is unwilling to regularize the account after all attempts then branch user to follow the protocol as detailed in chapter \u201cAccount closure requests with debit balance/TBMS lien.\u201d  <br><br>\n1) Where the customer is not willing to continue, Branch to ensure that the complete details on Account closure form and all the checks to be made as detailed in the chapter  \u201cGeneral Guidelines to be followed for Account closure\u201d  <br><br>\n2) In case of any incomplete request, the customer needs to be apprised of the requirements and Siebel to be updated accordingly.  <br><br>\n3) If the a/c closure request is complete in all respects / once the complete request is received from the customer, the same needs to be sent to CPC, post updating the Siebel  <br><br> \n4) Branch to journal of the attempts made to retain the customer.  <br><br>\nIn case the BOM/SM/BM/ RBM / AM or the branch staff are able / Not able  to retain the customer, then protthe SR which has been created needs to be closed with the Closure Description in Siebel as, \u201cCustomer Retained\u201d. This needs to be done diligently and would be subject to audits.C2",
+                        "<br>1) Customer expresses concerns on high charges, ascertain the nature of charges levied and recommend an upgraded account where required (e.g. if customer finds DD charges high, up-sell to an account with a higher free DD limit or an account offering At Par cheque facility if usage is on our locations). Communicate the AMB/AQB and NMC to customer clearly. <br><br>\n2) The account can be upgraded/downgrade as per customer requirement by retaining the same account Number  <br><br>\n3) Branch can also explain the benefits of Basic/Small Account and offer conversion to the said  account as it will address their inability to maintain the account.  <br><br>\nCustomer is unwilling to give us another chance  <br><br>\n1) In case of Issues expressed by the customer where he / she is willing to give the Bank another chance.  <br><br>\n2) Branch to attempt fix the problem within 48 hours or 7 days on the outside for extreme cases and revert to the customer. This TAT for revert to be communicated to the customer upfront.  <br><br>\n3) Customers to be sent a personalised letter thanking them for their time and an acknowledgement, that we value their business and have remedied whatever caused them to want to leave in the first place. A list of all reasons for closure with the action taken, to be stated.   <br><br>\n4) Once the customer has been retained, the customer letter / form duly marked \u201cNOT FOR CLOSURE \u2013 RETAINED\u201d, along with a copy of the resolution letter to be sent to CPC for filing in the customer record.  <br><br>\n5) Siebel to be updated with the same comment and closed.  <br><br>\nIn case the BOM/SM/BM/ RBM / AM or the branch staff are able / Not able  to retain the customer, then protthe SR which has been created needs to be closed with the Closure Description in Siebel as, \u201cCustomer Retained\u201d. This needs to be done diligently and would be subject to audits.  <br><br>\nCustomer will pay the  necessary amount to regularize the account   <br><br>\nCustomer is unwilling to regularize the account after all attempts then branch user to follow the protocol as detailed in chapter \u201cAccount closure requests with debit balance/TBMS lien.\u201d  <br><br>\n1) Where the customer is not willing to continue, Branch to ensure that the complete details on Account closure form and all the checks to be made as detailed in the chapter  \u201cGeneral Guidelines to be followed for Account closure\u201d  <br><br>\n2) In case of any incomplete request, the customer needs to be apprised of the requirements and Siebel to be updated accordingly.  <br><br>\n3) If the a/c closure request is complete in all respects / once the complete request is received from the customer, the same needs to be sent to CPC, post updating the Siebel  <br><br>\n4) Branch to journal of the attempts made to retain the customer.  <br><br>\nIn case the BOM/SM/BM/ RBM / AM or the branch staff are able / Not able  to retain the customer, then protthe SR which has been created needs to be closed with the Closure Description in Siebel as, \u201cCustomer Retained\u201d. This needs to be done diligently and would be subject to audits.\n"
+                    ]
+            ele_val = ele_val.concat(element_values);
+            //_.insert(ele, "Process", [0]);
+            $rootScope.tabvalue.elements = ele;
+            $rootScope.tabvalue.element_values=ele_val;
+            //$rootScope.$emit("setTabData", $scope.node_data);
+           
+            
+        };
+        $rootScope.InstructionResponse = function(id,data) {
+            $rootScope.pushSystemMsg(id,data);
+            $('#myCarousel').carousel({
+                interval: false,
+                wrap: false
+            });
+            $('#myCarousel').find('.item').first().addClass('active');
             $rootScope.showMsgLoader = false; 
         };
         $rootScope.getSystemMsg = function(id,value){
@@ -554,31 +611,9 @@ myApp.controller('HomeCtrl', function ($scope,$rootScope, TemplateService, Navig
                         //console.log(value);
                         if(value.type=="text")
                         {
-                        	var res = data.data.data.tiledlist[0].Text.split("\n");
-                            var chatT = "";
-                            for(var i=0;i<res.length;i++){
-                                breakTag= "";
-                                if(res[i] == res.length || res[i] == "")
-                                    breakTag = "";
-                                else
-                                    breakTag = "<br>";
-                                if(res[i] != "")
-                                    chatT += "<p class='lastMsg'&nbsp;&nbsp;>"+ res[i]+breakTag +"</p>";
-                            }
-                            $rootScope.pushSystemMsg(0,data.data.data);
-                            $rootScope.showMsgLoader = false;
-                            
-                            
-                            return false;
-                        }
-                        if(value.type=="rate card")
-                        {
-                            //console.log(data.data.data.tiledlist);
-                        	//var res = data.data.tiledlist[0].Text.split("\n");
-                                //alert(res.length);
+                        	// var res = data.data.data.tiledlist[0].Text.split("\n");
                             // var chatT = "";
                             // for(var i=0;i<res.length;i++){
-                            //     //alert(res[i])
                             //     breakTag= "";
                             //     if(res[i] == res.length || res[i] == "")
                             //         breakTag = "";
@@ -587,67 +622,14 @@ myApp.controller('HomeCtrl', function ($scope,$rootScope, TemplateService, Navig
                             //     if(res[i] != "")
                             //         chatT += "<p class='lastMsg'&nbsp;&nbsp;>"+ res[i]+breakTag +"</p>";
                             // }
+                            $rootScope.pushSystemMsg(0,data.data.data);
+                            $rootScope.showMsgLoader = false;
                             
-                            // $rootScope.rate_count++;
-                            // var chatdata ="";
-                            // var data_col = Array();
-                            // var data_row = Array();
-                            // var label_col = '';
-                            // var label_row = '';
-                            // var dynamic_row_id = '';
-                            // var dynamic_col_id = '';
-
-                            // for (var i = 0; i < data.data.data.tiledlist.length; i++) {
-                            //     // if(typeof(data.tiledlist[i].topic) != "undefined")
-                            //     //     $('#topic').text(data.tiledlist[i].topic);
-                            //     // else
-                            //     //     $('#topic').text("");
-
-                            //     data_col = data.data.data.tiledlist[i].data_col;
-                            //     data_row = data.data.data.tiledlist[i].data_row;
-                            //     label_col = data.data.data.tiledlist[i].col_name;
-                            //     label_row = data.data.data.tiledlist[i].row_name;
-                            // }
-                            // // dynamic_row_id = 'col_val_'+rate_count;
-                            // // dynamic_col_id =
-                            // $.each(data_col, function(val, text) {
-                            //     $('#col_val_'+rate_count.toString()).append(
-                            //         $('<option></option>').val(text).html(text)
-                            //     );
-                            // });
-                            // $.each(data_row, function(val, text) {
-                            //     $('#row_val_'+rate_count.toString()).append(
-                            //         $('<option></option>').val(text).html(text)
-                            //     );
-
-                            // });
-                            // // chatdata +=" <li class=' left lastChat  clearfix'>";
-                            // // chatdata += "<span class='chat-img pull-left'><img src='{% static 'images/logo5.jpg' %}' alt='YOU' class='img-circle' /></span>";
-                            // // chatdata += "<div class='chat-body clearfix'>";
-                            // var temp1 = '';
-                            // var temp2 = '';
-                            // $.each(data_col, function(val, text) {
-                            //     temp1 += "<option value='"+text+"''>"+text+"</option>";
-                            // });
-                            // $.each(data_row, function(val, text) {
-                            //     temp2 += "<option value='"+text+"''>"+text+"</option>";
-                            // });
-
-                            // chatdata += "<label for='col_val_"+rate_count.toString()+"'>"+label_col+" : </label>";
-                            // chatdata += "<select class='form-control' id='col_val_"+rate_count.toString()+"'>"+temp1+"</select><br>";
-                            // chatdata += "<label for='row_val_"+rate_count.toString()+"'>"+label_row+" : </label>";
-                            // chatdata += "<select class='form-control' id='row_val_"+rate_count.toString()+"'>"+temp2+"</select><br>";
-                            // chatdata += "<input class='rate_btn btn btn-default pull-right' id='rate_btn' type='button' value='Get Limit' /><br>";
                             
-                            // // $('.rate_btn').click(function() {
-                            // //     //alert("Hello 1");
-                            // //     var temp = '';
-                            // //     temp += $("#col_val_"+rate_count.toString()+" option:selected").text() + "," + $("#row_val_"+rate_count.toString()+" option:selected").text();
-
-
-                            // // });
-                            // console.log(chatdata);
-                            //$rootScope.pushSystemMsg(0,chatdata);
+                            return false;
+                        }
+                        if(value.type=="rate card")
+                        {
                             $rootScope.pushSystemMsg(0,data.data.data);
                             $rootScope.showMsgLoader = false;
                             
@@ -657,6 +639,10 @@ myApp.controller('HomeCtrl', function ($scope,$rootScope, TemplateService, Navig
                         else if(value.type=="DTHyperlink")
                         {
                            $rootScope.DthResponse(0,data.data.data);  
+                        }
+                        else if(value.type=="Instruction")
+                        {
+                           $rootScope.InstructionResponse(0,data.data.data);  
                         }
                         
                     });

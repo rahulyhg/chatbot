@@ -140,7 +140,7 @@ myApp.factory('apiService', function ($http, $q, $timeout,CsrfTokenService,$http
             //console.log(formData);
             return    $http({
                 //url:adminurl+'out/'+formData.user_id+"/",
-                url: adminUrl3 + 'Chatbotautolist/getSysMsg',
+                url: adminUrl3 + 'Chatbotautolist/getDthlink',
                 method: 'POST',
                 data:(formData),
                 withCredentials: true

@@ -20,7 +20,7 @@ def main():
     #input_obj = Input(session_obj)
     #session_obj.response = input_obj.take_input()
     #tiledlist = [session_obj.response]
-    response = {"tiledlist":[{'Script': [], 'Process': [u"Check if Customer's Phone Banking access is blocked in Finesse or Unified Desktop-Quick Actions-Channel One View"], 'Text': [], 'col_no': [14, 14], 'line_no': [73, 73], 'Step_list': [], 'Tooltip': [], 'topic': u'Cheque book request', 'current_step': '', 'type': 'DTHyperlink', 'DTHyperlink': [u'Phone Banking access is not blocked', u'Phone Banking access is blocked']}], 'session_obj_data':session_obj.__dict__}
+    response = {"tiledlist":[{'Script': [], 'Process': [u"Check if Customer's Phone Banking access is blocked in Finesse or Unified Desktop-Quick Actions-Channel One View"], 'Text': [], 'col_no': [14, 14], 'line_no': [73, 73], 'Step_list': ['step1'], 'Tooltip': ['tooltip1'], 'topic': u'Cheque book request', 'current_step': '', 'type': 'DTHyperlink', 'DTHyperlink': [u'Phone Banking access is not blocked', u'Phone Banking access is blocked']}], 'session_obj_data':session_obj.__dict__}
     print(json.dumps(response))
 
 #start process

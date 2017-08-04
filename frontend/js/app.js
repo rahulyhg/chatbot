@@ -26,7 +26,7 @@ myApp.config(function ($stateProvider, $urlRouterProvider, $httpProvider, $locat
     $httpProvider.defaults.withCredentials = true;
 
 
-    IdleProvider.idle(1*60); // 1 minutes idle
+    IdleProvider.idle(10*60); // 10 minutes idle
     $stateProvider
         .state('home', {
             url: "/",
@@ -76,6 +76,8 @@ myApp.run(['$http','$cookies','beforeUnload','$document','$rootScope','Idle', fu
     //** django urls loves trailling slashes which angularjs removes by default.
     //$resourceProvider.defaults.stripTrailingSlashes = false;
      //return function(scope, elm, attrs) {
+
+    $rootScope.tabvalue={};
          Idle.watch();
         $document.on("keydown", function(e) {
             if(e.ctrlKey && (e.key == "p" || e.charCode == 16 || e.charCode == 112 || e.keyCode == 80) ){

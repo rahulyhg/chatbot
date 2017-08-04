@@ -149,7 +149,7 @@ left:-20px;
 }
 .carousel_item img{
 height:100px;
-width:100px;
+width:90%;
 }
 .item-image{
     height: 100px;
@@ -270,7 +270,19 @@ background-color: #fafafa;
 width:30px!important;
 height:30px!important;
 }
-
+.instruction-slider {
+    position: relative;
+    width: 100%;
+    overflow: hidden;
+}
+.img-box
+{
+    height: 100px;
+    width: 100px;
+}
+.text-box span {
+    font-size:10px;
+}
 .panel .slidedown .glyphicon, .chat .glyphicon
 {
     margin-right: 5px;

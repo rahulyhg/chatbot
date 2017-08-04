@@ -277,6 +277,14 @@
         <div id="chatImage"><img class="clickImage chatbotimg" src="img/Tenali.png" ng-controller="ChatCtrl" ng-click="showChatwindow();"></div>
         <div class="col-lg-3 list-group">
         <div class="topic_col hidden-xs" ng-style="{height: iframeHeight + 'px'}">
+            <div class="searchbar">
+                <input type="text" class="searchTerm" placeholder="What are you looking for?">
+                <button type="submit" class="searchButton">
+                    <i class="fa fa-search" aria-hidden="true"></i>
+                </button>
+            </div>
+                
+                <p style="margin-top: 10px; margin-left: 80px;"><a href="#">See all topics</a></p>
             <div>
                 <h3 id="topic"></h3>
             </div>

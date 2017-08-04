@@ -2,14 +2,40 @@
     <div class="content">
         <marquee direction="left" speed="normal" behavior="loop" BGCOLOR="Gold">Important Notice : Please update your personal details before 1st July 2017</marquee>
         <div>
-            <uib-tabset active="selectTabIndex" id="tab_data">
+            <uib-tabset active="selectTabIndex" id="tab_data" ng-show="tabvalue.elements.length>0">
                 <uib-tab index="$index" ng-repeat="row in tabvalue.elements"  heading="{{row}}">
-                    <p class ="tab-con" ng-bind-html="tabvalue.element_values[$index]">
-                        {{tabvalue.element_values[$index]}}
-                    </p>
+                    <div class ="tab-con"  ng-if="row ==='Process'">
+                        <p class="" ng-repeat="processtext in tabvalue.element_values[$index].Process">
+                            <ng-bind-html ng-bind-html="processtext|newlines">
+                                {{processtext}}
+                            </ng-bind-html>
+                            <!-- <span id = "tooltip12" class="glyphicon glyphicon-info-sign" data-toggle="tooltip" data-container:"body" ng-if="tabvalue.element_values[$index].Tooltip[$index] !== ''" title="tabvalue.element_values[$index].Tooltip[$index]" data-original-title="Security Code">
+
+                            </span> -->
+                            <span id = "tooltip12" class="glyphicon glyphicon-info-sign" href="#" ng-if="tabvalue.element_values[0].Tooltip[$index] !== ''" ng-show="!!tabvalue.element_values[0].Tooltip.length" uib-tooltip="{{tabvalue.element_values[0].Tooltip[$index]}}"></span>
+                            <span id = "tooltip12" class="glyphicon glyphicon-plus-sign" href="#" ng-if="tabvalue.element_values[0].Step_list[$index] !== ''" ng-show="!!tabvalue.element_values[0].Step_list.length" uib-tooltip="{{tabvalue.element_values[0].Step_list[$index]}}"></span>
+                        </p>
+
+                        
+                    </div>
+                    <div class ="tab-con"  ng-if="row !=='Process'">
+                        <p class="" >
+                            <ng-bind-html ng-bind-html="tabvalue.element_values[$index]">
+                                {{tabvalue.element_values[$index]}}
+                            </ng-bind-html>
+                        </p>
+                    </div>
                 </uib-tab>
-                
             </uib-tabset>
+            <div class="scriptData" ng-if="tabvalue.elements[0] ==='Process'">
+
+                <p class="redtext" ng-repeat="scrpttext in tabvalue.element_values[0].Script">
+                    <ng-bind-html ng-bind-html="scrpttext|newlines">
+                        {{scrpttext}}
+                    </ng-bind-html>
+                </p>
+
+            </div>
             <!-- Nav tabs -->
             <!--
             <ul class="nav nav-tabs" role="tablist" id="tab_data">
@@ -21,7 +47,10 @@
             <!--<div class="tab-content" id="tab-content"></div>-->
         </div>
     </div>
+    
 </div>
+
+
 <!-- <div class="col-lg-4">
     <div class="col-md-12">
         <div class="inputs">
