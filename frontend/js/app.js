@@ -14,18 +14,19 @@ var myApp = angular.module('myApp', [
     'ngCookies',
     'ngResource',
     'ngIdle',
-    'app.directives'
+    'app.directives',
+    'voiceRss'
 ]);
 //angular.module('manage', ['ngResource']);
 // Define all the routes below
-myApp.config(function ($stateProvider, $urlRouterProvider, $httpProvider, $locationProvider,$resourceProvider,IdleProvider) {
+myApp.config(function ($stateProvider, $urlRouterProvider, $httpProvider, $locationProvider,$resourceProvider,IdleProvider,ttsProvider) {
     var tempateURL = "views/template/template.html"; //Default Template URL
     $resourceProvider.defaults.stripTrailingSlashes = false;
     $httpProvider.defaults.xsrfCookieName = 'csrftoken';
     $httpProvider.defaults.xsrfHeaderName = 'X-CSRFToken';
     // for http request with session
     $httpProvider.defaults.withCredentials = true;
-
+    ttsProvider.setSettings({ key: '5a1cc1a178c24b89ba23fd6e3b1bb6c5' });
 
     IdleProvider.idle(10*60); // 10 minutes idle
     $stateProvider
@@ -77,8 +78,9 @@ myApp.run(['$http','$cookies','beforeUnload','$document','$rootScope','Idle', fu
     //** django urls loves trailling slashes which angularjs removes by default.
     //$resourceProvider.defaults.stripTrailingSlashes = false;
      //return function(scope, elm, attrs) {
-
+    $rootScope.transcript="";
     $rootScope.tabvalue={};
+    
          Idle.watch();
         $document.on("keydown", function(e) {
             if(e.ctrlKey && (e.key == "p" || e.charCode == 16 || e.charCode == 112 || e.keyCode == 80) ){

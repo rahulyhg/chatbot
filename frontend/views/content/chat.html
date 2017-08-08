@@ -185,10 +185,10 @@
                                 <div class="loader_msg" ng-show="showMsgLoader">
                                     <div class="loading">Typing</div>
                                 </div>
-                                <div class="input-group chatinputgroup">
+                                <div class="input-group chatinputgroup" ng-controller="SpeechRecognitionController as speech">
                                     <input type="text" class="form-control chatinput" ng-change="getAutocomplete(chatText);" ng-model="chatText" id="userMsg" placeholder="Type your message here..." autofocus  typeahead="list for list in autocompletelist" ng-keyup="onKeyUp($event)" />
                                     <div class="input-group-addon" >
-                                        <span class="speechtotext" ng-speech-recognition-start="speechStarted();" ng-speech-recognition-end="displayTranscript()">
+                                        <span class="speechtotext" ng-speech-recognition-start="" ng-speech-recognition-end="speech.displayTranscript()">
                                             <i class="glyphicon glyphicon-volume-down"></i>
                                         </span>
                                     </div>

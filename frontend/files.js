@@ -37,6 +37,7 @@ module.exports = [
   // Directives
   'frontend/js/directives/directive.js',
   'frontend/js/directives/SpeechRecognitionDirective.js',
+  'frontend/js/directives/angularjs.voicerss-tts.min.js',
 
   // Filters
   'frontend/js/filters/filter.js',
