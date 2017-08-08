@@ -1,14 +1,6 @@
 var globalLocale = moment.locale('hi');
 var localLocale = moment();
-function displayTranscript() {
-            vm.transcript = $rootScope.transcript;
-            $(".chatinput").val($rootScope.transcript);
-            console.log("Speech",$rootScope.transcript);
-            //This is just to refresh the content in the view.
-            if (!$scope.$$phase) {
-                $scope.$digest();
-            }
-        }
+
 myApp.controller('HomeCtrl', function ($scope,$rootScope, TemplateService, NavigationService,CsrfTokenService,Menuservice, $timeout,$http,apiService,$state) {
         $scope.template = TemplateService.getHTML("content/home.html");
         TemplateService.title = "Home"; //This is the Title of the Website
@@ -496,7 +488,15 @@ myApp.controller('HomeCtrl', function ($scope,$rootScope, TemplateService, Navig
          * as you want.
          */
         
-        
+        function displayTranscript() {
+            vm.transcript = $rootScope.transcript;
+            $(".chatinput").val($rootScope.transcript);
+            console.log("Speech",$rootScope.transcript);
+            //This is just to refresh the content in the view.
+            if (!$scope.$$phase) {
+                $scope.$digest();
+            }
+        }
         $rootScope.scrollChatWindow = function() {
             $timeout(function(){
                 var chatHeight = $("ul.chat").height();
