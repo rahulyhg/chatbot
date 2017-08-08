@@ -1,5 +1,14 @@
 var globalLocale = moment.locale('hi');
 var localLocale = moment();
+function displayTranscript() {
+            vm.transcript = $rootScope.transcript;
+            $(".chatinput").val($rootScope.transcript);
+            console.log("Speech",$rootScope.transcript);
+            //This is just to refresh the content in the view.
+            if (!$scope.$$phase) {
+                $scope.$digest();
+            }
+        }
 myApp.controller('HomeCtrl', function ($scope,$rootScope, TemplateService, NavigationService,CsrfTokenService,Menuservice, $timeout,$http,apiService,$state) {
         $scope.template = TemplateService.getHTML("content/home.html");
         TemplateService.title = "Home"; //This is the Title of the Website
@@ -414,6 +423,30 @@ myApp.controller('HomeCtrl', function ($scope,$rootScope, TemplateService, Navig
             return $sce.trustAsHtml(text)
         }
     })
+
+    .controller('SpeechRecognitionController', function ($scope, $rootScope) {
+
+        var vm = this;
+
+        vm.displayTranscript = displayTranscript;
+        vm.transcript = '';
+
+        /**
+         * Handle the received transcript here.
+         * The result from the Web Speech Recognition will
+         * be set inside a $rootScope variable. You can use it
+         * as you want.
+         */
+        function displayTranscript() {
+            vm.transcript = $rootScope.transcript;
+
+            //This is just to refresh the content in the view.
+            if (!$scope.$$phase) {
+                $scope.$digest();
+            }
+        }
+
+    })
     .controller('ChatCtrl', function ($scope, $rootScope,TemplateService, NavigationService,CsrfTokenService, $timeout,$http,apiService,$state,$uibModal,Menuservice) {
         
         $rootScope.autocompletelist = [];
@@ -433,6 +466,37 @@ myApp.controller('HomeCtrl', function ($scope,$rootScope, TemplateService, Navig
         $rootScope.autolistvalue="";
         $rootScope.showMsgLoader=false;
         $rootScope.rate_count= 0;
+        
+        var vm = this;
+        
+        vm.displayTranscript = displayTranscript;
+        vm.transcript = '';
+         //$rootScope.transcript = "";
+        // $rootScope.displayTranscript = function() {
+        //     //vm.transcript = $rootScope.transcript;
+        //     $(".chatinput").val($rootScope.transcript);
+        //     console.log("Speech",$rootScope.transcript);
+        //     //This is just to refresh the content in the view.
+        //     if (!$scope.$$phase) {
+        //         $scope.$digest();
+        //     }
+        // };
+        $rootScope.speechEnd = function() {
+            console.log("Speech Ended");
+        };
+        //vm.displayTranscript = $rootScope.displayTranscript();
+        
+        $rootScope.speechStarted = function() {
+            console.log("speech Started");
+        };
+        /**
+         * Handle the received transcript here.
+         * The result from the Web Speech Recognition will
+         * be set inside a $rootScope variable. You can use it
+         * as you want.
+         */
+        
+        
         $rootScope.scrollChatWindow = function() {
             $timeout(function(){
                 var chatHeight = $("ul.chat").height();

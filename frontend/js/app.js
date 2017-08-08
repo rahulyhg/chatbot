@@ -14,6 +14,7 @@ var myApp = angular.module('myApp', [
     'ngCookies',
     'ngResource',
     'ngIdle',
+    'app.directives'
 ]);
 //angular.module('manage', ['ngResource']);
 // Define all the routes below

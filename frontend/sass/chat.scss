@@ -155,6 +155,12 @@ width:90%;
     height: 100px;
     width: 100px;
 }
+.chatinputgroup {
+    width: 100%;
+}
+.chatinputgroup .input-group-addon {
+    cursor:pointer;
+}
 .panel-primary {
     border-color: #0b354c;
 }
