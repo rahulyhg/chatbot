@@ -8,8 +8,12 @@ angular.module('app.directives', []).directive('ngSpeechRecognitionStart', funct
 	return {
 		restrict: 'A',
 		link: function ($scope, $element, $attrs) {
-			var recognition = new webkitSpeechRecognition();
-			//var recognition = new SpeechRecognition();
+			//var recognition = new webkitSpeechRecognition();
+			
+			var recognition = new (window.SpeechRecognition || window.webkitSpeechRecognition || window.mozSpeechRecognition || window.msSpeechRecognition)();
+			var SpeechGrammarList = SpeechGrammarList || webkitSpeechGrammarList
+
+			var SpeechRecognitionEvent = SpeechRecognitionEvent || webkitSpeechRecognitionEvent
 			// var SpeechGrammarList = SpeechGrammarList || webkitSpeechGrammarList
 			// var SpeechRecognitionEvent = SpeechRecognitionEvent || webkitSpeechRecognitionEvent
 			console.log(typeof Windows);
@@ -24,7 +28,8 @@ angular.module('app.directives', []).directive('ngSpeechRecognitionStart', funct
 
 			$element.bind('touchstart mousedown', function (event) {
 				$scope.isHolded = true;
-
+				//$(this).toggleClass('hover_effect');
+				$(this).addClass('hover_effect');
 				$timeout(function () {
 					if ($scope.isHolded) {
 						$scope.$apply(function () {
@@ -50,6 +55,8 @@ angular.module('app.directives', []).directive('ngSpeechRecognitionStart', funct
 
 			$element.bind('touchend mouseup', function (event) {
 				$scope.isHolded = false;
+				//$(this).toggleClass('hover_effect');
+				$(this).removeClass('hover_effect');
                 console.log($attrs.ngSpeechRecognitionEnd);
 				if ($attrs.ngSpeechRecognitionEnd) {
 					

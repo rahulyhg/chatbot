@@ -3,6 +3,10 @@
     display: none;
     font-family: 'Roboto', sans-serif;
     height:455px;
+    position: relative;
+}
+div#suggestionList {
+    position: relative;
 }
 #chatTabs li a {
     padding: 0px 10px;
@@ -20,6 +24,8 @@ ul#chatTabs {
 }
 .panel-footer {
     padding-bottom: 0px;
+    position: absolute;
+    bottom: 0;
 }
 .chattab-content {
     padding-top:5px; 
@@ -160,10 +166,26 @@ width:90%;
 }
 .chatinputgroup .input-group-addon {
     cursor:pointer;
+    width: 45px;
+    padding:1px 2px !important;
 }
+.chatinputgroup .input-group-addon i.fa { font-size: 20px;}
 .panel-primary {
     border-color: #0b354c;
 }
+.chatinputgroup .hover_effect
+{
+    // transform:scale(1.3,1.3);
+    // -webkit-transform:scale(1.3,1.3);
+    // -moz-transform:scale(1.3,1.3);
+    background:#003874;
+}
+.chatinputgroup .hover_effect i {
+    color:#fff;
+    transform:scale(1.3,1.3);
+    -webkit-transform:scale(1.3,1.3);
+    -moz-transform:scale(1.3,1.3);
+ }
 .panel-primary>.panel-heading {
     color: #fff;
     background-color: #003874;
@@ -191,11 +213,11 @@ background-color: #fafafa;
     /*display:none;*/
     width: auto;
     height: 140px;
-    margin: auto;
-    position: absolute;
+    // margin: auto;
+    // position: absolute;
     z-index: 10;
-    right: -70px;
-    bottom: -25px;
+    // right: -70px;
+    // bottom: -25px;
     cursor:pointer;
 }
 .redtext { color:red; }

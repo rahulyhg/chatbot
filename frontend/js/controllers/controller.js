@@ -736,18 +736,39 @@ myApp.controller('HomeCtrl', function ($scope,$rootScope, TemplateService, Navig
                         }
                         
                     });
-                    tts.speech({
-                        src: data.data.data.tiledlist[0].topic,
-                        hl: 'en-us',
-                        r: 0, 
-                        c: 'mp3',
-                        f: '44khz_16bit_stereo',
-                        ssml: false,
-                        withCredentials: false,
-                        xhrFields: {
-                            withCredentials: true
-                        },
-                    });
+                    $timeout(function(){
+                        var textspeech = data.data.data.tiledlist[0].Script[0];
+                        $.jStorage.set("texttospeak",textspeech);
+
+                        $('#mybtn_trigger').trigger('click');
+                        
+                    },200);
+                    
+                    // $('#mybtn_trigger').bind('click', function(event, textspeech) {
+                       
+
+                    // }); 
+                    // var msg = new SpeechSynthesisUtterance(data.data.data.tiledlist[0].Script[0]);
+                    // window.speechSynthesis.speak(msg);
+                    // var speech = new SpeechSynthesisUtterance();
+                    // speech.text = data.data.data.tiledlist[0].Script[0];
+                    // speech.volume = 1; // 0 to 1
+                    // speech.rate = 1; // 0.1 to 9
+                    // speech.pitch = 1; // 0 to 2, 1=normal
+                    // speech.lang = "en-US";
+                    // speechSynthesis.speak(speech);
+                    // tts.speech({
+                    //     src: data.data.data.tiledlist[0].Script[0],
+                    //     hl: 'en-us',
+                    //     r: 0, 
+                    //     c: 'mp3',
+                    //     f: '44khz_16bit_stereo',
+                    //     ssml: false,
+                    //     withCredentials: false,
+                    //     xhrFields: {
+                    //         withCredentials: true
+                    //     },
+                    // });
                     // $http({
                     //     url: "http://api.voicerss.org/?key=5a1cc1a178c24b89ba23fd6e3b1bb6c5&hl=en-us&src="+data.data.data.tiledlist[0].topic,
                     //     method: 'POST',
@@ -766,7 +787,62 @@ myApp.controller('HomeCtrl', function ($scope,$rootScope, TemplateService, Navig
             
         };
         
-
+        $rootScope.Speaktext = function() {
+            //console.log(text);
+            var _iOS9voices = [
+                { "data-name": "Maged", voiceURI: "com.apple.ttsbundle.Maged-compact", "data-lang": "ar-SA", localService: true, "default": true },
+                { "data-name": "Zuzana", voiceURI: "com.apple.ttsbundle.Zuzana-compact", "data-lang": "cs-CZ", localService: true, "default": true },
+                { "data-name": "Sara", voiceURI: "com.apple.ttsbundle.Sara-compact", "data-lang": "da-DK", localService: true, "default": true },
+                { "data-name": "Anna", voiceURI: "com.apple.ttsbundle.Anna-compact", "data-lang": "de-DE", localService: true, "default": true },
+                { "data-name": "Melina", voiceURI: "com.apple.ttsbundle.Melina-compact", "data-lang": "el-GR", localService: true, "default": true },
+                { "data-name": "Karen", voiceURI: "com.apple.ttsbundle.Karen-compact", "data-lang": "en-AU", localService: true, "default": true },
+                { "data-name": "Daniel", voiceURI: "com.apple.ttsbundle.Daniel-compact", "data-lang": "en-GB", localService: true, "default": true },
+                { "data-name": "Moira", voiceURI: "com.apple.ttsbundle.Moira-compact", "data-lang": "en-IE", localService: true, "default": true },
+                { "data-name": "Samantha (Enhanced)", voiceURI: "com.apple.ttsbundle.Samantha-premium", "data-lang": "en-US", localService: true, "default": true },
+                { "data-name": "Samantha", voiceURI: "com.apple.ttsbundle.Samantha-compact", "data-lang": "en-US", localService: true, "default": true },
+                { "data-name": "Tessa", voiceURI: "com.apple.ttsbundle.Tessa-compact", "data-lang": "en-ZA", localService: true, "default": true },
+                { "data-name": "Monica", voiceURI: "com.apple.ttsbundle.Monica-compact", "data-lang": "es-ES", localService: true, "default": true },
+                { "data-name": "Paulina", voiceURI: "com.apple.ttsbundle.Paulina-compact", "data-lang": "es-MX", localService: true, "default": true },
+                { "data-name": "Satu", voiceURI: "com.apple.ttsbundle.Satu-compact", "data-lang": "fi-FI", localService: true, "default": true },
+                { "data-name": "Amelie", voiceURI: "com.apple.ttsbundle.Amelie-compact", "data-lang": "fr-CA", localService: true, "default": true },
+                { "data-name": "Thomas", voiceURI: "com.apple.ttsbundle.Thomas-compact", "data-lang": "fr-FR", localService: true, "default": true },
+                { "data-name": "Carmit", voiceURI: "com.apple.ttsbundle.Carmit-compact", "data-lang": "he-IL", localService: true, "default": true },
+                { "data-name": "Lekha", voiceURI: "com.apple.ttsbundle.Lekha-compact", "data-lang": "hi-IN", localService: true, "default": true },
+                { "data-name": "Mariska", voiceURI: "com.apple.ttsbundle.Mariska-compact", "data-lang": "hu-HU", localService: true, "default": true },
+                { "data-name": "Damayanti", voiceURI: "com.apple.ttsbundle.Damayanti-compact", "data-lang": "id-ID", localService: true, "default": true },
+                { "data-name": "Alice", voiceURI: "com.apple.ttsbundle.Alice-compact", "data-lang": "it-IT", localService: true, "default": true },
+                { "data-name": "Kyoko", voiceURI: "com.apple.ttsbundle.Kyoko-compact", "data-lang": "ja-JP", localService: true, "default": true },
+                { "data-name": "Yuna", voiceURI: "com.apple.ttsbundle.Yuna-compact", "data-lang": "ko-KR", localService: true, "default": true },
+                { "data-name": "Ellen", voiceURI: "com.apple.ttsbundle.Ellen-compact", "data-lang": "nl-BE", localService: true, "default": true },
+                { "data-name": "Xander", voiceURI: "com.apple.ttsbundle.Xander-compact", "data-lang": "nl-NL", localService: true, "default": true },
+                { "data-name": "Nora", voiceURI: "com.apple.ttsbundle.Nora-compact", "data-lang": "no-NO", localService: true, "default": true },
+                { "data-name": "Zosia", voiceURI: "com.apple.ttsbundle.Zosia-compact", "data-lang": "pl-PL", localService: true, "default": true },
+                { "data-name": "Luciana", voiceURI: "com.apple.ttsbundle.Luciana-compact", "data-lang": "pt-BR", localService: true, "default": true },
+                { "data-name": "Joana", voiceURI: "com.apple.ttsbundle.Joana-compact", "data-lang": "pt-PT", localService: true, "default": true },
+                { "data-name": "Ioana", voiceURI: "com.apple.ttsbundle.Ioana-compact", "data-lang": "ro-RO", localService: true, "default": true },
+                { "data-name": "Milena", voiceURI: "com.apple.ttsbundle.Milena-compact", "data-lang": "ru-RU", localService: true, "default": true },
+                { "data-name": "Laura", voiceURI: "com.apple.ttsbundle.Laura-compact", "data-lang": "sk-SK", localService: true, "default": true },
+                { "data-name": "Alva", voiceURI: "com.apple.ttsbundle.Alva-compact", "data-lang": "sv-SE", localService: true, "default": true },
+                { "data-name": "Kanya", voiceURI: "com.apple.ttsbundle.Kanya-compact", "data-lang": "th-TH", localService: true, "default": true },
+                { "data-name": "Yelda", voiceURI: "com.apple.ttsbundle.Yelda-compact", "data-lang": "tr-TR", localService: true, "default": true },
+                { "data-name": "Ting-Ting", voiceURI: "com.apple.ttsbundle.Ting-Ting-compact", "data-lang": "zh-CN", localService: true, "default": true },
+                { "data-name": "Sin-Ji", voiceURI: "com.apple.ttsbundle.Sin-Ji-compact", "data-lang": "zh-HK", localService: true, "default": true },
+                { "data-name": "Mei-Jia", voiceURI: "com.apple.ttsbundle.Mei-Jia-compact", "data-lang": "zh-TW", localService: true, "default": true }
+                ];
+            var voices = window.speechSynthesis.getVoices();
+            var speech = new SpeechSynthesisUtterance($.jStorage.get("texttospeak"));
+            //speech.text = $.jStorage.get("texttospeak");
+            //speech.text = "Hello";
+            speech.volume = 1; // 0 to 1
+            speech.rate = 1; // 0.1 to 9
+            speech.pitch = 1; // 0 to 2, 1=normal
+            speech.lang = "en-US";
+            //speech.lang = {lang: 'en-US', desc: 'English (United States)'};
+            speech.voice = voices[8]; 
+            speech.voiceURI = 'native';
+            speechSynthesis.speak(speech);
+            $.jStorage.set("texttospeak","");
+        };
         
 
         $rootScope.tappedKeys = '';

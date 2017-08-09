@@ -19,7 +19,7 @@
             <div class="container-fluid chatbody">
                 <div class="tab-content chattab-content">
                     
-                    <div class="tab-pane active" id="chattab" ng-if="chat_tab === 1">
+                    <div class="tab-pane active row" id="chattab" ng-if="chat_tab === 1">
                         <div class="panel-body"> 
                             <ul class="chat">
                                 <li class="{{list.position}} lastchat clearfix" ng-repeat="list in chatlist track by $index">
@@ -173,7 +173,7 @@
                                 </li>    
                             </ul>
                         </div>
-                        <div class="panel-footer row">
+                        <div class="panel-footer ">
                             <div class="form-group">
                                 <span  class="thumbsIcon">
                                     <span class="chatbottomtext">Was this information useful ? 
@@ -187,9 +187,10 @@
                                 </div>
                                 <div class="input-group chatinputgroup" ng-controller="SpeechRecognitionController as speech">
                                     <input type="text" class="form-control chatinput" ng-change="getAutocomplete(chatText);" ng-model="chatText" id="userMsg" placeholder="Type your message here..." autofocus  typeahead="list for list in autocompletelist" ng-keyup="onKeyUp($event)" />
-                                    <div class="input-group-addon" >
-                                        <span class="speechtotext" ng-speech-recognition-start="" ng-speech-recognition-end="speech.displayTranscript()">
-                                            <i class="glyphicon glyphicon-volume-down"></i>
+                                    <div class="input-group-addon" ng-speech-recognition-start="" ng-speech-recognition-end="speech.displayTranscript()">
+                                        <span class="speechtotext"  >
+                                            <i class="fa fa-microphone fa-3"></i>
+                                            
                                         </span>
                                     </div>
                                 </div>
@@ -198,6 +199,7 @@
                                 <div id="field_val"></div>
                                 <div id="field_id"></div>
                             </div>
+                            <a id="mybtn_trigger" class="hidden" ng-click="Speaktext(text);">Speakme</a>
                             <div id= "suggestionList">
                                 <ul ng-if="autocompletelist.length > 0" class="{{autocompletelist.length}}  ui-menu ui-widget ui-widget-content ui-autocomplete ui-front" id="ui-id-1">
                                     <div class="ui-menu-item-wrapper">

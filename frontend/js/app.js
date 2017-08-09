@@ -22,10 +22,11 @@ var myApp = angular.module('myApp', [
 myApp.config(function ($stateProvider, $urlRouterProvider, $httpProvider, $locationProvider,$resourceProvider,IdleProvider,ttsProvider) {
     var tempateURL = "views/template/template.html"; //Default Template URL
     $resourceProvider.defaults.stripTrailingSlashes = false;
-    $httpProvider.defaults.xsrfCookieName = 'csrftoken';
-    $httpProvider.defaults.xsrfHeaderName = 'X-CSRFToken';
+    // $httpProvider.defaults.xsrfCookieName = 'csrftoken';
+    // $httpProvider.defaults.xsrfHeaderName = 'X-CSRFToken';
+    
     // for http request with session
-    $httpProvider.defaults.withCredentials = true;
+    $httpProvider.defaults.withCredentials = false;
     ttsProvider.setSettings({ key: '5a1cc1a178c24b89ba23fd6e3b1bb6c5' });
 
     IdleProvider.idle(10*60); // 10 minutes idle
