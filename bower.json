@@ -66,6 +66,7 @@
     "cleave.js": "^0.7.10",
     "angular-promise-buttons": "^0.1.21",
     "angular-idle": "^1.3.2",
-    "angular-ui-carousel": "^0.1.10"
+    "angular-ui-carousel": "^0.1.10",
+    "ng-idle": "^1.3.2"
   }
 }
