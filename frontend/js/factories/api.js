@@ -173,6 +173,18 @@ myApp.factory('apiService', function ($http, $q, $timeout,CsrfTokenService,$http
                 data: formData
             });
         },
+        getttsSpeech:function(formData,callback){
+            //console.log(formData);
+            return    $http({
+                //url:adminurl+'out/'+formData.user_id+"/",
+                url: adminUrl3 + 'Chatbotautolist/getttsSpeech',
+                method: 'POST',
+                data:(formData),
+                withCredentials: false
+            });
+            
+            
+        },
     };
     //return responsedata;
 });

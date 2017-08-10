@@ -1,4 +1,4 @@
-<div id="chat_window_1" ng-controller="ChatCtrl">
+<div id="chat_window_1" ng-controller="ChatCtrl" chatbotHeight >
         <div class="panel panel-primary " id="chat_panel" ng-init="chat_tab = 1">
             <div class="panel-heading container-fluid" id="accordion">
                 <!--<span class="glyphicon glyphicon-comment"></span> Chat-->
@@ -186,7 +186,7 @@
                                     <div class="loading">Typing</div>
                                 </div>
                                 <div class="input-group chatinputgroup" ng-controller="SpeechRecognitionController as speech">
-                                    <input type="text" class="form-control chatinput" ng-change="getAutocomplete(chatText);" ng-model="chatText" id="userMsg" placeholder="Type your message here..." autofocus  typeahead="list for list in autocompletelist" ng-keyup="onKeyUp($event)" />
+                                    <input type="text" class="form-control chatinput" ng-change="getAutocomplete(chatText);" ng-model="chatText" id="userMsg" placeholder="Type your message here..." autofocus  typeahead="list for list in autocompletelist" ng-keyup="onKeyUp($event)" x-webkit-speech />
                                     <div class="input-group-addon" ng-speech-recognition-start="" ng-speech-recognition-end="speech.displayTranscript()">
                                         <span class="speechtotext"  >
                                             <i class="fa fa-microphone fa-3"></i>

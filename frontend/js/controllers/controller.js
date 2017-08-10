@@ -117,12 +117,12 @@ myApp.controller('HomeCtrl', function ($scope,$rootScope, TemplateService, Navig
                 apiService.login($scope.formData).then(function (callback){
                     $scope.csrftoken=CsrfTokenService.getCookie("csrftoken");
                     
-                    
                     //if(angular.isUndefined(callback.data.error.message))
                     if(callback.data.value)
                     {
                         //console.log(callback);
                         $.jStorage.flush();
+                       
                         $.jStorage.set("id", callback.data.data._id);
                         $.jStorage.set("fname", callback.data.data.fname);
                         $.jStorage.set("lname", callback.data.data.lname);
@@ -303,12 +303,16 @@ myApp.controller('HomeCtrl', function ($scope,$rootScope, TemplateService, Navig
     })
 
 
-    .controller('CommonCtrl', function ($scope, TemplateService, NavigationService,CsrfTokenService, $timeout,$uibModal, toastr, $http,$state,apiService,$cookies) {
+    .controller('CommonCtrl', function ($scope, TemplateService, NavigationService,CsrfTokenService, $timeout,$uibModal, toastr, $http,$state,apiService,$cookies,$rootScope) {
         $scope.logout = function() {
 
             CsrfTokenService.getCookie("csrftoken").then(function(token) {
                 $scope.formData = {sessionid:$.jStorage.get("sessionid"),user:$.jStorage.get("id"),csrfmiddlewaretoken:token};
                 apiService.logout($scope.formData).then(function (callback){
+                    
+                    
+                    $rootScope.tabvalue.elements = [];
+                    $rootScope.tabvalue.element_values = [];
                     $.jStorage.flush();
                     $state.go("login");
                 });
@@ -703,18 +707,7 @@ myApp.controller('HomeCtrl', function ($scope,$rootScope, TemplateService, Navig
                         //console.log(value);
                         if(value.type=="text")
                         {
-                        	// var res = data.data.data.tiledlist[0].Text.split("\n");
-                            // var chatT = "";
-                            // for(var i=0;i<res.length;i++){
-                            //     breakTag= "";
-                            //     if(res[i] == res.length || res[i] == "")
-                            //         breakTag = "";
-                            //     else
-                            //         breakTag = "<br>";
-                            //     if(res[i] != "")
-                            //         chatT += "<p class='lastMsg'&nbsp;&nbsp;>"+ res[i]+breakTag +"</p>";
-                            // }
-                            $rootScope.pushSystemMsg(0,data.data.data);
+                        	$rootScope.pushSystemMsg(0,data.data.data);
                             $rootScope.showMsgLoader = false;
                             
                             
@@ -745,7 +738,9 @@ myApp.controller('HomeCtrl', function ($scope,$rootScope, TemplateService, Navig
                         $('#mybtn_trigger').trigger('click');
                         
                     },200);
-                    
+                    // apiService.getttsSpeech({text:data.data.data.tiledlist[0].Script[0]}).then(function (data){
+
+                    // });
                     // $('#mybtn_trigger').bind('click', function(event, textspeech) {
                        
 
@@ -840,7 +835,7 @@ myApp.controller('HomeCtrl', function ($scope,$rootScope, TemplateService, Navig
             speech.pitch = 1; // 0 to 2, 1=normal
             speech.lang = "en-US";
             //speech.lang = {lang: 'en-US', desc: 'English (United States)'};
-            speech.voice = voices[8]; 
+            //speech.voice = voices[8]; 
             speech.voiceURI = 'native';
             speechSynthesis.speak(speech);
             $.jStorage.set("texttospeak","");

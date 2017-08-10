@@ -17,9 +17,10 @@ var model = {
 
             //var textChunk = chunk.toString('utf8');// buffer to string
             json_data = JSON.parse(chunk);
-            console.log(json_data);
+            //console.log("tts",json_data);
             //console.log("chunk",chunk);
             //util.log(chunk);
+            
             callback(null, json_data);
             
         });
@@ -88,6 +89,17 @@ var model = {
 
         process.stdin.end();
         
+    },
+    getttsSpeech:function (data, callback){
+        tts = require('node-tts-api');
+ 
+        example = "Hello World";
+        console.log(data);
+        tts.getSpeech(example, function(error, link) {
+            console.log("tts",error);
+            
+            return console.log(link);
+        });
     },
 };
 module.exports = _.assign(module.exports, exports, model);

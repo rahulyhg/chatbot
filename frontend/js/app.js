@@ -19,7 +19,7 @@ var myApp = angular.module('myApp', [
 ]);
 //angular.module('manage', ['ngResource']);
 // Define all the routes below
-myApp.config(function ($stateProvider, $urlRouterProvider, $httpProvider, $locationProvider,$resourceProvider,IdleProvider,ttsProvider) {
+myApp.config(function ($stateProvider, $urlRouterProvider, $httpProvider, $locationProvider,$resourceProvider,IdleProvider,ttsProvider,$qProvider) {
     var tempateURL = "views/template/template.html"; //Default Template URL
     $resourceProvider.defaults.stripTrailingSlashes = false;
     // $httpProvider.defaults.xsrfCookieName = 'csrftoken';
@@ -28,7 +28,7 @@ myApp.config(function ($stateProvider, $urlRouterProvider, $httpProvider, $locat
     // for http request with session
     $httpProvider.defaults.withCredentials = false;
     ttsProvider.setSettings({ key: '5a1cc1a178c24b89ba23fd6e3b1bb6c5' });
-
+    //$qProvider.errorOnUnhandledRejections(false);
     IdleProvider.idle(10*60); // 10 minutes idle
     $stateProvider
         .state('home', {

@@ -76,6 +76,23 @@ myApp.directive('img', function ($compile, $parse) {
             }
         };
     })
+    .directive('chatbotHeight', function ($compile, $parse) {
+        return {
+            restrict: 'EA',
+            replace: false,
+            link: function ($scope, element, attrs) {
+                var $element = $(element);
+                var windowHeight = $(window).height();
+                var chatbotH = windowHeight - 53;
+                //$element.css("min-height", chatbotH);
+                $element.height(chatbotH);
+                // var w = angular.element($window);
+                // w.bind('chatbotHeight', function () {
+                //     scope.$apply();
+                // });
+            }
+        };
+    })
 
 
     .directive('replace', function () {

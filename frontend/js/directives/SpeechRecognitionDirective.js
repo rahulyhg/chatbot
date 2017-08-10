@@ -10,7 +10,8 @@ angular.module('app.directives', []).directive('ngSpeechRecognitionStart', funct
 		link: function ($scope, $element, $attrs) {
 			//var recognition = new webkitSpeechRecognition();
 			
-			var recognition = new (window.SpeechRecognition || window.webkitSpeechRecognition || window.mozSpeechRecognition || window.msSpeechRecognition)();
+			var SpeechRecognition =  (window.SpeechRecognition || window.webkitSpeechRecognition || window.mozSpeechRecognition || window.msSpeechRecognition || window.oSpeechRecognition );
+			var recognition = new SpeechRecognition();
 			var SpeechGrammarList = SpeechGrammarList || webkitSpeechGrammarList
 
 			var SpeechRecognitionEvent = SpeechRecognitionEvent || webkitSpeechRecognitionEvent
