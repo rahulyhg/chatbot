@@ -3,7 +3,7 @@ myApp.factory('apiService', function ($http, $q, $timeout,CsrfTokenService,$http
     adminurl = "http://35.161.160.7:8091/";
     var adminUrl2 = "http://wohlig.io/api/";
     //var adminUrl3 = "http://192.168.0.107/api/"
-    var adminUrl3 = "http://localhost:8096/api/";
+    var adminUrl3 = "http://localhost/api/";
     //return
     return {
 
@@ -43,7 +43,7 @@ myApp.factory('apiService', function ($http, $q, $timeout,CsrfTokenService,$http
                 //headers: {'X-CSRFToken': "6b86b273ff34fce19d6b804eff5a3f5747ada4eaa22f1d49c01e52ddb7875b4b"},
                 method: 'POST',
                 data: formData,
-                withCredentials: true,
+                withCredentials: false,
                 //dataType:"json",
             });
             /*
