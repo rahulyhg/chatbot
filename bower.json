@@ -67,6 +67,7 @@
     "angular-promise-buttons": "^0.1.21",
     "angular-idle": "^1.3.2",
     "angular-ui-carousel": "^0.1.10",
-    "ng-idle": "^1.3.2"
+    "ng-idle": "^1.3.2",
+    "angular-bowser": "^0.0.4"
   }
 }

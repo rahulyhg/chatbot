@@ -754,27 +754,37 @@ myApp.controller('HomeCtrl', function ($scope,$rootScope, TemplateService, Navig
                     // speech.pitch = 1; // 0 to 2, 1=normal
                     // speech.lang = "en-US";
                     // speechSynthesis.speak(speech);
-                    // tts.speech({
-                    //     src: data.data.data.tiledlist[0].Script[0],
-                    //     hl: 'en-us',
-                    //     r: 0, 
-                    //     c: 'mp3',
-                    //     f: '44khz_16bit_stereo',
-                    //     ssml: false,
-                    //     withCredentials: false,
-                    //     xhrFields: {
-                    //         withCredentials: true
-                    //     },
-                    // });
-                    // $http({
-                    //     url: "http://api.voicerss.org/?key=5a1cc1a178c24b89ba23fd6e3b1bb6c5&hl=en-us&src="+data.data.data.tiledlist[0].topic,
-                    //     method: 'POST',
-                    //     //data:(formData),
-                    //     withCredentials: false,
-                    //     //headers: {'Content-Type': 'application/json','X-CSRFToken': "Vfpx6pWJYBx7dbX35vwXm7P9xj3xNPyUJbSx9IlwgcRHReN974ZC5rEbvgpRQdY2"},
-                    // }).then(function (data){
-                    //    console.log(data); 
-                    // });
+                    tts.speech({
+                        src: data.data.data.tiledlist[0].Script[0],
+                        hl: 'en-us',
+                        r: 0, 
+                        c: 'mp3',
+                        f: '44khz_16bit_stereo',
+                        ssml: false,
+                       
+                    });
+                    $http({
+                        url: "http://api.voicerss.org/?key=5a1cc1a178c24b89ba23fd6e3b1bb6c5&hl=en-us&src="+data.data.data.tiledlist[0].topic,
+                        method: 'POST',
+                        //data:(formData),
+                        withCredentials: false,
+                        //headers: {'Content-Type': 'application/json','X-CSRFToken': "Vfpx6pWJYBx7dbX35vwXm7P9xj3xNPyUJbSx9IlwgcRHReN974ZC5rEbvgpRQdY2"},
+                    }).then(function (data){
+                       console.log(data); 
+                        // var audioElement = document.getElementById('ttsaudio');
+                        // audioElement.setAttribute('src', src);
+                        // // Load src of the audio file
+                        // audioElement.load();
+                        // audioElement.play();
+                        // output =  '<audio id="ttsaudio1">';
+                        // // you can add more source tag
+                        // output +=  '<source src='+data.data+'" type="audio/mp3" />';
+                        // output +=  '</audio>';
+                        //  //var newAudio = $(createAudio(src));
+                        // $("#ttsaudio").replaceWith(output);
+                        // $("#ttsaudio1").load();
+                        // $("#ttsaudio1").play();
+                    });
                     
 
                     $("#topic").text(data.data.data.tiledlist[0].topic);
@@ -826,7 +836,7 @@ myApp.controller('HomeCtrl', function ($scope,$rootScope, TemplateService, Navig
                 { "data-name": "Sin-Ji", voiceURI: "com.apple.ttsbundle.Sin-Ji-compact", "data-lang": "zh-HK", localService: true, "default": true },
                 { "data-name": "Mei-Jia", voiceURI: "com.apple.ttsbundle.Mei-Jia-compact", "data-lang": "zh-TW", localService: true, "default": true }
                 ];
-            var voices = window.speechSynthesis.getVoices();
+            //var voices = window.speechSynthesis.getVoices();
             var speech = new SpeechSynthesisUtterance($.jStorage.get("texttospeak"));
             //speech.text = $.jStorage.get("texttospeak");
             //speech.text = "Hello";
@@ -844,7 +854,7 @@ myApp.controller('HomeCtrl', function ($scope,$rootScope, TemplateService, Navig
 
         $rootScope.tappedKeys = '';
 
-        $rootScope.onKeyUp = (e)=>{
+        $rootScope.onKeyUp = function(e){
             //if(e.key == "ArrowDown" || e.key == "ArrowUp")
             if(e.which == 40 )
             {

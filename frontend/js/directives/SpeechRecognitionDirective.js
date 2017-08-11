@@ -8,28 +8,79 @@ angular.module('app.directives', []).directive('ngSpeechRecognitionStart', funct
 	return {
 		restrict: 'A',
 		link: function ($scope, $element, $attrs) {
-			//var recognition = new webkitSpeechRecognition();
+
+			// if (typeof Windows !== 'undefined' &&
+			// 	typeof Windows.UI !== 'undefined' &&
+			// 	typeof Windows.ApplicationModel !== 'undefined') 
+			//{
+			// Subscribe to the Windows Activation Event
+				// $element.bind('touchstart mousedown', function (event) {
+				
+				// Window.UI.WebUI.WebUIApplication.addEventListener("activated", function (args) {
+				// 	var activation = Window.ApplicationModel.Activation;
+				// 	// Check to see if the app was activated by a voice command
+				// 	if (args.kind === activation.ActivationKind.voiceCommand) {
+				// 	// Get the speech reco
+				// 	var speechRecognitionResult = args.result;
+				// 	var textSpoken = speechRecognitionResult.text;
+				// 	// Determine the command type {search} defined in vcd
+				// 	if (speechRecognitionResult.rulePath[0] === "search") {
+				// 		// Determine the stream name specified
+				// 		if (textSpoken.includes('foo') || textSpoken.includes('Foo')) {
+				// 		console.log("The user is searching for foo");
+				// 		}
+				// 		else if (textSpoken.includes('bar') || textSpoken.includes('Bar') ) {
+				// 		console.log("The user is searching for a bar");
+				// 		}
+				// 		else {
+				// 		console.log("Invalid search term specified by user");
+				// 		}
+				// 	}
+				// 	else { 
+				// 		console.log("No valid command specified");
+				// 	}
+				// 	}
+				// });
+				// });
+			//} 
+			// else {
+			// console.log("Windows namespace is unavaiable");
+			// }
 			
-			var SpeechRecognition =  (window.SpeechRecognition || window.webkitSpeechRecognition || window.mozSpeechRecognition || window.msSpeechRecognition || window.oSpeechRecognition );
-			var recognition = new SpeechRecognition();
-			var SpeechGrammarList = SpeechGrammarList || webkitSpeechGrammarList
+			if($rootScope.browser=="chrome") {
+				var recognition = new window.webkitSpeechRecognition();
+			} else if($rootScope.browser=="firefox") {
+				//var recognition = new ( SpeechRecognition || webkitSpeechRecognition || mozSpeechRecognition)();
+				var recognition = new SpeechRecognition();
+			} else if($rootScope.browser=="safari") {
+				var recognition = new window.msSpeechRecognition();
+			}
+			else if($rootScope.browser=="opera") {
+				var recognition = new window.oSpeechRecognition();
+			}
+			else if($rootScope.browser=="msie") {
+				var recognition = new window.msSpeechRecognition();
+			}
+			else if($rootScope.browser=="android") {
+				alert("android");
+				var recognition = new window.webkitSpeechRecognition();
+			}
+			else if($rootScope.browser=="ios") {
+				var recognition = new window.webkitSpeechRecognition();
+			}
+			var SpeechGrammarList = SpeechGrammarList || webkitSpeechGrammarList;
 
 			var SpeechRecognitionEvent = SpeechRecognitionEvent || webkitSpeechRecognitionEvent
-			// var SpeechGrammarList = SpeechGrammarList || webkitSpeechGrammarList
-			// var SpeechRecognitionEvent = SpeechRecognitionEvent || webkitSpeechRecognitionEvent
-			console.log(typeof Windows);
 			recognition.continuous = true;
 			recognition.interimResults = false;
 			ignore_onend = false;
 			final_transcript = '';
-			//Change the recognition language here.
 			recognition.lang = 'en-us';
 			
 			var recognitionIsAlreadyCalled = false;
 
 			$element.bind('touchstart mousedown', function (event) {
 				$scope.isHolded = true;
-				//$(this).toggleClass('hover_effect');
 				$(this).addClass('hover_effect');
 				$timeout(function () {
 					if ($scope.isHolded) {
@@ -56,24 +107,18 @@ angular.module('app.directives', []).directive('ngSpeechRecognitionStart', funct
 
 			$element.bind('touchend mouseup', function (event) {
 				$scope.isHolded = false;
-				//$(this).toggleClass('hover_effect');
 				$(this).removeClass('hover_effect');
                 console.log($attrs.ngSpeechRecognitionEnd);
 				if ($attrs.ngSpeechRecognitionEnd) {
 					
 					$scope.$apply(function () {
-						//console.log($attrs);
 						
 						recognition.onerror = function(event) {
 							if (event.error == 'no-speech') {
-							// start_img.src = '/intl/en/chrome/assets/common/images/content/mic.gif';
-							// showInfo('info_no_speech');
 							ignore_onend = true;
 							console.log("No speech");
 							}
 							if (event.error == 'audio-capture') {
-							// start_img.src = '/intl/en/chrome/assets/common/images/content/mic.gif';
-							// showInfo('info_no_microphone');
 							ignore_onend = true;
 							console.log("No mic");
 							}
@@ -86,30 +131,6 @@ angular.module('app.directives', []).directive('ngSpeechRecognitionStart', funct
 							ignore_onend = true;
 							}
 						};
-						// recognition.onend = function() {
-						// 	recognizing = false;
-						// 	if (ignore_onend) {
-						// 		console.log("ignore on end");
-						// 	return;
-						// 	}
-						// 	//start_img.src = '/intl/en/chrome/assets/common/images/content/mic.gif';
-						// 	if (!final_transcript) {
-						// 		console.log("Final trans",final_transcript);
-						// 	//showInfo('info_start');
-						// 	return;
-						// 	}
-						// 	//showInfo('');
-						// 	if (window.getSelection) {
-						// 	window.getSelection().removeAllRanges();
-						// 	var range = document.createRange();
-						// 	range.selectNode(document.getElementById('final_span'));
-						// 	window.getSelection().addRange(range);
-						// 	}
-						// 	if (create_email) {
-						// 	create_email = false;
-						// 	createEmail();
-						// 	}
-						// };
 						recognition.onresult = function (event) {
                             console.log("display+--",event);
 							if (event.results[0][0].transcript !== undefined) {
@@ -128,7 +149,6 @@ angular.module('app.directives', []).directive('ngSpeechRecognitionStart', funct
 								}
 							}
 						}
-						//recognition.onresult(event);
 						recognition.stop();
 						recognitionIsAlreadyCalled = false;
 					});
