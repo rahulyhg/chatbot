@@ -903,8 +903,9 @@ myApp.controller('HomeCtrl', function ($scope,$rootScope, TemplateService, Navig
                     $(".chatinput").val("");
                     $rootScope.pushMsg("",$rootScope.chatText);
                 }
-                else
-                    $rootScope.pushMsg($rootScope.autolistid,$rootScope.autolistvalue);
+                else {
+                    $rootScope.pushMsg($rootScope.autolistid,$rootScope.chatText);
+                }
             }
         };
         $rootScope.crnSubmit = function(crnno) {

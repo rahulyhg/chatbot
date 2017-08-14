@@ -39,7 +39,7 @@ myApp.factory('apiService', function ($http, $q, $timeout,CsrfTokenService,$http
             
             return $http({
                 //url: "http://wohlig.co.in/chatbotapi/index.php/json/" + 'login/',
-                url:adminUrl3+ "ChatbotUser/loginuser",
+                url:adminUrl3+ "Chatbotuser/loginuser",
                 //headers: {'X-CSRFToken': "6b86b273ff34fce19d6b804eff5a3f5747ada4eaa22f1d49c01e52ddb7875b4b"},
                 method: 'POST',
                 data: formData,
@@ -75,7 +75,7 @@ myApp.factory('apiService', function ($http, $q, $timeout,CsrfTokenService,$http
         changepassword:function(formData, callback) {
             
             return $http({
-                url: adminUrl3 + 'ChatbotUser/changepassword',
+                url: adminUrl3 + 'Chatbotuser/changepassword',
                 method: 'POST',
                 data: formData
             });
@@ -152,7 +152,7 @@ myApp.factory('apiService', function ($http, $q, $timeout,CsrfTokenService,$http
         forgotpassword:function(formData, callback) {
             
             return $http({
-                url: adminUrl3 + 'ChatbotUser/forgotpassword',
+                url: adminUrl3 + 'Chatbotuser/forgotpassword',
                 method: 'POST',
                 data: formData
             });
@@ -160,7 +160,7 @@ myApp.factory('apiService', function ($http, $q, $timeout,CsrfTokenService,$http
         isvalidpasswordresetreq:function(formData, callback) {
             
             return $http({
-                url: adminUrl3 + 'ChatbotUser/isvalidpasswordresetreq',
+                url: adminUrl3 + 'Chatbotuser/isvalidpasswordresetreq',
                 method: 'POST',
                 data: formData
             });
@@ -168,7 +168,7 @@ myApp.factory('apiService', function ($http, $q, $timeout,CsrfTokenService,$http
         changepassword2:function(formData, callback) {
             
             return $http({
-                url: adminUrl3 + 'ChatbotUser/resetpassword',
+                url: adminUrl3 + 'Chatbotuser/resetpassword',
                 method: 'POST',
                 data: formData
             });
