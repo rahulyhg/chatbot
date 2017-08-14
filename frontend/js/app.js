@@ -27,7 +27,7 @@ myApp.config(function ($stateProvider, $urlRouterProvider, $httpProvider, $locat
     // $httpProvider.defaults.xsrfHeaderName = 'X-CSRFToken';
     
     // for http request with session
-    $httpProvider.defaults.withCredentials = false;
+    //$httpProvider.defaults.withCredentials = false;
     ttsProvider.setSettings({ key: '5a1cc1a178c24b89ba23fd6e3b1bb6c5' });
     //$qProvider.errorOnUnhandledRejections(false);
     IdleProvider.idle(10*60); // 10 minutes idle
