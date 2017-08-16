@@ -125,12 +125,12 @@ angular.module('app.directives', []).directive('ngSpeechRecognitionStart', funct
 							console.log("No mic");
 							}
 							if (event.error == 'not-allowed') {
-							if (event.timeStamp - start_timestamp < 100) {
-								//showInfo('info_blocked');
-							} else {
-								//showInfo('info_denied');
-							}
-							ignore_onend = true;
+								// if (event.timeStamp - start_timestamp < 100) {
+								// 	//showInfo('info_blocked');
+								// } else {
+								// 	//showInfo('info_denied');
+								// }
+								ignore_onend = true;
 							}
 						};
 						recognition.onresult = function (event) {
