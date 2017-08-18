@@ -1,6 +1,10 @@
 var exports = _.cloneDeep(require("sails-wohlig-service"));
 var pythonpath = "http://104.46.103.162:8096/script/";
+<<<<<<< HEAD
 var pythonpath = "http://localhost:8080/script/";
+=======
+//var pythonpath = "http://localhost:8096/script/";
+>>>>>>> 1da21aafcdb0d979beeaf9450513f54482d5ed66
 var model = {
     getSysMsg: function (data, callback) {
         var util = require("util");
@@ -15,12 +19,13 @@ var model = {
 
         process.stdout.on('data',function(chunk){
 
-            //var textChunk = chunk.toString('utf8');// buffer to string
+            var textChunk = chunk.toString('utf8');// buffer to string
+			console.log("data", textChunk);
             json_data = JSON.parse(chunk);
             //console.log("tts",json_data);
             //console.log("chunk",chunk);
             //util.log(chunk);
-            
+            console.log("data", chunk);
             callback(null, json_data);
             
         });
@@ -28,7 +33,7 @@ var model = {
         process.on('close', function (code) {
             console.log("close",code);
         });
-
+		
         process.stderr.on('data', function (data) {
             console.log('stderr: ' + data);
         });
@@ -37,6 +42,7 @@ var model = {
                 console.log("error",err);
                 py.exit(0);
             }
+			callback(err,null);
         });
         process.stdout.on('end', function(){
         	//var str = dataString.substring(1,dataString.length);

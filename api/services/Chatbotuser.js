@@ -79,7 +79,11 @@ schema.plugin(timestamps);
 
 var PythonShell = require('python-shell');
 var pythonpath = "http://104.46.103.162:8096/script/";
+<<<<<<< HEAD
 var pythonpath = "http://localhost:8080/script/";
+=======
+//var pythonpath = "http://localhost:8096/script/";
+>>>>>>> 1da21aafcdb0d979beeaf9450513f54482d5ed66
 module.exports = mongoose.model('chatbotuser', schema,'chatbotuser');
 //var chatbot_user_logs = mongoose.model('chatbot_user_logs', userlogschema,"chatbot_user_logs");
 var exports = _.cloneDeep(require("sails-wohlig-service")(schema));

@@ -1,4 +1,4 @@
-var exports = _.cloneDeep(require("sails-wohlig-service"));
+/*var exports = _.cloneDeep(require("sails-wohlig-service"));
 const record = require('node-record-lpcm16');
 const fs = require('fs');
 const stream = require('stream');
@@ -79,7 +79,7 @@ var model = {
     },
   };
  module.exports = _.assign(module.exports, exports, model);
-
+*/
 // var exports = _.cloneDeep(require("sails-wohlig-service"));
 // var pythonpath = "http://35.161.160.7:8092/";
 // var pythonpath = "http://localhost:8080/script/";

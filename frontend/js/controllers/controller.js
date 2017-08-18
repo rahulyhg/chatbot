@@ -683,6 +683,7 @@ myApp.controller('HomeCtrl', function ($scope,$rootScope, TemplateService, Navig
         };
         $rootScope.InstructionResponse = function(id,data) {
             $rootScope.pushSystemMsg(id,data);
+			console.log(data);
             $('#myCarousel').carousel({
                 interval: false,
                 wrap: false
@@ -696,15 +697,16 @@ myApp.controller('HomeCtrl', function ($scope,$rootScope, TemplateService, Navig
                 //$rootScope.formData = {user_id:1164,user_input:value,auto_id:parseInt(id),auto_value:value,'csrfmiddlewaretoken':token};
                 var mysessiondata = $.jStorage.get("sessiondata");
                 //mysessiondata = mysessiondata.toObject();
-                mysessiondata.data = {auto_id:parseInt(id),Text:value};
+                //mysessiondata.data = {id:parseInt(id),Text:value};
+				mysessiondata.data = {id:id,Text:value};
                 $rootScope.formData = mysessiondata;
                 $timeout(function(){
                     $(".chatinput").val("");
                 });
                 apiService.getSysMsg($rootScope.formData).then(function (data){
-                    
+						console.log(data);
                     angular.forEach(data.data.data.tiledlist, function(value, key) {
-                        //console.log(value);
+                        console.log(value);
                         if(value.type=="text")
                         {
                         	$rootScope.pushSystemMsg(0,data.data.data);
@@ -727,6 +729,7 @@ myApp.controller('HomeCtrl', function ($scope,$rootScope, TemplateService, Navig
                         }
                         else if(value.type=="Instruction")
                         {
+							console.log(data);
                            $rootScope.InstructionResponse(0,data.data.data);  
                         }
                         
@@ -905,7 +908,11 @@ myApp.controller('HomeCtrl', function ($scope,$rootScope, TemplateService, Navig
                 }
                 else {
                     $rootScope.pushMsg($rootScope.autolistid,$rootScope.chatText);
+<<<<<<< HEAD
                 }
+=======
+				}
+>>>>>>> 1da21aafcdb0d979beeaf9450513f54482d5ed66
             }
         };
         $rootScope.crnSubmit = function(crnno) {

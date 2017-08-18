@@ -12019,4 +12019,8 @@ a.ui-button:active,
   background-image: url(../img/next.png); }
 
 .fancybox-nav.fancybox-prev span {
+<<<<<<< HEAD
   background-image: url(../img/prev.png); }
+=======
+  background-image: url(../img/prev.png); }
+>>>>>>> 1da21aafcdb0d979beeaf9450513f54482d5ed66
