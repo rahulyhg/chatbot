@@ -9750,6 +9750,10 @@ div.img-box {
   font-size: 0.8em;
   padding-right: 10px; }
 
+.toggler.active {
+  color: green;
+  background-color: #eee !important; }
+
 .nav-pills > li.active > a, .btn-primary {
   background-color: #003874;
   border-color: #003874; }
@@ -12019,8 +12023,4 @@ a.ui-button:active,
   background-image: url(../img/next.png); }
 
 .fancybox-nav.fancybox-prev span {
-<<<<<<< HEAD
   background-image: url(../img/prev.png); }
-=======
-  background-image: url(../img/prev.png); }
->>>>>>> 1da21aafcdb0d979beeaf9450513f54482d5ed66

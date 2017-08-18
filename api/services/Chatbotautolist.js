@@ -1,10 +1,6 @@
 var exports = _.cloneDeep(require("sails-wohlig-service"));
 var pythonpath = "http://104.46.103.162:8096/script/";
-<<<<<<< HEAD
-var pythonpath = "http://localhost:8080/script/";
-=======
 //var pythonpath = "http://localhost:8096/script/";
->>>>>>> 1da21aafcdb0d979beeaf9450513f54482d5ed66
 var model = {
     getSysMsg: function (data, callback) {
         var util = require("util");

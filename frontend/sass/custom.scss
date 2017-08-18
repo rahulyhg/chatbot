@@ -213,7 +213,10 @@ div.img-box { height: 100px; /*background: #ccc;*/ display: table-cell; vertical
         font-size: 0.8em;
         padding-right: 10px;
     }
-
+    .toggler.active {
+        color:rgb(0,128,0);
+        background-color:#eee !important; 
+    }
     .nav-pills>li.active>a, .btn-primary{
         background-color: #003874;
         border-color: #003874;
