@@ -64,7 +64,7 @@ angular.module('app.directives', []).directive('ngSpeechRecognitionStart', funct
 				var recognition = new window.msSpeechRecognition();
 			}
 			else if($rootScope.browser=="android") {
-				alert("android");
+				//alert("android");
 				var recognition = new window.webkitSpeechRecognition();
 			}
 			else if($rootScope.browser=="ios") {

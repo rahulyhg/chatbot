@@ -42,12 +42,12 @@
                                                             
                                                             {{chatRes.Text}}
                                                         </ng-bind-html>
-                                                        
+                                                        <!--
                                                         <small class="chatTime">
                                                             <span class="glyphicon glyphicon-time">
                                                             </span>
                                                             {{list.curTime | date: 'HH:mm:ss'}}
-                                                        </small>
+                                                        </small>-->
                                                     </p>
                                                 </div>
                                                 <div class="chatType" ng-if="list.msg.tiledlist[0].type==='rate card'">
@@ -65,12 +65,12 @@
                                                             <br>
                                                             <input class='rate_btn btn btn-default pull-right' id='rate_btn' type='button' value='Get Limit' ng-click="ratecardSubmit(r[rate_count].ratecard_col_select,r[rate_count].ratecard_data_select);" />
                                                         </ng-bind-html>
-                                                        
+                                                        <!--
                                                         <small class="chatTime">
                                                             <span class="glyphicon glyphicon-time">
                                                             </span>
                                                             {{list.curTime | date: 'HH:mm:ss'}}
-                                                        </small>
+                                                        </small>-->
                                                     </p>
                                                 </div>
                                                 <div class="chatType" ng-if="list.msg.tiledlist[0].type==='DTHyperlink'">
@@ -166,7 +166,7 @@
                                             <small class="chatTime">
                                                 <span class="glyphicon glyphicon-time">
                                                 </span>
-                                                {{list.curTime | date: 'HH:mm:ss'}}
+                                                {{list.curTime | date: 'HH:mm:ss a'}}
                                             </small>
                                         </p>
                                     </div>

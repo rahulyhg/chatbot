@@ -1,5 +1,5 @@
 import sys, json, re
-# from input import Input
+from input import Input
 from python_session import Psession
 
 #Read data from stdin
@@ -17,10 +17,11 @@ def main():
     session_obj.data['DTHyperlink'] =  re.sub(r'[^\x00-\x7F]','',session_obj.data['DTHyperlink'].decode('ascii','ignore'))
     session_obj.data['line_no'] = int(session_obj.DTHline)
     session_obj.data['col_no'] = int(session_obj.DTHcol)
-    #input_obj = Input(session_obj)
-    #session_obj.response = input_obj.take_input()
-    #tiledlist = [session_obj.response]
-    response = {"tiledlist":[{'Script': [], 'Process': [u"Check if Customer's Phone Banking access is blocked in Finesse or Unified Desktop-Quick Actions-Channel One View"], 'Text': [], 'col_no': [14, 14], 'line_no': [73, 73], 'Step_list': ['step1'], 'Tooltip': ['tooltip1'], 'topic': u'Cheque book request', 'current_step': '', 'type': 'DTHyperlink', 'DTHyperlink': [u'Phone Banking access is not blocked', u'Phone Banking access is blocked']}], 'session_obj_data':session_obj.__dict__}
+    input_obj = Input(session_obj)
+    session_obj.response = input_obj.take_input()
+    tiledlist = [session_obj.response]
+    response = {"tiledlilst" : tiledlilst, "session_object" : session_obj}
+    # response = {"tiledlist":[{'Script': [], 'Process': [u"Check if Customer's Phone Banking access is blocked in Finesse or Unified Desktop-Quick Actions-Channel One View"], 'Text': [], 'col_no': [14, 14], 'line_no': [73, 73], 'Step_list': ['step1'], 'Tooltip': ['tooltip1'], 'topic': u'Cheque book request', 'current_step': '', 'type': 'DTHyperlink', 'DTHyperlink': [u'Phone Banking access is not blocked', u'Phone Banking access is blocked']}], 'session_obj_data':session_obj.__dict__}
     print(json.dumps(response))
 
 #start process
