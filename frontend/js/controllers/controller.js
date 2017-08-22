@@ -861,7 +861,10 @@ myApp.controller('HomeCtrl', function ($scope,$rootScope, TemplateService, Navig
                         {
                            $rootScope.DthResponse(0,data.data.data);  
                            $timeout(function(){
-                                var textspeech = data.data.data.tiledlist[0].Process[0];
+                                var textspeech = data.data.data.tiledlist[0].Text;
+                                _.each(data.data.data.tiledlist[0].DTHyperlink,function(v,k){
+                                    textspeech += v;
+                                });
                                 $.jStorage.set("texttospeak",textspeech);
 
                                 $('#mybtn_trigger').trigger('click');
@@ -979,9 +982,10 @@ myApp.controller('HomeCtrl', function ($scope,$rootScope, TemplateService, Navig
                 { "data-name": "Mei-Jia", voiceURI: "com.apple.ttsbundle.Mei-Jia-compact", "data-lang": "zh-TW", localService: true, "default": true }
                 ];
             var voices = window.speechSynthesis.getVoices();
+            console.log(voices);
             var textspeech = $rootScope.htmlToPlaintext($.jStorage.get("texttospeak"));
-            console.log(textspeech);
-            var speech = new SpeechSynthesisUtterance(textspeech);
+            //console.log(textspeech);
+            var speech = new SpeechSynthesisUtterance("Hello world");
             //speech.text = $.jStorage.get("texttospeak");
             //speech.text = "Hello";
             speech.volume = 1; // 0 to 1
@@ -989,10 +993,23 @@ myApp.controller('HomeCtrl', function ($scope,$rootScope, TemplateService, Navig
             speech.pitch = 1; // 0 to 2, 1=normal
             speech.lang = "en-US";
             //speech.lang = {lang: 'en-US', desc: 'English (United States)'};
-            speech.voice = voices[8]; 
-            //speech.voiceURI = 'native';
-            speechSynthesis.speak(speech);
+            //speech.voice = voices[8]; 
+            speech.voiceURI = 'native';
+            //speechSynthesis.speak(speech);
+            //speech.text = textspeech;
+            console.log(speech);
+            window.speechSynthesis.speak(speech);
             $.jStorage.set("texttospeak","");
+
+            tts.speech({
+                src: textspeech,
+                hl: 'en-us',
+                r: 0, 
+                c: 'mp3',
+                f: '44khz_16bit_stereo',
+                ssml: false,
+                
+            });
         };
         
 
