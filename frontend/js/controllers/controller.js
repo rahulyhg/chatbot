@@ -1001,15 +1001,15 @@ myApp.controller('HomeCtrl', function ($scope,$rootScope, TemplateService, Navig
             //window.speechSynthesis.speak(speech);
             $.jStorage.set("texttospeak","");
 
-            tts.speech({
-                src: textspeech,
-                hl: 'en-us',
-                r: 0, 
-                c: 'mp3',
-                f: '44khz_16bit_stereo',
-                ssml: false,
+            // tts.speech({
+            //     src: textspeech,
+            //     hl: 'en-us',
+            //     r: 0, 
+            //     c: 'mp3',
+            //     f: '44khz_16bit_stereo',
+            //     ssml: false,
                 
-            });
+            // });
         };
         
 
