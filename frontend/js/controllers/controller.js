@@ -21,10 +21,11 @@ myApp.controller('HomeCtrl', function ($scope,$rootScope, TemplateService, Navig
                 return check;
             //};
         };
+        
         $timeout(function () {
-            $('.toggler').click(function () {
+            $(document).on('click', '.toggler', function(){ 
                 $(this).parent().children('ul.tree').toggle(300);
-                $(this).parent().find('.triangle').toggleClass('glyphicon-triangle-bottom').toggleClass('glyphicon-triangle-right');
+                $(this).children().find('.triangle').toggleClass('glyphicon-triangle-bottom').toggleClass('glyphicon-triangle-right');
                 //return false;
             });
             $('#myTabs a').click(function (e) {
@@ -529,6 +530,73 @@ myApp.controller('HomeCtrl', function ($scope,$rootScope, TemplateService, Navig
         //         $scope.$digest();
         //     }
         // }
+        $rootScope.findTopic = function(topic) {
+            var prev = "";
+            if(topic == "")
+            {
+                $("#topiclist li").parent().find('ul.tree').toggle(300);
+                $("#topiclist li").parent().children("a").find('.triangle').toggleClass('glyphicon-triangle-bottom').toggleClass('glyphicon-triangle-right');
+                $("#topiclist li").show();
+            }
+            else
+                $("#topiclist li").hide();
+            $("#topiclist li").each(function(){
+                
+                var keyword = new RegExp($(this).children("a").find().attr("id"), 'i');
+                //console.log($(this).text().search(new RegExp(topic, "i")));
+                //if (keyword.test(topic))
+                if($(this).find("a").text().search(new RegExp(topic, "i"))<0)
+                { }
+                else
+                {
+                    $(this).show();
+                    $(this).children("a").find().show();
+                    if($(this).parent().find('ul.tree').is(':visible')) {
+                        
+                    }
+                    else
+                    {
+                        $(this).parent().find('ul.tree').toggle(300);
+                        $(this).parent().children("a").find('.triangle').toggleClass('glyphicon-triangle-bottom').toggleClass('glyphicon-triangle-right');
+                    }
+                    
+                    //console.log("found",topic);   
+                }
+                //$(this).find(".section_last").removeClass("active");
+            });
+            // _.each(submenu, function(value, key) {
+                
+            //     if( value != "")
+            //     {   
+            //         if(submenu[0] == "Locker")
+            //         {
+            //             //value=value.replace(" ","_");
+            //             if(key==0)
+            //                 prev +=value;
+            //             else
+            //                 prev +=" "+value; 
+            //         }
+            //         else
+            //             prev +=value+" "; 
+            //         //console.log(".list-group "+prev);
+            //         if(submenu.length != (key+1))
+            //         {
+            //             if($(".list-group a[id='"+prev+"']").parent().children('ul.tree').is(':visible')) {}
+            //             else
+            //             {
+            //                 $(".list-group a[id='"+prev+"']").parent().children('ul.tree').toggle(300);
+            //             }
+            //             $(".list-group a[id='"+prev+"']").parent().find('.triangle').toggleClass('glyphicon-triangle-bottom').toggleClass('glyphicon-triangle-right');
+            //         }
+            //         if($( ".list-group a[id='"+prev+"']" ).hasClass( "section_last" ))
+            //         {   
+            //             console.log("hasclass");
+            //             $(".list-group a[id='"+prev+"']").addClass("active");
+            //         }
+            //     }
+                
+            // });
+        };
         $rootScope.scrollChatWindow = function() {
             $timeout(function(){
                 var chatHeight = $("ul.chat").height();
@@ -725,10 +793,14 @@ myApp.controller('HomeCtrl', function ($scope,$rootScope, TemplateService, Navig
                     }
                     else
                         prev +=value+" "; 
-                    console.log(".list-group "+prev);
+                    //console.log(".list-group "+prev);
                     if(submenu.length != (key+1))
                     {
-                        $(".list-group a[id='"+prev+"']").parent().children('ul.tree').toggle(300);
+                        if($(".list-group a[id='"+prev+"']").parent().children('ul.tree').is(':visible')) {}
+                        else
+                        {
+                            $(".list-group a[id='"+prev+"']").parent().children('ul.tree').toggle(300);
+                        }
                         $(".list-group a[id='"+prev+"']").parent().find('.triangle').toggleClass('glyphicon-triangle-bottom').toggleClass('glyphicon-triangle-right');
                     }
                     if($( ".list-group a[id='"+prev+"']" ).hasClass( "section_last" ))
