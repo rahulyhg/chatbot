@@ -813,6 +813,9 @@ myApp.controller('HomeCtrl', function ($scope,$rootScope, TemplateService, Navig
             });
             
         };
+        $rootScope.htmlToPlaintext=function(text) {
+            return text ? String(text).replace(/<[^>]+>/gm, '') : '';
+        };
         $rootScope.getSystemMsg = function(id,value){
             //console.log("id",id);
             //CsrfTokenService.getCookie("csrftoken").then(function(token) {
@@ -835,7 +838,9 @@ myApp.controller('HomeCtrl', function ($scope,$rootScope, TemplateService, Navig
                         	$rootScope.pushSystemMsg(0,data.data.data);
                             $rootScope.showMsgLoader = false;
                             $timeout(function(){
-                                var textspeech = data.data.data.tiledlist[0].Text[0];
+                                var textspeech = data.data.data.tiledlist[0].Text;
+                                
+                                
                                 $.jStorage.set("texttospeak",textspeech);
 
                                 $('#mybtn_trigger').trigger('click');
@@ -973,8 +978,10 @@ myApp.controller('HomeCtrl', function ($scope,$rootScope, TemplateService, Navig
                 { "data-name": "Sin-Ji", voiceURI: "com.apple.ttsbundle.Sin-Ji-compact", "data-lang": "zh-HK", localService: true, "default": true },
                 { "data-name": "Mei-Jia", voiceURI: "com.apple.ttsbundle.Mei-Jia-compact", "data-lang": "zh-TW", localService: true, "default": true }
                 ];
-            //var voices = window.speechSynthesis.getVoices();
-            var speech = new SpeechSynthesisUtterance($.jStorage.get("texttospeak"));
+            var voices = window.speechSynthesis.getVoices();
+            var textspeech = $rootScope.htmlToPlaintext($.jStorage.get("texttospeak"));
+            console.log(textspeech);
+            var speech = new SpeechSynthesisUtterance(textspeech);
             //speech.text = $.jStorage.get("texttospeak");
             //speech.text = "Hello";
             speech.volume = 1; // 0 to 1
@@ -982,8 +989,8 @@ myApp.controller('HomeCtrl', function ($scope,$rootScope, TemplateService, Navig
             speech.pitch = 1; // 0 to 2, 1=normal
             speech.lang = "en-US";
             //speech.lang = {lang: 'en-US', desc: 'English (United States)'};
-            //speech.voice = voices[8]; 
-            speech.voiceURI = 'native';
+            speech.voice = voices[8]; 
+            //speech.voiceURI = 'native';
             speechSynthesis.speak(speech);
             $.jStorage.set("texttospeak","");
         };
