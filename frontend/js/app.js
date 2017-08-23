@@ -37,6 +37,11 @@ myApp.config(function ($stateProvider, $urlRouterProvider, $httpProvider, $locat
             templateUrl: tempateURL,
             controller: 'HomeCtrl'
         })
+        .state('dashboard', {
+            url: "/dashboard",
+            templateUrl: tempateURL,
+            controller: 'DashboardCtrl'
+        })
         .state('login', {
             url: "/login",
             templateUrl: tempateURL,

@@ -90,7 +90,12 @@ myApp.controller('HomeCtrl', function ($scope,$rootScope, TemplateService, Navig
             }
         };
     })
-    
+    myApp.controller('DashboardCtrl', function ($scope,$rootScope, TemplateService, NavigationService,CsrfTokenService,Menuservice, $timeout,$http,apiService,$state) {
+        $scope.template = TemplateService.getHTML("content/dashboard.html");
+        TemplateService.title = "Dashboard"; //This is the Title of the Website
+        $scope.navigation = NavigationService.getNavigation();
+        $rootScope.uipage="dashboard";
+    })
     .controller('LoginCtrl', function ($scope, TemplateService, NavigationService,CsrfTokenService, $timeout, toastr, $http,$state,apiService,$uibModal,$filter,Idle) {
         $scope.template = TemplateService.getHTML("login.html");
         TemplateService.title = "Login"; //This is the Title of the Website
@@ -172,7 +177,7 @@ myApp.controller('HomeCtrl', function ($scope,$rootScope, TemplateService, Navig
                         $scope.$on('IdleStart', function() {
                             // the user appears to have gone idle
                         });
-                        $state.go("home");
+                        $state.go("dashboard");
                     }
                     else if(callback.data.error.message == -1)
                         $scope.loginerror = -1;
@@ -481,7 +486,7 @@ myApp.controller('HomeCtrl', function ($scope,$rootScope, TemplateService, Navig
         $rootScope.autolistvalue="";
         $rootScope.showMsgLoader=false;
         $rootScope.rate_count= 0;
-        
+        //$("#testLoad").load("http://wohlig.com/");
         var vm = this;
         
         vm.displayTranscript = displayTranscript;
@@ -704,7 +709,10 @@ myApp.controller('HomeCtrl', function ($scope,$rootScope, TemplateService, Navig
             
         };
         if($.jStorage.get("showchat"))
-            $rootScope.showChatwindow();
+        {
+            if($rootScope.uipage || $rootScope.uipage != 'dashboard')
+                 $rootScope.showChatwindow();
+        }
         else
             $rootScope.minimizeChatwindow();
 

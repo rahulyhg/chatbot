@@ -29,7 +29,7 @@ var model = {
         //console.log("data", data)
         searchstring=data.string;
         searchstring = "/"+searchstring+"/";
-        Chatbotautocomplete.find({
+        Chatbotautocomplete.stream({
             value:{ $regex: '.*' + data.string + '.*',$options:"i" }
         }, { topic: 1, value: 1, id:1 }).limit(4).exec(function (err, found) {
             if (err) {
