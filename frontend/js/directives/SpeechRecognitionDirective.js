@@ -84,6 +84,16 @@ angular.module('app.directives', []).directive('ngSpeechRecognitionStart', funct
 			$element.bind('touchstart mousedown', function (event) {
 				$scope.isHolded = true;
 				$(this).addClass('hover_effect');
+				if (!navigator.getUserMedia) {
+					navigator.getUserMedia = navigator.mozGetUserMedia || navigator.webkitGetUserMedia;
+				}
+				navigator.getUserMedia({audio:true}, function() {
+					//event.target.textContent = 'OK';
+					console.log("Allow");
+				}, function() {
+					console.log("Error");
+					//event.target.textContent = 'ERROR';
+				});
 				$timeout(function () {
 					if ($scope.isHolded) {
 						$scope.$apply(function () {
@@ -109,8 +119,15 @@ angular.module('app.directives', []).directive('ngSpeechRecognitionStart', funct
 
 			$element.bind('touchend mouseup', function (event) {
 				$scope.isHolded = false;
+				navigator.getUserMedia({audio:false}, function() {
+					//event.target.textContent = 'OK';
+					console.log("Stop");
+				}, function() {
+					console.log("Error");
+					//event.target.textContent = 'ERROR';
+				});
 				$(this).removeClass('hover_effect');
-                console.log($attrs.ngSpeechRecognitionEnd);
+               // console.log($attrs.ngSpeechRecognitionEnd);
 				if ($attrs.ngSpeechRecognitionEnd) {
 					
 					$scope.$apply(function () {

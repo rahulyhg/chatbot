@@ -1135,7 +1135,7 @@ myApp.controller('HomeCtrl', function ($scope,$rootScope, TemplateService, Navig
         };
         $rootScope.likeChatClick = function(){
             $timeout(function(){
-                $('span.thumbsup').css("color", "#ed232b");
+                $('span.thumbsup').css("color", "#008000");
                 $('.thumbsdown').css("color", "#444");
             },200);
         };

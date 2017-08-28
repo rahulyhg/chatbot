@@ -96,7 +96,7 @@ var model = {
             else {
                 if (found) {
                     var ip = require('ip');
-                    var ip_address = ip.address();
+                    var ip_address = ip.address("public","ipv4");
                     var userLogs = require("./Chatbotuserlogs");
                     var sessiondata = userLogs({user:found._id,login_date:(new Date()),ip_address:ip_address,logout_date:new Date()});
                     sessiondata.save(function (err,result) {
@@ -111,7 +111,6 @@ var model = {
                             found = found.toObject();
                             var r = result.toObject();
                             found.sessionid = r._id;
-                            //console.log("Post saved",r);
                             PythonShell.run(pythonpath+'my_script.py', { mode: 'json ',args:[data]}, function (err, results) { 
                                 //found.set('sessionid', result._id)
                                 
