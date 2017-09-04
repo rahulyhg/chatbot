@@ -10271,7 +10271,7 @@ div.scriptData {
 #chat_panel {
   display: none;
   font-family: 'Roboto', sans-serif;
-  height: 455px;
+  height: 600px;
   position: relative; }
 
 div#suggestionList {
@@ -10587,7 +10587,7 @@ button.headerbtns:focus {
 
 .panel-body {
   overflow-y: auto;
-  height: 320px; }
+  height: 470px; }
 
 ::-webkit-scrollbar-track {
   -webkit-box-shadow: inset 0 0 6px rgba(0, 0, 0, 0.3);
