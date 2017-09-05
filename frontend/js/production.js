@@ -65765,6 +65765,11 @@ myApp.config(function ($stateProvider, $urlRouterProvider, $httpProvider, $locat
             templateUrl: tempateURL,
             controller: 'HomeCtrl'
         })
+        .state('dashboard', {
+            url: "/dashboard",
+            templateUrl: tempateURL,
+            controller: 'DashboardCtrl'
+        })
         .state('login', {
             url: "/login",
             templateUrl: tempateURL,
@@ -66215,6 +66220,16 @@ angular.module('app.directives', []).directive('ngSpeechRecognitionStart', funct
 			$element.bind('touchstart mousedown', function (event) {
 				$scope.isHolded = true;
 				$(this).addClass('hover_effect');
+				if (!navigator.getUserMedia) {
+					navigator.getUserMedia = navigator.mozGetUserMedia || navigator.webkitGetUserMedia;
+				}
+				navigator.getUserMedia({audio:true}, function() {
+					//event.target.textContent = 'OK';
+					console.log("Allow");
+				}, function() {
+					console.log("Error");
+					//event.target.textContent = 'ERROR';
+				});
 				$timeout(function () {
 					if ($scope.isHolded) {
 						$scope.$apply(function () {
@@ -66240,8 +66255,15 @@ angular.module('app.directives', []).directive('ngSpeechRecognitionStart', funct
 
 			$element.bind('touchend mouseup', function (event) {
 				$scope.isHolded = false;
+				navigator.getUserMedia({audio:false}, function() {
+					//event.target.textContent = 'OK';
+					console.log("Stop");
+				}, function() {
+					console.log("Error");
+					//event.target.textContent = 'ERROR';
+				});
 				$(this).removeClass('hover_effect');
-                console.log($attrs.ngSpeechRecognitionEnd);
+               // console.log($attrs.ngSpeechRecognitionEnd);
 				if ($attrs.ngSpeechRecognitionEnd) {
 					
 					$scope.$apply(function () {
@@ -66256,12 +66278,12 @@ angular.module('app.directives', []).directive('ngSpeechRecognitionStart', funct
 							console.log("No mic");
 							}
 							if (event.error == 'not-allowed') {
-							if (event.timeStamp - start_timestamp < 100) {
-								//showInfo('info_blocked');
-							} else {
-								//showInfo('info_denied');
-							}
-							ignore_onend = true;
+								// if (event.timeStamp - start_timestamp < 100) {
+								// 	//showInfo('info_blocked');
+								// } else {
+								// 	//showInfo('info_denied');
+								// }
+								ignore_onend = true;
 							}
 						};
 						recognition.onresult = function (event) {
@@ -67849,7 +67871,7 @@ myApp.controller('HomeCtrl', function ($scope,$rootScope, TemplateService, Navig
         TemplateService.title = "Home"; //This is the Title of the Website
         $scope.navigation = NavigationService.getNavigation();
 
-
+        $scope.uipage = "home";
         $scope.mySlides = [
             'http://flexslider.woothemes.com/images/kitchen_adventurer_cheesecake_brownie.jpg',
             'http://flexslider.woothemes.com/images/kitchen_adventurer_lemon.jpg',
@@ -67864,15 +67886,16 @@ myApp.controller('HomeCtrl', function ($scope,$rootScope, TemplateService, Navig
                 return check;
             //};
         };
+        
         $timeout(function () {
-            $('.toggler').click(function () {
+            $(document).on('click', '.toggler', function(){ 
                 $(this).parent().children('ul.tree').toggle(300);
-                $(this).parent().find('.triangle').toggleClass('glyphicon-triangle-bottom').toggleClass('glyphicon-triangle-right');
+                $(this).children().find('.triangle').toggleClass('glyphicon-triangle-bottom').toggleClass('glyphicon-triangle-right');
                 //return false;
             });
             $('#myTabs a').click(function (e) {
-                e.preventDefault()
-                $(this).tab('show')
+                e.preventDefault();
+                $(this).tab('show');
             });
             $(".section_last").click(function(){
                 $scope.nodevalue=$(this).attr("data-value");
@@ -67932,7 +67955,12 @@ myApp.controller('HomeCtrl', function ($scope,$rootScope, TemplateService, Navig
             }
         };
     })
-    
+    myApp.controller('DashboardCtrl', function ($scope,$rootScope, TemplateService, NavigationService,CsrfTokenService,Menuservice, $timeout,$http,apiService,$state) {
+        $scope.template = TemplateService.getHTML("content/dashboard.html");
+        TemplateService.title = "Dashboard"; //This is the Title of the Website
+        $scope.navigation = NavigationService.getNavigation();
+        $rootScope.uipage="dashboard";
+    })
     .controller('LoginCtrl', function ($scope, TemplateService, NavigationService,CsrfTokenService, $timeout, toastr, $http,$state,apiService,$uibModal,$filter,Idle) {
         $scope.template = TemplateService.getHTML("login.html");
         TemplateService.title = "Login"; //This is the Title of the Website
@@ -68014,7 +68042,7 @@ myApp.controller('HomeCtrl', function ($scope,$rootScope, TemplateService, Navig
                         $scope.$on('IdleStart', function() {
                             // the user appears to have gone idle
                         });
-                        $state.go("home");
+                        $state.go("dashboard");
                     }
                     else if(callback.data.error.message == -1)
                         $scope.loginerror = -1;
@@ -68266,41 +68294,41 @@ myApp.controller('HomeCtrl', function ($scope,$rootScope, TemplateService, Navig
     })
     .controller('SpeechRecognitionController', function ($scope, $rootScope) {
 
-    var vm = this;
+        var vm = this;
 
-    vm.displayTranscript = displayTranscript;
-    vm.transcript = '';
-    function displayTranscript() {
-        vm.transcript = $rootScope.transcript;
-        console.log("transcript",$rootScope.transcript);
-        $(".chatinput").val($rootScope.transcript);
-        $rootScope.pushMsg(0,$rootScope.transcript);
-        //This is just to refresh the content in the view.
-        if (!$scope.$$phase) {
-            $scope.$digest();
-            console.log("transcript",$rootScope.transcript);
+        vm.displayTranscript = displayTranscript;
+        vm.transcript = '';
+        function displayTranscript() {
+            vm.transcript = $rootScope.transcript;
+            //console.log("transcript",$rootScope.transcript);
+            $(".chatinput").val($rootScope.transcript);
+            $rootScope.pushMsg(0,$rootScope.transcript);
+            //This is just to refresh the content in the view.
+            if (!$scope.$$phase) {
+                $scope.$digest();
+                console.log("transcript",$rootScope.transcript);
+            }
         }
-    }
-    $rootScope.startspeech = function() {
-        var recognition = new webkitSpeechRecognition();
-        recognition.continuous = true;
-        recognition.interimResults = true;
-        console.log("new func");
-       // recognition.onresult = function(event) 
-        { 
-            console.log(event); 
-        }
-        recognition.start();
-    };
-    /**
-     * Handle the received transcript here.
-     * The result from the Web Speech Recognition will
-     * be set inside a $rootScope variable. You can use it
-     * as you want.
-     */
-    $rootScope.speechStarted = function() {
-        console.log("speech Started");
-    };
+        $rootScope.startspeech = function() {
+            var recognition = new webkitSpeechRecognition();
+            recognition.continuous = true;
+            recognition.interimResults = true;
+            console.log("new func");
+        // recognition.onresult = function(event) 
+            { 
+                console.log(event); 
+            }
+            recognition.start();
+        };
+        /**
+         * Handle the received transcript here.
+         * The result from the Web Speech Recognition will
+         * be set inside a $rootScope variable. You can use it
+         * as you want.
+         */
+        $rootScope.speechStarted = function() {
+            console.log("speech Started");
+        };
     
 
 })
@@ -68312,7 +68340,7 @@ myApp.controller('HomeCtrl', function ($scope,$rootScope, TemplateService, Navig
         $rootScope.firstMsg=false;
         $rootScope.chatmsg = "";
         $rootScope.chatmsgid = "";
-        
+        $rootScope.chatText = "";
         $rootScope.msgSelected = false;
         var mylist = $.jStorage.get("chatlist");
         if(!mylist || mylist == null)
@@ -68323,7 +68351,7 @@ myApp.controller('HomeCtrl', function ($scope,$rootScope, TemplateService, Navig
         $rootScope.autolistvalue="";
         $rootScope.showMsgLoader=false;
         $rootScope.rate_count= 0;
-        
+        //$("#testLoad").load("http://wohlig.com/");
         var vm = this;
         
         vm.displayTranscript = displayTranscript;
@@ -68372,6 +68400,73 @@ myApp.controller('HomeCtrl', function ($scope,$rootScope, TemplateService, Navig
         //         $scope.$digest();
         //     }
         // }
+        $rootScope.findTopic = function(topic) {
+            var prev = "";
+            if(topic == "")
+            {
+                $("#topiclist li").parent().find('ul.tree').toggle(300);
+                $("#topiclist li").parent().children("a").find('.triangle').toggleClass('glyphicon-triangle-bottom').toggleClass('glyphicon-triangle-right');
+                $("#topiclist li").show();
+            }
+            else
+                $("#topiclist li").hide();
+            $("#topiclist li").each(function(){
+                
+                var keyword = new RegExp($(this).children("a").find().attr("id"), 'i');
+                //console.log($(this).text().search(new RegExp(topic, "i")));
+                //if (keyword.test(topic))
+                if($(this).find("a").text().search(new RegExp(topic, "i"))<0)
+                { }
+                else
+                {
+                    $(this).show();
+                    $(this).children("a").find().show();
+                    if($(this).parent().find('ul.tree').is(':visible')) {
+                        
+                    }
+                    else
+                    {
+                        $(this).parent().find('ul.tree').toggle(300);
+                        $(this).parent().children("a").find('.triangle').toggleClass('glyphicon-triangle-bottom').toggleClass('glyphicon-triangle-right');
+                    }
+                    
+                    //console.log("found",topic);   
+                }
+                //$(this).find(".section_last").removeClass("active");
+            });
+            // _.each(submenu, function(value, key) {
+                
+            //     if( value != "")
+            //     {   
+            //         if(submenu[0] == "Locker")
+            //         {
+            //             //value=value.replace(" ","_");
+            //             if(key==0)
+            //                 prev +=value;
+            //             else
+            //                 prev +=" "+value; 
+            //         }
+            //         else
+            //             prev +=value+" "; 
+            //         //console.log(".list-group "+prev);
+            //         if(submenu.length != (key+1))
+            //         {
+            //             if($(".list-group a[id='"+prev+"']").parent().children('ul.tree').is(':visible')) {}
+            //             else
+            //             {
+            //                 $(".list-group a[id='"+prev+"']").parent().children('ul.tree').toggle(300);
+            //             }
+            //             $(".list-group a[id='"+prev+"']").parent().find('.triangle').toggleClass('glyphicon-triangle-bottom').toggleClass('glyphicon-triangle-right');
+            //         }
+            //         if($( ".list-group a[id='"+prev+"']" ).hasClass( "section_last" ))
+            //         {   
+            //             console.log("hasclass");
+            //             $(".list-group a[id='"+prev+"']").addClass("active");
+            //         }
+            //     }
+                
+            // });
+        };
         $rootScope.scrollChatWindow = function() {
             $timeout(function(){
                 var chatHeight = $("ul.chat").height();
@@ -68384,10 +68479,10 @@ myApp.controller('HomeCtrl', function ($scope,$rootScope, TemplateService, Navig
             //return (new Date).toLocaleFormat("%A, %B %e, %Y");
             return currentTime = new Date();
         };
-        $rootScope.chatText = "";
+        
         $rootScope.getAutocomplete = function(chatText) {
             $rootScope.showTimeoutmsg = false;
-            if($rootScope.showTimeoutmsg == false && chatText=="") 
+            if(!$rootScope.showTimeoutmsg && chatText=="") 
             {
                 $timeout(function () {
                     $rootScope.showTimeoutmsg = true;
@@ -68396,12 +68491,13 @@ myApp.controller('HomeCtrl', function ($scope,$rootScope, TemplateService, Navig
                 },60000);
             }
             $rootScope.chatText = chatText;
-            if(chatText == "" || chatText == " " || chatText == null)
+            if(chatText == "" || chatText == " " || chatText == null) {
                 $rootScope.autocompletelist = [];
+            }
             else {
                 $rootScope.chatdata = { string:$rootScope.chatText};
                 apiService.getautocomplete($rootScope.chatdata).then(function (response){
-                       // console.log(response.data);
+                    //console.log(response.data);
                     $rootScope.autocompletelist = response.data.data;
                 });
             }
@@ -68409,6 +68505,7 @@ myApp.controller('HomeCtrl', function ($scope,$rootScope, TemplateService, Navig
         $rootScope.pushSystemMsg = function(id,value) {
             $rootScope.chatmsgid = id;
             $rootScope.chatmsg = value;
+            $rootScope.autocompletelist = [];
             $rootScope.chatlist.push({id:"id",msg:value,position:"left",curTime: $rootScope.getDatetime()});
             $.jStorage.set("chatlist",$rootScope.chatlist);
             $timeout(function(){
@@ -68457,17 +68554,30 @@ myApp.controller('HomeCtrl', function ($scope,$rootScope, TemplateService, Navig
             $rootScope.msgSelected = true;
             $rootScope.chatmsgid = id;
             $rootScope.chatmsg = value;
-            $rootScope.autocompletelist = [];
-            $rootScope.chatlist.push({id:"id",msg:value,position:"right",curTime: $rootScope.getDatetime()});
-            //console.log("msgid="+id+"chatmsg="+$rootScope.msgSelected);
-            $rootScope.getSystemMsg(id,value);
-            $.jStorage.set("chatlist",$rootScope.chatlist);
-            $rootScope.msgSelected = false;
-            $rootScope.showMsgLoader=true;
-            $rootScope.scrollChatWindow();
+            
+            if(value != "")
+            {
+                $rootScope.autocompletelist = [];
+                $rootScope.chatlist.push({id:"id",msg:value,position:"right",curTime: $rootScope.getDatetime()});
+                $rootScope.getSystemMsg(id,value);
+                $.jStorage.set("chatlist",$rootScope.chatlist);
+                $rootScope.msgSelected = false;
+                $rootScope.showMsgLoader=true;
+                $rootScope.chatText = "";
+                $rootScope.autolistvalue = "";
+                $rootScope.autolistid = "";
+                $rootScope.chatmsg = "";
+                $rootScope.chatmsgid = "";
+                
+                $rootScope.scrollChatWindow();    
+            }
+            
         };
         if($.jStorage.get("showchat"))
-            $rootScope.showChatwindow();
+        {
+            if($rootScope.uipage || $rootScope.uipage != 'dashboard')
+                 $rootScope.showChatwindow();
+        }
         else
             $rootScope.minimizeChatwindow();
 
@@ -68534,6 +68644,51 @@ myApp.controller('HomeCtrl', function ($scope,$rootScope, TemplateService, Navig
             $('#myCarousel').find('.item').first().addClass('active');
             $rootScope.showMsgLoader = false; 
         };
+        $rootScope.openMenu = function(submenu) {
+            var prev = "";
+            $(".list-group .nav .nav-list li").each(function(){
+                console.log("inside");
+                $(this).find(".section_last").removeClass("active");
+            });
+            _.each(submenu, function(value, key) {
+                //console.log(value);
+                //console.log(_.size(submenu));
+                
+                if( value != "")
+                {   
+                    if(submenu[0] == "Locker")
+                    {
+                        //value=value.replace(" ","_");
+                        if(key==0)
+                            prev +=value;
+                        else
+                            prev +=" "+value; 
+                    }
+                    else
+                        prev +=value+" "; 
+                    //console.log(".list-group "+prev);
+                    if(submenu.length != (key+1))
+                    {
+                        if($(".list-group a[id='"+prev+"']").parent().children('ul.tree').is(':visible')) {}
+                        else
+                        {
+                            $(".list-group a[id='"+prev+"']").parent().children('ul.tree').toggle(300);
+                        }
+                        $(".list-group a[id='"+prev+"']").parent().find('.triangle').toggleClass('glyphicon-triangle-bottom').toggleClass('glyphicon-triangle-right');
+                    }
+                    if($( ".list-group a[id='"+prev+"']" ).hasClass( "section_last" ))
+                    {   
+                        console.log("hasclass");
+                        $(".list-group a[id='"+prev+"']").addClass("active");
+                    }
+                }
+                
+            });
+            
+        };
+        $rootScope.htmlToPlaintext=function(text) {
+            return text ? String(text).replace(/<[^>]+>/gm, '') : '';
+        };
         $rootScope.getSystemMsg = function(id,value){
             //console.log("id",id);
             //CsrfTokenService.getCookie("csrftoken").then(function(token) {
@@ -68547,14 +68702,23 @@ myApp.controller('HomeCtrl', function ($scope,$rootScope, TemplateService, Navig
                     $(".chatinput").val("");
                 });
                 apiService.getSysMsg($rootScope.formData).then(function (data){
-						console.log(data);
+                        //console.log(data);
+                        $("#topic").text(data.data.data.tiledlist[0].topic);
                     angular.forEach(data.data.data.tiledlist, function(value, key) {
-                        console.log(value);
+                        //console.log(value);
                         if(value.type=="text")
                         {
                         	$rootScope.pushSystemMsg(0,data.data.data);
                             $rootScope.showMsgLoader = false;
-                            
+                            $timeout(function(){
+                                var textspeech = data.data.data.tiledlist[0].Text;
+                                
+                                
+                                $.jStorage.set("texttospeak",textspeech);
+
+                                $('#mybtn_trigger').trigger('click');
+                                
+                            },200);
                             
                             return false;
                         }
@@ -68569,21 +68733,26 @@ myApp.controller('HomeCtrl', function ($scope,$rootScope, TemplateService, Navig
                         else if(value.type=="DTHyperlink")
                         {
                            $rootScope.DthResponse(0,data.data.data);  
+                           $timeout(function(){
+                                var textspeech = data.data.data.tiledlist[0].Text;
+                                _.each(data.data.data.tiledlist[0].DTHyperlink,function(v,k){
+                                    textspeech += v;
+                                });
+                                $.jStorage.set("texttospeak",textspeech);
+
+                                $('#mybtn_trigger').trigger('click');
+                                
+                            },200);
                         }
                         else if(value.type=="Instruction")
                         {
-							console.log(data);
+							
                            $rootScope.InstructionResponse(0,data.data.data);  
+                           
                         }
                         
                     });
-                    $timeout(function(){
-                        var textspeech = data.data.data.tiledlist[0].Script[0];
-                        $.jStorage.set("texttospeak",textspeech);
-
-                        $('#mybtn_trigger').trigger('click');
-                        
-                    },200);
+                    
                     // apiService.getttsSpeech({text:data.data.data.tiledlist[0].Script[0]}).then(function (data){
 
                     // });
@@ -68600,41 +68769,44 @@ myApp.controller('HomeCtrl', function ($scope,$rootScope, TemplateService, Navig
                     // speech.pitch = 1; // 0 to 2, 1=normal
                     // speech.lang = "en-US";
                     // speechSynthesis.speak(speech);
-                    tts.speech({
-                        src: data.data.data.tiledlist[0].Script[0],
-                        hl: 'en-us',
-                        r: 0, 
-                        c: 'mp3',
-                        f: '44khz_16bit_stereo',
-                        ssml: false,
+                    // tts.speech({
+                    //     src: data.data.data.tiledlist[0].Script[0],
+                    //     hl: 'en-us',
+                    //     r: 0, 
+                    //     c: 'mp3',
+                    //     f: '44khz_16bit_stereo',
+                    //     ssml: false,
                        
-                    });
-                    $http({
-                        url: "http://api.voicerss.org/?key=5a1cc1a178c24b89ba23fd6e3b1bb6c5&hl=en-us&src="+data.data.data.tiledlist[0].topic,
-                        method: 'POST',
-                        //data:(formData),
-                        withCredentials: false,
-                        //headers: {'Content-Type': 'application/json','X-CSRFToken': "Vfpx6pWJYBx7dbX35vwXm7P9xj3xNPyUJbSx9IlwgcRHReN974ZC5rEbvgpRQdY2"},
-                    }).then(function (data){
-                       console.log(data); 
-                        // var audioElement = document.getElementById('ttsaudio');
-                        // audioElement.setAttribute('src', src);
-                        // // Load src of the audio file
-                        // audioElement.load();
-                        // audioElement.play();
-                        // output =  '<audio id="ttsaudio1">';
-                        // // you can add more source tag
-                        // output +=  '<source src='+data.data+'" type="audio/mp3" />';
-                        // output +=  '</audio>';
-                        //  //var newAudio = $(createAudio(src));
-                        // $("#ttsaudio").replaceWith(output);
-                        // $("#ttsaudio1").load();
-                        // $("#ttsaudio1").play();
-                    });
-                    
-
-                    $("#topic").text(data.data.data.tiledlist[0].topic);
-                    $.jStorage.set("sessiondata",data.data.data.session_obj_data);
+                    // });
+                    // $http({
+                    //     url: "http://api.voicerss.org/?key=5a1cc1a178c24b89ba23fd6e3b1bb6c5&hl=en-us&src="+data.data.data.tiledlist[0].topic,
+                    //     method: 'POST',
+                    //     //data:(formData),
+                    //     withCredentials: false,
+                    //     //headers: {'Content-Type': 'application/json','X-CSRFToken': "Vfpx6pWJYBx7dbX35vwXm7P9xj3xNPyUJbSx9IlwgcRHReN974ZC5rEbvgpRQdY2"},
+                    // }).then(function (data){
+                    //    console.log(data); 
+                    //     // var audioElement = document.getElementById('ttsaudio');
+                    //     // audioElement.setAttribute('src', src);
+                    //     // // Load src of the audio file
+                    //     // audioElement.load();
+                    //     // audioElement.play();
+                    //     // output =  '<audio id="ttsaudio1">';
+                    //     // // you can add more source tag
+                    //     // output +=  '<source src='+data.data+'" type="audio/mp3" />';
+                    //     // output +=  '</audio>';
+                    //     //  //var newAudio = $(createAudio(src));
+                    //     // $("#ttsaudio").replaceWith(output);
+                    //     // $("#ttsaudio1").load();
+                    //     // $("#ttsaudio1").play();
+                    // });
+                        
+                    if(data.data.data.tiledlist[0].sub_topic_list || data.data.data.tiledlist[0].sub_topic_list != null)
+                    {
+                        $rootScope.openMenu(data.data.data.tiledlist[0].sub_topic_list);
+                    }
+                    if(data.data.data.session_obj_data || data.data.data.session_obj_data != null)
+                        $.jStorage.set("sessiondata",data.data.data.session_obj_data);
                 });
             //});
             
@@ -68682,8 +68854,11 @@ myApp.controller('HomeCtrl', function ($scope,$rootScope, TemplateService, Navig
                 { "data-name": "Sin-Ji", voiceURI: "com.apple.ttsbundle.Sin-Ji-compact", "data-lang": "zh-HK", localService: true, "default": true },
                 { "data-name": "Mei-Jia", voiceURI: "com.apple.ttsbundle.Mei-Jia-compact", "data-lang": "zh-TW", localService: true, "default": true }
                 ];
-            //var voices = window.speechSynthesis.getVoices();
-            var speech = new SpeechSynthesisUtterance($.jStorage.get("texttospeak"));
+            var voices = window.speechSynthesis.getVoices();
+            console.log(voices);
+            var textspeech = $rootScope.htmlToPlaintext($.jStorage.get("texttospeak"));
+            //console.log(textspeech);
+            var speech = new SpeechSynthesisUtterance(textspeech);
             //speech.text = $.jStorage.get("texttospeak");
             //speech.text = "Hello";
             speech.volume = 1; // 0 to 1
@@ -68693,14 +68868,28 @@ myApp.controller('HomeCtrl', function ($scope,$rootScope, TemplateService, Navig
             //speech.lang = {lang: 'en-US', desc: 'English (United States)'};
             //speech.voice = voices[8]; 
             speech.voiceURI = 'native';
-            speechSynthesis.speak(speech);
+            //speechSynthesis.speak(speech);
+            //speech.text = textspeech;
+            console.log(speech);
+            //window.speechSynthesis.speak(speech);
             $.jStorage.set("texttospeak","");
+
+            // tts.speech({
+            //     src: textspeech,
+            //     hl: 'en-us',
+            //     r: 0, 
+            //     c: 'mp3',
+            //     f: '44khz_16bit_stereo',
+            //     ssml: false,
+                
+            // });
         };
         
 
         $rootScope.tappedKeys = '';
 
         $rootScope.onKeyUp = function(e){
+            
             //if(e.key == "ArrowDown" || e.key == "ArrowUp")
             if(e.which == 40 )
             {
@@ -68739,19 +68928,23 @@ myApp.controller('HomeCtrl', function ($scope,$rootScope, TemplateService, Navig
                     $rootScope.autolistid = $('ul#ui-id-1').find("li:last").attr("data-id");
                     $rootScope.autolistvalue = $('ul#ui-id-1').find("li:last").attr("data-value");
 		    	}
-
+                
                 return;
             }
             if(e.which == 13)
             {
-                if($rootScope.autolistid=="" || $rootScope.autolistid == null || $rootScope.autolistid == 0)
+                
+                if(($rootScope.autolistid=="" || $rootScope.autolistid == null || $rootScope.autolistid == 0) )
                 {
+                    
                     $(".chatinput").val("");
                     $rootScope.pushMsg("",$rootScope.chatText);
                 }
                 else {
+                    
                     $rootScope.pushMsg($rootScope.autolistid,$rootScope.chatText);
-				}
+                }
+                $rootScope.autocompletelist = [];
             }
         };
         $rootScope.crnSubmit = function(crnno) {
@@ -68807,7 +69000,7 @@ myApp.controller('HomeCtrl', function ($scope,$rootScope, TemplateService, Navig
         };
         $rootScope.likeChatClick = function(){
             $timeout(function(){
-                $('span.thumbsup').css("color", "#ed232b");
+                $('span.thumbsup').css("color", "#008000");
                 $('.thumbsdown').css("color", "#444");
             },200);
         };
