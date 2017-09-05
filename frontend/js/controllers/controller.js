@@ -726,6 +726,10 @@ myApp.controller('HomeCtrl', function ($scope,$rootScope, TemplateService, Navig
             mysession.DTHlink=dthlink;
             mysession.DTHline=lineno;
             mysession.DTHcol=colno;
+            // formData = {};
+            // formData.DTHcol = colno;
+            // formData.DTHline = lineno;
+            // formData.DTHlink = dthlink;
             formData = mysession;
             console.log(formData);
             apiService.getDthlinkRes(formData).then(function (data){

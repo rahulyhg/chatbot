@@ -405,6 +405,7 @@ div.scriptData {
     margin-bottom:10px !important;
 }
 .dashboard {
+    .news_text { color:#fff; }
     .close-sm {
         font-size: 14px;
     }
@@ -417,11 +418,13 @@ div.scriptData {
     .panel-body {
         height:auto;
         overflow-y:none;
-        min-height: auto; 
+        min-height: auto;
+        height:580px;
+        overflow-y: scroll; 
     }
     .whitebg { background: #fff; padding: 20px 0; }
     .section_panel {
-        padding: 20px 0;
+        padding: 12px 0;
     }
     .panel>.panel-body+.table {
         border-top: 1px solid #ddd;
@@ -456,7 +459,7 @@ div.scriptData {
 
     .task-thumb-details h3, .task-thumb-details h3 a, .task-progress h3, .task-progress h3 a {
         color: #39b5aa;
-        font-size: 18px;
+        font-size: 16px;
         margin: 0;
         padding: 0;
         font-weight: 400;
@@ -469,7 +472,7 @@ div.scriptData {
 
 
     .personal-task tbody tr td{
-        padding: 11px 15px;
+        padding: 8px 15px;
         border-color: #eeeff1;
     }
 
