@@ -4,8 +4,8 @@
                 <!--<span class="glyphicon glyphicon-comment"></span> Chat-->
                 <ul class="nav nav-tabs" id="chatTabs">
                     <li class="active" data-toggle="tab" ng-click="chat_tab=1"><a href="#chattab">Chat</a></li>
-                    <li ng-if="access_role == 2"><a href="#crntab" data-toggle="tab" ng-click="chat_tab=2">CRN NO.</a></li>
-                    <li ng-if="access_role == 2"><a href="#srtab" data-toggle="tab" ng-click="chat_tab=3">SR NO.</a></li>
+                    <li ng-show="access_role == 2"><a href="#crntab" data-toggle="tab" ng-click="chat_tab=2">CRN NO.</a></li>
+                    <li ng-show="access_role == 2"><a href="#srtab" data-toggle="tab" ng-click="chat_tab=3">SR NO.</a></li>
                 </ul>
                 <div class="btn-group pull-right">
                     <a type="button" class="btn btn-default btn-xs hidden" href="#">
@@ -155,7 +155,7 @@
                                                 </div>
                                             </div>
                                         </div>
-                                        <div class=" clearfix" ng-if="(list.position==='left' &&  (list.msg.type==='SYS_INACTIVE' || list.msg.type==='SYS_FIRST'))">
+                                        <div class=" clearfix" ng-if="(list.position==='left' &&  (list.msg.type==='SYS_INACTIVE' || list.msg.type==='SYS_FIRST' || list.msg.type === 'SYS_EMPTY_RES'))">
                                             <p class="lastmsg" >
                                                 <ng-bind-html ng-bind-html = "list.msg.Text">
                                                     {{list.msg.Text}}
@@ -212,7 +212,7 @@
                             </div>
                         </div>
                     </div>
-                    <div class="tab-pane" id="crntab" ng-show="chat_tab === 2" ng-if="access_role == 2">
+                    <div class="tab-pane" id="crntab" ng-show="chat_tab === 2" >
                         <div class="form-inline input-group-sm">
                             <input type="text" class="form-control" placeholder="CRN no" ng-model="crnno" name="crn" required>
                             <button id="crnsr1" type="submit" class="btn btn-primary btn-sm" ng-click="crnSubmit(crnno);">Query</button>
@@ -222,7 +222,7 @@
                             <p id="crn_details"></p>
                         </div>
                     </div>
-                    <div class="tab-pane" id="srtab" ng-show="chat_tab === 3" ng-if="access_role == 2">
+                    <div class="tab-pane" id="srtab" ng-show="chat_tab === 3" >
                         <div class="form-inline input-group-sm">
                             <input type="text" class="form-control" placeholder="SR no" name="sr" ng-model="srno">
                             <button id="crnsr" type="submit" class="btn btn-primary btn-sm" ng-click="srnSubmit(srno,crnno);">Query</button>

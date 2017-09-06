@@ -8,11 +8,14 @@
             <div class="pull-left" ng-if="dislikesuggestionSuccess==1">
                 <span class="label label-success" >Thank You.</span>
             </div>
-            <select id="dislikesuggestion" name="dislikesuggestion"  ng-options="cat as cat.name for cat in feedbacklist" ng-model="selectedFeedback" class="form-control"  required>
+            <!-- <select id="dislikesuggestion" name="dislikesuggestion"  ng-options="cat as cat.name for cat in feedbacklist" ng-model="selectedFeedbackval" class="form-control"  required>
                                     
-            </select> 
+            </select>  -->
+            <select id="dislikesuggestion" name="dislikesuggestion"   ng-model="selectedFeedbackval" class="form-control"  required>
+                <option ng-repeat="option in feedbacklist" value="{{option.id}}">{{option.name}}</option>
+            </select>
             <!-- <textarea class="form-control dislikesuggestion" id="dislikesuggestion"  name="dislikesuggestion" placeholder="Enter Suggestion" ng-model="user.dislikesuggestion" required></textarea> -->
-            <div class="pull-right" ng-repeat="(field,value) in dislikesuggestion_form.selectedFeedback.$error" ng-show="dislikesuggestion_form.selectedFeedback.$touched">
+            <div class="pull-right" ng-repeat="(field,value) in dislikesuggestion_form.selectedFeedbackval.$error" ng-show="dislikesuggestion_form.selectedFeedbackval.$touched">
                 <span class="label label-danger" ng-if="value">Please Select Feedback</span>
             </div>
             
@@ -21,7 +24,7 @@
                 <span class="label label-danger">Please Select Suggestion</span>
             </div>
             
-            <input class="form-control" id='dislikesuggestionsubmit' type="submit" name="dislikesuggestionsubmit" ng-disabled="dislikesuggestion_form.$invalid"  class="btn btn-primary btn-lg btn-block" value="Submit" ng-click="dislikesuggestionsubmit(selectedFeedback);">
+            <input class="form-control" id='dislikesuggestionsubmit' type="submit" name="dislikesuggestionsubmit" ng-disabled="dislikesuggestion_form.$invalid"  class="btn btn-primary btn-lg btn-block" value="Submit" ng-click="dislikesuggestionsubmit(selectedFeedbackval);">
         </div>
     </form>
 </div>

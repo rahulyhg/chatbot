@@ -13,7 +13,29 @@ myApp.controller('HomeCtrl', function ($scope,$rootScope, TemplateService, Navig
             'http://flexslider.woothemes.com/images/kitchen_adventurer_donut.jpg',
             'http://flexslider.woothemes.com/images/kitchen_adventurer_caramel.jpg'
         ];
-        
+        $rootScope.seeallTopic = function() {
+            $("#topic").text("");
+            $("#topiclist li").each(function(){
+                
+                
+                $(this).show();
+                $(this).children("a").find().show();
+                if($(this).find('ul.tree').is(':visible')) {
+                    $(this).find('ul.tree').slideToggle(300);
+                    $(this).children("a").find('.triangle').toggleClass('glyphicon-triangle-bottom').toggleClass('glyphicon-triangle-right');
+                }
+                // else
+                // {
+                //     $(this).parent().find('ul.tree').toggle(300);
+                //     $(this).parent().children("a").find('.triangle').toggleClass('glyphicon-triangle-bottom').toggleClass('glyphicon-triangle-right');
+                // }
+                
+            });
+            // $("#topiclist li").parent().find('ul.tree').toggle(300);
+            // $("#topiclist li").parent().children("a").find('.triangle').toggleClass('glyphicon-triangle-bottom').toggleClass('glyphicon-triangle-right');
+            // $("#topiclist li").show();
+            $(".searchTerm").val("");
+        };
         $rootScope.checkDevice = function (){
             //window.mobileAndTabletcheck = function() {
                 var check = false;
@@ -21,6 +43,7 @@ myApp.controller('HomeCtrl', function ($scope,$rootScope, TemplateService, Navig
                 return check;
             //};
         };
+        $rootScope.access_role = $.jStorage.get("access_role");
         angular.element(document).ready(function () {
             $timeout(function () {
                 $(document).on('click', '.toggler', function(){ 
@@ -86,9 +109,12 @@ myApp.controller('HomeCtrl', function ($scope,$rootScope, TemplateService, Navig
         $scope.uipage="login";
         $scope.formSubmitted = false;
         $scope.loginerror=0;
-        $scope.notLoggedin = false;
+        //$rootScope.notLoggedin = false;
+        //console.log($.jStorage.get("notloggedin"));
         if($.jStorage.get("notloggedin"))
-            $scope.notLoggedin = true;
+            $rootScope.notLoggedin = true;
+        else 
+            $state.go("home");
         $scope.login = function(username,password)
         {
             CsrfTokenService.getCookie("csrftoken").then(function(token) {
@@ -356,18 +382,21 @@ myApp.controller('HomeCtrl', function ($scope,$rootScope, TemplateService, Navig
         //     });
         // },200); 
     })
-    .controller('LoginDetCtrl', function ($scope, TemplateService, NavigationService, $timeout, toastr, $http,$state,apiService) {
+    .controller('LoginDetCtrl', function ($scope,$rootScope, TemplateService, NavigationService, $timeout, toastr, $http,$state,apiService) {
         $scope.fullname = "";
         $scope.branch = "";
         if($.jStorage.get("id") == null || $.jStorage.get("id") == "" || $.jStorage.get("id")==0)
         {
             $.jStorage.set("notloggedin",true);
+            $rootScope.notLoggedin = true;
             $state.go("login");
         }    
         else
         {
             $scope.fullname = $.jStorage.get("fname")+" "+$.jStorage.get("lname");
             $scope.branch = $.jStorage.get("branch");
+            $.jStorage.set("notloggedin",false);
+            $rootScope.notLoggedin = false;
         }
         
     })
@@ -547,38 +576,6 @@ myApp.controller('HomeCtrl', function ($scope,$rootScope, TemplateService, Navig
                 }
                 //$(this).find(".section_last").removeClass("active");
             });
-            // _.each(submenu, function(value, key) {
-                
-            //     if( value != "")
-            //     {   
-            //         if(submenu[0] == "Locker")
-            //         {
-            //             //value=value.replace(" ","_");
-            //             if(key==0)
-            //                 prev +=value;
-            //             else
-            //                 prev +=" "+value; 
-            //         }
-            //         else
-            //             prev +=value+" "; 
-            //         //console.log(".list-group "+prev);
-            //         if(submenu.length != (key+1))
-            //         {
-            //             if($(".list-group a[id='"+prev+"']").parent().children('ul.tree').is(':visible')) {}
-            //             else
-            //             {
-            //                 $(".list-group a[id='"+prev+"']").parent().children('ul.tree').toggle(300);
-            //             }
-            //             $(".list-group a[id='"+prev+"']").parent().find('.triangle').toggleClass('glyphicon-triangle-bottom').toggleClass('glyphicon-triangle-right');
-            //         }
-            //         if($( ".list-group a[id='"+prev+"']" ).hasClass( "section_last" ))
-            //         {   
-            //             console.log("hasclass");
-            //             $(".list-group a[id='"+prev+"']").addClass("active");
-            //         }
-            //     }
-                
-            // });
         };
         $rootScope.scrollChatWindow = function() {
             $timeout(function(){
@@ -604,7 +601,8 @@ myApp.controller('HomeCtrl', function ($scope,$rootScope, TemplateService, Navig
                 },60000);
             }
             $rootScope.chatText = chatText;
-            if(chatText == "" || chatText == " " || chatText == null) {
+            console.log($(".chatinput").val());
+            if($(".chatinput").val() == "" || $(".chatinput").val() == null) {
                 $rootScope.autocompletelist = [];
             }
             else {
@@ -688,7 +686,7 @@ myApp.controller('HomeCtrl', function ($scope,$rootScope, TemplateService, Navig
         };
         if($.jStorage.get("showchat"))
         {
-            if($rootScope.uipage || $rootScope.uipage != 'dashboard')
+            if($rootScope.uipage != 'dashboard')
                  $rootScope.showChatwindow();
         }
         else
@@ -763,6 +761,7 @@ myApp.controller('HomeCtrl', function ($scope,$rootScope, TemplateService, Navig
         };
         $rootScope.openMenu = function(submenu) {
             var prev = "";
+            $("#topiclist li").hide();
             $(".list-group .nav .nav-list li").each(function(){
                 console.log("inside");
                 $(this).find(".section_last").removeClass("active");
@@ -784,6 +783,9 @@ myApp.controller('HomeCtrl', function ($scope,$rootScope, TemplateService, Navig
                     else
                         prev +=value+" "; 
                     //console.log(".list-group "+prev);
+                    $(".list-group a[id='"+prev+"']").parent().show();
+                    $(".list-group a[id='"+prev+"']").parent().children(".tree").find("li").show();
+                    
                     if(submenu.length != (key+1))
                     {
                         if($(".list-group a[id='"+prev+"']").parent().children('ul.tree').is(':visible')) {}
@@ -921,6 +923,14 @@ myApp.controller('HomeCtrl', function ($scope,$rootScope, TemplateService, Navig
                     if(data.data.data.tiledlist[0].sub_topic_list || data.data.data.tiledlist[0].sub_topic_list != null)
                     {
                         $rootScope.openMenu(data.data.data.tiledlist[0].sub_topic_list);
+                    }
+                    if(data.data.data.tiledlist[0].Script || data.data.data.tiledlist[0].Script != null)
+                    {
+                        if(data.data.data.tiledlist[0].Script.length== 0)
+                            $rootScope.tabHeight = window.innerHeight-53;
+                        else
+                            $rootScope.tabHeight = 300;
+                        
                     }
                     if(data.data.data.session_obj_data || data.data.data.session_obj_data != null)
                         $.jStorage.set("sessiondata",data.data.data.session_obj_data);
@@ -1068,6 +1078,16 @@ myApp.controller('HomeCtrl', function ($scope,$rootScope, TemplateService, Navig
                 }
                 $rootScope.autocompletelist = [];
             }
+            if(e.which == 8)
+            {
+                
+                if($(".chatinput").val()=="")
+                {
+                    $rootScope.autocompletelist = [];
+                    $rootScope.chatText = "";
+                }
+                
+            }
         };
         $rootScope.crnSubmit = function(crnno) {
             //console.log(crnno,"crnno");
@@ -1136,7 +1156,8 @@ myApp.controller('HomeCtrl', function ($scope,$rootScope, TemplateService, Navig
             {id:"3",name:"Free text"},
             {id:"4",name:"Received no reply"},
         ];
-        //$rootScope.selectedFeedback = $rootScope.feedbacklist[0];
+        $rootScope.selectedFeedback = $rootScope.feedbacklist[0];
+        $rootScope.selectedFeedbackval = $rootScope.selectedFeedback.id;
         $rootScope.$dislikemodalInstance = {};
         $rootScope.dislikesuggestionerror = 0;
         $rootScope.dislikeChatClick = function(){
@@ -1155,6 +1176,7 @@ myApp.controller('HomeCtrl', function ($scope,$rootScope, TemplateService, Navig
         $rootScope.dislikeCancel = function() {
             //console.log("dismissing");
             $scope.$dislikemodalInstance.dismiss('cancel');
+            $('span.thumbsdown').css("color", "#444");
         };
         $rootScope.dislikesuggestionsubmit = function(suggestion){
             console.log("suggestion",suggestion);
@@ -1163,6 +1185,7 @@ myApp.controller('HomeCtrl', function ($scope,$rootScope, TemplateService, Navig
                 $rootScope.dislikesuggestionSuccess = 0;
                 $rootScope.dislikeCancel();
             },500);
+            $('span.thumbsdown').css("color", "#444");
         };
         
        $timeout(function(){

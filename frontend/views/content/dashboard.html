@@ -6,14 +6,16 @@
                     <marquee direction="left" speed="normal" behavior="loop" BGCOLOR="Gold" class="news_text">Important Notice : Please update your personal details before 1st July 2017</marquee>
                 <!--notification start-->
                     <div class="row">
-                        <div class="alert alert-success  col-lg-6">
-                            <button data-dismiss="alert" class="close close-sm" type="button">
-                                <i class="icon-remove"></i>
-                            </button>
-                            <strong>
-                                Hi <span ng-controller="LoginDetCtrl">{{fullname}} </span> 
-                            </strong>
-                            What can we explore today? Go to <a href="/home">Chat</a>
+                        <div class="col-lg-6">
+                            <div class="alert alert-success  ">
+                                <button data-dismiss="alert" class="close close-sm" type="button">
+                                    <i class="icon-remove"></i>
+                                </button>
+                                <strong>
+                                    Hi <span ng-controller="LoginDetCtrl">{{fullname}} </span> 
+                                </strong>
+                                What can we explore today? Go to <a href="/">Chat</a>
+                            </div>
                         </div>
                     </div>
                     <!--state overview start-->
@@ -91,10 +93,10 @@
                                     <table class="table table-hover  personal-task">
                                         <tbody>
                                             <tr>
-                                                <td>Process to follow in-case of bad weather</td>
+                                                <td><a href="#">Process to follow in-case of bad weather</a></td>
                                             </tr>
                                             <tr>
-                                                <td>Queries related to new Rs.200 notes</td>
+                                                <td><a href="#">Queries related to new Rs.200 notes</a></td>
                                             </tr>
                                         </tbody>
                                     </table>
@@ -113,7 +115,13 @@
                                     <table class="table table-hover  personal-task">
                                         <tbody>
                                             <tr>
-                                                <td>Verifications</td>
+                                                <td><a href="#">Cheque Book Request</a></td>
+                                            </tr>
+                                            <tr>
+                                                <td><a href="#">Block Credit Card</a></td>
+                                            </tr>
+                                            <tr>
+                                                <td><a href="#">Verifications</a></td>
                                             </tr>
                                         </tbody>
                                     </table>
@@ -134,13 +142,19 @@
                                     <table class="table table-hover  personal-task">
                                         <tbody>
                                             <tr>
-                                                <td>Locker Operations</td>
+                                                <td><a href="#">Cheque Book Request</a></td>
                                             </tr>
                                             <tr>
-                                                <td>Locker Surrender</td>
+                                                <td><a href="#">Block Credit Card</a></td>
                                             </tr>
                                             <tr>
-                                                <td>Account Opening</td>
+                                                <td><a href="#">Locker Operations</a></td>
+                                            </tr>
+                                            <tr>
+                                                <td><a href="#">Locker Surrender</a></td>
+                                            </tr>
+                                            <tr>
+                                                <td><a href="#">Account Opening</a></td>
                                             </tr>
                                         </tbody>
                                     </table>
@@ -158,6 +172,9 @@
                                 <div class="table_panel">
                                     <table class="table table-hover  personal-task">
                                         <tbody>
+                                            <tr>
+                                               <td><a href="#">Investonomics</a></td>
+                                           </tr>
                                             <tr>
                                                 <td><a href="http://economictimes.indiatimes.com/news/economy/finance/lending-rate-cuts-key-to-economic-revival-bofaml/articleshow/60346351.cms" target="_blank">Lending rate cuts key to economic revival: BofAML</a></td>
                                             </tr>
@@ -180,28 +197,36 @@
                                         <tbody>
                                             <tr>
                                                 <td>
-                                                    <b>Question:</b>
-                                                    <span>
-                                                         Staff at Kalyan branch is very rude. I want to make a complaint, how do I do it?  
-                                                    </span>    
-                                                    <br>
-                                                    <b>Answer:</b>
-                                                    <span>
-                                                         We are sorry to hear that. Please mail us your complaint at the following email id (customer_complaints@kotak.com) with your contact details. We will connect with you within 24 hours.
-                                                    </span>
+                                                    <div class="faqques">
+                                                        <p class="lastmsg" >
+                                                            <a href="#" >
+                                                                <span >Staff at Kalyan branch is very rude. I want to make a complaint, how do I do it?  </span>
+                                                            </a>
+                                                        </p>
+                                                    </div>
+                                                    <div class="faqans" style="display:none;">
+                                                            <span >
+                                                                We are sorry to hear that. Please mail us your complaint at the following email id (customer_complaints@kotak.com) with your contact details. We will connect with you within 24 hours.       
+                                                            </span>
+                                                        
+                                                    </div>
                                                 </td>
                                             </tr>
                                             <tr>
                                                 <td>
-                                                    <b>Question:</b>
-                                                    <span>
-                                                         Please help me with loans?
-                                                    </span>   
-                                                    <br>
-                                                    <b>Answer:</b>
-                                                    <span>
-                                                         Please let us know whether you are looking for personal laon or a car loan. We will then assist you with details.
-                                                    </span> 
+                                                    <div class="faqques">
+                                                        <p class="lastmsg" >
+                                                            <a href="#" >
+                                                                <span >Please help me with loans?</span>
+                                                            </a>
+                                                        </p>
+                                                    </div>
+                                                    <div class="faqans" style="display:none;">
+                                                            <span >
+                                                                Please let us know whether you are looking for personal loan or a car loan. We will then assist you with details.
+                                                            </span>
+                                                        
+                                                    </div>
                                                 </td>
                                             </tr>
                                         </tbody>

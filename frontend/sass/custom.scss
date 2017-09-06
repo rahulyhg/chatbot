@@ -404,6 +404,21 @@ div.scriptData {
 #changepassword_form .form-group input {
     margin-bottom:10px !important;
 }
+.alltopiclink { 
+    margin-top: 10px; 
+    margin-left: 80px;
+}
+.faqques a {
+    background-color: #39B1A8;
+    // border-color: #ccc;
+    color: #fff;
+    display: inline-block;
+    padding: 6px 12px;
+}
+.faqques a:hover {
+    // background-color: #e6e6e6;
+    // border-color: #adadad;
+}
 .dashboard {
     .news_text { color:#fff; }
     .close-sm {
@@ -412,7 +427,7 @@ div.scriptData {
     .close {
         color:#000;
         opacity:0.2;
-        right: 10px;
+        right: 20px;
         top: 5px;
     }
     .panel-body {

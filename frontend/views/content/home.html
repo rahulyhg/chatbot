@@ -3,7 +3,7 @@
         
         <marquee direction="left" speed="normal" behavior="loop" BGCOLOR="Gold" class="news_text">Important Notice : Please update your personal details before 1st July 2017</marquee>
         <div>
-            <uib-tabset active="selectTabIndex" id="tab_data" ng-show="tabvalue.elements.length>0">
+            <uib-tabset active="selectTabIndex" id="tab_data" ng-show="tabvalue.elements.length>0" ng-style="{height: tabHeight + 'px'}">
                 <uib-tab index="$index" ng-repeat="row in tabvalue.elements"  heading="{{row}}">
                     <div class ="tab-con"  ng-if="row ==='Process'">
                         <p class="" ng-repeat="processtext in tabvalue.element_values[$index].Process">

@@ -107,6 +107,9 @@ myApp.run(['$http','$cookies','beforeUnload','$document','$rootScope','Idle','bo
     $rootScope.transcript="";
     $rootScope.tabvalue={};
     $rotated = false;
+    $(document).on('click', '.faqques a', function(){ 
+        $(this).parent().parent().parent().find('.faqans').slideToggle();
+    });
     $(document).on('click', '.c-hamburger', function(){ 
     //$('.c-hamburger').click(function(){
         //console.log("menu click");
