@@ -21,65 +21,43 @@ myApp.controller('HomeCtrl', function ($scope,$rootScope, TemplateService, Navig
                 return check;
             //};
         };
-        
-        $timeout(function () {
-            $(document).on('click', '.toggler', function(){ 
-                $(this).parent().children('ul.tree').toggle(300);
-                $(this).children().find('.triangle').toggleClass('glyphicon-triangle-bottom').toggleClass('glyphicon-triangle-right');
-                //return false;
-            });
-            $('#myTabs a').click(function (e) {
-                e.preventDefault();
-                $(this).tab('show');
-            });
-            $(".section_last").click(function(){
-                $scope.nodevalue=$(this).attr("data-value");
-                Menuservice.create_tabs($scope.nodevalue);
-                
-            });
-            // $(function(){
-
-            //     $('#slide-submenu').on('click',function() {			        
-            //         $(this).closest('.list-group').fadeOut('slide',function(){
-            //             $('.mini-submenu').fadeIn();	
-            //         });
+        angular.element(document).ready(function () {
+            $timeout(function () {
+                $(document).on('click', '.toggler', function(){ 
+                    $(this).parent().children('ul.tree').toggle(300);
+                    $(this).children().find('.triangle').toggleClass('glyphicon-triangle-bottom').toggleClass('glyphicon-triangle-right');
+                    //return false;
+                });
+                $('#myTabs a').click(function (e) {
+                    e.preventDefault();
+                    $(this).tab('show');
+                });
+                $(".section_last").click(function(){
+                    $scope.nodevalue=$(this).attr("data-value");
+                    Menuservice.create_tabs($scope.nodevalue);
                     
-            //     });
+                });
+                // $(function(){
 
-            //     $('.mini-submenu').on('click',function(){		
-            //         $(this).next('.list-group').toggle('slide');
-            //         //$('.mini-submenu').hide();
-            //     })
-            // });
-            $rotated = false;
-           
-            $('.c-hamburger').click(function(){
-                if($rotated == false) 
-                {
-                    $('.c-hamburger span').css("transform", "rotate(90deg)");				
-                    $('.c-hamburger span').css("transition", "transform 1.2s ease");
-                    $(this).animate({'background-color': '#ed1c24'}, 'fast');
-                    //$('.list-group').show("slide", { direction: "left" }, 1000);
-                    $('.list-group').toggle('slide');
-                    $rotated = true;
-                }
-                else
-                {	
-                    //alert("matched");
-                    $('.c-hamburger span').css("transform", "rotate(0deg)");				
-                    $('.c-hamburger span').css("transition", "transform 1.2s ease");
-                    $(this).animate({'background-color': '#003874'}, 'fast');
-                    //$('.list-group').hide("slide", { direction: "left" }, 1000);
-                    $('.list-group').toggle('slide');
-                    $rotated = false;
-                }
+                //     $('#slide-submenu').on('click',function() {			        
+                //         $(this).closest('.list-group').fadeOut('slide',function(){
+                //             $('.mini-submenu').fadeIn();	
+                //         });
+                        
+                //     });
+
+                //     $('.mini-submenu').on('click',function(){		
+                //         $(this).next('.list-group').toggle('slide');
+                //         //$('.mini-submenu').hide();
+                //     })
+                // });
                 
+                // $('.mini-submenu').on('click',function(){		
+                //     console.log("clicked");
+                //     $('.list-group').toggle('slide');
+                //     //$('.mini-submenu').hide();
+                // });
             });
-            // $('.mini-submenu').on('click',function(){		
-            //     console.log("clicked");
-            //     $('.list-group').toggle('slide');
-            //     //$('.mini-submenu').hide();
-            // });
         });
        $rootScope.checkCollapsed = function()
         {
@@ -96,7 +74,7 @@ myApp.controller('HomeCtrl', function ($scope,$rootScope, TemplateService, Navig
         $scope.navigation = NavigationService.getNavigation();
         $rootScope.uipage="dashboard";
     })
-    .controller('LoginCtrl', function ($scope, TemplateService, NavigationService,CsrfTokenService, $timeout, toastr, $http,$state,apiService,$uibModal,$filter,Idle) {
+    .controller('LoginCtrl', function ($scope, TemplateService, NavigationService,CsrfTokenService, $timeout, toastr, $http,$state,apiService,$uibModal,$filter,Idle,$rootScope) {
         $scope.template = TemplateService.getHTML("login.html");
         TemplateService.title = "Login"; //This is the Title of the Website
         //$scope.navigation = NavigationService.getNavigation();
@@ -128,7 +106,7 @@ myApp.controller('HomeCtrl', function ($scope,$rootScope, TemplateService, Navig
                     {
                         //console.log(callback);
                         $.jStorage.flush();
-                       
+                        $rootScope.access_role = callback.data.data.accessrole;
                         $.jStorage.set("id", callback.data.data._id);
                         $.jStorage.set("fname", callback.data.data.fname);
                         $.jStorage.set("lname", callback.data.data.lname);
@@ -946,6 +924,11 @@ myApp.controller('HomeCtrl', function ($scope,$rootScope, TemplateService, Navig
                     }
                     if(data.data.data.session_obj_data || data.data.data.session_obj_data != null)
                         $.jStorage.set("sessiondata",data.data.data.session_obj_data);
+                }).catch(function (reason) {
+                    //console.log(reason);
+                    msg = {Text:"Sorry I could not understand",type:"SYS_EMPTY_RES"};
+                    $rootScope.pushSystemMsg(0,msg); 
+                    $rootScope.showMsgLoader=false;
                 });
             //});
             
@@ -1143,6 +1126,17 @@ myApp.controller('HomeCtrl', function ($scope,$rootScope, TemplateService, Navig
                 $('.thumbsdown').css("color", "#444");
             },200);
         };
+        $rootScope.selectedFeedback = "";
+        $rootScope.feedbacklist = [];
+        $rootScope.feedbacklist =  [
+            {id:"",name:"Choose a Feedback"},
+            {id:"0",name:"Incorrect Process"},
+            {id:"1",name:"Incomplete Process"},
+            {id:"2",name:"Unable to comprehend answer"},
+            {id:"3",name:"Free text"},
+            {id:"4",name:"Received no reply"},
+        ];
+        //$rootScope.selectedFeedback = $rootScope.feedbacklist[0];
         $rootScope.$dislikemodalInstance = {};
         $rootScope.dislikesuggestionerror = 0;
         $rootScope.dislikeChatClick = function(){
