@@ -107,9 +107,70 @@ myApp.run(['$http','$cookies','beforeUnload','$document','$rootScope','Idle','bo
     $rootScope.transcript="";
     $rootScope.tabvalue={};
     $rotated = false;
+
+                
+    $(document).on('click', '.toggler', function(){ 
+        $(this).parent().children('ul.tree').toggle(300);
+        $(this).children().find('.triangle').toggleClass('glyphicon-triangle-bottom').toggleClass('glyphicon-triangle-right');
+        //return false;
+    });
+    $(document).on('click', '#myTabs a', function(){ 
+        e.preventDefault();
+        $(this).tab('show');
+    });
+    $(document).on('click', '.section_last', function(){ 
+    //$(".section_last").click(function(){
+        $scope.nodevalue=$(this).attr("data-value");
+        Menuservice.create_tabs($scope.nodevalue);
+        
+    });
+    // $(function(){
+
+    //     $('#slide-submenu').on('click',function() {			        
+    //         $(this).closest('.list-group').fadeOut('slide',function(){
+    //             $('.mini-submenu').fadeIn();	
+    //         });
+            
+    //     });
+
+    //     $('.mini-submenu').on('click',function(){		
+    //         $(this).next('.list-group').toggle('slide');
+    //         //$('.mini-submenu').hide();
+    //     })
+    // });
+    
+    // $('.mini-submenu').on('click',function(){		
+    //     console.log("clicked");
+    //     $('.list-group').toggle('slide');
+    //     //$('.mini-submenu').hide();
+    // });
+            
     $(document).on('click', '.faqques a', function(){ 
         $(this).parent().parent().parent().find('.faqans').slideToggle();
     });
+    $rootScope.seeallTopic = function() {
+        $("#topic").text("");
+        $("#topiclist li").each(function(){
+            
+            
+            $(this).show();
+            $(this).children("a").find().show();
+            if($(this).find('ul.tree').is(':visible')) {
+                $(this).find('ul.tree').slideToggle(300);
+                $(this).children("a").find('.triangle').toggleClass('glyphicon-triangle-bottom').toggleClass('glyphicon-triangle-right');
+            }
+            // else
+            // {
+            //     $(this).parent().find('ul.tree').toggle(300);
+            //     $(this).parent().children("a").find('.triangle').toggleClass('glyphicon-triangle-bottom').toggleClass('glyphicon-triangle-right');
+            // }
+            
+        });
+        // $("#topiclist li").parent().find('ul.tree').toggle(300);
+        // $("#topiclist li").parent().children("a").find('.triangle').toggleClass('glyphicon-triangle-bottom').toggleClass('glyphicon-triangle-right');
+        // $("#topiclist li").show();
+        $(".searchTerm").val("");
+    };
     $(document).on('click', '.c-hamburger', function(){ 
     //$('.c-hamburger').click(function(){
         //console.log("menu click");

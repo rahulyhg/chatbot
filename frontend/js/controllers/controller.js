@@ -13,29 +13,7 @@ myApp.controller('HomeCtrl', function ($scope,$rootScope, TemplateService, Navig
             'http://flexslider.woothemes.com/images/kitchen_adventurer_donut.jpg',
             'http://flexslider.woothemes.com/images/kitchen_adventurer_caramel.jpg'
         ];
-        $rootScope.seeallTopic = function() {
-            $("#topic").text("");
-            $("#topiclist li").each(function(){
-                
-                
-                $(this).show();
-                $(this).children("a").find().show();
-                if($(this).find('ul.tree').is(':visible')) {
-                    $(this).find('ul.tree').slideToggle(300);
-                    $(this).children("a").find('.triangle').toggleClass('glyphicon-triangle-bottom').toggleClass('glyphicon-triangle-right');
-                }
-                // else
-                // {
-                //     $(this).parent().find('ul.tree').toggle(300);
-                //     $(this).parent().children("a").find('.triangle').toggleClass('glyphicon-triangle-bottom').toggleClass('glyphicon-triangle-right');
-                // }
-                
-            });
-            // $("#topiclist li").parent().find('ul.tree').toggle(300);
-            // $("#topiclist li").parent().children("a").find('.triangle').toggleClass('glyphicon-triangle-bottom').toggleClass('glyphicon-triangle-right');
-            // $("#topiclist li").show();
-            $(".searchTerm").val("");
-        };
+        
         $rootScope.checkDevice = function (){
             //window.mobileAndTabletcheck = function() {
                 var check = false;
@@ -45,42 +23,7 @@ myApp.controller('HomeCtrl', function ($scope,$rootScope, TemplateService, Navig
         };
         $rootScope.access_role = $.jStorage.get("access_role");
         angular.element(document).ready(function () {
-            $timeout(function () {
-                $(document).on('click', '.toggler', function(){ 
-                    $(this).parent().children('ul.tree').toggle(300);
-                    $(this).children().find('.triangle').toggleClass('glyphicon-triangle-bottom').toggleClass('glyphicon-triangle-right');
-                    //return false;
-                });
-                $('#myTabs a').click(function (e) {
-                    e.preventDefault();
-                    $(this).tab('show');
-                });
-                $(".section_last").click(function(){
-                    $scope.nodevalue=$(this).attr("data-value");
-                    Menuservice.create_tabs($scope.nodevalue);
-                    
-                });
-                // $(function(){
-
-                //     $('#slide-submenu').on('click',function() {			        
-                //         $(this).closest('.list-group').fadeOut('slide',function(){
-                //             $('.mini-submenu').fadeIn();	
-                //         });
-                        
-                //     });
-
-                //     $('.mini-submenu').on('click',function(){		
-                //         $(this).next('.list-group').toggle('slide');
-                //         //$('.mini-submenu').hide();
-                //     })
-                // });
-                
-                // $('.mini-submenu').on('click',function(){		
-                //     console.log("clicked");
-                //     $('.list-group').toggle('slide');
-                //     //$('.mini-submenu').hide();
-                // });
-            });
+            
         });
        $rootScope.checkCollapsed = function()
         {
