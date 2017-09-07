@@ -1,6 +1,6 @@
 myApp.factory('apiService', function ($http, $q, $timeout,CsrfTokenService,$httpParamSerializer) {
     //adminurl = "http://wohlig.co.in/chatbotapi/index.php/json/";
-    adminurl = "http://35.161.160.7:8091/";
+    adminurl = "http://104.46.103.162:8097/";
     var adminUrl2 = "http://wohlig.io/api/";
     var adminUrl3 = "http://104.46.103.162:8096/api/"
     //var adminUrl3 = "http://localhost/api/";
@@ -38,25 +38,12 @@ myApp.factory('apiService', function ($http, $q, $timeout,CsrfTokenService,$http
             // });
             
             return $http({
-                //url: "http://wohlig.co.in/chatbotapi/index.php/json/" + 'login/',
                 url:adminUrl3+ "Chatbotuser/loginuser",
                 //headers: {'X-CSRFToken': "6b86b273ff34fce19d6b804eff5a3f5747ada4eaa22f1d49c01e52ddb7875b4b"},
                 method: 'POST',
                 data: formData,
-                //withCredentials: false,
-                //dataType:"json",
             });
-            /*
-            return    $http({
-                url:adminurl+'authenticate/',
-                method: 'POST',
-                data:{username : "pratik", password : "asdf",'csrfmiddlewaretoken': "Vfpx6pWJYBx7dbX35vwXm7P9xj3xNPyUJbSx9IlwgcRHReN974ZC5rEbvgpRQdY2"},
-                //xsrfHeaderName :"X-CSRFToken",
-                //xsrfCookieName :"csrftoken",
-                withCredentials: true,
-                headers: {'Content-Type': 'application/json; charset=utf-8','X-CSRFToken': "Vfpx6pWJYBx7dbX35vwXm7P9xj3xNPyUJbSx9IlwgcRHReN974ZC5rEbvgpRQdY2"},
-            });
-             */
+           
         },
         logout:function(formData, callback) {
             
@@ -127,15 +114,25 @@ myApp.factory('apiService', function ($http, $q, $timeout,CsrfTokenService,$http
         getSysMsg:function(formData,callback){
             //console.log(formData);
             return    $http({
-                //url:adminurl+'out/'+formData.user_id+"/",
-                url: adminUrl3 + 'Chatbotautolist/getSysMsg',
+                url:adminurl+'out/'+formData.user_id+"/",
+                //url: adminUrl3 + 'Chatbotautolist/getSysMsg',
                 method: 'POST',
-                data:(formData),
+                data:$.param(formData),
+                headers: {'Content-Type': 'application/x-www-form-urlencoded;charset=utf-8','X-CSRFToken':formData.csrfmiddlewaretoken },
                 //withCredentials: false,
                 //headers: {'Content-Type': 'application/json','X-CSRFToken': "Vfpx6pWJYBx7dbX35vwXm7P9xj3xNPyUJbSx9IlwgcRHReN974ZC5rEbvgpRQdY2"},
             });
             
             
+        },
+        get_session: function (formData, callback) {
+            return $http({
+                url: adminurl + 'get_session/',
+                //headers: {'X-CSRFToken':formData.csrfmiddlewaretoken },
+                method: 'POST',
+                data: $.param(formData),
+                dataType:"json"
+            });
         },
         getDthlinkRes:function(formData,callback){
             //console.log(formData);

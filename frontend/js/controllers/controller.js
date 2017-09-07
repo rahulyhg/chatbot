@@ -1,7 +1,7 @@
 var globalLocale = moment.locale('hi');
 var localLocale = moment();
 
-myApp.controller('HomeCtrl', function ($scope,$rootScope, TemplateService, NavigationService,CsrfTokenService,Menuservice, $timeout,$http,apiService,$state) {
+myApp.controller('HomeCtrl', function ($scope,$rootScope, TemplateService, NavigationService,CsrfTokenService,Menuservice, $timeout,$http,apiService,$state,$cookies) {
         $scope.template = TemplateService.getHTML("content/home.html");
         TemplateService.title = "Home"; //This is the Title of the Website
         $scope.navigation = NavigationService.getNavigation();
@@ -13,7 +13,14 @@ myApp.controller('HomeCtrl', function ($scope,$rootScope, TemplateService, Navig
             'http://flexslider.woothemes.com/images/kitchen_adventurer_donut.jpg',
             'http://flexslider.woothemes.com/images/kitchen_adventurer_caramel.jpg'
         ];
-        
+        angular.element(document).ready(function () {
+            apiService.get_session({}).then( function (response) {
+                $cookies.put("csrftoken",response.data.csrf_token);
+                $cookies.put("session_id",response.data.session_id);
+                $.jStorage.set("csrftoken",response.data.csrf_token);
+                //console.log(response.data);
+            });
+        });
         $rootScope.checkDevice = function (){
             //window.mobileAndTabletcheck = function() {
                 var check = false;
@@ -86,7 +93,7 @@ myApp.controller('HomeCtrl', function ($scope,$rootScope, TemplateService, Navig
 
                         $scope.sessiondata = {
                             id_string : callback.data.data._id,
-                            data : {},
+                            //data : {},
                             DTHyperlink : '',
                             LineNo : '',
                             options : '',
@@ -417,7 +424,7 @@ myApp.controller('HomeCtrl', function ($scope,$rootScope, TemplateService, Navig
     
 
 })
-    .controller('ChatCtrl', function ($scope, $rootScope,TemplateService, NavigationService,CsrfTokenService, $timeout,$http,apiService,$state,$uibModal,Menuservice,tts) {
+    .controller('ChatCtrl', function ($scope, $rootScope,TemplateService, NavigationService,CsrfTokenService, $timeout,$http,apiService,$state,$uibModal,Menuservice,tts,$cookies) {
         
         $rootScope.autocompletelist = [];
         $rootScope.chatOpen = false;
@@ -485,6 +492,21 @@ myApp.controller('HomeCtrl', function ($scope,$rootScope, TemplateService, Navig
         //         $scope.$digest();
         //     }
         // }
+        $rootScope.getCookie = function(c_name)
+		{
+			if (document.cookie.length > 0)
+			{
+				c_start = document.cookie.indexOf(c_name + "=");
+				if (c_start != -1)
+				{
+					c_start = c_start + c_name.length + 1;
+					c_end = document.cookie.indexOf(";", c_start);
+					if (c_end == -1) c_end = document.cookie.length;
+					return unescape(document.cookie.substring(c_start,c_end));
+				}
+			}
+			return "";
+		};
         $rootScope.findTopic = function(topic) {
             var prev = "";
             if(topic == "")
@@ -544,7 +566,6 @@ myApp.controller('HomeCtrl', function ($scope,$rootScope, TemplateService, Navig
                 },60000);
             }
             $rootScope.chatText = chatText;
-            console.log($(".chatinput").val());
             if($(".chatinput").val() == "" || $(".chatinput").val() == null) {
                 $rootScope.autocompletelist = [];
             }
@@ -758,8 +779,15 @@ myApp.controller('HomeCtrl', function ($scope,$rootScope, TemplateService, Navig
                 var mysessiondata = $.jStorage.get("sessiondata");
                 //mysessiondata = mysessiondata.toObject();
                 //mysessiondata.data = {id:parseInt(id),Text:value};
-				mysessiondata.data = {id:id,Text:value};
-                $rootScope.formData = mysessiondata;
+                //mysessiondata.data = {id:id,Text:value};
+                sess2 = {id:id,Text:value};
+                console.log(mysessiondata);
+                //$rootScope.formData = mysessiondata;
+                console.log($cookies.get("session_id"));
+                formData1 = {csrfmiddlewaretoken:$rootScope.getCookie("csrftoken"),user_id:$cookies.get("session_id"),user_input:value,auto_id:id,auto_value:""};
+                var new_object = $.extend({}, mysessiondata, formData1);
+                //$.extend(formData1, mysessiondata);
+                $rootScope.formData = new_object;
                 $timeout(function(){
                     $(".chatinput").val("");
                 });
@@ -1032,47 +1060,6 @@ myApp.controller('HomeCtrl', function ($scope,$rootScope, TemplateService, Navig
                 
             }
         };
-        $rootScope.crnSubmit = function(crnno) {
-            //console.log(crnno,"crnno");
-            $rootScope.userid=$.jStorage.get("id");
-            var datatype = 'CRN';
-            CsrfTokenService.getCookie("csrftoken").then(function(token) {
-                apiService.crnsubmit($rootScope.formData).then(function (callback){
-                    console.log(callback,"crn");
-                });
-                    
-            // $.ajax({
-            
-            //     url : "",
-            //     data: {user_input: crnno, user_id:$scope.userid, number_type:datatype,'csrfmiddlewaretoken': token,
-            //     headers: {'X-CSRFToken': token},
-            //     type: "POST",
-            //     dataType: "json",
-            //     success: function(data){
-            //         var output = data.Output.Result;
-            //         $scope.result_crn(output);
-            //     }
-            // });
-            });
-        };
-        $rootScope.srnSubmit = function(srno,crnno) { 
-            //console.log(crnno+"crnno,sr"+srno);
-            $rootScope.userid=$.jStorage.get("id");
-            var datatype = 'SR';
-            CsrfTokenService.getCookie("csrftoken").then(function(token) {
-            // $.ajax({
-            //     // url: "/srandcrn/",
-            //     data: {user_input: srno, user_id:$scope.userid, number_type:datatype,'csrfmiddlewaretoken': token},
-            //     headers: {'X-CSRFToken': token},
-            //     type: "POST",
-            //     dataType: "json",
-            //     success: function(data){
-            //         var output = data.Output.Result;
-            //         $scope.result_sr(output);
-            //     }
-            // });
-            });
-        };
         $rootScope.result_sr = function(output) {
             $timeout(function () {
                 $('#sr_details').html(output);
@@ -1082,6 +1069,33 @@ myApp.controller('HomeCtrl', function ($scope,$rootScope, TemplateService, Navig
             $timeout(function () {
                 $('#crn_details').html(output);
             },200);
+        };
+        $rootScope.crnSubmit = function(crnno) {
+            //console.log(crnno,"crnno");
+            $scope.userid=$.jStorage.get("id");
+            var datatype = 'CRN';
+            CsrfTokenService.getCookie("csrftoken").then(function(token) {
+                $scope.formData = {user_input:crnno,user_id:$scope.userid, number_type:datatype,'csrfmiddlewaretoken': token};
+                console.log($scope.formData);
+                apiService.crnsubmit($scope.formData).then(function (callback){
+                    console.log(callback,"crn");
+                    $rootScope.result_crn(callback.data);
+                });
+            });
+        };
+        
+        $rootScope.srnSubmit = function(srno,crnno) { 
+            //console.log(crnno+"crnno,sr"+srno);
+            $rootScope.userid=$.jStorage.get("id");
+            var datatype = 'SR';
+            CsrfTokenService.getCookie("csrftoken").then(function(token) {
+                $scope.formData = {user_input:srno,user_id:$scope.userid, number_type:datatype,'csrfmiddlewaretoken': token};
+                console.log($scope.formData);
+                apiService.crnsubmit($scope.formData).then(function (callback){
+                    console.log(callback,"crn");
+                    $rootScope.result_sr(callback.data);
+                });
+            });
         };
         $rootScope.likeChatClick = function(){
             $timeout(function(){
