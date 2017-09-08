@@ -642,7 +642,6 @@ myApp.controller('HomeCtrl', function ($scope,$rootScope, TemplateService, Navig
             $rootScope.chatmsg = "";
             $rootScope.answers = "";
             $(".chatinput").val("");
-            $rootScope.autocompletelist = [];
             $rootScope.autolistid = "";
             $rootScope.chatText = "";
             $rootScope.scrollChatWindow();
