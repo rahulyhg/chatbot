@@ -25,7 +25,7 @@ myApp.config(function ($stateProvider, $urlRouterProvider, $httpProvider, $locat
     $resourceProvider.defaults.stripTrailingSlashes = false;
     // $httpProvider.defaults.xsrfCookieName = 'csrftoken';
     // $httpProvider.defaults.xsrfHeaderName = 'X-CSRFToken';
-    
+    // $httpProvider.defaults.withCredentials = true
     // for http request with session
     //$httpProvider.defaults.withCredentials = false;
     ttsProvider.setSettings({ key: '5a1cc1a178c24b89ba23fd6e3b1bb6c5' });
@@ -76,14 +76,13 @@ myApp.run(['$http', 'CSRF_TOKEN', function($http, CSRF_TOKEN) {
 }]);*/
 
 
-myApp.run(['$http','$cookies','beforeUnload','$document','$rootScope','Idle','bowser', function run(  $http, $cookies,beforeUnload,$document,$rootScope,Idle,bowser ){
+myApp.run(['$http','$cookies','beforeUnload','$document','$rootScope','Idle','bowser','Menuservice', function run(  $http, $cookies,beforeUnload,$document,$rootScope,Idle,bowser,Menuservice ){
     // For CSRF token compatibility with Django
     
     //$http.defaults.xsrfCookieName = 'csrftoken';
     //$http.defaults.xsrfHeaderName = 'X-CSRFToken';
     //$http.defaults.headers.post['X-CSRFToken'] = $cookies.get('csrftoken');
-    //** django urls loves trailling slashes which angularjs removes by default.
-    //$resourceProvider.defaults.stripTrailingSlashes = false;
+    
      //return function(scope, elm, attrs) {
     if ( bowser.msie )
         $rootScope.browser = "msie";
@@ -120,8 +119,8 @@ myApp.run(['$http','$cookies','beforeUnload','$document','$rootScope','Idle','bo
     });
     $(document).on('click', '.section_last', function(){ 
     //$(".section_last").click(function(){
-        $scope.nodevalue=$(this).attr("data-value");
-        Menuservice.create_tabs($scope.nodevalue);
+        var nodevalue=$(this).attr("data-value");
+        Menuservice.create_tabs(nodevalue);
         
     });
     // $(function(){

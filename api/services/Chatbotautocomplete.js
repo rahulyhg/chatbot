@@ -8,7 +8,16 @@ var schema = new Schema({
     location: {
         type: String,
     },
-   id: {
+    answers: {
+        type: String,
+    },
+    final: {
+        type: String,
+    },
+    combine: {
+        type: String,
+    },
+    id: {
        type:Number,
    }, 
 });
@@ -31,7 +40,7 @@ var model = {
         searchstring = "/"+searchstring+"/";
         Chatbotautocomplete.find({
             value:{ $regex: '.*' + data.string + '.*',$options:"i" }
-        }, { topic: 1, value: 1, id:1 }).limit(4).exec(function (err, found) {
+        }, { topic: 1, value: 1, id:1,answers:1 }).limit(4).exec(function (err, found) {
             if (err) {
                 callback(err, null);
             } 

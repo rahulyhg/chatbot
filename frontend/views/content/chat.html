@@ -155,7 +155,7 @@
                                                 </div>
                                             </div>
                                         </div>
-                                        <div class=" clearfix" ng-if="(list.position==='left' &&  (list.msg.type==='SYS_INACTIVE' || list.msg.type==='SYS_FIRST' || list.msg.type === 'SYS_EMPTY_RES'))">
+                                        <div class=" clearfix" ng-if="(list.position==='left' &&  (list.msg.type==='SYS_INACTIVE' || list.msg.type==='SYS_FIRST' || list.msg.type === 'SYS_EMPTY_RES' || list.msg.type === 'SYS_AUTO'))">
                                             <p class="lastmsg" >
                                                 <ng-bind-html ng-bind-html = "list.msg.Text">
                                                     {{list.msg.Text}}
@@ -206,7 +206,7 @@
                             <div id= "suggestionList">
                                 <ul ng-if="autocompletelist.length > 0" class="{{autocompletelist.length}}  ui-menu ui-widget ui-widget-content ui-autocomplete ui-front" id="ui-id-1">
                                     <div class="ui-menu-item-wrapper">
-                                        <li class="ui-menu-item autolist" data-id="{{list.id}}" data-value="{{list.value}}"  ng-repeat="list in autocompletelist | filter:chatText  " ng-click="pushMsg(list.id,list.value);"  ng-bind-html="list.value | highlight:chatText" >{{list.value}}</li>
+                                        <li class="ui-menu-item autolist" data-id="{{list.id}}" data-value="{{list.value}}" data-answers="{{list.answers}}"  ng-repeat="list in autocompletelist | filter:chatText  " ng-click="pushMsg(list.id,list.value,list.answers);"  ng-bind-html="list.value | highlight:chatText" >{{list.value}}</li>
                                     </div>
                                 </ul>
                             </div>

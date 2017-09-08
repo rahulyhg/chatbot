@@ -79,11 +79,9 @@ myApp.factory('apiService', function ($http, $q, $timeout,CsrfTokenService,$http
             return    $http({
                 url:adminurl+'srandcrn/',
                 method: 'POST',
-                data:{user_input : 2, user_id : 1,number_type:'CRN','csrfmiddlewaretoken': "Vfpx6pWJYBx7dbX35vwXm7P9xj3xNPyUJbSx9IlwgcRHReN974ZC5rEbvgpRQdY2"},
-                //xsrfHeaderName :"X-CSRFToken",
-                //xsrfCookieName :"csrftoken",
-                //withCredentials: false,
-                headers: {'Content-Type': 'application/json; charset=utf-8','X-CSRFToken': "Vfpx6pWJYBx7dbX35vwXm7P9xj3xNPyUJbSx9IlwgcRHReN974ZC5rEbvgpRQdY2"},
+                data:$.param(formData),
+                withCredentials: true,
+                headers: {'Content-Type': 'application/x-www-form-urlencoded;charset=utf-8','X-CSRFToken':formData.csrfmiddlewaretoken },
             });
         },
         gettabdata:function(formData,callback){
@@ -96,7 +94,7 @@ myApp.factory('apiService', function ($http, $q, $timeout,CsrfTokenService,$http
                 //xsrfHeaderName :"X-CSRFToken",
                 //xsrfCookieName :"csrftoken",
                 //withCredentials: false,
-                headers: {'X-CSRFToken': formData.csrfmiddlewaretoken},
+                headers: {'Content-Type': 'application/x-www-form-urlencoded;charset=utf-8','X-CSRFToken': formData.csrfmiddlewaretoken},
             });
             /*
             var data = $.param(formData);
