@@ -557,25 +557,29 @@ myApp.controller('HomeCtrl', function ($scope,$rootScope, TemplateService, Navig
         };
         
         $rootScope.getAutocomplete = function(chatText) {
-            $rootScope.showTimeoutmsg = false;
-            if(!$rootScope.showTimeoutmsg && chatText=="") 
+            
+            if( $rootScope.answers == "")
             {
-                $timeout(function () {
-                    $rootScope.showTimeoutmsg = true;
-                    msg = {Text:"Any Confusion ? How May I help You ?",type:"SYS_INACTIVE"};
-                    $rootScope.pushSystemMsg(0,msg);
-                },60000);
-            }
-            $rootScope.chatText = chatText;
-            if($(".chatinput").val() == "" || $(".chatinput").val() == null) {
-                $rootScope.autocompletelist = [];
-            }
-            else {
-                $rootScope.chatdata = { string:$rootScope.chatText};
-                apiService.getautocomplete($rootScope.chatdata).then(function (response){
-                    //console.log(response.data);
-                    $rootScope.autocompletelist = response.data.data;
-                });
+                $rootScope.showTimeoutmsg = false;
+                if(!$rootScope.showTimeoutmsg && chatText=="") 
+                {
+                    $timeout(function () {
+                        $rootScope.showTimeoutmsg = true;
+                        msg = {Text:"Any Confusion ? How May I help You ?",type:"SYS_INACTIVE"};
+                        $rootScope.pushSystemMsg(0,msg);
+                    },60000);
+                }
+                $rootScope.chatText = chatText;
+                if($(".chatinput").val() == "" || $(".chatinput").val() == null) {
+                    $rootScope.autocompletelist = [];
+                }
+                else {
+                    $rootScope.chatdata = { string:$rootScope.chatText};
+                    apiService.getautocomplete($rootScope.chatdata).then(function (response){
+                        //console.log(response.data);
+                        $rootScope.autocompletelist = response.data.data;
+                    });
+                }
             }
         };
         $rootScope.pushSystemMsg = function(id,value) {
@@ -650,7 +654,6 @@ myApp.controller('HomeCtrl', function ($scope,$rootScope, TemplateService, Navig
             $rootScope.msgSelected = true;
             $rootScope.chatmsgid = id;
             $rootScope.chatmsg = value;
-            console.log(answer);
             if(answer == "")
             {
                 if(value != "")
@@ -685,7 +688,7 @@ myApp.controller('HomeCtrl', function ($scope,$rootScope, TemplateService, Navig
 
         $rootScope.ratecardSubmit = function(coldata,rowdata) {
             console.log(coldata,rowdata);
-            $scope.formData = {csrfmiddlewaretoken:$rootScope.getCookie("csrftoken"),user_id:$cookies.get("session_id"),user_input:"",auto_id:"",auto_value:"",Net_annual_Income:coldata,Interest:rowdata,type:"rate card"};
+            $scope.formData = {csrfmiddlewaretoken:$rootScope.getCookie("csrftoken"),user_id:$cookies.get("session_id"),user_input:coldata+","+rowdata,auto_id:"",auto_value:"",Net_annual_Income:coldata,Interest:rowdata,type:"rate card"};
             apiService.getSysMsg($scope.formData).then(function (data){
             
             });
@@ -850,6 +853,18 @@ myApp.controller('HomeCtrl', function ($scope,$rootScope, TemplateService, Navig
                             $rootScope.pushSystemMsg(0,data.data);
                             $rootScope.showMsgLoader = false;
                             
+                            // $(".r_c_col").val($(".r_c_col option:first").val());
+                            // $(".r_c_row").val($(".r_c_row option:first").val());
+
+                            // var firstOption = $('.r_c_col option:first');
+                            // firstOption.attr('selected', true);
+                            // $('.r_c_col').attr('selectedIndex', 0);
+                            $timeout(function(){
+                                $('select.r_c_col:last option:nth-child(2)').attr("selected", "selected");
+                                $('select.r_c_row:last option:nth-child(2)').attr("selected", "selected");
+                                $("select.r_c_col:last").trigger('change');
+                                $("select.r_c_row:last").trigger('change');
+                            },1000);
                             
                             return false;
                         }
@@ -1057,7 +1072,6 @@ myApp.controller('HomeCtrl', function ($scope,$rootScope, TemplateService, Navig
                     $rootScope.autolistvalue = $('ul#ui-id-1').find("li:first").attr("data-value");
                     $rootScope.answers = $(storeTarget).attr("data-answers");
 		    	}
-
                 return;
             }
             if(e.which == 38 )

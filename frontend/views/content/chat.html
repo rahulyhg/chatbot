@@ -54,12 +54,12 @@
                                                     <p class="lastmsg" >
                                                         <ng-bind-html >
                                                             <label for="col_val_[chatRes.col_name]">{{chatRes.col_name}} : </label>
-                                                            <select ng-attr-id="{{'col_val_'+rate_count}}" ng-model="r[rate_count].ratecard_col_select" ng-options="coldata for coldata in chatRes.data_col" class="form-control">
+                                                            <select ng-attr-id="{{'col_val_'+rate_count}}" ng-model="r[rate_count].ratecard_col_select" ng-options="coldata for coldata in chatRes.data_col" class="form-control r_c_col">
                                                                 
                                                             </select>
                                                             <br>
                                                             <label for="lcol_val_[chatRes.row_name]">{{chatRes.row_name}} : </label>
-                                                            <select ng-attr-id="{{'data_val_'+rate_count}}" ng-model="r[rate_count].ratecard_data_select" ng-options="rowdata for rowdata in chatRes.data_row" class="form-control">
+                                                            <select ng-attr-id="{{'data_val_'+rate_count}}" ng-model="r[rate_count].ratecard_data_select" ng-options="rowdata for rowdata in chatRes.data_row" class="form-control r_c_row">
                                                                 
                                                             </select>
                                                             <br>
