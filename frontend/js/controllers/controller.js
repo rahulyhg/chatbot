@@ -709,7 +709,30 @@ myApp.controller('HomeCtrl', function ($scope,$rootScope, TemplateService, Navig
             console.log(coldata,rowdata);
             $scope.formData = {csrfmiddlewaretoken:$rootScope.getCookie("csrftoken"),user_id:$cookies.get("session_id"),user_input:coldata+","+rowdata,auto_id:"",auto_value:"",Net_annual_Income:coldata,Interest:rowdata,type:"rate card"};
             apiService.getSysMsg($scope.formData).then(function (data){
-            
+				//console.log(data);
+				angular.forEach(data.data.tiledlist, function(value, key) {
+                        //console.log(value);
+					if(value.type=="text")
+					{
+						//console.log(data.data.tiledlist[0].text);
+						if(data.data.tiledlist[0].Text != "-")
+						{
+							$rootScope.pushSystemMsg(0,data.data);
+							$rootScope.showMsgLoader = false;
+							$timeout(function(){
+								var textspeech = data.data.tiledlist[0].Text;
+								
+								
+								$.jStorage.set("texttospeak",textspeech);
+
+								$('#mybtn_trigger').trigger('click');
+								
+							},200);
+							
+							return false;
+						}
+					}
+				});
             });
 
         };
@@ -757,21 +780,40 @@ myApp.controller('HomeCtrl', function ($scope,$rootScope, TemplateService, Navig
             });
         };
         $rootScope.DthResponse = function(id,data) {
-            if(data.tiledlist[0].DT.length > 0 && data.tiledlist[0].Text != "")
-                $rootScope.pushSystemMsg(id,data);
-            if(data.tiledlist[0].topic != "ATM pin generation")
+            if(data.tiledlist[0].DT.length > 0 || data.tiledlist[0].Text != "")
             {
-                
-                $rootScope.pushSystemMsg(id,data);
+				//if()
+				{
+					
+					var images = Array();
+					var process = Array();
+					process = data.tiledlist[0].Process;
+					/*_.each(data.tiledlist[0].Process,function(v,k){
+						if (v.indexOf(".png") >= 0) 
+					});*/
+					 images = _.remove(process, function(n) {
+					  return n.indexOf(".png") >= 0;
+					});
+					//console.log(images);
+					data.tiledlist[0].Process =process;
+					data.tiledlist[0].images =images;
+					if(data.tiledlist[0].DT.length > 0 || ( data.tiledlist[0].Text != "" && data.tiledlist[0].Text) || images.length > 0 )
+						$rootScope.pushSystemMsg(id,data);
+					if(images.length > 0)
+					{
+						$timeout(function(){
+							$('#myCarousel2').carousel({
+								interval: false,
+								wrap: false
+							});
+							$('#myCarousel2').find('.item').first().addClass('active');
+						},2000);
+						
+					}
+				}
             }
-            else
-            {
-                $('#myCarousel2').carousel({
-                    interval: false,
-                    wrap: false
-                });
-                $('#myCarousel2').find('.item').first().addClass('active');
-            }
+           
+				
             $rootScope.showMsgLoader = false; 
             $rootScope.selectTabIndex = 0;
             var ele = new Array("Process");
@@ -892,13 +934,14 @@ myApp.controller('HomeCtrl', function ($scope,$rootScope, TemplateService, Navig
                     $(".chatinput").val("");
                 });
                 apiService.getSysMsg($rootScope.formData).then(function (data){
-                        //console.log(data.data.tiledlist);
+                        console.log(data);
                         if(data.data.tiledlist[0].topic)
                              $("#topic").text(data.data.tiledlist[0].topic);
                     angular.forEach(data.data.tiledlist, function(value, key) {
                         //console.log(value);
                         if(value.type=="text")
                         {
+							console.log(data.data.tiledlist[0].text);
                         	$rootScope.pushSystemMsg(0,data.data);
                             $rootScope.showMsgLoader = false;
                             $timeout(function(){
