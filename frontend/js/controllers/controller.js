@@ -34,6 +34,10 @@ myApp.controller('HomeCtrl', function ($scope,$rootScope, TemplateService, Navig
             var post = "Hello How are you <blargh src='image.jpg' /> see you tomorrow";
             //var firstimg = $(post).find('img:first').attr('src'); 
             //console.log(firstimg,"img");
+            // var str = '<img src="/quizs-schol/headimages/4194.png?id=51a2f7aec61ac" style="height:30px; width:40px;"> Online free quiz';
+            // var imgs = $("<div>" +str +"</div>").find("img"); 
+            // console.log(imgs);
+            // console.log(str);
         });
         $rootScope.checkDevice = function (){
             //window.mobileAndTabletcheck = function() {
@@ -755,6 +759,19 @@ myApp.controller('HomeCtrl', function ($scope,$rootScope, TemplateService, Navig
         $rootScope.DthResponse = function(id,data) {
             if(data.tiledlist[0].DT.length > 0 && data.tiledlist[0].Text != "")
                 $rootScope.pushSystemMsg(id,data);
+            if(data.tiledlist[0].topic != "ATM pin generation")
+            {
+                
+                $rootScope.pushSystemMsg(id,data);
+            }
+            else
+            {
+                $('#myCarousel2').carousel({
+                    interval: false,
+                    wrap: false
+                });
+                $('#myCarousel2').find('.item').first().addClass('active');
+            }
             $rootScope.showMsgLoader = false; 
             $rootScope.selectTabIndex = 0;
             var ele = new Array("Process");
