@@ -135,11 +135,11 @@ myApp.factory('apiService', function ($http, $q, $timeout,CsrfTokenService,$http
         getDthlinkRes:function(formData,callback){
             //console.log(formData);
             return    $http({
-                //url:adminurl+'out/'+formData.user_id+"/",
-                url: adminUrl3 + 'Chatbotautolist/getDthlink',
+                url:adminurl+'outDTL/'+formData.user_id+"/",
+                //url: adminUrl3 + 'Chatbotautolist/getDthlink',
                 method: 'POST',
-                data:(formData),
-                //withCredentials: false
+                data:$.param(formData),
+                headers: {'Content-Type': 'application/x-www-form-urlencoded;charset=utf-8','X-CSRFToken':formData.csrfmiddlewaretoken },
             });
             
             

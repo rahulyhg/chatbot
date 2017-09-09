@@ -263,6 +263,9 @@ div#tab_data {
 }
 div.scriptData {
     padding-top:5px;
+    height: 120px;
+    overflow-y: scroll;
+    margin-bottom: 10px;
 }
 .tooltips {
     background: #d9edf7;

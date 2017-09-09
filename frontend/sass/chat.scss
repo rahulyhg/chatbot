@@ -97,10 +97,14 @@ li.ui-menu-item {
     font-weight:bold;
     color:#204d74;
 }
-button.headerbtns {
+.headerbtns {
     margin-top: 8px;
     margin-left:20px;
+    color: #fff !important;
+    padding: 5px !important;
+    line-height: 1.428571429;
 }
+a.headerbtns:hover { background-color: #0081d9 !important; }
 button.headerbtns:focus { background-color: #003874; outline: none; }
 .autolist .highlighted { 
     color:#000;
