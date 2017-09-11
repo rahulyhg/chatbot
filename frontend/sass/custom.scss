@@ -641,8 +641,11 @@ div.scriptData {
     }
     
 }
-@media only screen and (max-device-width:560px){
-    /* styles for mobile browsers smaller than 480px; (iPhone) */
+/* Portrait and Landscape */
+@media screen 
+  and (device-width: 320px) 
+  and (device-height: 640px) 
+  and (-webkit-device-pixel-ratio: 2) {
     #chat_window_1 
     {
         width:90% !important;
@@ -653,8 +656,44 @@ div.scriptData {
             height:360px;
         }
     }
-    
 }
+
+/* Portrait */
+@media screen 
+  and (device-width: 320px) 
+  and (device-height: 640px) 
+  and (-webkit-device-pixel-ratio: 2) 
+  and (orientation: portrait) {
+    #chat_window_1 
+    {
+        width:90% !important;
+        #chat_panel {
+            height: 500px;
+        }
+        .panel-body {
+            height:360px;
+        }
+    }
+}
+
+/* Landscape */
+@media screen 
+  and (device-width: 320px) 
+  and (device-height: 640px) 
+  and (-webkit-device-pixel-ratio: 2) 
+  and (orientation: landscape) {
+    #chat_window_1 
+    {
+        width:90% !important;
+        #chat_panel {
+            height: 500px;
+        }
+        .panel-body {
+            height:360px;
+        }
+    }
+}
+
 @media only screen and (device-width:768px){
     /* default iPad screens */
     #chat_window_1 
