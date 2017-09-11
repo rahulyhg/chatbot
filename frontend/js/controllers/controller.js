@@ -537,6 +537,7 @@ myApp.controller('HomeCtrl', function ($scope,$rootScope, TemplateService, Navig
             }
             else
                 $("#topiclist li").hide();
+            $("h3#topic").text(topic);
             $("#topiclist li").each(function(){
                 
                 var keyword = new RegExp($(this).children("a").find().attr("id"), 'i');
@@ -584,8 +585,8 @@ myApp.controller('HomeCtrl', function ($scope,$rootScope, TemplateService, Navig
                 {
                     $timeout(function () {
                         $rootScope.showTimeoutmsg = true;
-                        msg = {Text:"Any Confusion ? How May I help You ?",type:"SYS_INACTIVE"};
-                        $rootScope.pushSystemMsg(0,msg);
+                        // msg = {Text:"Any Confusion ? How May I help You ?",type:"SYS_INACTIVE"};
+                        // $rootScope.pushSystemMsg(0,msg);
                     },60000);
                 }
                 $rootScope.chatText = chatText;
