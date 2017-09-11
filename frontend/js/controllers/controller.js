@@ -753,7 +753,7 @@ myApp.controller('HomeCtrl', function ($scope,$rootScope, TemplateService, Navig
             formData = mysession;
             formData.csrfmiddlewaretoken=$rootScope.getCookie("csrftoken");
             formData.user_id=$cookies.get("session_id");
-            console.log(formData);
+            //console.log(formData);
             apiService.getDthlinkRes(formData).then(function (data){
                 angular.forEach(data.data.tiledlist, function(value, key) {
                     if(value.type=="DTHyperlink")
@@ -882,13 +882,13 @@ myApp.controller('HomeCtrl', function ($scope,$rootScope, TemplateService, Navig
                     }
                     else
                         prev +=value+" "; 
-                    console.log(value);
+                    //console.log(value);
                     $(".list-group a[id='"+prev+"']").parent().show();
                     $(".list-group a[id='"+prev+"']").parent().children(".tree").find("li").show();
                     
                     if(submenu.length != (key+1))
                     {
-                        console.log(prev);
+                        //console.log(prev);
                         if($(".list-group a[id='"+prev+"']").parent().children('ul.tree').is(':visible')) {}
                         else
                         {
@@ -898,12 +898,12 @@ myApp.controller('HomeCtrl', function ($scope,$rootScope, TemplateService, Navig
                     }
                     if($( ".list-group a[id='"+prev+"']" ).hasClass( "section_last" ))
                     {   
-                        console.log("hasclass");
+                        //console.log("hasclass");
                         $(".list-group a[id='"+prev+"']").addClass("active");
                     }
                     if(submenu.length == (key+1))
                     {
-                        console.log("last");
+                        //console.log("last");
                         $(".list-group a[id='"+prev+"']").parent().children('ul.tree').toggle(300);
                     }
                 }
@@ -924,6 +924,8 @@ myApp.controller('HomeCtrl', function ($scope,$rootScope, TemplateService, Navig
                 //mysessiondata.data = {id:parseInt(id),Text:value};
                 //mysessiondata.data = {id:id,Text:value};
                 sess2 = {id:id,Text:value};
+                $rootScope.tabvalue.elements = [];
+                $rootScope.tabvalue.element_values=[];
                 //console.log(mysessiondata);
                 //$rootScope.formData = mysessiondata;
                 //console.log($cookies.get("session_id"));
@@ -935,14 +937,14 @@ myApp.controller('HomeCtrl', function ($scope,$rootScope, TemplateService, Navig
                     $(".chatinput").val("");
                 });
                 apiService.getSysMsg($rootScope.formData).then(function (data){
-                        console.log(data);
+                        //console.log(data);
                         if(data.data.tiledlist[0].topic)
                              $("#topic").text(data.data.tiledlist[0].topic);
                     angular.forEach(data.data.tiledlist, function(value, key) {
                         //console.log(value);
                         if(value.type=="text")
                         {
-							console.log(data.data.tiledlist[0].text);
+							//console.log(data.data.tiledlist[0].text);
                         	$rootScope.pushSystemMsg(0,data.data);
                             $rootScope.showMsgLoader = false;
                             $timeout(function(){
