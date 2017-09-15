@@ -26,7 +26,7 @@
                                     <span class="chat-img pull-{{list.position}}">
                                         <img ng-src="img/{{list.position == 'left' && 'Tenali.png' || 'logo7.png'}}" alt="BOT" class="img-circle " />
                                     </span>
-                                    <div ng-class="{'chat-body':list.position==='right' || list.msg.tiledlist[0].type !== 'Instruction'}">
+                                    <div ng-class="{'chat-body':list.position==='right' || ( list.msg.tiledlist[0].type !== 'Instruction' &&  list.msg.type != 'SYS_CALC')}">
                                         <div class="clearfix" ng-if="list.position==='right'">
                                             <p class="lastmsg" >
                                                 <ng-bind-html ng-bind-html = "list.msg">
@@ -198,6 +198,139 @@
                                                     {{list.msg.Text}}
                                                 </ng-bind-html>
                                             </p>
+                                        </div>
+                                        <div class=" clearfix" ng-if="(list.position==='left' &&  (list.msg.type==='SYS_CALC' ))">
+                                            <div class="cals row" id="cal_select{{$index}}">
+                                                <button class="btn btn-sm btn-primary" name="tdbtn" id="tdbtn{{$index}}" ng-click="showTdcalc();">TD Calculator</button>
+                                                <button class="btn btn-sm btn-primary" name="rdbtn" id="rdbtn{{$index}}" ng-click="showRdcalc();">RD Calculator</button>
+                                            </div>
+                                            <div class="caldiv">
+                                                <div class="row rdm tdcal" id="tdcal" ng-show="showTdcal" >
+                                                    <div class="col-lg-12 col-md-12">
+                                                        <form>
+                                                            <div class="form-group col-md-12 col-xs-12">
+                                                                <label for="mondep" class="control-label">Monthly Deposit (Installment)</label>
+                                                                <br>
+                                                                <input type="text" class="form-control" name="mondep" id="mondep" ng-change="tdcalc(td[$index].mondep,td[$index].rate,td[$index].tenure,$index);" ng-model="td[$index].mondep">
+                                                            </div>
+                                                            <div class="form-group col-md-12 col-xs-12">
+                                                                <label for="rate" class="control-label">Rate</label>
+                                                                <br>
+                                                                <input type="text" class="form-control" name="rate" id="rate" ng-model="td[$index].rate" ng-init="td[$index].rate='9.25'"  value="9.25" ng-change="tdcalc(td[$index].mondep,td[$index].rate,td[$index].tenure,$index);">
+                                                            </div>
+                                                            <div class="form-group col-md-12 col-xs-12">
+                                                                <label for="ten" class="control-label">Tenure(months)</label>
+                                                                <br>
+                                                                <input type="text" class="form-control" name="ten" id="ten" ng-init="td[$index].tenure='12'" ng-change="tdcalc(td[$index].mondep,td[$index].rate,td[$index].tenure,$index);" value="12" ng-model="td[$index].tenure">
+                                                            </div>
+                                                            <div class="form-group col-md-12 col-xs-12">
+                                                                <label for="ten" class="control-label">RD Maturity Value</label>
+                                                                <br>
+                                                                <input type="text" class="form-control rdm{{$index}}" name="rdm" id="rdm"  readonly="">
+                                                            </div>
+                                                        </form>
+                                                    </div>
+                                                </div>
+                                                <div class="row calci" id="rdcal" ng-show="showRdcal">
+                                                    <div class="col-md-12">
+                                                        <div class="panel calculator">
+                                                            <div class="panel-heading">
+                                                                <div class="row">
+                                                                    <div class="col-xs-6">
+                                                                        <a href="#" ng-class="{'active':showSTD}" id="simple" ng-click="showSTDcal();">Simple Term Deposit</a>
+                                                                    </div>
+                                                                    <div class="col-xs-6">
+                                                                        <a href="#" ng-class="{'active':showCTD}" id="cumulative" ng-click="showCTDcal();">Cumulative Term Deposit</a>
+                                                                    </div>
+                                                                </div>
+                                                                <hr>
+                                                            </div>
+                                                            <div class="panel-body">
+                                                                <div class="row">
+                                                                    <div class="col-lg-12">
+                                                                        <form class="form-horizontal" id="simple-form" ng-show="showSTD" >
+                                                                            <div class="form-group">
+                                                                                <label for="principal" class="col-sm-4 control-label">Principal Amount</label>
+                                                                                <div class="col-sm-8">
+                                                                                    <input type="text" class="form-control" name="principal" id="principal" ng-model="std[$index].principal" ng-change="calcSTD(std[$index].principal,std[$index].rate,std[$index].tenure,$index);">
+                                                                                </div>
+                                                                            </div>
+                                                                            <div class="form-group">
+                                                                                <label for="rate2" class="col-sm-4 control-label">Rate</label>
+                                                                                <div class="col-sm-8">
+                                                                                    <input type="text" class="form-control" name="rate2" value="9.25" id="rate2" ng-init="std[$index].rate='9.25'" ng-model="std[$index].rate" ng-change="calcSTD(std[$index].principal,std[$index].rate,std[$index].tenure,$index);">
+                                                                                </div>
+                                                                            </div>
+                                                                            <div class="form-group">
+                                                                                <label for="tenure_days" class="col-sm-4 control-label">Tenure(Days)</label>
+                                                                                <div class="col-sm-8">
+                                                                                    <input type="text" class="form-control" name="tenure_days" id="tenure_days" ng-model="std[$index].tenure" ng-change="calcSTD(std[$index].principal,std[$index].rate,std[$index].tenure,$index);">
+                                                                                </div>
+                                                                            </div>
+                                                                            <div class="form-group">
+                                                                                <label for="tenure_yrs" class="col-sm-4 control-label">Tenure (In Years)</label>
+                                                                                <div class="col-sm-8">
+                                                                                    <input type="text" class="form-control tenure_yrs{{$index}}" name="tenure_yrs" id="tenure_yrs" readonly="" ng-model="std[$index].year">
+                                                                                </div>
+                                                                            </div>
+                                                                            <div class="form-group">
+                                                                                <label for="int_maturity" class="col-sm-4 control-label">Interest on Maturity</label>
+                                                                                <div class="col-sm-8">
+                                                                                    <input type="text" class="form-control int_maturity{{$index}}" name="int_maturity" id="int_maturity" readonly="" ng-model="std[$index].maturity_int">
+                                                                                </div>
+                                                                            </div>
+                                                                            <div class="form-group">
+                                                                                <label for="val_maturity" class="col-sm-4 control-label">Maturity Value</label>
+                                                                                <div class="col-sm-8">
+                                                                                    <input type="text" class="form-control val_maturity{{$index}}" name="val_maturity" id="val_maturity" readonly="" ng-model="std[$index].maturity_val">
+                                                                                </div>
+                                                                            </div>
+                                                                        </form>
+                                                                        <form class="form-horizontal" id="cumu-form" ng-show="showCTD">
+                                                                            <div class="form-group">
+                                                                                <label for="cumu_principal" class="col-sm-4 control-label">Principal Amount</label>
+                                                                                <div class="col-sm-8">
+                                                                                    <input type="text" class="form-control" name="cumu_principal" id="cumu_principal" ng-model="ctd[$index].principal" ng-change="calcCTD(ctd[$index].principal,ctd[$index].rate,ctd[$index].tenure,$index);">
+                                                                                </div>
+                                                                            </div>
+                                                                            <div class="form-group">
+                                                                                <label for="cumu_rate2" class="col-sm-4 control-label">Rate</label>
+                                                                                <div class="col-sm-8">
+                                                                                    <input type="text" class="form-control" name="cumu_rate2" value="9.25" id="cumu_rate2" ng-init="ctd[$index].rate='9.25'" ng-model="ctd[$index].rate" ng-change="calcCTD(ctd[$index].principal,ctd[$index].rate,ctd[$index].tenure,$index);">
+                                                                                </div>
+                                                                            </div>
+                                                                            <div class="form-group">
+                                                                                <label for="cumu_tenure_days" class="col-sm-4 control-label">Tenure(Days)</label>
+                                                                                <div class="col-sm-8">
+                                                                                    <input type="text" class="form-control" name="cumu_tenure_days" id="cumu_tenure_days" ng-model="ctd[$index].tenure" ng-change="calcCTD(ctd[$index].principal,ctd[$index].rate,ctd[$index].tenure,$index);">
+                                                                                </div>
+                                                                            </div>
+                                                                            <div class="form-group">
+                                                                                <label for="cumu_tenure_yrs" class="col-sm-4 control-label">Tenure (In Years)</label>
+                                                                                <div class="col-sm-8">
+                                                                                    <input type="text" class="form-control cumu_tenure_yrs{{$index}}" name="cumu_tenure_yrs" id="cumu_tenure_yrs" readonly="" ng-model="ctd[$index].years">
+                                                                                </div>
+                                                                            </div>
+                                                                            <div class="form-group">
+                                                                                <label for="cumu_int_maturity" class="col-sm-4 control-label">Interest on Maturity</label>
+                                                                                <div class="col-sm-8">
+                                                                                    <input type="text" class="form-control cumu_int_maturity{{$index}}" name="cumu_int_maturity" id="cumu_int_maturity" readonly="" ng-model="ctd[$index].int_maturity">
+                                                                                </div>
+                                                                            </div>
+                                                                            <div class="form-group">
+                                                                                <label for="cumu_val_maturity" class="col-sm-4 control-label">Maturity Value</label>
+                                                                                <div class="col-sm-8">
+                                                                                    <input type="text" class="form-control cumu_val_maturity{{$index}}" name="cumu_val_maturity" id="cumu_val_maturity" readonly="" ng-model="ctd[$index].maturity">
+                                                                                </div>
+                                                                            </div>
+                                                                        </form>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
                                         </div>
                                         <p class="lastmsg">
                                             <small class="chatTime">

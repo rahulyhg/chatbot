@@ -453,6 +453,10 @@ myApp.controller('HomeCtrl', function ($scope,$rootScope, TemplateService, Navig
         $rootScope.chatText = "";
         $rootScope.answers = "";
         $rootScope.msgSelected = false;
+        $rootScope.showTdcal = false;
+        $rootScope.showRdcal = false;
+        $rootScope.showSTD = false;
+        $rootScope.showCTD = false;
         // var mylist = $.jStorage.get("chatlist");
         // if(!mylist || mylist == null)
         //     $rootScope.chatlist = [];
@@ -584,7 +588,7 @@ myApp.controller('HomeCtrl', function ($scope,$rootScope, TemplateService, Navig
                 if(!$rootScope.showTimeoutmsg && chatText=="") 
                 {
                     $timeout(function () {
-                        $rootScope.showTimeoutmsg = true;
+                        //$rootScope.showTimeoutmsg = true;
                         // msg = {Text:"Any Confusion ? How May I help You ?",type:"SYS_INACTIVE"};
                         // $rootScope.pushSystemMsg(0,msg);
                     },60000);
@@ -594,11 +598,18 @@ myApp.controller('HomeCtrl', function ($scope,$rootScope, TemplateService, Navig
                     $rootScope.autocompletelist = [];
                 }
                 else {
-                    $rootScope.chatdata = { string:$rootScope.chatText};
-                    apiService.getautocomplete($rootScope.chatdata).then(function (response){
-                        //console.log(response.data);
-                        $rootScope.autocompletelist = response.data.data;
-                    });
+                    var str2 = $rootScope.chatText;
+                    str2 = str2.toLowerCase();
+                    if (str2.includes("calculator") || str2.includes("td cal") || str2.includes("rd cal") || str2.includes("calc") )
+                    //if($rootScope.chatText != "calc" || $rootScope.chatText != "calculator" || $rootScope.chatText != "td cal" || $rootScope.chatText != "rd cal")
+                        
+                    {   
+                        $rootScope.chatdata = { string:$rootScope.chatText};
+                        apiService.getautocomplete($rootScope.chatdata).then(function (response){
+                            //console.log(response.data);
+                            $rootScope.autocompletelist = response.data.data;
+                        });
+                    }
                 }
             }
         };
@@ -670,6 +681,58 @@ myApp.controller('HomeCtrl', function ($scope,$rootScope, TemplateService, Navig
             $rootScope.chatText = "";
             $rootScope.scrollChatWindow();
         };
+        
+        $rootScope.showSTDcal = function(){
+            $rootScope.showSTD = true;
+            $rootScope.showCTD = false;
+            // $("#simple-form").delay(100).fadeIn(100);
+            // $("#cumu-form").fadeOut(100);
+        };
+        $rootScope.showCTDcal = function(){
+            $rootScope.showSTD = false;
+            $rootScope.showCTD = true;
+            // $("#cumu-form").delay(100).fadeIn(100);
+            // $("#simple-form").fadeOut(100);
+            
+        };
+        $rootScope.showTdcalc = function(){
+            $rootScope.showTdcal = true;
+            $rootScope.showRdcal = false;
+        };
+        $rootScope.showRdcalc = function(){
+            $rootScope.showTdcal = false;
+            $rootScope.showRdcal = true;
+            $rootScope.showSTDcal();
+        };
+        $rootScope.tdcalc = function(mon,rate,tenure,index) {
+            var mondep = parseFloat(mon);
+            var rate = parseFloat(rate);
+            var ten = parseFloat(tenure);
+            var rdmValue = mondep * (  (Math.pow((1+rate/4),(ten/3))-1  )/(1-(Math.pow(1+rate/4),(-1/3))));
+            $('.rdm'+index).val(rdmValue.toFixed(2));
+        };
+        $rootScope.calcSTD = function(principal,rate,tenure,index) {
+            var principal = parseFloat(principal);
+            var rate2 = parseFloat(rate);
+            var tenure_days = parseFloat(tenure);
+            var tenure_yrs = tenure_days/365;
+            $('.tenure_yrs'+index).val(tenure_yrs.toFixed(2));
+            var int_maturity = (principal * rate2 * tenure_yrs)/100;
+            $('.int_maturity'+index).val(int_maturity.toFixed(2));
+            var val_maturity = principal + int_maturity;
+            $('.val_maturity'+index).val(val_maturity.toFixed(2));
+        };
+        $rootScope.calcCTD = function(principal,rate,tenure,index) {
+            var cumu_principal = parseFloat(principal);
+            var cumu_rate2 = parseFloat(rate);
+            var cumu_tenure_days = parseFloat(tenure);
+            var cumu_tenure_yrs = cumu_tenure_days/365;
+            var cumu_val_maturity = cumu_principal * (1+(cumu_rate2/400))^(4*cumu_tenure_yrs);
+            var cumu_int_maturity = cumu_val_maturity - cumu_principal;
+            $('.cumu_tenure_yrs'+index).val(cumu_tenure_yrs.toFixed(2));
+            $('.cumu_int_maturity'+index).val(cumu_int_maturity.toFixed(2));
+            $('.cumu_val_maturity'+index).val(cumu_val_maturity.toFixed(2));
+        };
         $rootScope.pushMsg = function(id,value,answer) {
             $rootScope.msgSelected = true;
             $rootScope.chatmsgid = id;
@@ -680,16 +743,39 @@ myApp.controller('HomeCtrl', function ($scope,$rootScope, TemplateService, Navig
                 {
                     $rootScope.autocompletelist = [];
                     $rootScope.chatlist.push({id:"id",msg:value,position:"right",curTime: $rootScope.getDatetime()});
-                    $rootScope.getSystemMsg(id,value);
+                    str2 = value;
+                    str2 = str2.toLowerCase();
+                    if (str2.includes("calculator") || str2.includes("td cal") || str2.includes("rd cal") || str2.includes("calc") )
+                    {
+                        $rootScope.showTdcal = false;
+                        $rootScope.showRdcal = false;
+                        $rootScope.showSTD = false;
+                        $rootScope.showCTD = false;
+                        var automsg = {  type : "SYS_CALC"};
+                        $rootScope.chatlist.push({id:id,msg:automsg,position:"left",curTime: $rootScope.getDatetime()});
+                        $rootScope.showMsgLoader=false;
+                        $rootScope.msgSelected = false;
+                        $timeout(function(){
+                            $rootScope.autocompletelist = [];
+                        },3000);
+                        
+                    }
+                    else
+                    {
+                        $rootScope.getSystemMsg(id,value);
+                        $rootScope.msgSelected = false;
+                        $rootScope.showMsgLoader=true;
+                    }
+                    
                     $.jStorage.set("chatlist",$rootScope.chatlist);
-                    $rootScope.msgSelected = false;
-                    $rootScope.showMsgLoader=true;
+                    
+                    
                     $rootScope.chatText = "";
                     $rootScope.autolistvalue = "";
                     $rootScope.autolistid = "";
                     $rootScope.chatmsg = "";
                     $rootScope.chatmsgid = "";
-                    
+                    $rootScope.autocompletelist = [];
                     $rootScope.scrollChatWindow();    
                 }
             }
