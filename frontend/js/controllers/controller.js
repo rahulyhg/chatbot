@@ -795,7 +795,7 @@ myApp.controller('HomeCtrl', function ($scope,$rootScope, TemplateService, Navig
         $rootScope.ratecardSubmit = function(coldata,rowdata) {
             console.log(coldata,rowdata);
             $scope.formData = {csrfmiddlewaretoken:$rootScope.getCookie("csrftoken"),user_id:$cookies.get("session_id"),user_input:coldata+","+rowdata,auto_id:"",auto_value:"",Net_annual_Income:coldata,Interest:rowdata,type:"rate card"};
-            apiService.getSysMsg($scope.formData).then(function (data){
+            apiService.ratecardsubmit($scope.formData).then(function (data){
 				//console.log(data);
 				angular.forEach(data.data.tiledlist, function(value, key) {
                         //console.log(value);

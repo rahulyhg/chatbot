@@ -123,6 +123,20 @@ myApp.factory('apiService', function ($http, $q, $timeout,CsrfTokenService,$http
             
             
         },
+        ratecardsubmit : function(formData,callback){
+            //console.log(formData);
+            return    $http({
+                url:adminurl+'outRateCard/'+formData.user_id+"/",
+                //url: adminUrl3 + 'Chatbotautolist/getSysMsg',
+                method: 'POST',
+                data:$.param(formData),
+                headers: {'Content-Type': 'application/x-www-form-urlencoded;charset=utf-8','X-CSRFToken':formData.csrfmiddlewaretoken },
+                //withCredentials: false,
+                //headers: {'Content-Type': 'application/json','X-CSRFToken': "Vfpx6pWJYBx7dbX35vwXm7P9xj3xNPyUJbSx9IlwgcRHReN974ZC5rEbvgpRQdY2"},
+            });
+            
+            
+        },
         get_session: function (formData, callback) {
             return $http({
                 url: adminurl + 'get_session/',
