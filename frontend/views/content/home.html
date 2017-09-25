@@ -13,7 +13,7 @@
 
             </div>
             <uib-tabset active="selectTabIndex" id="tab_data" ng-show="tabvalue.elements.length>0" ng-style="{height: tabHeight + 'px'}">
-                <uib-tab index="$index" ng-repeat="row in tabvalue.elements"  heading="{{row}}">
+                <uib-tab index="$index" ng-repeat="row in tabvalue.elements track by $index"  heading="{{row}}">
                     <div class ="tab-con"  ng-if="row ==='Process'">
                         <p class="" ng-repeat="processtext in tabvalue.element_values[$index].Process">
                             <ng-bind-html ng-bind-html="processtext|newlines">
@@ -24,18 +24,38 @@
                             </span> -->
                             <span id = "tooltip12" class="glyphicon glyphicon-plus-sign" href="#" tooltip-placement="bottom" ng-if="tabvalue.element_values[0].Steps[$index] !== '' && tabvalue.element_values[0].Steps[$index]" ng-show="!!tabvalue.element_values[0].Steps.length && tabvalue.element_values[0].Steps[$index]" uib-tooltip="{{tabvalue.element_values[0].Steps[$index]}}"></span>
                             <span id = "tooltip12" class="glyphicon glyphicon-info-sign" href="#" tooltip-placement="bottom" ng-if="tabvalue.element_values[0].Tooltip[$index] !== '' && tabvalue.element_values[0].Tooltip[$index]" ng-show="!!tabvalue.element_values[0].Tooltip.length && tabvalue.element_values[0].Tooltip[$index]" uib-tooltip="{{tabvalue.element_values[0].Tooltip[$index]}}"></span>
-                            
+                            <span id = "tooltip12" class="glyphicon glyphicon-blackboard" href="#" tooltip-placement="bottom" ng-if="tabvalue.element_values[0].System[$index] !== '' && tabvalue.element_values[0].System[$index]" ng-show="!!tabvalue.element_values[0].System.length && tabvalue.element_values[0].System[$index]" uib-tooltip="{{tabvalue.element_values[0].System[$index]}}"></span>
+                            <span id = "tooltip12" class="glyphicon glyphicon-exclamation-sign" href="#" tooltip-placement="bottom" ng-if="tabvalue.element_values[0].Checks[$index] !== '' && tabvalue.element_values[0].Checks[$index]" ng-show="!!tabvalue.element_values[0].Checks.length && tabvalue.element_values[0].Checks[$index]" uib-tooltip="{{tabvalue.element_values[0].Checks[$index]}}"></span>
                         </p>
 
                         
                     </div>
-                    <div class ="tab-con"  ng-if="row !=='Process'">
-                        <p class="" >
+                    <div class ="tab-con"  ng-if="row==='Quik Tip'">
+                        <form class="form-inline">
+                            <div class="form-group">
+                                <label for="exampleInputName2">Notes</label>
+                                <select  class="notes" ng-change="getnotedata(s.notes,tabvalue.element_values[0].Table);" ng-model="s.notes">
+                                    <option value="" selected>Please Select</option>
+                                    <option ng-repeat="x in tabvalue.element_values[0].Quik_Tip" value="{{x.col}}" ng-init="s.notes=x.col">{{x.val}}</option>
+                                </select>
+                            </div>
+                        </form>
+                        <div  ng-if="notedata.length > 0">
+                            <p ng-repeat = "notev in notedata">
+                                <ng-bind-html ng-bind-html="notev">
+                                    {{notev}}
+                                </ng-bind-html>
+                            </p>
+                        </div>
+                    </div> 
+                    <div class ="tab-con"  ng-if="(row !== 'Process' || ((!tabvalue.element_values[1].Quik_Tip && $index == 1))">
+                        <p class="" > 
                             <ng-bind-html ng-bind-html="tabvalue.element_values[$index]">
                                 {{tabvalue.element_values[$index]}}
                             </ng-bind-html>
                         </p>
-                    </div>
+                    </div> 
+                    
                 </uib-tab>
             </uib-tabset>
             

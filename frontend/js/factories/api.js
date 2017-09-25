@@ -124,7 +124,7 @@ myApp.factory('apiService', function ($http, $q, $timeout,CsrfTokenService,$http
             
         },
         ratecardsubmit : function(formData,callback){
-            //console.log(formData);
+            console.log(formData);
             return    $http({
                 url:adminurl+'outRateCard/'+formData.user_id+"/",
                 //url: adminUrl3 + 'Chatbotautolist/getSysMsg',
@@ -223,6 +223,17 @@ myApp.factory('apiService', function ($http, $q, $timeout,CsrfTokenService,$http
             return    $http({
                 //url:adminurl+'out/'+formData.user_id+"/",
                 url: adminUrl3 + 'Chatbotvoice/startRecoding1',
+                method: 'POST',
+                data:(formData),
+            });
+            
+            
+        },
+        getnoteval:function(formData,callback){
+            //console.log(formData);
+            return    $http({
+                //url:adminurl+'out/'+formData.user_id+"/",
+                url: adminUrl3 + 'Chatbotnotes/getnotedata',
                 method: 'POST',
                 data:(formData),
             });

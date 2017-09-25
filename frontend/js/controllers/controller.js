@@ -581,30 +581,37 @@ myApp.controller('HomeCtrl', function ($scope,$rootScope, TemplateService, Navig
         };
         
         $rootScope.getAutocomplete = function(chatText) {
-            
+            console.log($rootScope.answers);
             if( $rootScope.answers == "")
             {
                 $rootScope.showTimeoutmsg = false;
-                if(!$rootScope.showTimeoutmsg && chatText=="") 
-                {
-                    $timeout(function () {
-                        //$rootScope.showTimeoutmsg = true;
-                        // msg = {Text:"Any Confusion ? How May I help You ?",type:"SYS_INACTIVE"};
-                        // $rootScope.pushSystemMsg(0,msg);
-                    },60000);
-                }
+                // if(!$rootScope.showTimeoutmsg && chatText=="") 
+                // {
+                //     $timeout(function () {
+                //         //$rootScope.showTimeoutmsg = true;
+                //         // msg = {Text:"Any Confusion ? How May I help You ?",type:"SYS_INACTIVE"};
+                //         // $rootScope.pushSystemMsg(0,msg);
+                //     },60000);
+                // }
+                console.log("HI");
                 $rootScope.chatText = chatText;
                 if($(".chatinput").val() == "" || $(".chatinput").val() == null) {
                     $rootScope.autocompletelist = [];
+                    console.log("null");
                 }
                 else {
                     var str2 = $rootScope.chatText;
                     str2 = str2.toLowerCase();
                     if (str2.includes("calculator") || str2.includes("td cal") || str2.includes("rd cal") || str2.includes("calc") )
                     //if($rootScope.chatText != "calc" || $rootScope.chatText != "calculator" || $rootScope.chatText != "td cal" || $rootScope.chatText != "rd cal")
-                        
-                    {   
-                        $rootScope.chatdata = { string:$rootScope.chatText};
+                    {
+                        console.log("not calc");
+                    }
+                    else     
+                    {  
+                        console.log("auto"); 
+                        var topic = $("#topic").text();
+                        $rootScope.chatdata = { string:$rootScope.chatText,topic:topic};
                         apiService.getautocomplete($rootScope.chatdata).then(function (response){
                             //console.log(response.data);
                             $rootScope.autocompletelist = response.data.data;
@@ -866,6 +873,27 @@ myApp.controller('HomeCtrl', function ($scope,$rootScope, TemplateService, Navig
                 });
             });
         };
+        $rootScope.notedata = [];
+        $rootScope.getnotedata=function(value,table) {
+            console.log(value);
+            console.log(table);
+            formData = {table:table,value:value};
+            apiService.getnoteval(formData).then(function (data){
+                //console.log(data);
+                if(value == 'NTB_New_to_bank_customer')
+                {
+                    //console.log(data.data.data[0].NTB_New_to_bank_customer);
+                    $rootScope.notedata = data.data.data[0].NTB_New_to_bank_customer;
+                }
+                else if(value == 'For_Existing_CRN_new_account_opening')
+                {
+                    //console.log(data.data.data[0].For_Existing_CRN_new_account_opening);
+                    $rootScope.notedata = data.data.data[0].For_Existing_CRN_new_account_opening;
+                }
+                //$rootScope.notedata = data.data.data[0].value;
+                //console.log($rootScope.notedata);
+            });
+        };
         $rootScope.DthResponse = function(id,data) {
             if(data.tiledlist[0].DT.length > 0 || data.tiledlist[0].Text != "")
             {
@@ -903,8 +931,17 @@ myApp.controller('HomeCtrl', function ($scope,$rootScope, TemplateService, Navig
 				
             $rootScope.showMsgLoader = false; 
             $rootScope.selectTabIndex = 0;
-            var ele = new Array("Process");
-            var ele_val = new Array(data.tiledlist[0]);
+            if(data.tiledlist[0].Quik_Tip)
+            {
+                var ele = new Array("Process","Quik Tip");
+            
+                var ele_val = new Array(data.tiledlist[0],data.tiledlist[0]);
+            }
+            else
+            {
+                var ele = new Array("Process");
+                var ele_val = new Array(data.tiledlist[0],data.tiledlist[0]);
+            }
             $rootScope.tabvalue.elements = ele;
             $rootScope.tabvalue.element_values=ele_val;
             // if(data.node_data)

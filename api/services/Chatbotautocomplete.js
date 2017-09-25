@@ -38,9 +38,13 @@ var model = {
         //console.log("data", data)
         searchstring=data.string;
         searchstring = "/"+searchstring+"/";
-        Chatbotautocomplete.find({
+        var obj = { 
             value:{ $regex: '.*' + data.string + '.*',$options:"i" }
-        }, { topic: 1, value: 1, id:1,answers:1 }).limit(4).exec(function (err, found) {
+        };
+        console.log(obj);
+        if(data.topic != '')
+            obj = {topic:data.topic,value:{ $regex: '.*' + data.string + '.*',$options:"i" }};
+        Chatbotautocomplete.find(obj, { topic: 1, value: 1, id:1,answers:1 }).limit(4).exec(function (err, found) {
             if (err) {
                 callback(err, null);
             } 
