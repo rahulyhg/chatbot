@@ -48,7 +48,7 @@
                             </p>
                         </div>
                     </div> 
-                    <div class ="tab-con"  ng-if="(row !== 'Process' || (tabvalue.element_values[1].Quik_Tip && $index == 1))">
+                    <div class ="tab-con"  ng-if="(row !== 'Process' || (!tabvalue.element_values[1].Quik_Tip && $index != 1))">
                         <p class="" > 
                             <ng-bind-html ng-bind-html="tabvalue.element_values[$index]">
                                 {{tabvalue.element_values[$index]}}
