@@ -107,7 +107,14 @@ myApp.run(['$http','$cookies','beforeUnload','$document','$rootScope','Idle','bo
     $rootScope.tabvalue={};
     $rotated = false;
 
-                
+    $(document).on('click', '.chat-body .changedthbg', function(){ 
+        var stage = $(this).attr("data-bgstage");
+        $(".stage"+stage).css('background-color','#eee');
+        $(".stage"+stage).css('color','#1e90ff');
+        
+        $(this).css('background-color', '#003874');
+        $(this).css('color', '#fff');
+    });     
     $(document).on('click', '.toggler', function(){ 
         $(this).parent().children('ul.tree').toggle(300);
         $(this).children().find('.triangle').toggleClass('glyphicon-triangle-bottom').toggleClass('glyphicon-triangle-right');

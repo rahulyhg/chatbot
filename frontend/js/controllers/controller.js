@@ -830,10 +830,11 @@ myApp.controller('HomeCtrl', function ($scope,$rootScope, TemplateService, Navig
             });
 
         };
-        $rootScope.getDthlinkRes = function(stage,dthlink) {
+        $rootScope.getDthlinkRes = function(stage,dthlink,index) {
             //console.log(colno,lineno,dthlink);
             //mysession = $.jStorage.get("sessiondata");
             var mysession = {};
+            
             console.log(stage+"-"+dthlink);
             mysession.DTHlink=dthlink;
             //mysession.DTHline=lineno;
@@ -852,6 +853,50 @@ myApp.controller('HomeCtrl', function ($scope,$rootScope, TemplateService, Navig
                     if(value.type=="DTHyperlink")
                     {
                         $rootScope.DthResponse(0,data.data);
+                        if(data.data.tiledlist[0].sub_topic_list || data.data.tiledlist[0].sub_topic_list != null)
+                        {
+                            $rootScope.openMenu(data.data.tiledlist[0].sub_topic_list);
+                        }
+                        if(data.data.tiledlist[0].Script || data.data.tiledlist[0].Script != null)
+                        {
+                            if(data.data.tiledlist[0].Script.length== 0)
+                                $rootScope.tabHeight = window.innerHeight-53;
+                            else
+                                $rootScope.tabHeight = 300;
+                            
+                        }
+                        if(data.data.session_obj_data || data.data.session_obj_data != null)
+                            $.jStorage.set("sessiondata",data.data.session_obj_data);
+                        if(data.data.tiledlist[0].topic)
+                            $("#topic").text(data.data.tiledlist[0].topic);
+                        //$.jStorage.set("sessiondata",data.data.session_obj_data);
+                    }
+                });
+            });
+        };
+        $rootScope.getDthlinkRes2 = function(stage,dthlink,index) {
+            //console.log(colno,lineno,dthlink);
+            //mysession = $.jStorage.get("sessiondata");
+            var mysession = {};
+            
+            console.log(stage+"-"+dthlink);
+            mysession.DTHlink=dthlink;
+            //mysession.DTHline=lineno;
+            //mysession.DTHcol=colno;
+            mysession.DTHstage=stage;
+            // formData = {};
+            // formData.DTHcol = colno;
+            // formData.DTHline = lineno;
+            // formData.DTHlink = dthlink;
+            formData = mysession;
+            formData.csrfmiddlewaretoken=$rootScope.getCookie("csrftoken");
+            formData.user_id=$cookies.get("session_id");
+            //console.log(formData);
+            apiService.getDthlinkRes(formData).then(function (data){
+                angular.forEach(data.data.tiledlist, function(value, key) {
+                    if(value.type=="DTHyperlink")
+                    {
+                        $rootScope.DthResponse2(0,data.data,dthlink);
                         if(data.data.tiledlist[0].sub_topic_list || data.data.tiledlist[0].sub_topic_list != null)
                         {
                             $rootScope.openMenu(data.data.tiledlist[0].sub_topic_list);
@@ -902,7 +947,10 @@ myApp.controller('HomeCtrl', function ($scope,$rootScope, TemplateService, Navig
 					
 					var images = Array();
 					var process = Array();
-					process = data.tiledlist[0].Process;
+                    process = data.tiledlist[0].Process;
+                    var dtstage = data.tiledlist[0].Stage;
+                    var dtstage = dtstage.replace(".", "");
+                    data.tiledlist[0].bgstage = dtstage;
 					/*_.each(data.tiledlist[0].Process,function(v,k){
 						if (v.indexOf(".png") >= 0) 
 					});*/
@@ -912,8 +960,15 @@ myApp.controller('HomeCtrl', function ($scope,$rootScope, TemplateService, Navig
 					//console.log(images);
 					data.tiledlist[0].Process =process;
 					data.tiledlist[0].images =images;
-					if(data.tiledlist[0].DT.length > 0 || ( data.tiledlist[0].Text != "" && data.tiledlist[0].Text) || images.length > 0 )
-						$rootScope.pushSystemMsg(id,data);
+					if((data.tiledlist[0].Stage == '0') && data.tiledlist[0].DT.length > 0 || ( data.tiledlist[0].Text != "" && data.tiledlist[0].Text) || images.length > 0 )
+                        $rootScope.pushSystemMsg(id,data);
+                    if(data.tiledlist[0].Stage != '0')
+                    {
+                        if(!data.tiledlist[0].Script || data.tiledlist[0].Script.length== 0 )
+                            $rootScope.tabHeight = window.innerHeight-53;
+                        else
+                            $rootScope.tabHeight = 300;
+                    }
 					if(images.length > 0)
 					{
 						$timeout(function(){
@@ -933,9 +988,13 @@ myApp.controller('HomeCtrl', function ($scope,$rootScope, TemplateService, Navig
             $rootScope.selectTabIndex = 0;
             if(data.tiledlist[0].Quik_Tip)
             {
-                var ele = new Array("Process","Quik Tip");
+                var ele = new Array("Process","Exception");
             
                 var ele_val = new Array(data.tiledlist[0],data.tiledlist[0]);
+                if(!data.tiledlist[0].Script || data.tiledlist[0].Script.length== 0)
+                    $rootScope.tabHeight = window.innerHeight-53;
+                else
+                    $rootScope.tabHeight = 300;
             }
             else
             {
@@ -970,6 +1029,83 @@ myApp.controller('HomeCtrl', function ($scope,$rootScope, TemplateService, Navig
                 
             //     //$rootScope.$emit("setTabData", $scope.node_data);
             // }
+            
+        };
+        $rootScope.DthResponse2 = function(id,data,dlink) {
+            console.log(data);
+            var dtstage = data.tiledlist[0].Stage;
+            var dtstage = dtstage.replace(".", "");
+            if(data.tiledlist[0].DT.length > 0 || data.tiledlist[0].Text != "")
+            {
+				//if()
+				// {
+					
+				// 	var images = Array();
+				// 	var process = Array();
+                //     process = data.tiledlist[0].Process;
+                //     var dtstage = data.tiledlist[0].Stage;
+                //     var dtstage = dtstage.replace(".", "");
+                //     data.tiledlist[0].bgstage = dtstage;
+				// 	/*_.each(data.tiledlist[0].Process,function(v,k){
+				// 		if (v.indexOf(".png") >= 0) 
+				// 	});*/
+				// 	 images = _.remove(process, function(n) {
+				// 	  return n.indexOf(".png") >= 0;
+				// 	});
+				// 	//console.log(images);
+				// 	data.tiledlist[0].Process =process;
+				// 	data.tiledlist[0].images =images;
+					
+                // }
+                // if((data.tiledlist[0].Stage == '0') && data.tiledlist[0].DT.length > 0 || ( data.tiledlist[0].Text != "" && data.tiledlist[0].Text) || images.length > 0 )
+                //     $rootScope.pushSystemMsg(id,data);
+                // if(data.tiledlist[0].Stage != '0')
+                // {
+                //     if(!data.tiledlist[0].Script || data.tiledlist[0].Script.length== 0 )
+                //         $rootScope.tabHeight = window.innerHeight-53;
+                //     else
+                //         $rootScope.tabHeight = 300;
+                // }
+                
+            }
+           
+			$rootScope.element_values2 = new Array();
+            $rootScope.showMsgLoader = false; 
+            $rootScope.selectTabIndex = 0;
+            if(data.tiledlist[0].Quik_Tip)
+            {
+                if($rootScope.tabvalue.elements[1] !== 'Exception')
+                {
+                    $rootScope.tabvalue.elements.push("Exception");
+                    $rootScope.tabvalue.element_values.push(data.tiledlist[0]);
+                }
+                
+                if(!data.tiledlist[0].Script || data.tiledlist[0].Script.length== 0)
+                    $rootScope.tabHeight = window.innerHeight-53;
+                else
+                    $rootScope.tabHeight = 300;
+            }
+            else
+            {
+                var a = $rootScope.tabvalue.elements.indexOf("Exception");
+                // _.remove(array, function(n) {
+
+                // });
+                $rootScope.tabvalue.element_values.splice(a,a);
+                $rootScope.tabvalue.elements.splice(a,a);
+            }
+            $rootScope.element_values2 = data.tiledlist[0].Process;
+            $rootScope.element_values2.dtstage = dtstage;
+            console.log(dtstage);
+            $("."+dlink).html("");
+            // else
+            // {
+            //     var ele = new Array("Process");
+            //     var ele_val = new Array(data.tiledlist[0],data.tiledlist[0]);
+            // }
+            // $rootScope.tabvalue.elements.push(ele);
+            // $rootScope.tabvalue.element_values.push(ele_val);
+            
             
         };
         $rootScope.InstructionResponse = function(id,data) {
@@ -1341,12 +1477,13 @@ myApp.controller('HomeCtrl', function ($scope,$rootScope, TemplateService, Navig
                 else if(($rootScope.autolistid=="" || $rootScope.autolistid == null || $rootScope.autolistid == 0) )
                 {
                     
+                     
+                     $rootScope.pushMsg("",$(".chatinput").val(),"");
                      $(".chatinput").val("");
-                     $rootScope.pushMsg("",$rootScope.chatText,"");
                 }
                 else {
                     
-                    $rootScope.pushMsg($rootScope.autolistid,$rootScope.chatText,"");
+                    $rootScope.pushMsg($rootScope.autolistid,$(".chatinput").val(),"");
                 }
                 $rootScope.autocompletelist = [];
             }
@@ -1372,13 +1509,10 @@ myApp.controller('HomeCtrl', function ($scope,$rootScope, TemplateService, Navig
             },200);
         };
         $rootScope.crnSubmit = function(crnno) {
-            //console.log(crnno,"crnno");
             $scope.userid=$.jStorage.get("id");
             var datatype = 'CRN';
             $scope.formData = {user_input:crnno, number_type:datatype,csrfmiddlewaretoken:$rootScope.getCookie("csrftoken"),user_id:$cookies.get("session_id")};
-            console.log($scope.formData);
             apiService.crnsubmit($scope.formData).then(function (callback){
-                console.log(callback,"crn");
                 $rootScope.result_crn(callback.data);
             });
         };

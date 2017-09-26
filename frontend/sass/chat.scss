@@ -11,7 +11,15 @@ div#suggestionList {
 #chatTabs li a {
     padding: 0px 10px;
 }
-
+.panel-default.dthyperlink {
+    margin-bottom: 5px;
+}
+.accordiondt .panel-body {
+    height: auto;
+}
+.accordiondt .panel-title {
+    font-size: 13px;
+}
 ul#chatTabs {
     border-bottom: 0px !important;
     width: auto;
