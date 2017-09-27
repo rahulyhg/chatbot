@@ -89,9 +89,9 @@
                         <form class="form-inline">
                             <div class="form-group">
                                 <label for="exampleInputName2">Notes</label>
-                                <select  class="notes" ng-change="getnotedata(s.notes,tabvalue.element_values[0].Table);" ng-model="s.notes">
+                                <select  class="notes" ng-change="getnotedata(s.notes,tabvalue.element_values[1].Table);" ng-model="s.notes">
                                     <option value="" selected>Please Select</option>
-                                    <option ng-repeat="x in tabvalue.element_values[0].Quik_Tip" value="{{x.col}}" ng-init="s.notes=x.col">{{x.val}}</option>
+                                    <option ng-repeat="x in tabvalue.element_values[1].Quik_Tip" value="{{x.col}}" ng-init="s.notes=x.col">{{x.val}}</option>
                                 </select>
                             </div>
                         </form>

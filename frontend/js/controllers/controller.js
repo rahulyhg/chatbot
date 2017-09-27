@@ -1105,7 +1105,8 @@ myApp.controller('HomeCtrl', function ($scope,$rootScope, TemplateService, Navig
                     $rootScope.tabvalue.element_values.push(data.tiledlist[0]);
                 }
                 else {
-                    $rootScope.tabvalue.element_values[1]=data.tiledlist[1];
+                    $rootScope.tabvalue.element_values[1]=data.tiledlist[0];
+                    
                 }
                 if(!data.tiledlist[0].Script || data.tiledlist[0].Script.length== 0)
                     $rootScope.tabHeight = window.innerHeight-53;
