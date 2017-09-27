@@ -442,8 +442,8 @@ myApp.controller('HomeCtrl', function ($scope,$rootScope, TemplateService, Navig
     
 
 })
-    .controller('ChatCtrl', function ($scope, $rootScope,TemplateService, NavigationService,CsrfTokenService, $timeout,$http,apiService,$state,$uibModal,Menuservice,tts,$cookies) {
-        
+    .controller('ChatCtrl', function ($scope, $rootScope,TemplateService, NavigationService,CsrfTokenService, $timeout,$http,apiService,$state,$uibModal,Menuservice,tts,$cookies,$sce) {
+        $rootScope.contentobj = [];
         $rootScope.autocompletelist = [];
         $rootScope.chatOpen = false;
         $rootScope.showTimeoutmsg = false;
@@ -516,6 +516,9 @@ myApp.controller('HomeCtrl', function ($scope,$rootScope, TemplateService, Navig
         //         $scope.$digest();
         //     }
         // }
+        $rootScope.trustedHtml = function (plainText) {
+            return $sce.trustAsHtml(plainText);
+        };
         $rootScope.getCookie = function(c_name)
 		{
 			if (document.cookie.length > 0)
@@ -924,20 +927,42 @@ myApp.controller('HomeCtrl', function ($scope,$rootScope, TemplateService, Navig
             console.log(table);
             formData = {table:table,value:value};
             apiService.getnoteval(formData).then(function (data){
-                //console.log(data);
-                if(value == 'NTB_New_to_bank_customer')
+                console.log(data);
+                if(value.col == 'NTB_New_to_bank_customer')
                 {
                     //console.log(data.data.data[0].NTB_New_to_bank_customer);
                     $rootScope.notedata = data.data.data[0].NTB_New_to_bank_customer;
                 }
-                else if(value == 'For_Existing_CRN_new_account_opening')
+                else if(value.col == 'For_Existing_CRN_new_account_opening')
                 {
+                    console.log(value);
                     //console.log(data.data.data[0].For_Existing_CRN_new_account_opening);
                     $rootScope.notedata = data.data.data[0].For_Existing_CRN_new_account_opening;
                 }
                 //$rootScope.notedata = data.data.data[0].value;
-                //console.log($rootScope.notedata);
+                console.log($rootScope.notedata);
             });
+        };
+        $rootScope.viewdata = "";
+        $rootScope.$viewmodalInstance1 = {};
+        $rootScope.openContentModal = function(d) {
+            $rootScope.viewdata = d;
+            $rootScope.sendobj = {viewdata : $rootScope.viewdata,contentobj:$rootScope.contentobj};
+            $rootScope.$viewmodalInstance1 = $uibModal.open({
+                scope: $rootScope,
+                animation: true,
+                size: 'lg',
+                templateUrl: 'views/modal/content.html',
+                resolve: {
+                    items: function () {
+                    return $rootScope.sendobj;
+                    }
+                },
+                controller: 'ViewCtrl'
+            });
+        };
+        $rootScope.contentCancel = function(){
+            $scope.$viewmodalInstance1.dismiss('cancel');
         };
         $rootScope.DthResponse = function(id,data) {
             if(data.tiledlist[0].DT.length > 0 || data.tiledlist[0].Text != "")
@@ -1003,7 +1028,7 @@ myApp.controller('HomeCtrl', function ($scope,$rootScope, TemplateService, Navig
             console.log(data.tiledlist[0].Process);
             $rootScope.showMsgLoader = false; 
             $rootScope.selectTabIndex = 0;
-            
+            $rootScope.contentobj = [];
             if(data.tiledlist[0].Quik_Tip)
             {
                 
@@ -1019,13 +1044,15 @@ myApp.controller('HomeCtrl', function ($scope,$rootScope, TemplateService, Navig
             }
             if(data.tiledlist[0].Address_Change)
             {
-                ele.push("Address Change");
-                ele_val.push(data.tiledlist[0]);
+                $rootScope.contentobj.push({data:data.tiledlist[0].Address_Change,type:"Address_Change"});
+                // ele.push("Address Change");
+                // ele_val.push(data.tiledlist[0]);
             }
             if(data.tiledlist[0].Dormant_Activation)
             {
-                ele.push("Dormant Activation");
-                ele_val.push(data.tiledlist[0]);
+                $rootScope.contentobj.push({data:data.tiledlist[0].Dormant_Activation,type:"Dormant_Activation"});
+                // ele.push("Dormant Activation");
+                // ele_val.push(data.tiledlist[0]);
             }
             $rootScope.tabvalue.elements = ele;
             $rootScope.tabvalue.element_values=ele_val;
@@ -1605,6 +1632,28 @@ myApp.controller('HomeCtrl', function ($scope,$rootScope, TemplateService, Navig
        $timeout(function(){
             //$('#chatTabs a:last').tab('show');
        },200);
+    })
+    .controller('ViewCtrl', function ($scope,$rootScope, $uibModalInstance, items) {
+        $scope.items = items;
+        
+        _.each(items.contentobj,function(v,k){
+            if(v.type == items.viewdata)
+            {
+                $scope.displaydata = v.data;
+                $scope.displaydata.type = v.type;
+            }
+            
+        });
+        console.log(items);
+        console.log($scope.displaydata);
+        if($rootScope.viewdata == 'Address_Change')
+        {
+            $scope.modaltitle = "Address Change";
+        }
+        if($rootScope.viewdata == 'Dormant_Activation')
+        {
+            $scope.modaltitle = "Dormant Activation";
+        }
     })
     // Example API Controller
     .controller('DemoAPICtrl', function ($scope, TemplateService, apiService, NavigationService, $timeout) {

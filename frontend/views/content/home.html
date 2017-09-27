@@ -15,6 +15,7 @@
             <uib-tabset active="selectTabIndex" id="tab_data" ng-show="tabvalue.elements.length>0" ng-style="{height: tabHeight + 'px'}">
                 <uib-tab index="$index" ng-repeat="row in tabvalue.elements track by $index"  heading="{{row}}">
                     <div class ="tab-con"  ng-if="row ==='Process'">
+                        <br>
                          <div class="" ng-repeat="processtext in tabvalue.element_values[$index].Process track by $index">
                             <p ng-if="!processtext.heading ">
                                 <ng-bind-html ng-bind-html="processtext|newlines">
@@ -27,6 +28,7 @@
                                 <span id = "tooltip12" class="glyphicon glyphicon-copyright-mark" href="#" tooltip-placement="bottom" ng-if="tabvalue.element_values[0].Checks[$index] !== '' && tabvalue.element_values[0].Checks[$index]" ng-show="!!tabvalue.element_values[0].Checks.length && tabvalue.element_values[0].Checks[$index]" uib-tooltip="{{tabvalue.element_values[0].Checks[$index]}}"></span>
                             </p>
                             <div ng-if="processtext.heading">
+                                <br>
                                 <uib-accordion close-others="true">
                                     <div uib-accordion-group class="panel-default"   data-index="{{0}}"    is-open="status.open">
                                         <uib-accordion-heading >
@@ -36,9 +38,9 @@
                                         </uib-accordion-heading>
                                         <div class="" >
                                             <p class="" >
-                                                <ng-bind-html ng-bind-html="processtext.collapse|newlines">
+                                                 <ng-bind-html ng-bind-html="trustedHtml(processtext.collapse);"> 
                                                     {{processtext.collapse}}
-                                                </ng-bind-html>
+                                                 </ng-bind-html> 
                                                 <!-- <span id = "tooltip12" class="glyphicon glyphicon-info-sign" data-toggle="tooltip" data-container:"body" ng-if="tabvalue.element_values[$index].Tooltip[$index] !== ''" title="tabvalue.element_values[$index].Tooltip[$index]" data-original-title="Security Code">
 
                                                 </span> -->
@@ -86,7 +88,7 @@
                         
                     </div>
                     <div class ="tab-con"  ng-if="row==='Exception'">
-                        <form class="form-inline">
+                        <!-- <form class="form-inline">
                             <div class="form-group">
                                 <label for="exampleInputName2">Notes</label>
                                 <select  class="notes" ng-change="getnotedata(s.notes,tabvalue.element_values[1].Table);" ng-model="s.notes">
@@ -101,9 +103,26 @@
                                     {{notev}}
                                 </ng-bind-html>
                             </p>
-                        </div>
+                        </div> -->
+                        <br>
+                        <uib-accordion close-others="true" class="accordiondt">
+                            <div uib-accordion-group class="panel-default"  ng-repeat="x in tabvalue.element_values[1].Quik_Tip"      is-open="status.open">
+                                <uib-accordion-heading >
+                                    <div ng-click="getnotedata(x,tabvalue.element_values[1].Table);">
+                                        {{x.val}} <i class="pull-right glyphicon" ng-class="{'glyphicon-chevron-down': status.open, 'glyphicon-chevron-right': !status.open}"></i>
+                                    </div>
+                                </uib-accordion-heading>
+                                <div >
+                                    <p ng-repeat = "notev in notedata">
+                                        <ng-bind-html ng-bind-html="notev">
+                                            {{notev}}
+                                        </ng-bind-html>
+                                    </p>
+                                </div>
+                            </div>
+                        </uib-accordion>
                     </div> 
-                    <div class ="tab-con"  ng-if="row==='Address Change'">
+                    <!-- <div class ="tab-con"  ng-if="row==='Address Change'">
                         <p ng-repeat = "add_c in tabvalue.element_values[0].Address_Change">
                             <ng-bind-html ng-bind-html="add_c">
                                 {{add_c}}
@@ -116,8 +135,8 @@
                                 {{d_a}}
                             </ng-bind-html>
                         </p>
-                    </div>
-                    <div ng-if="!(tabvalue.element_values[1].Quik_Tip && $index == 1) && !(tabvalue.element_values[$index].Address_Change) && !(tabvalue.element_values[$index].Address_Change)">
+                    </div> -->
+                    <div ng-if="!(tabvalue.element_values[1].Quik_Tip && $index == 1)">
                         <div class ="tab-con"  ng-if="(row !== 'Process' && row !== 'Exception')">
                             <p class="" > 
                                 <ng-bind-html ng-bind-html="tabvalue.element_values[$index]">

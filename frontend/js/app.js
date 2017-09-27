@@ -150,7 +150,14 @@ myApp.run(['$http','$cookies','beforeUnload','$document','$rootScope','Idle','bo
     //     $('.list-group').toggle('slide');
     //     //$('.mini-submenu').hide();
     // });
-            
+    angular.element(document).ready(function () {
+        $(document).on('click', '#address_change', function(){ 
+            $rootScope.openContentModal('Address_Change');
+        });
+        $(document).on('click', '#dormant_activation', function(){ 
+            $rootScope.openContentModal('Dormant_Activation');
+        });
+    });   
     $(document).on('click', '.faqques a', function(){ 
         $(this).parent().parent().parent().find('.faqans').slideToggle();
     });
