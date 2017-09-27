@@ -983,23 +983,49 @@ myApp.controller('HomeCtrl', function ($scope,$rootScope, TemplateService, Navig
 				}
             }
            
-				
+            
+            $rootScope.collapse_arr = new Array();
+            var process = data.tiledlist[0].Process;
+            _.each(process,function(v,k){
+                var res = v.split("!."); 
+                if(res.length == 1)
+                {}
+                else
+                {
+                    var col_obj = {heading:res[0],collapse:res[1]};
+                    $rootScope.collapse_arr.push(col_obj);
+                    process[k] = col_obj;
+                }
+            });
+            data.tiledlist[0].Process = process;
+            var ele = ele = new Array("Process");
+            var ele_val = new Array(data.tiledlist[0]);
+            console.log(data.tiledlist[0].Process);
             $rootScope.showMsgLoader = false; 
             $rootScope.selectTabIndex = 0;
+            
             if(data.tiledlist[0].Quik_Tip)
             {
-                var ele = new Array("Process","Exception");
-            
-                var ele_val = new Array(data.tiledlist[0],data.tiledlist[0]);
+                
+                
+                ele = new Array("Process","Exception");
+                ele_val = new Array(data.tiledlist[0],data.tiledlist[0]);
+                
+                //var ele_val = new Array(data.tiledlist[0],data.tiledlist[0]);
                 if(!data.tiledlist[0].Script || data.tiledlist[0].Script.length== 0)
                     $rootScope.tabHeight = window.innerHeight-53;
                 else
                     $rootScope.tabHeight = 300;
             }
-            else
+            if(data.tiledlist[0].Address_Change)
             {
-                var ele = new Array("Process");
-                var ele_val = new Array(data.tiledlist[0],data.tiledlist[0]);
+                ele.push("Address Change");
+                ele_val.push(data.tiledlist[0]);
+            }
+            if(data.tiledlist[0].Dormant_Activation)
+            {
+                ele.push("Dormant Activation");
+                ele_val.push(data.tiledlist[0]);
             }
             $rootScope.tabvalue.elements = ele;
             $rootScope.tabvalue.element_values=ele_val;
@@ -1032,7 +1058,6 @@ myApp.controller('HomeCtrl', function ($scope,$rootScope, TemplateService, Navig
             
         };
         $rootScope.DthResponse2 = function(id,data,dlink) {
-            console.log(data);
             var dtstage = data.tiledlist[0].Stage;
             var dtstage = dtstage.replace(".", "");
             if(data.tiledlist[0].DT.length > 0 || data.tiledlist[0].Text != "")
@@ -1079,7 +1104,9 @@ myApp.controller('HomeCtrl', function ($scope,$rootScope, TemplateService, Navig
                     $rootScope.tabvalue.elements.push("Exception");
                     $rootScope.tabvalue.element_values.push(data.tiledlist[0]);
                 }
-                
+                else {
+                    $rootScope.tabvalue.element_values[1]=data.tiledlist[1];
+                }
                 if(!data.tiledlist[0].Script || data.tiledlist[0].Script.length== 0)
                     $rootScope.tabHeight = window.innerHeight-53;
                 else
@@ -1096,8 +1123,6 @@ myApp.controller('HomeCtrl', function ($scope,$rootScope, TemplateService, Navig
             }
             $rootScope.element_values2 = data.tiledlist[0].Process;
             $rootScope.element_values2.dtstage = dtstage;
-            console.log(dtstage);
-            $("."+dlink).html("");
             // else
             // {
             //     var ele = new Array("Process");
