@@ -862,10 +862,10 @@ myApp.controller('HomeCtrl', function ($scope,$rootScope, TemplateService, Navig
                         }
                         if(data.data.tiledlist[0].Script || data.data.tiledlist[0].Script != null)
                         {
-                            if(data.data.tiledlist[0].Script.length== 0)
-                                $rootScope.tabHeight = window.innerHeight-53;
-                            else
-                                $rootScope.tabHeight = 300;
+                            // if(data.data.tiledlist[0].Script.length== 0)
+                            //     $rootScope.tabHeight = window.innerHeight-53;
+                            // else
+                            //     $rootScope.tabHeight = 300;
                             
                         }
                         if(data.data.session_obj_data || data.data.session_obj_data != null)
@@ -1020,6 +1020,7 @@ myApp.controller('HomeCtrl', function ($scope,$rootScope, TemplateService, Navig
                     var col_obj = {heading:res[0],collapse:res[1]};
                     $rootScope.collapse_arr.push(col_obj);
                     process[k] = col_obj;
+                    $rootScope.tabHeight = window.innerHeight-120-53;
                 }
             });
             data.tiledlist[0].Process = process;
@@ -1037,20 +1038,22 @@ myApp.controller('HomeCtrl', function ($scope,$rootScope, TemplateService, Navig
                 ele_val = new Array(data.tiledlist[0],data.tiledlist[0]);
                 
                 //var ele_val = new Array(data.tiledlist[0],data.tiledlist[0]);
-                if(!data.tiledlist[0].Script || data.tiledlist[0].Script.length== 0)
-                    $rootScope.tabHeight = window.innerHeight-53;
-                else
-                    $rootScope.tabHeight = 300;
+                // if(!data.tiledlist[0].Script || data.tiledlist[0].Script.length== 0)
+                //     $rootScope.tabHeight = window.innerHeight-53;
+                // else
+                //     $rootScope.tabHeight = 300;
             }
             if(data.tiledlist[0].Address_Change)
             {
                 $rootScope.contentobj.push({data:data.tiledlist[0].Address_Change,type:"Address_Change"});
                 // ele.push("Address Change");
                 // ele_val.push(data.tiledlist[0]);
+                $rootScope.tabHeight = window.innerHeight-120-53;
             }
             if(data.tiledlist[0].Dormant_Activation)
             {
                 $rootScope.contentobj.push({data:data.tiledlist[0].Dormant_Activation,type:"Dormant_Activation"});
+                $rootScope.tabHeight = window.innerHeight-120-53;
                 // ele.push("Dormant Activation");
                 // ele_val.push(data.tiledlist[0]);
             }
@@ -1124,6 +1127,7 @@ myApp.controller('HomeCtrl', function ($scope,$rootScope, TemplateService, Navig
 			$rootScope.element_values2 = new Array();
             $rootScope.showMsgLoader = false; 
             $rootScope.selectTabIndex = 0;
+            $rootScope.tabHeight = window.innerHeight-120-53;
             if(data.tiledlist[0].Quik_Tip)
             {
                 if($rootScope.tabvalue.elements[1] !== 'Exception')
@@ -1135,10 +1139,11 @@ myApp.controller('HomeCtrl', function ($scope,$rootScope, TemplateService, Navig
                     $rootScope.tabvalue.element_values[1]=data.tiledlist[0];
                     
                 }
-                if(!data.tiledlist[0].Script || data.tiledlist[0].Script.length== 0)
-                    $rootScope.tabHeight = window.innerHeight-53;
-                else
-                    $rootScope.tabHeight = 300;
+                $rootScope.tabHeight = window.innerHeight-120-53;
+                // if(!data.tiledlist[0].Script || data.tiledlist[0].Script.length== 0)
+                //     $rootScope.tabHeight = window.innerHeight-53;
+                // else
+                //     $rootScope.tabHeight = 300;
             }
             else
             {
@@ -1371,7 +1376,7 @@ myApp.controller('HomeCtrl', function ($scope,$rootScope, TemplateService, Navig
                         if(data.data.tiledlist[0].Script.length== 0)
                             $rootScope.tabHeight = window.innerHeight-53;
                         else
-                            $rootScope.tabHeight = 300;
+                            $rootScope.tabHeight = window.innerHeight-53;;
                         
                     }
                     if(data.data.session_obj_data || data.data.session_obj_data != null)
