@@ -105,7 +105,7 @@
                             </p>
                         </div> -->
                         <br>
-                        <uib-accordion close-others="true" class="accordiondt">
+                        <!-- <uib-accordion close-others="true" class="accordiondt">
                             <div uib-accordion-group class="panel-default"  ng-repeat="x in tabvalue.element_values[1].Quik_Tip"      is-open="status.open">
                                 <uib-accordion-heading >
                                     <div ng-click="getnotedata(x,tabvalue.element_values[1].Table);">
@@ -120,7 +120,14 @@
                                     </p>
                                 </div>
                             </div>
-                        </uib-accordion>
+                        </uib-accordion> -->
+                        <div >
+                            <p ng-repeat = "notev in notedata">
+                                <ng-bind-html ng-bind-html="notev">
+                                    {{notev}}
+                                </ng-bind-html>
+                            </p>
+                        </div>
                     </div> 
                     <!-- <div class ="tab-con"  ng-if="row==='Address Change'">
                         <p ng-repeat = "add_c in tabvalue.element_values[0].Address_Change">

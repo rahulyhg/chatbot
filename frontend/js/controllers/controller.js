@@ -767,7 +767,7 @@ myApp.controller('HomeCtrl', function ($scope,$rootScope, TemplateService, Navig
                         $rootScope.msgSelected = false;
                         $timeout(function(){
                             $rootScope.autocompletelist = [];
-                        },3000);
+                        },1000);
                         
                     }
                     else
@@ -1036,7 +1036,10 @@ myApp.controller('HomeCtrl', function ($scope,$rootScope, TemplateService, Navig
                 
                 ele = new Array("Process","Exception");
                 ele_val = new Array(data.tiledlist[0],data.tiledlist[0]);
-                
+                //if(data.tiledlist[0].Quik_Tip.length == 0)
+                {
+                    $rootScope.getnotedata(data.tiledlist[0].Quik_Tip[0],data.tiledlist[0].Table);
+                }
                 //var ele_val = new Array(data.tiledlist[0],data.tiledlist[0]);
                 // if(!data.tiledlist[0].Script || data.tiledlist[0].Script.length== 0)
                 //     $rootScope.tabHeight = window.innerHeight-53;
@@ -1144,6 +1147,11 @@ myApp.controller('HomeCtrl', function ($scope,$rootScope, TemplateService, Navig
                 //     $rootScope.tabHeight = window.innerHeight-53;
                 // else
                 //     $rootScope.tabHeight = 300;
+                //if(data.tiledlist[0].Quik_Tip.length == 0)
+                {
+                    
+                    $rootScope.getnotedata(data.tiledlist[0].Quik_Tip[0],data.tiledlist[0].Table);
+                }
             }
             else
             {
