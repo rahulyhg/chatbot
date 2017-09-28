@@ -87,7 +87,7 @@
 
                         
                     </div>
-                    <div class ="tab-con"  ng-if="row==='Exception'">
+                    <div class ="tab-con"  ng-if="row==='Exception Scenarios'">
                         <!-- <form class="form-inline">
                             <div class="form-group">
                                 <label for="exampleInputName2">Notes</label>
@@ -144,7 +144,7 @@
                         </p>
                     </div> -->
                     <div ng-if="!(tabvalue.element_values[1].Quik_Tip && $index == 1)">
-                        <div class ="tab-con"  ng-if="(row !== 'Process' && row !== 'Exception')">
+                        <div class ="tab-con"  ng-if="(row !== 'Process' && row !== 'Exception Scenarios')">
                             <p class="" > 
                                 <ng-bind-html ng-bind-html="tabvalue.element_values[$index]">
                                     {{tabvalue.element_values[$index]}}

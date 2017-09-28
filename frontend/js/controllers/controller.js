@@ -1034,7 +1034,7 @@ myApp.controller('HomeCtrl', function ($scope,$rootScope, TemplateService, Navig
             {
                 
                 
-                ele = new Array("Process","Exception");
+                ele = new Array("Process","Exception Scenarios");
                 ele_val = new Array(data.tiledlist[0],data.tiledlist[0]);
                 //if(data.tiledlist[0].Quik_Tip.length == 0)
                 {
@@ -1133,9 +1133,9 @@ myApp.controller('HomeCtrl', function ($scope,$rootScope, TemplateService, Navig
             $rootScope.tabHeight = window.innerHeight-120-53;
             if(data.tiledlist[0].Quik_Tip)
             {
-                if($rootScope.tabvalue.elements[1] !== 'Exception')
+                if($rootScope.tabvalue.elements[1] !== 'Exception Scenarios')
                 {
-                    $rootScope.tabvalue.elements.push("Exception");
+                    $rootScope.tabvalue.elements.push("Exception Scenarios");
                     $rootScope.tabvalue.element_values.push(data.tiledlist[0]);
                 }
                 else {
@@ -1155,7 +1155,7 @@ myApp.controller('HomeCtrl', function ($scope,$rootScope, TemplateService, Navig
             }
             else
             {
-                var a = $rootScope.tabvalue.elements.indexOf("Exception");
+                var a = $rootScope.tabvalue.elements.indexOf("Exception Scenarios");
                 // _.remove(array, function(n) {
 
                 // });
