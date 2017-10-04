@@ -1060,6 +1060,13 @@ myApp.controller('HomeCtrl', function ($scope,$rootScope, TemplateService, Navig
                 // ele.push("Dormant Activation");
                 // ele_val.push(data.tiledlist[0]);
             }
+            if(data.tiledlist[0].verify_seeding_info)
+            {
+                $rootScope.contentobj.push({data:data.tiledlist[0].verify_seeding_info,type:"verify_seeding_info"});
+                // ele.push("Address Change");
+                // ele_val.push(data.tiledlist[0]);
+                $rootScope.tabHeight = window.innerHeight-120-53;
+            }
             $rootScope.tabvalue.elements = ele;
             $rootScope.tabvalue.element_values=ele_val;
             // if(data.node_data)
@@ -1667,6 +1674,11 @@ myApp.controller('HomeCtrl', function ($scope,$rootScope, TemplateService, Navig
         {
             $scope.modaltitle = "Dormant Activation";
         }
+        if($rootScope.viewdata == 'verify_seeding_info')
+        {
+            $scope.modaltitle = "Verify seeding info";
+        }
+        
     })
     // Example API Controller
     .controller('DemoAPICtrl', function ($scope, TemplateService, apiService, NavigationService, $timeout) {

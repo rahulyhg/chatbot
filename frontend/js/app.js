@@ -157,6 +157,9 @@ myApp.run(['$http','$cookies','beforeUnload','$document','$rootScope','Idle','bo
         $(document).on('click', '#dormant_activation', function(){ 
             $rootScope.openContentModal('Dormant_Activation');
         });
+        $(document).on('click', '#verify_seeding_info', function(){ 
+            $rootScope.openContentModal('verify_seeding_info');
+        });
     });   
     $(document).on('click', '.faqques a', function(){ 
         $(this).parent().parent().parent().find('.faqans').slideToggle();
