@@ -875,6 +875,8 @@ myApp.controller('HomeCtrl', function ($scope,$rootScope, TemplateService, Navig
                         //$.jStorage.set("sessiondata",data.data.session_obj_data);
                     }
                 });
+            }).catch(function(reason){
+                console.log(reason);
             });
         };
         $rootScope.getDthlinkRes2 = function(stage,dthlink,index) {
@@ -946,6 +948,7 @@ myApp.controller('HomeCtrl', function ($scope,$rootScope, TemplateService, Navig
         $rootScope.viewdata = "";
         $rootScope.$viewmodalInstance1 = {};
         $rootScope.openContentModal = function(d) {
+            console.log(d);
             $rootScope.viewdata = d;
             $rootScope.sendobj = {viewdata : $rootScope.viewdata,contentobj:$rootScope.contentobj};
             $rootScope.$viewmodalInstance1 = $uibModal.open({
@@ -970,22 +973,22 @@ myApp.controller('HomeCtrl', function ($scope,$rootScope, TemplateService, Navig
 				//if()
 				{
 					
-					var images = Array();
-					var process = Array();
-                    process = data.tiledlist[0].Process;
-                    var dtstage = data.tiledlist[0].Stage;
-                    var dtstage = dtstage.replace(".", "");
-                    data.tiledlist[0].bgstage = dtstage;
-					/*_.each(data.tiledlist[0].Process,function(v,k){
-						if (v.indexOf(".png") >= 0) 
-					});*/
-					 images = _.remove(process, function(n) {
-					  return n.indexOf(".png") >= 0;
-					});
-					//console.log(images);
-					data.tiledlist[0].Process =process;
-					data.tiledlist[0].images =images;
-					if((data.tiledlist[0].Stage == '0') && data.tiledlist[0].DT.length > 0 || ( data.tiledlist[0].Text != "" && data.tiledlist[0].Text) || images.length > 0 )
+					// var images = Array();
+					// var process = Array();
+                    // process = data.tiledlist[0].Process;
+                    // var dtstage = data.tiledlist[0].Stage;
+                    // var dtstage = dtstage.replace(".", "");
+                    // data.tiledlist[0].bgstage = dtstage;
+					// /*_.each(data.tiledlist[0].Process,function(v,k){
+					// 	if (v.indexOf(".png") >= 0) 
+					// });*/
+					//  images = _.remove(process, function(n) {
+					//   return n.indexOf(".png") >= 0;
+					// });
+					// //console.log(images);
+					// data.tiledlist[0].Process =process;
+					// data.tiledlist[0].images =images; //|| images.length > 0
+					if((data.tiledlist[0].Stage == '0') && data.tiledlist[0].DT.length > 0 || ( data.tiledlist[0].Text != "" && data.tiledlist[0].Text)  )
                         $rootScope.pushSystemMsg(id,data);
                     if(data.tiledlist[0].Stage != '0')
                     {
@@ -994,35 +997,35 @@ myApp.controller('HomeCtrl', function ($scope,$rootScope, TemplateService, Navig
                         else
                             $rootScope.tabHeight = 300;
                     }
-					if(images.length > 0)
-					{
-						$timeout(function(){
-							$('#myCarousel2').carousel({
-								interval: false,
-								wrap: false
-							});
-							$('#myCarousel2').find('.item').first().addClass('active');
-						},2000);
+					// if(images.length > 0)
+					// {
+					// 	$timeout(function(){
+					// 		$('#myCarousel2').carousel({
+					// 			interval: false,
+					// 			wrap: false
+					// 		});
+					// 		$('#myCarousel2').find('.item').first().addClass('active');
+					// 	},2000);
 						
-					}
+					// }
 				}
             }
            
             
             $rootScope.collapse_arr = new Array();
             var process = data.tiledlist[0].Process;
-            _.each(process,function(v,k){
-                var res = v.split("!."); 
-                if(res.length == 1)
-                {}
-                else
-                {
-                    var col_obj = {heading:res[0],collapse:res[1]};
-                    $rootScope.collapse_arr.push(col_obj);
-                    process[k] = col_obj;
-                    $rootScope.tabHeight = window.innerHeight-120-53;
-                }
-            });
+            // _.each(process,function(v,k){
+            //     var res = v.split("!."); 
+            //     if(res.length == 1)
+            //     {}
+            //     else
+            //     {
+            //         var col_obj = {heading:res[0],collapse:res[1]};
+            //         $rootScope.collapse_arr.push(col_obj);
+            //         process[k] = col_obj;
+            //         $rootScope.tabHeight = window.innerHeight-120-53;
+            //     }
+            // });
             data.tiledlist[0].Process = process;
             var ele = ele = new Array("Process");
             var ele_val = new Array(data.tiledlist[0]);
@@ -1405,7 +1408,7 @@ myApp.controller('HomeCtrl', function ($scope,$rootScope, TemplateService, Navig
                     if(data.data.session_obj_data || data.data.session_obj_data != null)
                         $.jStorage.set("sessiondata",data.data.session_obj_data);
                 }).catch(function (reason) {
-                    //console.log(reason);
+                    console.log(reason);
                     var msg = {Text:"Sorry I could not understand",type:"SYS_EMPTY_RES"};
                     $rootScope.pushSystemMsg(0,msg); 
                     $rootScope.showMsgLoader=false;
@@ -1663,17 +1666,22 @@ myApp.controller('HomeCtrl', function ($scope,$rootScope, TemplateService, Navig
     })
     .controller('ViewCtrl', function ($scope,$rootScope, $uibModalInstance, items) {
         $scope.items = items;
-        
+        console.log(items); 
+        console.log(items.viewdata);
         _.each(items.contentobj,function(v,k){
+            console.log(v.type,"type");
             if(v.type == items.viewdata)
             {
+                console.log("Exist");
                 $scope.displaydata = v.data;
                 $scope.displaydata.type = v.type;
             }
-            
+            console.log($scope.displaydata,"data");
+            console.log($scope.displaydata.type,"type");
         });
-        console.log(items);
-        console.log($scope.displaydata);
+        console.log($scope.displaydata.type,"type");
+        // console.log(items);
+        // console.log($scope.displaydata);
         if($rootScope.viewdata == 'Address_Change')
         {
             $scope.modaltitle = "Address Change";
