@@ -1666,18 +1666,13 @@ myApp.controller('HomeCtrl', function ($scope,$rootScope, TemplateService, Navig
     })
     .controller('ViewCtrl', function ($scope,$rootScope, $uibModalInstance, items) {
         $scope.items = items;
-        console.log(items); 
-        console.log(items.viewdata);
         _.each(items.contentobj,function(v,k){
-            console.log(v.type,"type");
             if(v.type == items.viewdata)
             {
                 console.log("Exist");
                 $scope.displaydata = v.data;
                 $scope.displaydata.type = v.type;
             }
-            console.log($scope.displaydata,"data");
-            console.log($scope.displaydata.type,"type");
         });
         console.log($scope.displaydata.type,"type");
         // console.log(items);

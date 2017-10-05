@@ -160,7 +160,7 @@ myApp.run(['$http','$cookies','beforeUnload','$document','$rootScope','Idle','bo
         $(document).on('click', '#verify_seeding_info', function(){ 
             $rootScope.openContentModal('verify_seeding_info');
         });
-        $(document).on('click', '#name_mismatch_table', function(){ 
+        $(document).on('click', '.name_mismatch_table', function(){ 
             $rootScope.openContentModal('name_mismatch_table');
         });
         
