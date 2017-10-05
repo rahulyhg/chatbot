@@ -1067,6 +1067,14 @@ myApp.controller('HomeCtrl', function ($scope,$rootScope, TemplateService, Navig
                 // ele_val.push(data.tiledlist[0]);
                 $rootScope.tabHeight = window.innerHeight-120-53;
             }
+            if(data.tiledlist[0].name_mismatch_table)
+            {
+                $rootScope.contentobj.push({data:data.tiledlist[0].name_mismatch_table,type:"name_mismatch_table"});
+                // ele.push("Address Change");
+                // ele_val.push(data.tiledlist[0]);
+                $rootScope.tabHeight = window.innerHeight-120-53;
+            }
+            
             $rootScope.tabvalue.elements = ele;
             $rootScope.tabvalue.element_values=ele_val;
             // if(data.node_data)
@@ -1677,6 +1685,10 @@ myApp.controller('HomeCtrl', function ($scope,$rootScope, TemplateService, Navig
         if($rootScope.viewdata == 'verify_seeding_info')
         {
             $scope.modaltitle = "Verify seeding info";
+        }
+        if($rootScope.viewdata == 'name_mismatch_table')
+        {
+            $scope.modaltitle = "Name Mismatch Table";
         }
         
     })
