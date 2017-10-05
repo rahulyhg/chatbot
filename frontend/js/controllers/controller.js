@@ -1674,7 +1674,6 @@ myApp.controller('HomeCtrl', function ($scope,$rootScope, TemplateService, Navig
                 $scope.displaydata.type = v.type;
             }
         });
-        console.log($scope.displaydata.type,"type");
         // console.log(items);
         // console.log($scope.displaydata);
         if($rootScope.viewdata == 'Address_Change')
