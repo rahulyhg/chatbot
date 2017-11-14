@@ -78,7 +78,7 @@ schema.plugin(timestamps);
 //userlogschema = require('userlogschema');
 
 var PythonShell = require('python-shell');
-var pythonpath = "http://104.46.103.162:8096/script/";
+var pythonpath = "http://104.46.103.162:8001/script/";
 //var pythonpath = "http://localhost:8096/script/";
 module.exports = mongoose.model('chatbotuser', schema,'chatbotuser');
 //var chatbot_user_logs = mongoose.model('chatbot_user_logs', userlogschema,"chatbot_user_logs");
