@@ -1442,32 +1442,7 @@ myApp.controller('HomeCtrl', function ($scope,$rootScope, TemplateService, Navig
                     // apiService.sendchat({}, function (data) {
                     //     console.log(data);
                     // });
-                    //io.sails.url = 'https://localhost:8080';
-                    //io.sails.connect([io.sails.url]);
-                    // io.sails.connect('http://localhost:8080');
-                    // var fullname = $.jStorage.get("fname")+" "+$.jStorage.get("lname");
-                    // addUser({id:$.jStorage.get("id"),name:fullname});
-                    // io.socket.on('connect', function socketConnected() {
-
-                    // Show the main UI
-                        // $('#disconnect').hide();
-                        // $('#main').show();
-
-                        // Announce that a new user is online--in this somewhat contrived example,
-                        // this also causes the CREATION of the user, so each window/tab is a new user.
-                        io.socket.get("/user/announce", function(data){
-                        window.me = data;
-                        updateMyName(data);
-
-                        // Get the current list of users online.  This will also subscribe us to
-                        // update and destroy events for the individual users.
-                        io.socket.get('/user', updateUserList);
-
-                        // Get the current list of chat rooms. This will also subscribe us to
-                        // update and destroy events for the individual rooms.
-                        io.socket.get('/room', updateRoomList);
-
-                        });
+                    
                     });
                     // io.socket.on('user', function messageReceived(message) {
 
