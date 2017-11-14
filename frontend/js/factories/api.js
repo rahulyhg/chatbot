@@ -3,7 +3,7 @@ myApp.factory('apiService', function ($http, $q, $timeout,CsrfTokenService,$http
     adminurl = "http://104.46.103.162:8097/";
     var adminUrl2 = "http://wohlig.io/api/";
     var adminUrl3 = "http://104.46.103.162:8001/api/"
-    var adminUrl3 = "http://localhost/api/";
+    //var adminUrl3 = "http://localhost/api/";
     //return
     return {
 
