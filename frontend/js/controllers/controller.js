@@ -149,7 +149,10 @@ myApp.controller('HomeCtrl', function ($scope,$rootScope, TemplateService, Navig
                         $scope.$on('IdleStart', function() {
                             // the user appears to have gone idle
                         });
-                        $state.go("dashboard");
+                        if(callback.data.data.accessrole == 4)
+                            $state.go("agentdashboard");
+                        else
+                            $state.go("dashboard");
                     }
                     else if(callback.data.error.message == -1)
                         $scope.loginerror = -1;
@@ -187,6 +190,20 @@ myApp.controller('HomeCtrl', function ($scope,$rootScope, TemplateService, Navig
                     $scope.forgotpassworderror =-1;
             })
         };
+    })
+    .controller('AgentdashboardCtrl', function ($scope, $rootScope,TemplateService, NavigationService,CsrfTokenService, $timeout,$http,apiService,$state,$uibModal,Menuservice,tts,$cookies,$sce) {
+        $scope.template = TemplateService.getHTML("content/agentdashboard.html");
+        TemplateService.title = "Home"; //This is the Title of the Website
+        $scope.navigation = NavigationService.getNavigation();
+        $scope.uipage = "agentdashboard";
+        $rootScope.access_role = $.jStorage.get("access_role");
+        //io.sails.connect([io.sails.url]);
+        io.sails.connect('http://localhost:80');
+        var fullname = $.jStorage.get("fname")+" "+$.jStorage.get("lname");
+        //addUser({id:$.jStorage.get("id"),name:fullname});
+                    
+
+
     })
     .controller('ForgotPasswordCtrl', function ($scope, TemplateService, NavigationService,CsrfTokenService, $timeout, toastr, $http,$state,apiService,$stateParams,$interval) {
         $scope.template = TemplateService.getHTML("forgotpassword.html");
@@ -596,7 +613,7 @@ myApp.controller('HomeCtrl', function ($scope,$rootScope, TemplateService, Navig
                 //         // $rootScope.pushSystemMsg(0,msg);
                 //     },60000);
                 // }
-                console.log("HI");
+                //console.log("HI");
                 $rootScope.chatText = chatText;
                 if($(".chatinput").val() == "" || $(".chatinput").val() == null) {
                     $rootScope.autocompletelist = [];
@@ -608,11 +625,10 @@ myApp.controller('HomeCtrl', function ($scope,$rootScope, TemplateService, Navig
                     if (str2.includes("calculator") || str2.includes("td cal") || str2.includes("rd cal") || str2.includes("calc") )
                     //if($rootScope.chatText != "calc" || $rootScope.chatText != "calculator" || $rootScope.chatText != "td cal" || $rootScope.chatText != "rd cal")
                     {
-                        console.log("not calc");
+                        //console.log("not calc");
                     }
                     else     
                     {  
-                        console.log("auto"); 
                         var topic = $("#topic").text();
                         $rootScope.chatdata = { string:$rootScope.chatText,topic:topic};
                         apiService.getautocomplete($rootScope.chatdata).then(function (response){
@@ -1279,8 +1295,16 @@ myApp.controller('HomeCtrl', function ($scope,$rootScope, TemplateService, Navig
                 $timeout(function(){
                     $(".chatinput").val("");
                 });
+                
+                
+                // io.socket.on('user', function gotHelloMessage (data) {
+                // console.log('User alert!', data);
+                // });
+                //io.socket.get('/Livechat/addconv');
+                
                 apiService.getSysMsg($rootScope.formData).then(function (data){
                         //console.log(data);
+                    
                         if(data.data.tiledlist[0].topic)
                              $("#topic").text(data.data.tiledlist[0].topic);
                     angular.forEach(data.data.tiledlist, function(value, key) {
@@ -1345,6 +1369,9 @@ myApp.controller('HomeCtrl', function ($scope,$rootScope, TemplateService, Navig
                         
                     });
                     
+
+
+
                     // apiService.getttsSpeech({text:data.data.data.tiledlist[0].Script[0]}).then(function (data){
 
                     // });
@@ -1412,6 +1439,105 @@ myApp.controller('HomeCtrl', function ($scope,$rootScope, TemplateService, Navig
                     var msg = {Text:"Sorry I could not understand",type:"SYS_EMPTY_RES"};
                     $rootScope.pushSystemMsg(0,msg); 
                     $rootScope.showMsgLoader=false;
+                    // apiService.sendchat({}, function (data) {
+                    //     console.log(data);
+                    // });
+                    //io.sails.url = 'https://localhost:8080';
+                    //io.sails.connect([io.sails.url]);
+                    io.sails.connect('http://localhost');
+                    var fullname = $.jStorage.get("fname")+" "+$.jStorage.get("lname");
+                    addUser({id:$.jStorage.get("id"),name:fullname});
+                    io.socket.on('connect', function socketConnected() {
+
+                    // Show the main UI
+                        // $('#disconnect').hide();
+                        // $('#main').show();
+
+                        // Announce that a new user is online--in this somewhat contrived example,
+                        // this also causes the CREATION of the user, so each window/tab is a new user.
+                        io.socket.get("/user/announce", function(data){
+                        window.me = data;
+                        updateMyName(data);
+
+                        // Get the current list of users online.  This will also subscribe us to
+                        // update and destroy events for the individual users.
+                        io.socket.get('/user', updateUserList);
+
+                        // Get the current list of chat rooms. This will also subscribe us to
+                        // update and destroy events for the individual rooms.
+                        io.socket.get('/room', updateRoomList);
+
+                        });
+                    });
+                    // io.socket.on('user', function messageReceived(message) {
+
+                    //     switch (message.verb) {
+
+                    //         // Handle user creation
+                    //         case 'created':
+                    //             addUser(message.data);
+                    //         break;
+
+                    //         // Handle a user changing their name
+                    //         case 'updated':
+
+                    //         // Get the user's old name by finding the <option> in the list with their ID
+                    //         // and getting its text.
+                    //             var oldName = $('#user-'+message.id).text();
+
+                    //         // Update the name in the user select list
+                    //             $('#user-'+message.id).text(message.data.name);
+
+                    //             // If we have a private convo with them, update the name there and post a status message in the chat.
+                    //             if ($('#private-username-'+message.id).length) {
+                    //                 $('#private-username-'+message.id).html(message.data.name);
+                    //                 postStatusMessage('private-messages-'+message.id,oldName+' has changed their name to '+message.data.name);
+                    //             }
+
+                    //         break;
+
+                    //         // Handle user destruction
+                    //         case 'destroyed':
+                    //             removeUser(message.id);
+                    //         break;
+
+                    //         // Handle private messages.  Only sockets subscribed to the "message" context of a
+                    //         // User instance will get this message--see the onConnect logic in config/sockets.js
+                    //         // to see where a new user gets subscribed to their own "message" context
+                    //         case 'messaged':
+                    //             receivePrivateMessage(message.data);
+                    //         break;
+
+                    //         default:
+                    //         break;
+                    //     }
+
+                    //     });
+
+                    //     // Add a click handler for the "Update name" button, allowing the user to update their name.
+                    //     // updateName() is defined in user.js.
+                    //     //$('#update-name').click(updateName);
+
+                    //     // Add a click handler for the "Send private message" button
+                    //     // startPrivateConversation() is defined in private_message.js.
+                    //     //$('#private-msg-button').click(startPrivateConversation);
+
+                    //     // Add a click handler for the "Join room" button
+                    //     // joinRoom() is defined in public_message.js.
+                    //     //$('#join-room').click(joinRoom);
+
+                    //     // Add a click handler for the "New room" button
+                    //     // newRoom() is defined in room.js.
+                    //     //$('#new-room').click(newRoom);
+
+                    //     console.log('Socket is now connected!');
+
+                    //     // When the socket disconnects, hide the UI until we reconnect.
+                    //     io.socket.on('disconnect', function() {
+                    //     // Hide the main UI
+                    //     $('#main').hide();
+                    //     $('#disconnect').show();
+                    //     });
                 });
             //});
             $rootScope.autocompletelist = [];

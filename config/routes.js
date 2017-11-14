@@ -53,8 +53,13 @@ module.exports.routes = {
     "/api/download/:filename": {
         controller: "WebController",
         action: "download"
-    }
+    },
+    '/': {
+    	view: 'homepage'
+    },
 
+    'post /room/:roomId/users': 'RoomController.join',
+    'delete /room/:roomId/users': 'RoomController.leave'
     /***************************************************************************
      *                                                                          *
      * Custom routes here...                                                    *

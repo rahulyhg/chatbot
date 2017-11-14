@@ -42,6 +42,11 @@ myApp.config(function ($stateProvider, $urlRouterProvider, $httpProvider, $locat
             templateUrl: tempateURL,
             controller: 'DashboardCtrl'
         })
+        .state('agentdashboard', {
+            url: "/agentdashboard",
+            templateUrl: tempateURL,
+            controller: 'AgentdashboardCtrl'
+        })
         .state('login', {
             url: "/login",
             templateUrl: tempateURL,
@@ -314,8 +319,94 @@ myApp.run(['$http','$cookies','beforeUnload','$document','$rootScope','Idle','bo
         //console.log(element2);
         //console.clear();
         //document.querySelector('#devtool-status').innerHTML = checkStatus;
-    }, 1000)
-     
+    }, 1000);
+     /**
+ * app.js
+ *
+ * Front-end code and event handling for sailsChat
+ *
+ */
+
+
+// Attach a listener which fires when a connection is established:
+io.socket.on('connect', function socketConnected() {
+
+    // Show the main UI
+    $('#disconnect').hide();
+    $('#main').show();
+
+    // Announce that a new user is online--in this somewhat contrived example,
+    // this also causes the CREATION of the user, so each window/tab is a new user.
+    io.socket.get("/chatuser/announce", function(data){
+      window.me = data;
+      updateMyName(data);
+
+      // Get the current list of users online.  This will also subscribe us to
+      // update and destroy events for the individual users.
+      io.socket.get('/chatuser', updateUserList);
+
+      // Get the current list of chat rooms. This will also subscribe us to
+      // update and destroy events for the individual rooms.
+      io.socket.get('/room', updateRoomList);
+
+    });
+    
+    // Listen for the "room" event, which will be broadcast when something
+    // happens to a room we're subscribed to.  See the "autosubscribe" attribute
+    // of the Room model to see which messages will be broadcast by default
+    // to subscribed sockets.
+    io.socket.on('room', function messageReceived(message) {
+
+      switch (message.verb) {
+
+        // Handle room creation
+        case 'created':
+          addRoom(message.data);
+          break;
+
+        // Handle a user joining a room
+        case 'addedTo':
+          // Post a message in the room
+          postStatusMessage('room-messages-'+message.id, $('#user-'+message.addedId).text()+' has joined');
+          // Update the room user count
+          increaseRoomCount(message.id);
+          break;
+
+        // Handle a user leaving a room
+        case 'removedFrom':
+          // Post a message in the room
+          postStatusMessage('room-messages-'+message.id, $('#user-'+message.removedId).text()+' has left');
+          // Update the room user count
+          decreaseRoomCount(message.id);
+          break;
+
+        // Handle a room being destroyed
+        case 'destroyed':
+          removeRoom(message.id);
+          break;
+
+        // Handle a public message in a room.  Only sockets subscribed to the "message" context of a
+        // Room instance will get this message--see the "join" and "leave" methods of RoomController.js
+        // to see where a socket gets subscribed to a Room instance's "message" context.
+        case 'messaged':
+          receiveRoomMessage(message.data);
+          break;
+
+        default:
+          break;
+
+      }
+
+    });
+
+    // Listen for the "user" event, which will be broadcast when something
+    // happens to a user we're subscribed to.  See the "autosubscribe" attribute
+    // of the User model to see which messages will be broadcast by default
+    // to subscribed sockets.
+        
+
+    });
+
 }])
 // For Language JS
 myApp.config(function ($translateProvider) {
