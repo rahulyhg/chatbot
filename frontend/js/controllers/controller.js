@@ -1443,7 +1443,6 @@ myApp.controller('HomeCtrl', function ($scope,$rootScope, TemplateService, Navig
                     //     console.log(data);
                     // });
                     
-                    });
                     // io.socket.on('user', function messageReceived(message) {
 
                     //     switch (message.verb) {

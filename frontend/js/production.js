@@ -65770,6 +65770,11 @@ myApp.config(function ($stateProvider, $urlRouterProvider, $httpProvider, $locat
             templateUrl: tempateURL,
             controller: 'DashboardCtrl'
         })
+        .state('agentdashboard', {
+            url: "/agentdashboard",
+            templateUrl: tempateURL,
+            controller: 'AgentdashboardCtrl'
+        })
         .state('login', {
             url: "/login",
             templateUrl: tempateURL,
@@ -65835,7 +65840,14 @@ myApp.run(['$http','$cookies','beforeUnload','$document','$rootScope','Idle','bo
     $rootScope.tabvalue={};
     $rotated = false;
 
-                
+    $(document).on('click', '.chat-body .changedthbg', function(){ 
+        var stage = $(this).attr("data-bgstage");
+        $(".stage"+stage).css('background-color','#eee');
+        $(".stage"+stage).css('color','#1e90ff');
+        
+        $(this).css('background-color', '#003874');
+        $(this).css('color', '#fff');
+    });     
     $(document).on('click', '.toggler', function(){ 
         $(this).parent().children('ul.tree').toggle(300);
         $(this).children().find('.triangle').toggleClass('glyphicon-triangle-bottom').toggleClass('glyphicon-triangle-right');
@@ -65871,7 +65883,21 @@ myApp.run(['$http','$cookies','beforeUnload','$document','$rootScope','Idle','bo
     //     $('.list-group').toggle('slide');
     //     //$('.mini-submenu').hide();
     // });
-            
+    angular.element(document).ready(function () {
+        $(document).on('click', '#address_change', function(){ 
+            $rootScope.openContentModal('Address_Change');
+        });
+        $(document).on('click', '#dormant_activation', function(){ 
+            $rootScope.openContentModal('Dormant_Activation');
+        });
+        $(document).on('click', '#verify_seeding_info', function(){ 
+            $rootScope.openContentModal('verify_seeding_info');
+        });
+        $(document).on('click', '.name_mismatch_table', function(){ 
+            $rootScope.openContentModal('name_mismatch_table');
+        });
+        
+    });   
     $(document).on('click', '.faqques a', function(){ 
         $(this).parent().parent().parent().find('.faqans').slideToggle();
     });
@@ -66021,8 +66047,19 @@ myApp.run(['$http','$cookies','beforeUnload','$document','$rootScope','Idle','bo
         //console.log(element2);
         //console.clear();
         //document.querySelector('#devtool-status').innerHTML = checkStatus;
-    }, 1000)
-     
+    }, 1000);
+     /**
+ * app.js
+ *
+ * Front-end code and event handling for sailsChat
+ *
+ */
+
+
+
+
+    
+
 }])
 // For Language JS
 myApp.config(function ($translateProvider) {
@@ -67699,8 +67736,8 @@ myApp.factory('apiService', function ($http, $q, $timeout,CsrfTokenService,$http
     //adminurl = "http://wohlig.co.in/chatbotapi/index.php/json/";
     adminurl = "http://104.46.103.162:8097/";
     var adminUrl2 = "http://wohlig.io/api/";
-    var adminUrl3 = "http://104.46.103.162:8096/api/"
-    //var adminUrl3 = "http://localhost/api/";
+    var adminUrl3 = "http://104.46.103.162:8001/api/"
+    var adminUrl3 = "http://localhost/api/";
     //return
     return {
 
@@ -67820,6 +67857,20 @@ myApp.factory('apiService', function ($http, $q, $timeout,CsrfTokenService,$http
             
             
         },
+        ratecardsubmit : function(formData,callback){
+            console.log(formData);
+            return    $http({
+                url:adminurl+'outRateCard/'+formData.user_id+"/",
+                //url: adminUrl3 + 'Chatbotautolist/getSysMsg',
+                method: 'POST',
+                data:$.param(formData),
+                headers: {'Content-Type': 'application/x-www-form-urlencoded;charset=utf-8','X-CSRFToken':formData.csrfmiddlewaretoken },
+                //withCredentials: false,
+                //headers: {'Content-Type': 'application/json','X-CSRFToken': "Vfpx6pWJYBx7dbX35vwXm7P9xj3xNPyUJbSx9IlwgcRHReN974ZC5rEbvgpRQdY2"},
+            });
+            
+            
+        },
         get_session: function (formData, callback) {
             return $http({
                 url: adminurl + 'get_session/',
@@ -67906,6 +67957,28 @@ myApp.factory('apiService', function ($http, $q, $timeout,CsrfTokenService,$http
             return    $http({
                 //url:adminurl+'out/'+formData.user_id+"/",
                 url: adminUrl3 + 'Chatbotvoice/startRecoding1',
+                method: 'POST',
+                data:(formData),
+            });
+            
+            
+        },
+        getnoteval:function(formData,callback){
+            //console.log(formData);
+            return    $http({
+                //url:adminurl+'out/'+formData.user_id+"/",
+                url: adminUrl3 + 'Chatbotnotes/getnotedata',
+                method: 'POST',
+                data:(formData),
+            });
+            
+            
+        },
+        sendchat:function(formData,callback){
+            //console.log(formData);
+            return    $http({
+                //url:adminurl+'out/'+formData.user_id+"/",
+                url: adminUrl3 + 'Livechat/addConv',
                 method: 'POST',
                 data:(formData),
             });
@@ -68099,7 +68172,10 @@ myApp.controller('HomeCtrl', function ($scope,$rootScope, TemplateService, Navig
                         $scope.$on('IdleStart', function() {
                             // the user appears to have gone idle
                         });
-                        $state.go("dashboard");
+                        if(callback.data.data.accessrole == 4)
+                            $state.go("agentdashboard");
+                        else
+                            $state.go("dashboard");
                     }
                     else if(callback.data.error.message == -1)
                         $scope.loginerror = -1;
@@ -68137,6 +68213,20 @@ myApp.controller('HomeCtrl', function ($scope,$rootScope, TemplateService, Navig
                     $scope.forgotpassworderror =-1;
             })
         };
+    })
+    .controller('AgentdashboardCtrl', function ($scope, $rootScope,TemplateService, NavigationService,CsrfTokenService, $timeout,$http,apiService,$state,$uibModal,Menuservice,tts,$cookies,$sce) {
+        $scope.template = TemplateService.getHTML("content/agentdashboard.html");
+        TemplateService.title = "Home"; //This is the Title of the Website
+        $scope.navigation = NavigationService.getNavigation();
+        $scope.uipage = "agentdashboard";
+        $rootScope.access_role = $.jStorage.get("access_role");
+        //io.sails.connect([io.sails.url]);
+        // io.sails.connect('http://localhost:80');
+        // var fullname = $.jStorage.get("fname")+" "+$.jStorage.get("lname");
+        //addUser({id:$.jStorage.get("id"),name:fullname});
+                    
+
+
     })
     .controller('ForgotPasswordCtrl', function ($scope, TemplateService, NavigationService,CsrfTokenService, $timeout, toastr, $http,$state,apiService,$stateParams,$interval) {
         $scope.template = TemplateService.getHTML("forgotpassword.html");
@@ -68392,8 +68482,8 @@ myApp.controller('HomeCtrl', function ($scope,$rootScope, TemplateService, Navig
     
 
 })
-    .controller('ChatCtrl', function ($scope, $rootScope,TemplateService, NavigationService,CsrfTokenService, $timeout,$http,apiService,$state,$uibModal,Menuservice,tts,$cookies) {
-        
+    .controller('ChatCtrl', function ($scope, $rootScope,TemplateService, NavigationService,CsrfTokenService, $timeout,$http,apiService,$state,$uibModal,Menuservice,tts,$cookies,$sce) {
+        $rootScope.contentobj = [];
         $rootScope.autocompletelist = [];
         $rootScope.chatOpen = false;
         $rootScope.showTimeoutmsg = false;
@@ -68403,6 +68493,10 @@ myApp.controller('HomeCtrl', function ($scope,$rootScope, TemplateService, Navig
         $rootScope.chatText = "";
         $rootScope.answers = "";
         $rootScope.msgSelected = false;
+        $rootScope.showTdcal = false;
+        $rootScope.showRdcal = false;
+        $rootScope.showSTD = false;
+        $rootScope.showCTD = false;
         // var mylist = $.jStorage.get("chatlist");
         // if(!mylist || mylist == null)
         //     $rootScope.chatlist = [];
@@ -68462,6 +68556,9 @@ myApp.controller('HomeCtrl', function ($scope,$rootScope, TemplateService, Navig
         //         $scope.$digest();
         //     }
         // }
+        $rootScope.trustedHtml = function (plainText) {
+            return $sce.trustAsHtml(plainText);
+        };
         $rootScope.getCookie = function(c_name)
 		{
 			if (document.cookie.length > 0)
@@ -68487,6 +68584,7 @@ myApp.controller('HomeCtrl', function ($scope,$rootScope, TemplateService, Navig
             }
             else
                 $("#topiclist li").hide();
+            $("h3#topic").text(topic);
             $("#topiclist li").each(function(){
                 
                 var keyword = new RegExp($(this).children("a").find().attr("id"), 'i');
@@ -68526,28 +68624,41 @@ myApp.controller('HomeCtrl', function ($scope,$rootScope, TemplateService, Navig
         };
         
         $rootScope.getAutocomplete = function(chatText) {
-            
+            console.log($rootScope.answers);
             if( $rootScope.answers == "")
             {
                 $rootScope.showTimeoutmsg = false;
-                if(!$rootScope.showTimeoutmsg && chatText=="") 
-                {
-                    $timeout(function () {
-                        $rootScope.showTimeoutmsg = true;
-                        msg = {Text:"Any Confusion ? How May I help You ?",type:"SYS_INACTIVE"};
-                        $rootScope.pushSystemMsg(0,msg);
-                    },60000);
-                }
+                // if(!$rootScope.showTimeoutmsg && chatText=="") 
+                // {
+                //     $timeout(function () {
+                //         //$rootScope.showTimeoutmsg = true;
+                //         // msg = {Text:"Any Confusion ? How May I help You ?",type:"SYS_INACTIVE"};
+                //         // $rootScope.pushSystemMsg(0,msg);
+                //     },60000);
+                // }
+                //console.log("HI");
                 $rootScope.chatText = chatText;
                 if($(".chatinput").val() == "" || $(".chatinput").val() == null) {
                     $rootScope.autocompletelist = [];
+                    console.log("null");
                 }
                 else {
-                    $rootScope.chatdata = { string:$rootScope.chatText};
-                    apiService.getautocomplete($rootScope.chatdata).then(function (response){
-                        //console.log(response.data);
-                        $rootScope.autocompletelist = response.data.data;
-                    });
+                    var str2 = $rootScope.chatText;
+                    str2 = str2.toLowerCase();
+                    if (str2.includes("calculator") || str2.includes("td cal") || str2.includes("rd cal") || str2.includes("calc") )
+                    //if($rootScope.chatText != "calc" || $rootScope.chatText != "calculator" || $rootScope.chatText != "td cal" || $rootScope.chatText != "rd cal")
+                    {
+                        //console.log("not calc");
+                    }
+                    else     
+                    {  
+                        var topic = $("#topic").text();
+                        $rootScope.chatdata = { string:$rootScope.chatText,topic:topic};
+                        apiService.getautocomplete($rootScope.chatdata).then(function (response){
+                            //console.log(response.data);
+                            $rootScope.autocompletelist = response.data.data;
+                        });
+                    }
                 }
             }
         };
@@ -68619,6 +68730,58 @@ myApp.controller('HomeCtrl', function ($scope,$rootScope, TemplateService, Navig
             $rootScope.chatText = "";
             $rootScope.scrollChatWindow();
         };
+        
+        $rootScope.showSTDcal = function(){
+            $rootScope.showSTD = true;
+            $rootScope.showCTD = false;
+            // $("#simple-form").delay(100).fadeIn(100);
+            // $("#cumu-form").fadeOut(100);
+        };
+        $rootScope.showCTDcal = function(){
+            $rootScope.showSTD = false;
+            $rootScope.showCTD = true;
+            // $("#cumu-form").delay(100).fadeIn(100);
+            // $("#simple-form").fadeOut(100);
+            
+        };
+        $rootScope.showTdcalc = function(){
+            $rootScope.showTdcal = true;
+            $rootScope.showRdcal = false;
+        };
+        $rootScope.showRdcalc = function(){
+            $rootScope.showTdcal = false;
+            $rootScope.showRdcal = true;
+            $rootScope.showSTDcal();
+        };
+        $rootScope.tdcalc = function(mon,rate,tenure,index) {
+            var mondep = parseFloat(mon);
+            var rate = parseFloat(rate);
+            var ten = parseFloat(tenure);
+            var rdmValue = mondep * (  (Math.pow((1+rate/4),(ten/3))-1  )/(1-(Math.pow(1+rate/4),(-1/3))));
+            $('.rdm'+index).val(rdmValue.toFixed(2));
+        };
+        $rootScope.calcSTD = function(principal,rate,tenure,index) {
+            var principal = parseFloat(principal);
+            var rate2 = parseFloat(rate);
+            var tenure_days = parseFloat(tenure);
+            var tenure_yrs = tenure_days/365;
+            $('.tenure_yrs'+index).val(tenure_yrs.toFixed(2));
+            var int_maturity = (principal * rate2 * tenure_yrs)/100;
+            $('.int_maturity'+index).val(int_maturity.toFixed(2));
+            var val_maturity = principal + int_maturity;
+            $('.val_maturity'+index).val(val_maturity.toFixed(2));
+        };
+        $rootScope.calcCTD = function(principal,rate,tenure,index) {
+            var cumu_principal = parseFloat(principal);
+            var cumu_rate2 = parseFloat(rate);
+            var cumu_tenure_days = parseFloat(tenure);
+            var cumu_tenure_yrs = cumu_tenure_days/365;
+            var cumu_val_maturity = cumu_principal * (1+(cumu_rate2/400))^(4*cumu_tenure_yrs);
+            var cumu_int_maturity = cumu_val_maturity - cumu_principal;
+            $('.cumu_tenure_yrs'+index).val(cumu_tenure_yrs.toFixed(2));
+            $('.cumu_int_maturity'+index).val(cumu_int_maturity.toFixed(2));
+            $('.cumu_val_maturity'+index).val(cumu_val_maturity.toFixed(2));
+        };
         $rootScope.pushMsg = function(id,value,answer) {
             $rootScope.msgSelected = true;
             $rootScope.chatmsgid = id;
@@ -68629,16 +68792,39 @@ myApp.controller('HomeCtrl', function ($scope,$rootScope, TemplateService, Navig
                 {
                     $rootScope.autocompletelist = [];
                     $rootScope.chatlist.push({id:"id",msg:value,position:"right",curTime: $rootScope.getDatetime()});
-                    $rootScope.getSystemMsg(id,value);
+                    str2 = value;
+                    str2 = str2.toLowerCase();
+                    if (str2.includes("calculator") || str2.includes("td cal") || str2.includes("rd cal") || str2.includes("calc") )
+                    {
+                        $rootScope.showTdcal = false;
+                        $rootScope.showRdcal = false;
+                        $rootScope.showSTD = false;
+                        $rootScope.showCTD = false;
+                        var automsg = {  type : "SYS_CALC"};
+                        $rootScope.chatlist.push({id:id,msg:automsg,position:"left",curTime: $rootScope.getDatetime()});
+                        $rootScope.showMsgLoader=false;
+                        $rootScope.msgSelected = false;
+                        $timeout(function(){
+                            $rootScope.autocompletelist = [];
+                        },1000);
+                        
+                    }
+                    else
+                    {
+                        $rootScope.getSystemMsg(id,value);
+                        $rootScope.msgSelected = false;
+                        $rootScope.showMsgLoader=true;
+                    }
+                    
                     $.jStorage.set("chatlist",$rootScope.chatlist);
-                    $rootScope.msgSelected = false;
-                    $rootScope.showMsgLoader=true;
+                    
+                    
                     $rootScope.chatText = "";
                     $rootScope.autolistvalue = "";
                     $rootScope.autolistid = "";
                     $rootScope.chatmsg = "";
                     $rootScope.chatmsgid = "";
-                    
+                    $rootScope.autocompletelist = [];
                     $rootScope.scrollChatWindow();    
                 }
             }
@@ -68657,8 +68843,8 @@ myApp.controller('HomeCtrl', function ($scope,$rootScope, TemplateService, Navig
 
         $rootScope.ratecardSubmit = function(coldata,rowdata) {
             console.log(coldata,rowdata);
-            $scope.formData = {csrfmiddlewaretoken:$rootScope.getCookie("csrftoken"),user_id:$cookies.get("session_id"),user_input:coldata+","+rowdata,auto_id:"",auto_value:"",Net_annual_Income:coldata,Interest:rowdata,type:"rate card"};
-            apiService.getSysMsg($scope.formData).then(function (data){
+            $scope.formData = {csrfmiddlewaretoken:$rootScope.getCookie("csrftoken"),user_id:$cookies.get("session_id"),user_input:coldata+","+rowdata,auto_id:"",auto_value:"",coldata:coldata,rowdata:rowdata,type:"rate card"};
+            apiService.ratecardsubmit($scope.formData).then(function (data){
 				//console.log(data);
 				angular.forEach(data.data.tiledlist, function(value, key) {
                         //console.log(value);
@@ -68686,10 +68872,11 @@ myApp.controller('HomeCtrl', function ($scope,$rootScope, TemplateService, Navig
             });
 
         };
-        $rootScope.getDthlinkRes = function(stage,dthlink) {
+        $rootScope.getDthlinkRes = function(stage,dthlink,index) {
             //console.log(colno,lineno,dthlink);
             //mysession = $.jStorage.get("sessiondata");
             var mysession = {};
+            
             console.log(stage+"-"+dthlink);
             mysession.DTHlink=dthlink;
             //mysession.DTHline=lineno;
@@ -68702,12 +68889,58 @@ myApp.controller('HomeCtrl', function ($scope,$rootScope, TemplateService, Navig
             formData = mysession;
             formData.csrfmiddlewaretoken=$rootScope.getCookie("csrftoken");
             formData.user_id=$cookies.get("session_id");
-            console.log(formData);
+            //console.log(formData);
             apiService.getDthlinkRes(formData).then(function (data){
                 angular.forEach(data.data.tiledlist, function(value, key) {
                     if(value.type=="DTHyperlink")
                     {
                         $rootScope.DthResponse(0,data.data);
+                        if(data.data.tiledlist[0].sub_topic_list || data.data.tiledlist[0].sub_topic_list != null)
+                        {
+                            $rootScope.openMenu(data.data.tiledlist[0].sub_topic_list);
+                        }
+                        if(data.data.tiledlist[0].Script || data.data.tiledlist[0].Script != null)
+                        {
+                            // if(data.data.tiledlist[0].Script.length== 0)
+                            //     $rootScope.tabHeight = window.innerHeight-53;
+                            // else
+                            //     $rootScope.tabHeight = 300;
+                            
+                        }
+                        if(data.data.session_obj_data || data.data.session_obj_data != null)
+                            $.jStorage.set("sessiondata",data.data.session_obj_data);
+                        if(data.data.tiledlist[0].topic)
+                            $("#topic").text(data.data.tiledlist[0].topic);
+                        //$.jStorage.set("sessiondata",data.data.session_obj_data);
+                    }
+                });
+            }).catch(function(reason){
+                console.log(reason);
+            });
+        };
+        $rootScope.getDthlinkRes2 = function(stage,dthlink,index) {
+            //console.log(colno,lineno,dthlink);
+            //mysession = $.jStorage.get("sessiondata");
+            var mysession = {};
+            
+            console.log(stage+"-"+dthlink);
+            mysession.DTHlink=dthlink;
+            //mysession.DTHline=lineno;
+            //mysession.DTHcol=colno;
+            mysession.DTHstage=stage;
+            // formData = {};
+            // formData.DTHcol = colno;
+            // formData.DTHline = lineno;
+            // formData.DTHlink = dthlink;
+            formData = mysession;
+            formData.csrfmiddlewaretoken=$rootScope.getCookie("csrftoken");
+            formData.user_id=$cookies.get("session_id");
+            //console.log(formData);
+            apiService.getDthlinkRes(formData).then(function (data){
+                angular.forEach(data.data.tiledlist, function(value, key) {
+                    if(value.type=="DTHyperlink")
+                    {
+                        $rootScope.DthResponse2(0,data.data,dthlink);
                         if(data.data.tiledlist[0].sub_topic_list || data.data.tiledlist[0].sub_topic_list != null)
                         {
                             $rootScope.openMenu(data.data.tiledlist[0].sub_topic_list);
@@ -68729,45 +68962,161 @@ myApp.controller('HomeCtrl', function ($scope,$rootScope, TemplateService, Navig
                 });
             });
         };
+        $rootScope.notedata = [];
+        $rootScope.getnotedata=function(value,table) {
+            console.log(value);
+            console.log(table);
+            formData = {table:table,value:value};
+            apiService.getnoteval(formData).then(function (data){
+                console.log(data);
+                if(value.col == 'NTB_New_to_bank_customer')
+                {
+                    //console.log(data.data.data[0].NTB_New_to_bank_customer);
+                    $rootScope.notedata = data.data.data[0].NTB_New_to_bank_customer;
+                }
+                else if(value.col == 'For_Existing_CRN_new_account_opening')
+                {
+                    console.log(value);
+                    //console.log(data.data.data[0].For_Existing_CRN_new_account_opening);
+                    $rootScope.notedata = data.data.data[0].For_Existing_CRN_new_account_opening;
+                }
+                //$rootScope.notedata = data.data.data[0].value;
+                console.log($rootScope.notedata);
+            });
+        };
+        $rootScope.viewdata = "";
+        $rootScope.$viewmodalInstance1 = {};
+        $rootScope.openContentModal = function(d) {
+            console.log(d);
+            $rootScope.viewdata = d;
+            $rootScope.sendobj = {viewdata : $rootScope.viewdata,contentobj:$rootScope.contentobj};
+            $rootScope.$viewmodalInstance1 = $uibModal.open({
+                scope: $rootScope,
+                animation: true,
+                size: 'lg',
+                templateUrl: 'views/modal/content.html',
+                resolve: {
+                    items: function () {
+                    return $rootScope.sendobj;
+                    }
+                },
+                controller: 'ViewCtrl'
+            });
+        };
+        $rootScope.contentCancel = function(){
+            $scope.$viewmodalInstance1.dismiss('cancel');
+        };
         $rootScope.DthResponse = function(id,data) {
             if(data.tiledlist[0].DT.length > 0 || data.tiledlist[0].Text != "")
             {
 				//if()
 				{
 					
-					var images = Array();
-					var process = Array();
-					process = data.tiledlist[0].Process;
-					/*_.each(data.tiledlist[0].Process,function(v,k){
-						if (v.indexOf(".png") >= 0) 
-					});*/
-					 images = _.remove(process, function(n) {
-					  return n.indexOf(".png") >= 0;
-					});
-					//console.log(images);
-					data.tiledlist[0].Process =process;
-					data.tiledlist[0].images =images;
-					if(data.tiledlist[0].DT.length > 0 || ( data.tiledlist[0].Text != "" && data.tiledlist[0].Text) || images.length > 0 )
-						$rootScope.pushSystemMsg(id,data);
-					if(images.length > 0)
-					{
-						$timeout(function(){
-							$('#myCarousel2').carousel({
-								interval: false,
-								wrap: false
-							});
-							$('#myCarousel2').find('.item').first().addClass('active');
-						},2000);
+					// var images = Array();
+					// var process = Array();
+                    // process = data.tiledlist[0].Process;
+                    // var dtstage = data.tiledlist[0].Stage;
+                    // var dtstage = dtstage.replace(".", "");
+                    // data.tiledlist[0].bgstage = dtstage;
+					// /*_.each(data.tiledlist[0].Process,function(v,k){
+					// 	if (v.indexOf(".png") >= 0) 
+					// });*/
+					//  images = _.remove(process, function(n) {
+					//   return n.indexOf(".png") >= 0;
+					// });
+					// //console.log(images);
+					// data.tiledlist[0].Process =process;
+					// data.tiledlist[0].images =images; //|| images.length > 0
+					if((data.tiledlist[0].Stage == '0') && data.tiledlist[0].DT.length > 0 || ( data.tiledlist[0].Text != "" && data.tiledlist[0].Text)  )
+                        $rootScope.pushSystemMsg(id,data);
+                    if(data.tiledlist[0].Stage != '0')
+                    {
+                        if(!data.tiledlist[0].Script || data.tiledlist[0].Script.length== 0 )
+                            $rootScope.tabHeight = window.innerHeight-53;
+                        else
+                            $rootScope.tabHeight = 300;
+                    }
+					// if(images.length > 0)
+					// {
+					// 	$timeout(function(){
+					// 		$('#myCarousel2').carousel({
+					// 			interval: false,
+					// 			wrap: false
+					// 		});
+					// 		$('#myCarousel2').find('.item').first().addClass('active');
+					// 	},2000);
 						
-					}
+					// }
 				}
             }
            
-				
+            
+            $rootScope.collapse_arr = new Array();
+            var process = data.tiledlist[0].Process;
+            // _.each(process,function(v,k){
+            //     var res = v.split("!."); 
+            //     if(res.length == 1)
+            //     {}
+            //     else
+            //     {
+            //         var col_obj = {heading:res[0],collapse:res[1]};
+            //         $rootScope.collapse_arr.push(col_obj);
+            //         process[k] = col_obj;
+            //         $rootScope.tabHeight = window.innerHeight-120-53;
+            //     }
+            // });
+            data.tiledlist[0].Process = process;
+            var ele = ele = new Array("Process");
+            var ele_val = new Array(data.tiledlist[0]);
+            console.log(data.tiledlist[0].Process);
             $rootScope.showMsgLoader = false; 
             $rootScope.selectTabIndex = 0;
-            var ele = new Array("Process");
-            var ele_val = new Array(data.tiledlist[0]);
+            $rootScope.contentobj = [];
+            if(data.tiledlist[0].Quik_Tip)
+            {
+                
+                
+                ele = new Array("Process","Exception Scenarios");
+                ele_val = new Array(data.tiledlist[0],data.tiledlist[0]);
+                //if(data.tiledlist[0].Quik_Tip.length == 0)
+                {
+                    $rootScope.getnotedata(data.tiledlist[0].Quik_Tip[0],data.tiledlist[0].Table);
+                }
+                //var ele_val = new Array(data.tiledlist[0],data.tiledlist[0]);
+                // if(!data.tiledlist[0].Script || data.tiledlist[0].Script.length== 0)
+                //     $rootScope.tabHeight = window.innerHeight-53;
+                // else
+                //     $rootScope.tabHeight = 300;
+            }
+            if(data.tiledlist[0].Address_Change)
+            {
+                $rootScope.contentobj.push({data:data.tiledlist[0].Address_Change,type:"Address_Change"});
+                // ele.push("Address Change");
+                // ele_val.push(data.tiledlist[0]);
+                $rootScope.tabHeight = window.innerHeight-120-53;
+            }
+            if(data.tiledlist[0].Dormant_Activation)
+            {
+                $rootScope.contentobj.push({data:data.tiledlist[0].Dormant_Activation,type:"Dormant_Activation"});
+                $rootScope.tabHeight = window.innerHeight-120-53;
+                // ele.push("Dormant Activation");
+                // ele_val.push(data.tiledlist[0]);
+            }
+            if(data.tiledlist[0].verify_seeding_info)
+            {
+                $rootScope.contentobj.push({data:data.tiledlist[0].verify_seeding_info,type:"verify_seeding_info"});
+                // ele.push("Address Change");
+                // ele_val.push(data.tiledlist[0]);
+                $rootScope.tabHeight = window.innerHeight-120-53;
+            }
+            if(data.tiledlist[0].name_mismatch_table)
+            {
+                $rootScope.contentobj.push({data:data.tiledlist[0].name_mismatch_table,type:"name_mismatch_table"});
+                // ele.push("Address Change");
+                // ele_val.push(data.tiledlist[0]);
+                $rootScope.tabHeight = window.innerHeight-120-53;
+            }
+            
             $rootScope.tabvalue.elements = ele;
             $rootScope.tabvalue.element_values=ele_val;
             // if(data.node_data)
@@ -68796,6 +69145,90 @@ myApp.controller('HomeCtrl', function ($scope,$rootScope, TemplateService, Navig
                 
             //     //$rootScope.$emit("setTabData", $scope.node_data);
             // }
+            
+        };
+        $rootScope.DthResponse2 = function(id,data,dlink) {
+            var dtstage = data.tiledlist[0].Stage;
+            var dtstage = dtstage.replace(".", "");
+            if(data.tiledlist[0].DT.length > 0 || data.tiledlist[0].Text != "")
+            {
+				//if()
+				// {
+					
+				// 	var images = Array();
+				// 	var process = Array();
+                //     process = data.tiledlist[0].Process;
+                //     var dtstage = data.tiledlist[0].Stage;
+                //     var dtstage = dtstage.replace(".", "");
+                //     data.tiledlist[0].bgstage = dtstage;
+				// 	/*_.each(data.tiledlist[0].Process,function(v,k){
+				// 		if (v.indexOf(".png") >= 0) 
+				// 	});*/
+				// 	 images = _.remove(process, function(n) {
+				// 	  return n.indexOf(".png") >= 0;
+				// 	});
+				// 	//console.log(images);
+				// 	data.tiledlist[0].Process =process;
+				// 	data.tiledlist[0].images =images;
+					
+                // }
+                // if((data.tiledlist[0].Stage == '0') && data.tiledlist[0].DT.length > 0 || ( data.tiledlist[0].Text != "" && data.tiledlist[0].Text) || images.length > 0 )
+                //     $rootScope.pushSystemMsg(id,data);
+                // if(data.tiledlist[0].Stage != '0')
+                // {
+                //     if(!data.tiledlist[0].Script || data.tiledlist[0].Script.length== 0 )
+                //         $rootScope.tabHeight = window.innerHeight-53;
+                //     else
+                //         $rootScope.tabHeight = 300;
+                // }
+                
+            }
+           
+			$rootScope.element_values2 = new Array();
+            $rootScope.showMsgLoader = false; 
+            $rootScope.selectTabIndex = 0;
+            $rootScope.tabHeight = window.innerHeight-120-53;
+            if(data.tiledlist[0].Quik_Tip)
+            {
+                if($rootScope.tabvalue.elements[1] !== 'Exception Scenarios')
+                {
+                    $rootScope.tabvalue.elements.push("Exception Scenarios");
+                    $rootScope.tabvalue.element_values.push(data.tiledlist[0]);
+                }
+                else {
+                    $rootScope.tabvalue.element_values[1]=data.tiledlist[0];
+                    
+                }
+                $rootScope.tabHeight = window.innerHeight-120-53;
+                // if(!data.tiledlist[0].Script || data.tiledlist[0].Script.length== 0)
+                //     $rootScope.tabHeight = window.innerHeight-53;
+                // else
+                //     $rootScope.tabHeight = 300;
+                //if(data.tiledlist[0].Quik_Tip.length == 0)
+                {
+                    
+                    $rootScope.getnotedata(data.tiledlist[0].Quik_Tip[0],data.tiledlist[0].Table);
+                }
+            }
+            else
+            {
+                var a = $rootScope.tabvalue.elements.indexOf("Exception Scenarios");
+                // _.remove(array, function(n) {
+
+                // });
+                $rootScope.tabvalue.element_values.splice(a,a);
+                $rootScope.tabvalue.elements.splice(a,a);
+            }
+            $rootScope.element_values2 = data.tiledlist[0].Process;
+            $rootScope.element_values2.dtstage = dtstage;
+            // else
+            // {
+            //     var ele = new Array("Process");
+            //     var ele_val = new Array(data.tiledlist[0],data.tiledlist[0]);
+            // }
+            // $rootScope.tabvalue.elements.push(ele);
+            // $rootScope.tabvalue.element_values.push(ele_val);
+            
             
         };
         $rootScope.InstructionResponse = function(id,data) {
@@ -68831,13 +69264,13 @@ myApp.controller('HomeCtrl', function ($scope,$rootScope, TemplateService, Navig
                     }
                     else
                         prev +=value+" "; 
-                    console.log(value);
+                    //console.log(value);
                     $(".list-group a[id='"+prev+"']").parent().show();
                     $(".list-group a[id='"+prev+"']").parent().children(".tree").find("li").show();
                     
                     if(submenu.length != (key+1))
                     {
-                        console.log(prev);
+                        //console.log(prev);
                         if($(".list-group a[id='"+prev+"']").parent().children('ul.tree').is(':visible')) {}
                         else
                         {
@@ -68847,12 +69280,12 @@ myApp.controller('HomeCtrl', function ($scope,$rootScope, TemplateService, Navig
                     }
                     if($( ".list-group a[id='"+prev+"']" ).hasClass( "section_last" ))
                     {   
-                        console.log("hasclass");
+                        //console.log("hasclass");
                         $(".list-group a[id='"+prev+"']").addClass("active");
                     }
                     if(submenu.length == (key+1))
                     {
-                        console.log("last");
+                        //console.log("last");
                         $(".list-group a[id='"+prev+"']").parent().children('ul.tree').toggle(300);
                     }
                 }
@@ -68873,6 +69306,8 @@ myApp.controller('HomeCtrl', function ($scope,$rootScope, TemplateService, Navig
                 //mysessiondata.data = {id:parseInt(id),Text:value};
                 //mysessiondata.data = {id:id,Text:value};
                 sess2 = {id:id,Text:value};
+                $rootScope.tabvalue.elements = [];
+                $rootScope.tabvalue.element_values=[];
                 //console.log(mysessiondata);
                 //$rootScope.formData = mysessiondata;
                 //console.log($cookies.get("session_id"));
@@ -68883,15 +69318,23 @@ myApp.controller('HomeCtrl', function ($scope,$rootScope, TemplateService, Navig
                 $timeout(function(){
                     $(".chatinput").val("");
                 });
+                
+                
+                // io.socket.on('user', function gotHelloMessage (data) {
+                // console.log('User alert!', data);
+                // });
+                //io.socket.get('/Livechat/addconv');
+                
                 apiService.getSysMsg($rootScope.formData).then(function (data){
-                        console.log(data);
+                        //console.log(data);
+                    
                         if(data.data.tiledlist[0].topic)
                              $("#topic").text(data.data.tiledlist[0].topic);
                     angular.forEach(data.data.tiledlist, function(value, key) {
                         //console.log(value);
                         if(value.type=="text")
                         {
-							console.log(data.data.tiledlist[0].text);
+							//console.log(data.data.tiledlist[0].text);
                         	$rootScope.pushSystemMsg(0,data.data);
                             $rootScope.showMsgLoader = false;
                             $timeout(function(){
@@ -68949,6 +69392,9 @@ myApp.controller('HomeCtrl', function ($scope,$rootScope, TemplateService, Navig
                         
                     });
                     
+
+
+
                     // apiService.getttsSpeech({text:data.data.data.tiledlist[0].Script[0]}).then(function (data){
 
                     // });
@@ -69006,16 +69452,89 @@ myApp.controller('HomeCtrl', function ($scope,$rootScope, TemplateService, Navig
                         if(data.data.tiledlist[0].Script.length== 0)
                             $rootScope.tabHeight = window.innerHeight-53;
                         else
-                            $rootScope.tabHeight = 300;
+                            $rootScope.tabHeight = window.innerHeight-53;;
                         
                     }
                     if(data.data.session_obj_data || data.data.session_obj_data != null)
                         $.jStorage.set("sessiondata",data.data.session_obj_data);
                 }).catch(function (reason) {
-                    //console.log(reason);
+                    console.log(reason);
                     var msg = {Text:"Sorry I could not understand",type:"SYS_EMPTY_RES"};
                     $rootScope.pushSystemMsg(0,msg); 
                     $rootScope.showMsgLoader=false;
+                    // apiService.sendchat({}, function (data) {
+                    //     console.log(data);
+                    // });
+                    
+                    // io.socket.on('user', function messageReceived(message) {
+
+                    //     switch (message.verb) {
+
+                    //         // Handle user creation
+                    //         case 'created':
+                    //             addUser(message.data);
+                    //         break;
+
+                    //         // Handle a user changing their name
+                    //         case 'updated':
+
+                    //         // Get the user's old name by finding the <option> in the list with their ID
+                    //         // and getting its text.
+                    //             var oldName = $('#user-'+message.id).text();
+
+                    //         // Update the name in the user select list
+                    //             $('#user-'+message.id).text(message.data.name);
+
+                    //             // If we have a private convo with them, update the name there and post a status message in the chat.
+                    //             if ($('#private-username-'+message.id).length) {
+                    //                 $('#private-username-'+message.id).html(message.data.name);
+                    //                 postStatusMessage('private-messages-'+message.id,oldName+' has changed their name to '+message.data.name);
+                    //             }
+
+                    //         break;
+
+                    //         // Handle user destruction
+                    //         case 'destroyed':
+                    //             removeUser(message.id);
+                    //         break;
+
+                    //         // Handle private messages.  Only sockets subscribed to the "message" context of a
+                    //         // User instance will get this message--see the onConnect logic in config/sockets.js
+                    //         // to see where a new user gets subscribed to their own "message" context
+                    //         case 'messaged':
+                    //             receivePrivateMessage(message.data);
+                    //         break;
+
+                    //         default:
+                    //         break;
+                    //     }
+
+                    //     });
+
+                    //     // Add a click handler for the "Update name" button, allowing the user to update their name.
+                    //     // updateName() is defined in user.js.
+                    //     //$('#update-name').click(updateName);
+
+                    //     // Add a click handler for the "Send private message" button
+                    //     // startPrivateConversation() is defined in private_message.js.
+                    //     //$('#private-msg-button').click(startPrivateConversation);
+
+                    //     // Add a click handler for the "Join room" button
+                    //     // joinRoom() is defined in public_message.js.
+                    //     //$('#join-room').click(joinRoom);
+
+                    //     // Add a click handler for the "New room" button
+                    //     // newRoom() is defined in room.js.
+                    //     //$('#new-room').click(newRoom);
+
+                    //     console.log('Socket is now connected!');
+
+                    //     // When the socket disconnects, hide the UI until we reconnect.
+                    //     io.socket.on('disconnect', function() {
+                    //     // Hide the main UI
+                    //     $('#main').hide();
+                    //     $('#disconnect').show();
+                    //     });
                 });
             //});
             $rootScope.autocompletelist = [];
@@ -69159,18 +69678,19 @@ myApp.controller('HomeCtrl', function ($scope,$rootScope, TemplateService, Navig
             {
                 if( $rootScope.answers )
                 {
-                    $rootScope.pushAutoMsg($rootScope.autolistid,$rootScope.chatText,$rootScope.answers);
+                    $rootScope.pushAutoMsg($rootScope.autolistid,$(".chatinput").val(),$rootScope.answers);
                     $rootScope.autocompletelist = [];
                 }
                 else if(($rootScope.autolistid=="" || $rootScope.autolistid == null || $rootScope.autolistid == 0) )
                 {
                     
+                     
+                     $rootScope.pushMsg("",$(".chatinput").val(),"");
                      $(".chatinput").val("");
-                     $rootScope.pushMsg("",$rootScope.chatText,"");
                 }
                 else {
                     
-                    $rootScope.pushMsg($rootScope.autolistid,$rootScope.chatText,"");
+                    $rootScope.pushMsg($rootScope.autolistid,$(".chatinput").val(),"");
                 }
                 $rootScope.autocompletelist = [];
             }
@@ -69196,13 +69716,10 @@ myApp.controller('HomeCtrl', function ($scope,$rootScope, TemplateService, Navig
             },200);
         };
         $rootScope.crnSubmit = function(crnno) {
-            //console.log(crnno,"crnno");
             $scope.userid=$.jStorage.get("id");
             var datatype = 'CRN';
             $scope.formData = {user_input:crnno, number_type:datatype,csrfmiddlewaretoken:$rootScope.getCookie("csrftoken"),user_id:$cookies.get("session_id")};
-            console.log($scope.formData);
             apiService.crnsubmit($scope.formData).then(function (callback){
-                console.log(callback,"crn");
                 $rootScope.result_crn(callback.data);
             });
         };
@@ -69269,6 +69786,36 @@ myApp.controller('HomeCtrl', function ($scope,$rootScope, TemplateService, Navig
        $timeout(function(){
             //$('#chatTabs a:last').tab('show');
        },200);
+    })
+    .controller('ViewCtrl', function ($scope,$rootScope, $uibModalInstance, items) {
+        $scope.items = items;
+        _.each(items.contentobj,function(v,k){
+            if(v.type == items.viewdata)
+            {
+                console.log("Exist");
+                $scope.displaydata = v.data;
+                $scope.displaydata.type = v.type;
+            }
+        });
+        // console.log(items);
+        // console.log($scope.displaydata);
+        if($rootScope.viewdata == 'Address_Change')
+        {
+            $scope.modaltitle = "Address Change";
+        }
+        if($rootScope.viewdata == 'Dormant_Activation')
+        {
+            $scope.modaltitle = "Dormant Activation";
+        }
+        if($rootScope.viewdata == 'verify_seeding_info')
+        {
+            $scope.modaltitle = "Verify seeding info";
+        }
+        if($rootScope.viewdata == 'name_mismatch_table')
+        {
+            $scope.modaltitle = "Name Mismatch Table";
+        }
+        
     })
     // Example API Controller
     .controller('DemoAPICtrl', function ($scope, TemplateService, apiService, NavigationService, $timeout) {
