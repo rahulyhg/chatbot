@@ -198,8 +198,8 @@ myApp.controller('HomeCtrl', function ($scope,$rootScope, TemplateService, Navig
         $scope.uipage = "agentdashboard";
         $rootScope.access_role = $.jStorage.get("access_role");
         //io.sails.connect([io.sails.url]);
-        io.sails.connect('http://localhost:80');
-        var fullname = $.jStorage.get("fname")+" "+$.jStorage.get("lname");
+        // io.sails.connect('http://localhost:80');
+        // var fullname = $.jStorage.get("fname")+" "+$.jStorage.get("lname");
         //addUser({id:$.jStorage.get("id"),name:fullname});
                     
 
@@ -1444,10 +1444,10 @@ myApp.controller('HomeCtrl', function ($scope,$rootScope, TemplateService, Navig
                     // });
                     //io.sails.url = 'https://localhost:8080';
                     //io.sails.connect([io.sails.url]);
-                    io.sails.connect('http://localhost:8080');
-                    var fullname = $.jStorage.get("fname")+" "+$.jStorage.get("lname");
-                    addUser({id:$.jStorage.get("id"),name:fullname});
-                    io.socket.on('connect', function socketConnected() {
+                    // io.sails.connect('http://localhost:8080');
+                    // var fullname = $.jStorage.get("fname")+" "+$.jStorage.get("lname");
+                    // addUser({id:$.jStorage.get("id"),name:fullname});
+                    // io.socket.on('connect', function socketConnected() {
 
                     // Show the main UI
                         // $('#disconnect').hide();
