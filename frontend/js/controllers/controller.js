@@ -58,6 +58,7 @@ myApp.controller('HomeCtrl', function ($scope,$rootScope, TemplateService, Navig
                 $rootScope.minimizeChatwindow();
             }
         };
+        
     })
     myApp.controller('DashboardCtrl', function ($scope,$rootScope, TemplateService, NavigationService,CsrfTokenService,Menuservice, $timeout,$http,apiService,$state) {
         $scope.template = TemplateService.getHTML("content/dashboard.html");
@@ -152,7 +153,11 @@ myApp.controller('HomeCtrl', function ($scope,$rootScope, TemplateService, Navig
                         if(callback.data.data.accessrole == 4)
                             $state.go("agentdashboard");
                         else
+                        {
+                            //io.socket.get('/chat/addconv');
+                            
                             $state.go("dashboard");
+                        }
                     }
                     else if(callback.data.error.message == -1)
                         $scope.loginerror = -1;
@@ -191,17 +196,69 @@ myApp.controller('HomeCtrl', function ($scope,$rootScope, TemplateService, Navig
             })
         };
     })
-    .controller('AgentdashboardCtrl', function ($scope, $rootScope,TemplateService, NavigationService,CsrfTokenService, $timeout,$http,apiService,$state,$uibModal,Menuservice,tts,$cookies,$sce) {
+    .controller('AgentdashboardCtrl', function ($scope, $rootScope,$resource,TemplateService, NavigationService,CsrfTokenService, $timeout,$http,apiService,$state,$uibModal,Menuservice,tts,$cookies,$sce,$location) {
         $scope.template = TemplateService.getHTML("content/agentdashboard.html");
         TemplateService.title = "Home"; //This is the Title of the Website
         $scope.navigation = NavigationService.getNavigation();
         $scope.uipage = "agentdashboard";
         $rootScope.access_role = $.jStorage.get("access_role");
+        $scope.firstreload = false;
+        if($.jStorage.get("firstreload"))
+            $scope.firstreload = true;
+        else
+        {
+            $.jStorage.set("firstreload",true);
+            location.reload();
+        }
+        io.sails.url = 'http://localhost:1337';
+        //io('http://localhost:8080');
+        // var CONNECTION_METADATA_PARAMS = {
+        //     version: '__sails_io_sdk_version',
+        //     platform: '__sails_io_sdk_platform',
+        //     language: '__sails_io_sdk_language'
+        // };
+
+        // var SDK_INFO = {
+        //     version: '0.11.0',
+        //     platform: typeof module === 'undefined' ? 'browser' : 'node',
+        //     language: 'javascript'
+        // };
+
+        // SDK_INFO.versionString =
+        //     CONNECTION_METADATA_PARAMS.version + '=' + SDK_INFO.version + '&' +
+        //     CONNECTION_METADATA_PARAMS.platform + '=' + SDK_INFO.platform + '&' +
+        //     CONNECTION_METADATA_PARAMS.language + '=' + SDK_INFO.language;
+
+        // var socket = io.connect({
+        //     query: SDK_INFO.versionString
+        // });
         //io.sails.connect([io.sails.url]);
+        
         // io.sails.connect('http://localhost:80');
         // var fullname = $.jStorage.get("fname")+" "+$.jStorage.get("lname");
         //addUser({id:$.jStorage.get("id"),name:fullname});
-                    
+        /**
+     * app.js
+     *
+     * Front-end code and event handling for sailsChat
+     *
+     */
+    io.socket.get('/chat/addconv',{}, function (resData, jwres){
+    // ...
+    });
+        //$scope.feedEntries = $resource('/Feed').query();
+        // apiService.Feed({}).then(function (callback){
+        //     // io.socket.get('api/Feed/subscribe', function(data, jwr) {
+        //     //     io.socket.on('new_entry', function(entry) {
+        //     //         $timeout(function() {
+        //     //             $scope.feedEntries.unshift(entry);
+        //     //         });
+        //     //     });
+        //     // });
+        //     io.socket.on("tweet", function(data){})
+        // });
+        
+    
 
 
     })
@@ -474,6 +531,288 @@ myApp.controller('HomeCtrl', function ($scope,$rootScope, TemplateService, Navig
         $rootScope.showRdcal = false;
         $rootScope.showSTD = false;
         $rootScope.showCTD = false;
+        $rootScope.agentconnected = false;
+
+        //Privatemsg
+        // Start a private conversation with another user
+        function startPrivateConversation() {
+
+        // Get the user list
+        var select = $('#users-list');
+
+        // Make sure a user is selected in the list
+        if (select.val() === null) {
+            return alert('Please select a user to send a private message to.');
+        }
+
+        // Get the recipient's name from the text of the option in the <select>
+        var recipientName = $('option:selected', select).text();
+        var recipientId = select.val();
+
+        // Prompt for a message to send
+        var message = prompt("Enter a message to send to "+recipientName);
+
+        // Create the UI for the room if it doesn't exist
+        createPrivateConversationRoom({name:recipientName, id:recipientId});
+
+        // Add the message to the room
+        addMessageToConversation(window.me.id, recipientId, message);
+
+        // Send the private message
+        io.socket.post('/chat/private', {to:recipientId, msg: message});
+
+        }
+
+        // Create the HTML to hold a private conversation between two users
+        function createPrivateConversationRoom(penPal) {
+
+        // Get the ID of the HTML element for this private convo, if there is one
+        var roomName = 'private-room-'+penPal.id;
+
+        // If HTML for the room already exists, return.
+        if ($('#'+roomName).length) {
+            return;
+        }
+
+        var penPalName = penPal.name == "unknown" ? ("User #"+penPal.id) : penPal.name;
+
+        // Create a new div to contain the room
+        var roomDiv = $('<div id="'+roomName+'"></div>');
+
+        // Create the HTML for the room
+        var roomHTML = '<h2>Private conversation with <span id="private-username-'+penPal.id+'">'+penPalName+'</span></h2>\n' +
+                        '<div id="private-messages-'+penPal.id+'" style="width: 50%; height: 150px; overflow: auto; border: solid 1px #666; padding: 5px; margin: 5px"></div>'+
+                        '<input id="private-message-'+penPal.id+'"/> <button id="private-button-'+penPal.id+'">Send message</button">';
+
+        roomDiv.html(roomHTML);
+
+        // Add the room to the private conversation area
+        $('#convos').append(roomDiv);
+
+        // Hook up the "send message" button
+        $('#private-button-'+penPal.id).click(onClickSendPrivateMessage);
+
+        }
+
+        // Callback for when the user clicks the "Send message" button in a private conversation
+        function onClickSendPrivateMessage(e) {
+
+        // Get the button that was pressed
+        var button = e.currentTarget;
+
+        // Get the ID of the user we want to send to
+        var recipientId = button.id.split('-')[2];
+
+        // Get the message to send
+        var message = $('#private-message-'+recipientId).val();
+        $('#private-message-'+recipientId).val("");
+
+        // Add this message to the room
+        addMessageToConversation(window.me.id, recipientId, message);
+
+        // Send the message
+        io.socket.post('/chat/private', {to: recipientId, msg: message});
+
+        }
+
+        // Add HTML for a new message in a private conversation
+        function addMessageToConversation(senderId, recipientId, message) {
+
+            var fromMe = senderId == window.me.id;
+            var roomName = 'private-messages-' + (fromMe ? recipientId : senderId);
+            var senderName = fromMe ? "Me" : $('#private-username-'+senderId).html();
+            var justify = fromMe ? 'right' : 'left';
+
+            var div = $('<div style="text-align:'+justify+'"></div>');
+            div.html('<strong>'+senderName+'</strong>: '+message);
+            $('#'+roomName).append(div);
+
+        }
+
+        // Handle an incoming private message from the server.
+        function receivePrivateMessage(data) {
+
+            var sender = data.from;
+
+            // Create a room for this message if one doesn't exist
+             createPrivateConversationRoom(sender);
+
+            // Add a message to the room
+            //addMessageToConversation(sender.id, window.me.id, data.msg);
+            //$(".chat").append("<li class='left clearfix'><span class='chat-img pull-left'><img ng-src='img/Tenali.png' alt='BOT' class='img-circle  doneLoading' src='img/Tenali.png'></span><div class='chat-body'><p>"+data.msg+" </p></div></li>");
+            console.log(data,"recvdmsg");
+            mymsg = {Text:data.msg,type:"SYS_FIRST"};
+            //$rootScope.chatlist.push({id:"id",msg:mymsg,position:"left",curTime: $rootScope.getDatetime()});
+            $rootScope.pushSystemMsg(0,mymsg);  
+        }
+
+
+        //Chatapp
+            /**
+         * app.js
+         *
+         * Front-end code and event handling for sailsChat
+         *
+         */
+
+
+        // Attach a listener which fires when a connection is established:
+        io.socket.on('connect', function socketConnected() {
+
+            // Show the main UI
+            $('#disconnect').hide();
+            $('#main').show();
+
+            // Announce that a new user is online--in this somewhat contrived example,
+            // this also causes the CREATION of the user, so each window/tab is a new user.
+            userdata = {id:$.jStorage.get("id"),name:$.jStorage.get("fname")};
+            io.socket.get("/user/announce", function(data){
+            //console.log(data);
+            userdata.socketId = data.socketId;
+            userdata.sid = data.id;
+            $.jStorage.set("socketId",userdata.socketId);
+            $.jStorage.set("sid",userdata.sid);
+            window.me = userdata;
+            updateMyName(userdata);
+
+            // Get the current list of users online.  This will also subscribe us to
+            // update and destroy events for the individual users.
+            io.socket.get('/user', updateUserList);
+
+            // Get the current list of chat rooms. This will also subscribe us to
+            // update and destroy events for the individual rooms.
+            io.socket.get('/room', updateRoomList);
+
+            });
+            
+            // Listen for the "room" event, which will be broadcast when something
+            // happens to a room we're subscribed to.  See the "autosubscribe" attribute
+            // of the Room model to see which messages will be broadcast by default
+            // to subscribed sockets.
+            io.socket.on('room', function messageReceived(message) {
+
+            switch (message.verb) {
+
+                // Handle room creation
+                case 'created':
+                addRoom(message.data);
+                break;
+
+                // Handle a user joining a room
+                case 'addedTo':
+                // Post a message in the room
+                postStatusMessage('room-messages-'+message.id, $('#user-'+message.addedId).text()+' has joined');
+                // Update the room user count
+                increaseRoomCount(message.id);
+                break;
+
+                // Handle a user leaving a room
+                case 'removedFrom':
+                // Post a message in the room
+                postStatusMessage('room-messages-'+message.id, $('#user-'+message.removedId).text()+' has left');
+                // Update the room user count
+                decreaseRoomCount(message.id);
+                break;
+
+                // Handle a room being destroyed
+                case 'destroyed':
+                removeRoom(message.id);
+                break;
+
+                // Handle a public message in a room.  Only sockets subscribed to the "message" context of a
+                // Room instance will get this message--see the "join" and "leave" methods of RoomController.js
+                // to see where a socket gets subscribed to a Room instance's "message" context.
+                case 'messaged':
+                receiveRoomMessage(message.data);
+                break;
+
+                default:
+                break;
+
+            }
+
+            });
+
+            // Listen for the "user" event, which will be broadcast when something
+            // happens to a user we're subscribed to.  See the "autosubscribe" attribute
+            // of the User model to see which messages will be broadcast by default
+            // to subscribed sockets.
+            io.socket.on('user', function messageReceived(message) {
+
+            switch (message.verb) {
+
+                // Handle user creation
+                case 'created':
+                addUser(message.data);
+                break;
+
+                // Handle a user changing their name
+                case 'updated':
+
+                // Get the user's old name by finding the <option> in the list with their ID
+                // and getting its text.
+                var oldName = $('#user-'+message.id).text();
+
+                // Update the name in the user select list
+                $('#user-'+message.id).text(message.data.name);
+
+                // If we have a private convo with them, update the name there and post a status message in the chat.
+                if ($('#private-username-'+message.id).length) {
+                    $('#private-username-'+message.id).html(message.data.name);
+                    postStatusMessage('private-messages-'+message.id,oldName+' has changed their name to '+message.data.name);
+                }
+
+                break;
+
+                // Handle user destruction
+                case 'destroyed':
+                removeUser(message.id);
+                break;
+
+                // Handle private messages.  Only sockets subscribed to the "message" context of a
+                // User instance will get this message--see the onConnect logic in config/sockets.js
+                // to see where a new user gets subscribed to their own "message" context
+                case 'messaged':
+                receivePrivateMessage(message.data);
+                break;
+
+                default:
+                break;
+            }
+
+            });
+
+            // Add a click handler for the "Update name" button, allowing the user to update their name.
+            // updateName() is defined in user.js.
+            $('#update-name').click(updateName);
+
+            // Add a click handler for the "Send private message" button
+            // startPrivateConversation() is defined in private_message.js.
+            $('#private-msg-button').click(startPrivateConversation);
+
+            // Add a click handler for the "Join room" button
+            // joinRoom() is defined in public_message.js.
+            $('#join-room').click(joinRoom);
+
+            // Add a click handler for the "New room" button
+            // newRoom() is defined in room.js.
+            $('#new-room').click(newRoom);
+
+            console.log('Socket is now connected!');
+
+            // When the socket disconnects, hide the UI until we reconnect.
+            io.socket.on('disconnect', function() {
+            // Hide the main UI
+            $('#main').hide();
+            $('#disconnect').show();
+            });
+
+        });
+
+
+
+
+
         // var mylist = $.jStorage.get("chatlist");
         // if(!mylist || mylist == null)
         //     $rootScope.chatlist = [];
@@ -763,50 +1102,59 @@ myApp.controller('HomeCtrl', function ($scope,$rootScope, TemplateService, Navig
             $rootScope.msgSelected = true;
             $rootScope.chatmsgid = id;
             $rootScope.chatmsg = value;
-            if(answer == "")
+            if($rootScope.agentconnected)
             {
-                if(value != "")
-                {
-                    $rootScope.autocompletelist = [];
-                    $rootScope.chatlist.push({id:"id",msg:value,position:"right",curTime: $rootScope.getDatetime()});
-                    str2 = value;
-                    str2 = str2.toLowerCase();
-                    if (str2.includes("calculator") || str2.includes("td cal") || str2.includes("rd cal") || str2.includes("calc") )
-                    {
-                        $rootScope.showTdcal = false;
-                        $rootScope.showRdcal = false;
-                        $rootScope.showSTD = false;
-                        $rootScope.showCTD = false;
-                        var automsg = {  type : "SYS_CALC"};
-                        $rootScope.chatlist.push({id:id,msg:automsg,position:"left",curTime: $rootScope.getDatetime()});
-                        $rootScope.showMsgLoader=false;
-                        $rootScope.msgSelected = false;
-                        $timeout(function(){
-                            $rootScope.autocompletelist = [];
-                        },1000);
-                        
-                    }
-                    else
-                    {
-                        $rootScope.getSystemMsg(id,value);
-                        $rootScope.msgSelected = false;
-                        $rootScope.showMsgLoader=true;
-                    }
-                    
-                    $.jStorage.set("chatlist",$rootScope.chatlist);
-                    
-                    
-                    $rootScope.chatText = "";
-                    $rootScope.autolistvalue = "";
-                    $rootScope.autolistid = "";
-                    $rootScope.chatmsg = "";
-                    $rootScope.chatmsgid = "";
-                    $rootScope.autocompletelist = [];
-                    $rootScope.scrollChatWindow();    
-                }
+                $rootScope.autocompletelist = [];
+                $rootScope.chatlist.push({id:"id",msg:value,position:"right",curTime: $rootScope.getDatetime()});
+                $rootScope.sendMsgtoagent(value);
             }
             else {
-                $rootScope.pushAutoMsg(id,value,answer);
+
+                if(answer == "")
+                {
+                    if(value != "")
+                    {
+                        $rootScope.autocompletelist = [];
+                        $rootScope.chatlist.push({id:"id",msg:value,position:"right",curTime: $rootScope.getDatetime()});
+                        str2 = value;
+                        str2 = str2.toLowerCase();
+                        if (str2.includes("calculator") || str2.includes("td cal") || str2.includes("rd cal") || str2.includes("calc") )
+                        {
+                            $rootScope.showTdcal = false;
+                            $rootScope.showRdcal = false;
+                            $rootScope.showSTD = false;
+                            $rootScope.showCTD = false;
+                            var automsg = {  type : "SYS_CALC"};
+                            $rootScope.chatlist.push({id:id,msg:automsg,position:"left",curTime: $rootScope.getDatetime()});
+                            $rootScope.showMsgLoader=false;
+                            $rootScope.msgSelected = false;
+                            $timeout(function(){
+                                $rootScope.autocompletelist = [];
+                            },1000);
+                            
+                        }
+                        else
+                        {
+                            $rootScope.getSystemMsg(id,value);
+                            $rootScope.msgSelected = false;
+                            $rootScope.showMsgLoader=true;
+                        }
+                        
+                        $.jStorage.set("chatlist",$rootScope.chatlist);
+                        
+                        
+                        $rootScope.chatText = "";
+                        $rootScope.autolistvalue = "";
+                        $rootScope.autolistid = "";
+                        $rootScope.chatmsg = "";
+                        $rootScope.chatmsgid = "";
+                        $rootScope.autocompletelist = [];
+                        $rootScope.scrollChatWindow();    
+                    }
+                }
+                else {
+                    $rootScope.pushAutoMsg(id,value,answer);
+                }
             }
         };
         
@@ -1439,84 +1787,33 @@ myApp.controller('HomeCtrl', function ($scope,$rootScope, TemplateService, Navig
                     var msg = {Text:"Sorry I could not understand",type:"SYS_EMPTY_RES"};
                     $rootScope.pushSystemMsg(0,msg); 
                     $rootScope.showMsgLoader=false;
-                    // apiService.sendchat({}, function (data) {
-                    //     console.log(data);
-                    // });
+                    $rootScope.agentconnected = true;
+                    if($rootScope.agentconnected)
+                    {
+                        $rootScope.sendMsgtoagent(sess2.Text);
+                    }
                     
-                    // io.socket.on('user', function messageReceived(message) {
-
-                    //     switch (message.verb) {
-
-                    //         // Handle user creation
-                    //         case 'created':
-                    //             addUser(message.data);
-                    //         break;
-
-                    //         // Handle a user changing their name
-                    //         case 'updated':
-
-                    //         // Get the user's old name by finding the <option> in the list with their ID
-                    //         // and getting its text.
-                    //             var oldName = $('#user-'+message.id).text();
-
-                    //         // Update the name in the user select list
-                    //             $('#user-'+message.id).text(message.data.name);
-
-                    //             // If we have a private convo with them, update the name there and post a status message in the chat.
-                    //             if ($('#private-username-'+message.id).length) {
-                    //                 $('#private-username-'+message.id).html(message.data.name);
-                    //                 postStatusMessage('private-messages-'+message.id,oldName+' has changed their name to '+message.data.name);
-                    //             }
-
-                    //         break;
-
-                    //         // Handle user destruction
-                    //         case 'destroyed':
-                    //             removeUser(message.id);
-                    //         break;
-
-                    //         // Handle private messages.  Only sockets subscribed to the "message" context of a
-                    //         // User instance will get this message--see the onConnect logic in config/sockets.js
-                    //         // to see where a new user gets subscribed to their own "message" context
-                    //         case 'messaged':
-                    //             receivePrivateMessage(message.data);
-                    //         break;
-
-                    //         default:
-                    //         break;
-                    //     }
-
-                    //     });
-
-                    //     // Add a click handler for the "Update name" button, allowing the user to update their name.
-                    //     // updateName() is defined in user.js.
-                    //     //$('#update-name').click(updateName);
-
-                    //     // Add a click handler for the "Send private message" button
-                    //     // startPrivateConversation() is defined in private_message.js.
-                    //     //$('#private-msg-button').click(startPrivateConversation);
-
-                    //     // Add a click handler for the "Join room" button
-                    //     // joinRoom() is defined in public_message.js.
-                    //     //$('#join-room').click(joinRoom);
-
-                    //     // Add a click handler for the "New room" button
-                    //     // newRoom() is defined in room.js.
-                    //     //$('#new-room').click(newRoom);
-
-                    //     console.log('Socket is now connected!');
-
-                    //     // When the socket disconnects, hide the UI until we reconnect.
-                    //     io.socket.on('disconnect', function() {
-                    //     // Hide the main UI
-                    //     $('#main').hide();
-                    //     $('#disconnect').show();
-                    //     });
                 });
             //});
             $rootScope.autocompletelist = [];
         };
-        
+        $rootScope.sendMsgtoagent = function(msg) {
+            io.sails.url = 'http://localhost:1337';
+            
+            //io.sails.connect([io.sails.url]);
+            //sess2.Text
+            // var sockets = io.sails.sockets.clients();
+            // console.log(sockets);
+            
+            // io.socket.get('/chat/addconv',{}, function (resData, jwres){
+            // // ...
+            // });
+            //createPrivateConversationRoom({name:"User #10", id:10});
+            addMessageToConversation(window.me.id, 10, msg);
+
+            // Send the message
+            io.socket.post('/chat/private', {to: 10, msg: msg});
+        };
         $rootScope.Speaktext = function() {
             //console.log(text);
             var _iOS9voices = [

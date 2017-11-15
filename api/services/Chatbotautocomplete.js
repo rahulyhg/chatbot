@@ -35,6 +35,7 @@ var exports = _.cloneDeep(require("sails-wohlig-service")(schema, "chatbotautoco
 //{ $regex: searchstring, $options: 'i' }
 var model = {
     getautocomplete: function (data, callback) {
+        
         //console.log("data", data)
         searchstring=data.string;
         searchstring = "/"+searchstring+"/";

@@ -251,6 +251,17 @@ myApp.factory('apiService', function ($http, $q, $timeout,CsrfTokenService,$http
             
             
         },
+        Feed:function(formData,callback){
+            //console.log(formData);
+            return    $http({
+                //url:adminurl+'out/'+formData.user_id+"/",
+                url: adminUrl3 + 'Feed',
+                method: 'POST',
+                data:(formData),
+            });
+            
+            
+        },
     };
     //return responsedata;
 });

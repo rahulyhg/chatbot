@@ -87,7 +87,9 @@ myApp.run(['$http','$cookies','beforeUnload','$document','$rootScope','Idle','bo
     //$http.defaults.xsrfCookieName = 'csrftoken';
     //$http.defaults.xsrfHeaderName = 'X-CSRFToken';
     //$http.defaults.headers.post['X-CSRFToken'] = $cookies.get('csrftoken');
-    
+
+
+
      //return function(scope, elm, attrs) {
     if ( bowser.msie )
         $rootScope.browser = "msie";
@@ -320,16 +322,11 @@ myApp.run(['$http','$cookies','beforeUnload','$document','$rootScope','Idle','bo
         //console.clear();
         //document.querySelector('#devtool-status').innerHTML = checkStatus;
     }, 1000);
-     /**
- * app.js
- *
- * Front-end code and event handling for sailsChat
- *
- */
+    io.sails.url = 'http://localhost:1337';
+    io.sails.useCORSRouteToGetCookie = false
 
-
-
-
+    
+    
     
 
 }])

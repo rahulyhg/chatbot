@@ -36,8 +36,10 @@ mongoose.connect('mongodb://localhost:27017/' + database, {
 // Ensure a "sails" can be located:
 (function () {
     var sails;
+    
     try {
         sails = require('sails');
+        
     } catch (e) {
         console.error('To run an app using `node app.js`, you usually need to have a version of `sails` installed in the same directory as your app.');
         console.error('To do that, run `npm install sails`');
@@ -67,5 +69,6 @@ mongoose.connect('mongodb://localhost:27017/' + database, {
     }
 
     // Start server
+     
     sails.lift(rc('sails'));
 })();

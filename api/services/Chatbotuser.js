@@ -111,6 +111,8 @@ var model = {
                             found = found.toObject();
                             var r = result.toObject();
                             found.sessionid = r._id;
+                      
+
                             PythonShell.run(pythonpath+'my_script.py', { mode: 'json ',args:[data]}, function (err, results) { 
                                 //found.set('sessionid', result._id)
                                 
