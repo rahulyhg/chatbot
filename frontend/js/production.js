@@ -69763,10 +69763,13 @@ myApp.controller('HomeCtrl', function ($scope,$rootScope, TemplateService, Navig
             $rootScope.tabvalue.element_values=[];
             $rootScope.tabvalue.elements = ele;
             $rootScope.tabvalue.element_values=ele_val;
-            console.log("process");
-            $("#tab_data .nav-tabs li").first().addClass("active");
-			$("#tab_data .tab-content .tab-pane").first().addClass("active");
             $rootScope.selectTabIndex = 0;
+			$timeout(function(){
+				$("#tab_data .nav-tabs li").first().addClass("active");
+				$("#tab_data .tab-content .tab-pane").first().addClass("active");
+			},4000);
+            
+            
             
             // if(data.node_data)
             // {
@@ -69871,7 +69874,11 @@ myApp.controller('HomeCtrl', function ($scope,$rootScope, TemplateService, Navig
             $rootScope.element_values2 = data.tiledlist[0].Process;
             $rootScope.element_values2.dtstage = dtstage;
             $rootScope.selectTabIndex = 0;
-            // else
+            $timeout(function(){
+				$("#tab_data .nav-tabs li").first().addClass("active");
+				$("#tab_data .tab-content .tab-pane").first().addClass("active");
+			},4000);
+			// else
             // {
             //     var ele = new Array("Process");
             //     var ele_val = new Array(data.tiledlist[0],data.tiledlist[0]);
