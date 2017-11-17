@@ -67,5 +67,5 @@ module.exports = [
   // 'frontend/js/room.js',
   // 'frontend/js/user.js',
   // 'frontend/js/util.js',
-  // 'frontend/js/wow.min.js',
+  'frontend/js/wow.min.js',
 ];
