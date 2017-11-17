@@ -65757,7 +65757,7 @@ myApp.config(function ($stateProvider, $urlRouterProvider, $httpProvider, $locat
     // for http request with session
     //$httpProvider.defaults.withCredentials = false;
     ttsProvider.setSettings({ key: '5a1cc1a178c24b89ba23fd6e3b1bb6c5' });
-    //$qProvider.errorOnUnhandledRejections(false);
+    $qProvider.errorOnUnhandledRejections(false);
     IdleProvider.idle(10*60); // 10 minutes idle
     $stateProvider
         .state('home', {
@@ -65815,7 +65815,9 @@ myApp.run(['$http','$cookies','beforeUnload','$document','$rootScope','Idle','bo
     //$http.defaults.xsrfCookieName = 'csrftoken';
     //$http.defaults.xsrfHeaderName = 'X-CSRFToken';
     //$http.defaults.headers.post['X-CSRFToken'] = $cookies.get('csrftoken');
-    
+
+
+
      //return function(scope, elm, attrs) {
     if ( bowser.msie )
         $rootScope.browser = "msie";
@@ -65838,7 +65840,7 @@ myApp.run(['$http','$cookies','beforeUnload','$document','$rootScope','Idle','bo
     
     $rootScope.transcript="";
     $rootScope.tabvalue={};
-    $rotated = false;
+    //$rotated = false;
 
     $(document).on('click', '.chat-body .changedthbg', function(){ 
         var stage = $(this).attr("data-bgstage");
@@ -66048,16 +66050,13 @@ myApp.run(['$http','$cookies','beforeUnload','$document','$rootScope','Idle','bo
         //console.clear();
         //document.querySelector('#devtool-status').innerHTML = checkStatus;
     }, 1000);
-     /**
- * app.js
- *
- * Front-end code and event handling for sailsChat
- *
- */
-
-
-
-
+    // io.sails.url = 'http://localhost:1337';
+    // //io.sails.autoConnect = false;
+    // io.sails.useCORSRouteToGetCookie = false;
+    angular.element(document).ready(function() {
+        new WOW().init();
+    });
+    
     
 
 }])
@@ -67985,6 +67984,17 @@ myApp.factory('apiService', function ($http, $q, $timeout,CsrfTokenService,$http
             
             
         },
+        Feed:function(formData,callback){
+            //console.log(formData);
+            return    $http({
+                //url:adminurl+'out/'+formData.user_id+"/",
+                url: adminUrl3 + 'Feed',
+                method: 'POST',
+                data:(formData),
+            });
+            
+            
+        },
     };
     //return responsedata;
 });
@@ -68036,7 +68046,9 @@ myApp.controller('HomeCtrl', function ($scope,$rootScope, TemplateService, Navig
             'http://flexslider.woothemes.com/images/kitchen_adventurer_donut.jpg',
             'http://flexslider.woothemes.com/images/kitchen_adventurer_caramel.jpg'
         ];
-        
+        angular.element(document).ready(function() {
+            new WOW().init();
+        });
         angular.element(document).ready(function () {
             apiService.get_session({}).then( function (response) {
                 $cookies.put("csrftoken",response.data.csrf_token);
@@ -68081,6 +68093,7 @@ myApp.controller('HomeCtrl', function ($scope,$rootScope, TemplateService, Navig
                 $rootScope.minimizeChatwindow();
             }
         };
+        
     })
     myApp.controller('DashboardCtrl', function ($scope,$rootScope, TemplateService, NavigationService,CsrfTokenService,Menuservice, $timeout,$http,apiService,$state) {
         $scope.template = TemplateService.getHTML("content/dashboard.html");
@@ -68175,7 +68188,11 @@ myApp.controller('HomeCtrl', function ($scope,$rootScope, TemplateService, Navig
                         if(callback.data.data.accessrole == 4)
                             $state.go("agentdashboard");
                         else
+                        {
+                            //io.socket.get('/chat/addconv');
+                            
                             $state.go("dashboard");
+                        }
                     }
                     else if(callback.data.error.message == -1)
                         $scope.loginerror = -1;
@@ -68214,17 +68231,341 @@ myApp.controller('HomeCtrl', function ($scope,$rootScope, TemplateService, Navig
             })
         };
     })
-    .controller('AgentdashboardCtrl', function ($scope, $rootScope,TemplateService, NavigationService,CsrfTokenService, $timeout,$http,apiService,$state,$uibModal,Menuservice,tts,$cookies,$sce) {
+    .controller('AgentdashboardCtrl', function ($scope, $rootScope,$resource,TemplateService, NavigationService,CsrfTokenService, $timeout,$http,apiService,$state,$uibModal,Menuservice,tts,$cookies,$sce,$location) {
         $scope.template = TemplateService.getHTML("content/agentdashboard.html");
         TemplateService.title = "Home"; //This is the Title of the Website
         $scope.navigation = NavigationService.getNavigation();
         $scope.uipage = "agentdashboard";
         $rootScope.access_role = $.jStorage.get("access_role");
+        $scope.firstreload = false;
+        if($.jStorage.get("firstreload"))
+            $scope.firstreload = true;
+        else
+        {
+            $.jStorage.set("firstreload",true);
+            location.reload();
+        }
+        // io.sails.url = 'http://localhost:1337';
+        
+        // function startPrivateConversation() {
+
+        // // Get the user list
+        // var select = $('#users-list');
+
+        // // Make sure a user is selected in the list
+        // if (select.val() === null) {
+        //     return alert('Please select a user to send a private message to.');
+        // }
+
+        // // Get the recipient's name from the text of the option in the <select>
+        // var recipientName = $('option:selected', select).text();
+        // var recipientId = select.val();
+
+        // // Prompt for a message to send
+        // var message = prompt("Enter a message to send to "+recipientName);
+
+        // // Create the UI for the room if it doesn't exist
+        // createPrivateConversationRoom({name:recipientName, id:recipientId});
+
+        // // Add the message to the room
+        // addMessageToConversation(window.me.id, recipientId, message);
+
+        // // Send the private message
+        // io.socket.post('/chat/private', {to:recipientId, msg: message});
+
+        // }
+
+        // // Create the HTML to hold a private conversation between two users
+        // function createPrivateConversationRoom(penPal) {
+
+        // // Get the ID of the HTML element for this private convo, if there is one
+        // var roomName = 'private-room-'+penPal.id;
+
+        // // If HTML for the room already exists, return.
+        // if ($('#'+roomName).length) {
+        //     return;
+        // }
+
+        // var penPalName = penPal.name == "unknown" ? ("User #"+penPal.id) : penPal.name;
+
+        // // Create a new div to contain the room
+        // var roomDiv = $('<div id="'+roomName+'"></div>');
+
+        // // Create the HTML for the room
+        // var roomHTML = '<h2>Private conversation with <span id="private-username-'+penPal.id+'">'+penPalName+'</span></h2>\n' +
+        //                 '<div id="private-messages-'+penPal.id+'" style="width: 50%; height: 150px; overflow: auto; border: solid 1px #666; padding: 5px; margin: 5px"></div>'+
+        //                 '<input id="private-message-'+penPal.id+'"/> <button id="private-button-'+penPal.id+'">Send message</button">';
+
+        // roomDiv.html(roomHTML);
+
+        // // Add the room to the private conversation area
+        // $('#convos').append(roomDiv);
+
+        // // Hook up the "send message" button
+        // $('#private-button-'+penPal.id).click(onClickSendPrivateMessage);
+
+        // }
+
+        // // Callback for when the user clicks the "Send message" button in a private conversation
+        // function onClickSendPrivateMessage(e) {
+
+        // // Get the button that was pressed
+        // var button = e.currentTarget;
+
+        // // Get the ID of the user we want to send to
+        // var recipientId = button.id.split('-')[2];
+
+        // // Get the message to send
+        // var message = $('#private-message-'+recipientId).val();
+        // $('#private-message-'+recipientId).val("");
+
+        // // Add this message to the room
+        // addMessageToConversation(window.me.id, recipientId, message);
+
+        // // Send the message
+        // io.socket.post('/chat/private', {to: recipientId, msg: message});
+
+        // }
+
+        // // Add HTML for a new message in a private conversation
+        // function addMessageToConversation(senderId, recipientId, message) {
+
+        //     var fromMe = senderId == window.me.id;
+        //     var roomName = 'private-messages-' + (fromMe ? recipientId : senderId);
+        //     var senderName = fromMe ? "Me" : $('#private-username-'+senderId).html();
+        //     var justify = fromMe ? 'right' : 'left';
+
+        //     var div = $('<div style="text-align:'+justify+'"></div>');
+        //     div.html('<strong>'+senderName+'</strong>: '+message);
+        //     $('#'+roomName).append(div);
+
+        // }
+
+        // // Handle an incoming private message from the server.
+        // function receivePrivateMessage(data) {
+
+        //     var sender = data.from;
+
+        //     // Create a room for this message if one doesn't exist
+        //      createPrivateConversationRoom(sender);
+
+        //     // Add a message to the room
+        //     //addMessageToConversation(sender.id, window.me.id, data.msg);
+        //     //$(".chat").append("<li class='left clearfix'><span class='chat-img pull-left'><img ng-src='img/Tenali.png' alt='BOT' class='img-circle  doneLoading' src='img/Tenali.png'></span><div class='chat-body'><p>"+data.msg+" </p></div></li>");
+        //     console.log(data,"recvdmsg");
+        //     mymsg = {Text:data.msg,type:"SYS_FIRST"};
+        //     //$rootScope.chatlist.push({id:"id",msg:mymsg,position:"left",curTime: $rootScope.getDatetime()});
+        //     $rootScope.pushSystemMsg(0,mymsg);  
+        // }
+        // window.me={};
+        // io.socket.on('connect', function socketConnected() {
+
+        //     // Show the main UI
+        //     $('#disconnect').hide();
+        //     $('#main').show();
+
+        //     // Announce that a new user is online--in this somewhat contrived example,
+        //     // this also causes the CREATION of the user, so each window/tab is a new user.
+        //     userdata = {sid:$.jStorage.get("id"),name:$.jStorage.get("fname")+' '+$.jStorage.get("lname"),access_role:$.jStorage.get("access_role")};
+        //     io.socket.get("/user/announce",{query:userdata}, function(data){
+        //         //console.log(data);
+        //         userdata.socketId = data.socketId;
+        //         userdata.id = data.id;
+        //         $.jStorage.set("socketId",userdata.socketId);
+        //         $.jStorage.set("sid",userdata.sid);
+        //         window.me = userdata;
+        //         updateMyName(userdata);
+
+        //         // Get the current list of users online.  This will also subscribe us to
+        //         // update and destroy events for the individual users.
+        //         io.socket.get('/user', updateUserList);
+
+        //         // Get the current list of chat rooms. This will also subscribe us to
+        //         // update and destroy events for the individual rooms.
+        //         io.socket.get('/room', updateRoomList);
+
+        //     });
+            
+        //     // Listen for the "room" event, which will be broadcast when something
+        //     // happens to a room we're subscribed to.  See the "autosubscribe" attribute
+        //     // of the Room model to see which messages will be broadcast by default
+        //     // to subscribed sockets.
+        //     io.socket.on('room', function messageReceived(message) {
+
+        //         switch (message.verb) {
+
+        //             // Handle room creation
+        //             case 'created':
+        //             addRoom(message.data);
+        //             break;
+
+        //             // Handle a user joining a room
+        //             case 'addedTo':
+        //             // Post a message in the room
+        //             postStatusMessage('room-messages-'+message.id, $('#user-'+message.addedId).text()+' has joined');
+        //             // Update the room user count
+        //             increaseRoomCount(message.id);
+        //             break;
+
+        //             // Handle a user leaving a room
+        //             case 'removedFrom':
+        //             // Post a message in the room
+        //             postStatusMessage('room-messages-'+message.id, $('#user-'+message.removedId).text()+' has left');
+        //             // Update the room user count
+        //             decreaseRoomCount(message.id);
+        //             break;
+
+        //             // Handle a room being destroyed
+        //             case 'destroyed':
+        //             removeRoom(message.id);
+        //             break;
+
+        //             // Handle a public message in a room.  Only sockets subscribed to the "message" context of a
+        //             // Room instance will get this message--see the "join" and "leave" methods of RoomController.js
+        //             // to see where a socket gets subscribed to a Room instance's "message" context.
+        //             case 'messaged':
+        //             receiveRoomMessage(message.data);
+        //             break;
+
+        //             default:
+        //             break;
+
+        //         }
+
+        //     });
+
+        //     // Listen for the "user" event, which will be broadcast when something
+        //     // happens to a user we're subscribed to.  See the "autosubscribe" attribute
+        //     // of the User model to see which messages will be broadcast by default
+        //     // to subscribed sockets.
+        //     io.socket.on('user', function messageReceived(message) {
+
+        //         switch (message.verb) {
+
+        //             // Handle user creation
+        //             case 'created':
+        //             addUser(message.data);
+        //             break;
+
+        //             // Handle a user changing their name
+        //             case 'updated':
+
+        //             // Get the user's old name by finding the <option> in the list with their ID
+        //             // and getting its text.
+        //             var oldName = $('#user-'+message.id).text();
+
+        //             // Update the name in the user select list
+        //             $('#user-'+message.id).text(message.data.name);
+
+        //             // If we have a private convo with them, update the name there and post a status message in the chat.
+        //             if ($('#private-username-'+message.id).length) {
+        //                 $('#private-username-'+message.id).html(message.data.name);
+        //                 postStatusMessage('private-messages-'+message.id,oldName+' has changed their name to '+message.data.name);
+        //             }
+
+        //             break;
+
+        //             // Handle user destruction
+        //             case 'destroyed':
+        //             removeUser(message.id);
+        //             break;
+
+        //             // Handle private messages.  Only sockets subscribed to the "message" context of a
+        //             // User instance will get this message--see the onConnect logic in config/sockets.js
+        //             // to see where a new user gets subscribed to their own "message" context
+        //             case 'messaged':
+        //             receivePrivateMessage(message.data);
+        //             break;
+
+        //             default:
+        //             break;
+        //         }
+
+        //     });
+
+        //     // Add a click handler for the "Update name" button, allowing the user to update their name.
+        //     // updateName() is defined in user.js.
+        //     $('#update-name').click(updateName);
+
+        //     // Add a click handler for the "Send private message" button
+        //     // startPrivateConversation() is defined in private_message.js.
+        //     $('#private-msg-button').click(startPrivateConversation);
+
+        //     // Add a click handler for the "Join room" button
+        //     // joinRoom() is defined in public_message.js.
+        //     $('#join-room').click(joinRoom);
+
+        //     // Add a click handler for the "New room" button
+        //     // newRoom() is defined in room.js.
+        //     $('#new-room').click(newRoom);
+
+        //     console.log('Socket is now connected!');
+
+        //     // When the socket disconnects, hide the UI until we reconnect.
+        //     io.socket.on('disconnect', function() {
+        //     // Hide the main UI
+        //         $('#main').hide();
+        //         $('#disconnect').show();
+        //     });
+
+        // });
+
+
+
+
+
+
+
+
+
+        //io('http://localhost:8080');
+        // var CONNECTION_METADATA_PARAMS = {
+        //     version: '__sails_io_sdk_version',
+        //     platform: '__sails_io_sdk_platform',
+        //     language: '__sails_io_sdk_language'
+        // };
+
+        // var SDK_INFO = {
+        //     version: '0.11.0',
+        //     platform: typeof module === 'undefined' ? 'browser' : 'node',
+        //     language: 'javascript'
+        // };
+
+        // SDK_INFO.versionString =
+        //     CONNECTION_METADATA_PARAMS.version + '=' + SDK_INFO.version + '&' +
+        //     CONNECTION_METADATA_PARAMS.platform + '=' + SDK_INFO.platform + '&' +
+        //     CONNECTION_METADATA_PARAMS.language + '=' + SDK_INFO.language;
+
+        // var socket = io.connect({
+        //     query: SDK_INFO.versionString
+        // });
         //io.sails.connect([io.sails.url]);
+        
         // io.sails.connect('http://localhost:80');
         // var fullname = $.jStorage.get("fname")+" "+$.jStorage.get("lname");
         //addUser({id:$.jStorage.get("id"),name:fullname});
-                    
+        /**
+     * app.js
+     *
+     * Front-end code and event handling for sailsChat
+     *
+     */
+    // io.socket.get('/chat/addconv',{}, function (resData, jwres){
+    // // ...
+    // });
+        //$scope.feedEntries = $resource('/Feed').query();
+        // apiService.Feed({}).then(function (callback){
+        //     // io.socket.get('api/Feed/subscribe', function(data, jwr) {
+        //     //     io.socket.on('new_entry', function(entry) {
+        //     //         $timeout(function() {
+        //     //             $scope.feedEntries.unshift(entry);
+        //     //         });
+        //     //     });
+        //     // });
+        //     io.socket.on("tweet", function(data){})
+        // });
+        
+    
 
 
     })
@@ -68481,7 +68822,7 @@ myApp.controller('HomeCtrl', function ($scope,$rootScope, TemplateService, Navig
         };
     
 
-})
+    })
     .controller('ChatCtrl', function ($scope, $rootScope,TemplateService, NavigationService,CsrfTokenService, $timeout,$http,apiService,$state,$uibModal,Menuservice,tts,$cookies,$sce) {
         $rootScope.contentobj = [];
         $rootScope.autocompletelist = [];
@@ -68497,6 +68838,299 @@ myApp.controller('HomeCtrl', function ($scope,$rootScope, TemplateService, Navig
         $rootScope.showRdcal = false;
         $rootScope.showSTD = false;
         $rootScope.showCTD = false;
+        $rootScope.agentconnected = false;
+        $rootScope.lastagent ="";
+        if($.jStorage.get("lastagent"))
+            $rootScope.lastagent = $.jStorage.get("lastagent");
+        
+        
+        
+        
+        
+        
+        // //Privatemsg
+        // // Start a private conversation with another user
+        // function startPrivateConversation() {
+
+        // // Get the user list
+        // var select = $('#users-list');
+
+        // // Make sure a user is selected in the list
+        // if (select.val() === null) {
+        //     return alert('Please select a user to send a private message to.');
+        // }
+
+        // // Get the recipient's name from the text of the option in the <select>
+        // var recipientName = $('option:selected', select).text();
+        // var recipientId = select.val();
+
+        // // Prompt for a message to send
+        // var message = prompt("Enter a message to send to "+recipientName);
+
+        // // Create the UI for the room if it doesn't exist
+        // createPrivateConversationRoom({name:recipientName, id:recipientId});
+
+        // // Add the message to the room
+        // addMessageToConversation(window.me.id, recipientId, message);
+
+        // // Send the private message
+        // io.socket.post('/chat/private', {to:recipientId, msg: message});
+
+        // }
+
+        // // Create the HTML to hold a private conversation between two users
+        // function createPrivateConversationRoom(penPal) {
+
+        // // Get the ID of the HTML element for this private convo, if there is one
+        // var roomName = 'private-room-'+penPal.id;
+
+        // // If HTML for the room already exists, return.
+        // if ($('#'+roomName).length) {
+        //     return;
+        // }
+
+        // var penPalName = penPal.name == "unknown" ? ("User #"+penPal.id) : penPal.name;
+
+        // // Create a new div to contain the room
+        // var roomDiv = $('<div id="'+roomName+'"></div>');
+
+        // // Create the HTML for the room
+        // var roomHTML = '<h2>Private conversation with <span id="private-username-'+penPal.id+'">'+penPalName+'</span></h2>\n' +
+        //                 '<div id="private-messages-'+penPal.id+'" style="width: 50%; height: 150px; overflow: auto; border: solid 1px #666; padding: 5px; margin: 5px"></div>'+
+        //                 '<input id="private-message-'+penPal.id+'"/> <button id="private-button-'+penPal.id+'">Send message</button">';
+
+        // roomDiv.html(roomHTML);
+
+        // // Add the room to the private conversation area
+        // $('#convos').append(roomDiv);
+
+        // // Hook up the "send message" button
+        // $('#private-button-'+penPal.id).click(onClickSendPrivateMessage);
+
+        // }
+
+        // // Callback for when the user clicks the "Send message" button in a private conversation
+        // function onClickSendPrivateMessage(e) {
+
+        // // Get the button that was pressed
+        // var button = e.currentTarget;
+
+        // // Get the ID of the user we want to send to
+        // var recipientId = button.id.split('-')[2];
+
+        // // Get the message to send
+        // var message = $('#private-message-'+recipientId).val();
+        // $('#private-message-'+recipientId).val("");
+
+        // // Add this message to the room
+        // addMessageToConversation(window.me.id, recipientId, message);
+
+        // // Send the message
+        // io.socket.post('/chat/private', {to: recipientId, msg: message});
+
+        // }
+
+        // // Add HTML for a new message in a private conversation
+        // function addMessageToConversation(senderId, recipientId, message) {
+
+        //     var fromMe = senderId == window.me.id;
+        //     var roomName = 'private-messages-' + (fromMe ? recipientId : senderId);
+        //     var senderName = fromMe ? "Me" : $('#private-username-'+senderId).html();
+        //     var justify = fromMe ? 'right' : 'left';
+
+        //     var div = $('<div style="text-align:'+justify+'"></div>');
+        //     div.html('<strong>'+senderName+'</strong>: '+message);
+        //     $('#'+roomName).append(div);
+
+        // }
+
+        // // Handle an incoming private message from the server.
+        // function receivePrivateMessage(data) {
+
+        //     var sender = data.from;
+
+        //     // Create a room for this message if one doesn't exist
+        //      createPrivateConversationRoom(sender);
+
+        //     // Add a message to the room
+        //     //addMessageToConversation(sender.id, window.me.id, data.msg);
+        //     //$(".chat").append("<li class='left clearfix'><span class='chat-img pull-left'><img ng-src='img/Tenali.png' alt='BOT' class='img-circle  doneLoading' src='img/Tenali.png'></span><div class='chat-body'><p>"+data.msg+" </p></div></li>");
+        //     console.log(data,"recvdmsg");
+        //     mymsg = {Text:data.msg,type:"SYS_FIRST"};
+        //     //$rootScope.chatlist.push({id:"id",msg:mymsg,position:"left",curTime: $rootScope.getDatetime()});
+        //     $rootScope.pushSystemMsg(0,mymsg);  
+        // }
+
+        // window.me = {};
+        // console.log($.jStorage.get("notloggedin"));
+        // if(!$.jStorage.get("notloggedin"))
+        // {
+        //     //Chatapp
+        //         /**
+        //      * app.js
+        //      *
+        //      * Front-end code and event handling for sailsChat
+        //      *
+        //      */
+
+            
+        //     // Attach a listener which fires when a connection is established:
+        //     io.socket.on('connect', function socketConnected() {
+
+        //         // Show the main UI
+        //         $('#disconnect').hide();
+        //         $('#main').show();
+
+        //         // Announce that a new user is online--in this somewhat contrived example,
+        //         // this also causes the CREATION of the user, so each window/tab is a new user.
+        //         userdata = {sid:$.jStorage.get("id"),name:$.jStorage.get("fname")+' '+$.jStorage.get("lname"),access_role:$.jStorage.get("access_role")};
+        //         io.socket.get("/user/announce",{query:userdata}, function(data){
+        //             //console.log(data);
+        //             userdata.socketId = data.socketId;
+        //             userdata.id = data.id;
+        //             $.jStorage.set("socketId",userdata.socketId);
+        //             $.jStorage.set("sid",userdata.sid);
+        //             window.me = userdata;
+        //             updateMyName(userdata);
+
+        //             // Get the current list of users online.  This will also subscribe us to
+        //             // update and destroy events for the individual users.
+        //             io.socket.get('/user', updateUserList);
+
+        //             // Get the current list of chat rooms. This will also subscribe us to
+        //             // update and destroy events for the individual rooms.
+        //             io.socket.get('/room', updateRoomList);
+
+        //         });
+                
+        //         // Listen for the "room" event, which will be broadcast when something
+        //         // happens to a room we're subscribed to.  See the "autosubscribe" attribute
+        //         // of the Room model to see which messages will be broadcast by default
+        //         // to subscribed sockets.
+        //         io.socket.on('room', function messageReceived(message) {
+
+        //             switch (message.verb) {
+
+        //                 // Handle room creation
+        //                 case 'created':
+        //                 addRoom(message.data);
+        //                 break;
+
+        //                 // Handle a user joining a room
+        //                 case 'addedTo':
+        //                 // Post a message in the room
+        //                 postStatusMessage('room-messages-'+message.id, $('#user-'+message.addedId).text()+' has joined');
+        //                 // Update the room user count
+        //                 increaseRoomCount(message.id);
+        //                 break;
+
+        //                 // Handle a user leaving a room
+        //                 case 'removedFrom':
+        //                 // Post a message in the room
+        //                 postStatusMessage('room-messages-'+message.id, $('#user-'+message.removedId).text()+' has left');
+        //                 // Update the room user count
+        //                 decreaseRoomCount(message.id);
+        //                 break;
+
+        //                 // Handle a room being destroyed
+        //                 case 'destroyed':
+        //                 removeRoom(message.id);
+        //                 break;
+
+        //                 // Handle a public message in a room.  Only sockets subscribed to the "message" context of a
+        //                 // Room instance will get this message--see the "join" and "leave" methods of RoomController.js
+        //                 // to see where a socket gets subscribed to a Room instance's "message" context.
+        //                 case 'messaged':
+        //                 receiveRoomMessage(message.data);
+        //                 break;
+
+        //                 default:
+        //                 break;
+
+        //             }
+
+        //         });
+
+        //         // Listen for the "user" event, which will be broadcast when something
+        //         // happens to a user we're subscribed to.  See the "autosubscribe" attribute
+        //         // of the User model to see which messages will be broadcast by default
+        //         // to subscribed sockets.
+        //         io.socket.on('user', function messageReceived(message) {
+
+        //             switch (message.verb) {
+
+        //                 // Handle user creation
+        //                 case 'created':
+        //                 addUser(message.data);
+        //                 break;
+
+        //                 // Handle a user changing their name
+        //                 case 'updated':
+
+        //                 // Get the user's old name by finding the <option> in the list with their ID
+        //                 // and getting its text.
+        //                 var oldName = $('#user-'+message.id).text();
+
+        //                 // Update the name in the user select list
+        //                 $('#user-'+message.id).text(message.data.name);
+
+        //                 // If we have a private convo with them, update the name there and post a status message in the chat.
+        //                 if ($('#private-username-'+message.id).length) {
+        //                     $('#private-username-'+message.id).html(message.data.name);
+        //                     postStatusMessage('private-messages-'+message.id,oldName+' has changed their name to '+message.data.name);
+        //                 }
+
+        //                 break;
+
+        //                 // Handle user destruction
+        //                 case 'destroyed':
+        //                 removeUser(message.id);
+        //                 break;
+
+        //                 // Handle private messages.  Only sockets subscribed to the "message" context of a
+        //                 // User instance will get this message--see the onConnect logic in config/sockets.js
+        //                 // to see where a new user gets subscribed to their own "message" context
+        //                 case 'messaged':
+        //                 receivePrivateMessage(message.data);
+        //                 break;
+
+        //                 default:
+        //                 break;
+        //             }
+
+        //         });
+
+        //         // Add a click handler for the "Update name" button, allowing the user to update their name.
+        //         // updateName() is defined in user.js.
+        //         $('#update-name').click(updateName);
+
+        //         // Add a click handler for the "Send private message" button
+        //         // startPrivateConversation() is defined in private_message.js.
+        //         $('#private-msg-button').click(startPrivateConversation);
+
+        //         // Add a click handler for the "Join room" button
+        //         // joinRoom() is defined in public_message.js.
+        //         $('#join-room').click(joinRoom);
+
+        //         // Add a click handler for the "New room" button
+        //         // newRoom() is defined in room.js.
+        //         $('#new-room').click(newRoom);
+
+        //         console.log('Socket is now connected!');
+
+        //         // When the socket disconnects, hide the UI until we reconnect.
+        //         io.socket.on('disconnect', function() {
+        //         // Hide the main UI
+        //             $('#main').hide();
+        //             $('#disconnect').show();
+        //         });
+
+        //     });
+        // }
+
+
+
+
         // var mylist = $.jStorage.get("chatlist");
         // if(!mylist || mylist == null)
         //     $rootScope.chatlist = [];
@@ -68786,50 +69420,59 @@ myApp.controller('HomeCtrl', function ($scope,$rootScope, TemplateService, Navig
             $rootScope.msgSelected = true;
             $rootScope.chatmsgid = id;
             $rootScope.chatmsg = value;
-            if(answer == "")
+            if($rootScope.agentconnected)
             {
-                if(value != "")
-                {
-                    $rootScope.autocompletelist = [];
-                    $rootScope.chatlist.push({id:"id",msg:value,position:"right",curTime: $rootScope.getDatetime()});
-                    str2 = value;
-                    str2 = str2.toLowerCase();
-                    if (str2.includes("calculator") || str2.includes("td cal") || str2.includes("rd cal") || str2.includes("calc") )
-                    {
-                        $rootScope.showTdcal = false;
-                        $rootScope.showRdcal = false;
-                        $rootScope.showSTD = false;
-                        $rootScope.showCTD = false;
-                        var automsg = {  type : "SYS_CALC"};
-                        $rootScope.chatlist.push({id:id,msg:automsg,position:"left",curTime: $rootScope.getDatetime()});
-                        $rootScope.showMsgLoader=false;
-                        $rootScope.msgSelected = false;
-                        $timeout(function(){
-                            $rootScope.autocompletelist = [];
-                        },1000);
-                        
-                    }
-                    else
-                    {
-                        $rootScope.getSystemMsg(id,value);
-                        $rootScope.msgSelected = false;
-                        $rootScope.showMsgLoader=true;
-                    }
-                    
-                    $.jStorage.set("chatlist",$rootScope.chatlist);
-                    
-                    
-                    $rootScope.chatText = "";
-                    $rootScope.autolistvalue = "";
-                    $rootScope.autolistid = "";
-                    $rootScope.chatmsg = "";
-                    $rootScope.chatmsgid = "";
-                    $rootScope.autocompletelist = [];
-                    $rootScope.scrollChatWindow();    
-                }
+                $rootScope.autocompletelist = [];
+                $rootScope.chatlist.push({id:"id",msg:value,position:"right",curTime: $rootScope.getDatetime()});
+                $rootScope.sendMsgtoagent(value);
             }
             else {
-                $rootScope.pushAutoMsg(id,value,answer);
+
+                if(answer == "")
+                {
+                    if(value != "")
+                    {
+                        $rootScope.autocompletelist = [];
+                        $rootScope.chatlist.push({id:"id",msg:value,position:"right",curTime: $rootScope.getDatetime()});
+                        str2 = value;
+                        str2 = str2.toLowerCase();
+                        if (str2.includes("calculator") || str2.includes("td cal") || str2.includes("rd cal") || str2.includes("calc") )
+                        {
+                            $rootScope.showTdcal = false;
+                            $rootScope.showRdcal = false;
+                            $rootScope.showSTD = false;
+                            $rootScope.showCTD = false;
+                            var automsg = {  type : "SYS_CALC"};
+                            $rootScope.chatlist.push({id:id,msg:automsg,position:"left",curTime: $rootScope.getDatetime()});
+                            $rootScope.showMsgLoader=false;
+                            $rootScope.msgSelected = false;
+                            $timeout(function(){
+                                $rootScope.autocompletelist = [];
+                            },1000);
+                            
+                        }
+                        else
+                        {
+                            $rootScope.getSystemMsg(id,value);
+                            $rootScope.msgSelected = false;
+                            $rootScope.showMsgLoader=true;
+                        }
+                        
+                        $.jStorage.set("chatlist",$rootScope.chatlist);
+                        
+                        
+                        $rootScope.chatText = "";
+                        $rootScope.autolistvalue = "";
+                        $rootScope.autolistid = "";
+                        $rootScope.chatmsg = "";
+                        $rootScope.chatmsgid = "";
+                        $rootScope.autocompletelist = [];
+                        $rootScope.scrollChatWindow();    
+                    }
+                }
+                else {
+                    $rootScope.pushAutoMsg(id,value,answer);
+                }
             }
         };
         
@@ -69070,7 +69713,7 @@ myApp.controller('HomeCtrl', function ($scope,$rootScope, TemplateService, Navig
             var ele_val = new Array(data.tiledlist[0]);
             console.log(data.tiledlist[0].Process);
             $rootScope.showMsgLoader = false; 
-            $rootScope.selectTabIndex = 0;
+            
             $rootScope.contentobj = [];
             if(data.tiledlist[0].Quik_Tip)
             {
@@ -69116,9 +69759,14 @@ myApp.controller('HomeCtrl', function ($scope,$rootScope, TemplateService, Navig
                 // ele_val.push(data.tiledlist[0]);
                 $rootScope.tabHeight = window.innerHeight-120-53;
             }
-            
+            $rootScope.tabvalue.elements = [];
+            $rootScope.tabvalue.element_values=[];
             $rootScope.tabvalue.elements = ele;
             $rootScope.tabvalue.element_values=ele_val;
+            console.log("process");
+            $(".nav.nav-tabs li").first().addClass('active');
+            $rootScope.selectTabIndex = 0;
+            
             // if(data.node_data)
             // {
             //     //var node_data = {"node_data": {"elements": ["Guidelines", "Shifting", "Accessibility", "Charges"], "element_values": ["<br>To define general guidelines to be followed by Branches while processing Account Closure. <br><br> Branch should attempt for retention of account before closing the account as opening a new account is expensive. <br><br> Channels through which Account Closure request is received: <br> 1. Customers In Person (CIP) who walk in to the Branch <br>\n2. Representatives/Bearer of customers who walk in to the Branch <br>\n3. Mail / Drop Box <br><br> Check Documentation and Signature Protocol <br><br> Check Mode of Payment for closure Proceeds <br><br> Check for Customer Handling on receipt of request <br><br> Check Process at Branch \u2013Checks during acceptance of closure form <br><br> Check Process at Branch- Post acceptance of Closure form <br><br> ", "<br>Customer is unwilling to give us another chance  <br>\n1) In case of Issues expressed by the customer where he / she is willing to give the Bank another chance. <br><br>\n2) Branch to attempt fix the problem within 48 hours or 7 days on the outside for extreme cases and revert to the customer. This TAT for revert to be communicated to the customer upfront. <br><br>\n3) Customers to be sent a personalised letter thanking them for their time and an acknowledgement, that we value their business and have remedied whatever caused them to want to leave in the first place. A list of all reasons for closure with the action taken, to be stated.  <br><br>\n4) Once the customer has been retained, the customer letter / form duly marked \u201cNOT FOR CLOSURE \u2013 RETAINED\u201d, along with a copy of the resolution letter to be sent to CPC for filing in the customer record.  <br><br>\n5) Siebel to be updated with the same comment and closed.  <br><br>In case the BOM/SM/BM/ RBM / AM or the branch staff are able / Not able  to retain the customer, then protthe SR which has been created needs to be closed with the Closure Description in Siebel as, \u201cCustomer Retained\u201d. This needs to be done diligently and would be subject to audits.\nCustomer will pay the  necessary amount to regularize the account <br>\nCustomer is unwilling to regularize the account after all attempts then branch user to follow the protocol as detailed in chapter \u201cAccount closure requests with debit balance/TBMS lien.\u201d <br><br>\n1) Where the customer is not willing to continue, Branch to ensure that the complete details on Account closure form and all the checks to be made as detailed in the chapter  \u201cGeneral Guidelines to be followed for Account closure\u201d <br><br>\n2) In case of any incomplete request, the customer needs to be apprised of the requirements and Siebel to be updated accordingly. <br><br>\n3) If the a/c closure request is complete in all respects / once the complete request is received from the customer, the same needs to be sent to CPC, post updating the Siebel <br><br>\n4) Branch to journal of the attempts made to retain the customer. <br><br>\nIn case the BOM/SM/BM/ RBM / AM or the branch staff are able / Not able  to retain the customer, then protthe SR which has been created needs to be closed with the Closure Description in Siebel as, \u201cCustomer Retained\u201d. This needs to be done diligently and would be subject to audits.", "<br>If customer is closing his/ her account due to inconvenient accessibility, solutions like Home Banking, Beat Pick up facility, etc. should be re-iterated. <br>\nIn case customer has an account which he/ she is not eligible for an accessibility offering he/ she is interested in, an upgraded account should be offered especially if account balances justify it (ensure that new AMB/AQBs and NMCs are communicated clearly).Customer is unwilling to give us another chance  <br><br>\n1) In case of Issues expressed by the customer where he / she is willing to give the Bank another chance.  <br><br>\n2) Branch to attempt fix the problem within 48 hours or 7 days on the outside for extreme cases and revert to the customer. This TAT for revert to be communicated to the customer upfront. <br><br>\n3) Customers to be sent a personalised letter thanking them for their time and an acknowledgement, that we value their business and have remedied whatever caused them to want to leave in the first place. A list of all reasons for closure with the action taken, to be stated.  <br><br>\n4) Once the customer has been retained, the customer letter / form duly marked \u201cNOT FOR CLOSURE \u2013 RETAINED\u201d, along with a copy of the resolution letter to be sent to CPC for filing in the customer record.  <br><br>\n5) Siebel to be updated with the same comment and closed.  <br><br>\nIn case the BOM/SM/BM/ RBM / AM or the branch staff are able / Not able  to retain the customer, then protthe SR which has been created needs to be closed with the Closure Description in Siebel as, \u201cCustomer Retained\u201d.  <br><br> This needs to be done diligently and would be subject to audits.  <br><br>\nCustomer is unwilling to give another chance: < <br><br>> Customer will pay the  necessary amount to regularize the account  <br><br>\nCustomer is unwilling to regularize the account after all attempts then branch user to follow the protocol as detailed in chapter \u201cAccount closure requests with debit balance/TBMS lien.\u201d  <br><br>\n1) Where the customer is not willing to continue, Branch to ensure that the complete details on Account closure form and all the checks to be made as detailed in the chapter  \u201cGeneral Guidelines to be followed for Account closure\u201d  <br><br>\n2) In case of any incomplete request, the customer needs to be apprised of the requirements and Siebel to be updated accordingly.  <br><br>\n3) If the a/c closure request is complete in all respects / once the complete request is received from the customer, the same needs to be sent to CPC, post updating the Siebel  <br><br> \n4) Branch to journal of the attempts made to retain the customer.  <br><br>\nIn case the BOM/SM/BM/ RBM / AM or the branch staff are able / Not able  to retain the customer, then protthe SR which has been created needs to be closed with the Closure Description in Siebel as, \u201cCustomer Retained\u201d. This needs to be done diligently and would be subject to audits.C2", "<br>1) Customer expresses concerns on high charges, ascertain the nature of charges levied and recommend an upgraded account where required (e.g. if customer finds DD charges high, up-sell to an account with a higher free DD limit or an account offering At Par cheque facility if usage is on our locations). Communicate the AMB/AQB and NMC to customer clearly. <br><br>\n2) The account can be upgraded/downgrade as per customer requirement by retaining the same account Number  <br><br>\n3) Branch can also explain the benefits of Basic/Small Account and offer conversion to the said  account as it will address their inability to maintain the account.  <br><br>\nCustomer is unwilling to give us another chance  <br><br>\n1) In case of Issues expressed by the customer where he / she is willing to give the Bank another chance.  <br><br>\n2) Branch to attempt fix the problem within 48 hours or 7 days on the outside for extreme cases and revert to the customer. This TAT for revert to be communicated to the customer upfront.  <br><br>\n3) Customers to be sent a personalised letter thanking them for their time and an acknowledgement, that we value their business and have remedied whatever caused them to want to leave in the first place. A list of all reasons for closure with the action taken, to be stated.   <br><br>\n4) Once the customer has been retained, the customer letter / form duly marked \u201cNOT FOR CLOSURE \u2013 RETAINED\u201d, along with a copy of the resolution letter to be sent to CPC for filing in the customer record.  <br><br>\n5) Siebel to be updated with the same comment and closed.  <br><br>\nIn case the BOM/SM/BM/ RBM / AM or the branch staff are able / Not able  to retain the customer, then protthe SR which has been created needs to be closed with the Closure Description in Siebel as, \u201cCustomer Retained\u201d. This needs to be done diligently and would be subject to audits.  <br><br>\nCustomer will pay the  necessary amount to regularize the account   <br><br>\nCustomer is unwilling to regularize the account after all attempts then branch user to follow the protocol as detailed in chapter \u201cAccount closure requests with debit balance/TBMS lien.\u201d  <br><br>\n1) Where the customer is not willing to continue, Branch to ensure that the complete details on Account closure form and all the checks to be made as detailed in the chapter  \u201cGeneral Guidelines to be followed for Account closure\u201d  <br><br>\n2) In case of any incomplete request, the customer needs to be apprised of the requirements and Siebel to be updated accordingly.  <br><br>\n3) If the a/c closure request is complete in all respects / once the complete request is received from the customer, the same needs to be sent to CPC, post updating the Siebel  <br><br>\n4) Branch to journal of the attempts made to retain the customer.  <br><br>\nIn case the BOM/SM/BM/ RBM / AM or the branch staff are able / Not able  to retain the customer, then protthe SR which has been created needs to be closed with the Closure Description in Siebel as, \u201cCustomer Retained\u201d. This needs to be done diligently and would be subject to audits.\n"]}};
@@ -69186,7 +69834,7 @@ myApp.controller('HomeCtrl', function ($scope,$rootScope, TemplateService, Navig
            
 			$rootScope.element_values2 = new Array();
             $rootScope.showMsgLoader = false; 
-            $rootScope.selectTabIndex = 0;
+            
             $rootScope.tabHeight = window.innerHeight-120-53;
             if(data.tiledlist[0].Quik_Tip)
             {
@@ -69221,6 +69869,7 @@ myApp.controller('HomeCtrl', function ($scope,$rootScope, TemplateService, Navig
             }
             $rootScope.element_values2 = data.tiledlist[0].Process;
             $rootScope.element_values2.dtstage = dtstage;
+            $rootScope.selectTabIndex = 0;
             // else
             // {
             //     var ele = new Array("Process");
@@ -69389,7 +70038,20 @@ myApp.controller('HomeCtrl', function ($scope,$rootScope, TemplateService, Navig
                            $rootScope.InstructionResponse(0,data.data);  
                            
                         }
-                        
+                        if(value.type=="product listing")
+                        {
+                            $rootScope.pushSystemMsg(0,data.data);
+                            $rootScope.showMsgLoader = false;
+                            $timeout(function(){
+                            $('.carousel').carousel({
+                                interval: false,
+                                wrap: false
+                            });
+                            $('.carousel').find('.item').first().addClass('active');
+                            },2000);
+                            
+                            return false;
+                        }
                     });
                     
 
@@ -69462,84 +70124,43 @@ myApp.controller('HomeCtrl', function ($scope,$rootScope, TemplateService, Navig
                     var msg = {Text:"Sorry I could not understand",type:"SYS_EMPTY_RES"};
                     $rootScope.pushSystemMsg(0,msg); 
                     $rootScope.showMsgLoader=false;
-                    // apiService.sendchat({}, function (data) {
-                    //     console.log(data);
-                    // });
+                    // $rootScope.agentconnected = true;
+                    // if($rootScope.agentconnected)
+                    // {
+                    //     $rootScope.sendMsgtoagent(sess2.Text);
+                    // }
                     
-                    // io.socket.on('user', function messageReceived(message) {
-
-                    //     switch (message.verb) {
-
-                    //         // Handle user creation
-                    //         case 'created':
-                    //             addUser(message.data);
-                    //         break;
-
-                    //         // Handle a user changing their name
-                    //         case 'updated':
-
-                    //         // Get the user's old name by finding the <option> in the list with their ID
-                    //         // and getting its text.
-                    //             var oldName = $('#user-'+message.id).text();
-
-                    //         // Update the name in the user select list
-                    //             $('#user-'+message.id).text(message.data.name);
-
-                    //             // If we have a private convo with them, update the name there and post a status message in the chat.
-                    //             if ($('#private-username-'+message.id).length) {
-                    //                 $('#private-username-'+message.id).html(message.data.name);
-                    //                 postStatusMessage('private-messages-'+message.id,oldName+' has changed their name to '+message.data.name);
-                    //             }
-
-                    //         break;
-
-                    //         // Handle user destruction
-                    //         case 'destroyed':
-                    //             removeUser(message.id);
-                    //         break;
-
-                    //         // Handle private messages.  Only sockets subscribed to the "message" context of a
-                    //         // User instance will get this message--see the onConnect logic in config/sockets.js
-                    //         // to see where a new user gets subscribed to their own "message" context
-                    //         case 'messaged':
-                    //             receivePrivateMessage(message.data);
-                    //         break;
-
-                    //         default:
-                    //         break;
-                    //     }
-
-                    //     });
-
-                    //     // Add a click handler for the "Update name" button, allowing the user to update their name.
-                    //     // updateName() is defined in user.js.
-                    //     //$('#update-name').click(updateName);
-
-                    //     // Add a click handler for the "Send private message" button
-                    //     // startPrivateConversation() is defined in private_message.js.
-                    //     //$('#private-msg-button').click(startPrivateConversation);
-
-                    //     // Add a click handler for the "Join room" button
-                    //     // joinRoom() is defined in public_message.js.
-                    //     //$('#join-room').click(joinRoom);
-
-                    //     // Add a click handler for the "New room" button
-                    //     // newRoom() is defined in room.js.
-                    //     //$('#new-room').click(newRoom);
-
-                    //     console.log('Socket is now connected!');
-
-                    //     // When the socket disconnects, hide the UI until we reconnect.
-                    //     io.socket.on('disconnect', function() {
-                    //     // Hide the main UI
-                    //     $('#main').hide();
-                    //     $('#disconnect').show();
-                    //     });
                 });
             //});
             $rootScope.autocompletelist = [];
         };
-        
+        $rootScope.sendMsgtoagent = function(msg) {
+
+            io.sails.url = 'http://localhost:1337';
+            
+            //io.sails.connect([io.sails.url]);
+            //sess2.Text
+            // var sockets = io.sails.sockets.clients();
+            // console.log(sockets);
+            
+            // io.socket.get('/chat/addconv',{}, function (resData, jwres){
+            // // ...
+            // });
+            //createPrivateConversationRoom({name:"User #10", id:10});
+            //$rootScope.lastagent
+            io.socket.get('/user', function (users){
+                console.log(users,"users");
+                users.forEach(function(user) {
+                    //console.log(user);
+                    //if (user.id == me.id) {return;}
+                    //addUser(user);
+                });
+            });
+            addMessageToConversation(window.me.id, "5a0a81e8179172360420c966", msg);
+
+            // Send the message
+            io.socket.post('/chat/private', {to: "5a0a81e8179172360420c966", msg: msg});
+        };
         $rootScope.Speaktext = function() {
             //console.log(text);
             var _iOS9voices = [
@@ -69851,3 +70472,5 @@ myApp.controller('languageCtrl', function ($scope, TemplateService, $translate, 
         //  $rootScope.$apply();
     };
 });
+/*! WOW - v0.1.9 - 2014-05-10
+* Copyright (c) 2014 Matthieu Aussaguel; Licensed MIT */(function(){var a,b,c=function(a,b){return function(){return a.apply(b,arguments)}};a=function(){function a(){}return a.prototype.extend=function(a,b){var c,d;for(c in a)d=a[c],null!=d&&(b[c]=d);return b},a.prototype.isMobile=function(a){return/Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(a)},a}(),b=this.WeakMap||(b=function(){function a(){this.keys=[],this.values=[]}return a.prototype.get=function(a){var b,c,d,e,f;for(f=this.keys,b=d=0,e=f.length;e>d;b=++d)if(c=f[b],c===a)return this.values[b]},a.prototype.set=function(a,b){var c,d,e,f,g;for(g=this.keys,c=e=0,f=g.length;f>e;c=++e)if(d=g[c],d===a)return void(this.values[c]=b);return this.keys.push(a),this.values.push(b)},a}()),this.WOW=function(){function d(a){null==a&&(a={}),this.scrollCallback=c(this.scrollCallback,this),this.scrollHandler=c(this.scrollHandler,this),this.start=c(this.start,this),this.scrolled=!0,this.config=this.util().extend(a,this.defaults),this.animationNameCache=new b}return d.prototype.defaults={boxClass:"wow",animateClass:"animated",offset:0,mobile:!0},d.prototype.init=function(){var a;return this.element=window.document.documentElement,"interactive"===(a=document.readyState)||"complete"===a?this.start():document.addEventListener("DOMContentLoaded",this.start)},d.prototype.start=function(){var a,b,c,d;if(this.boxes=this.element.getElementsByClassName(this.config.boxClass),this.boxes.length){if(this.disabled())return this.resetStyle();for(d=this.boxes,b=0,c=d.length;c>b;b++)a=d[b],this.applyStyle(a,!0);return window.addEventListener("scroll",this.scrollHandler,!1),window.addEventListener("resize",this.scrollHandler,!1),this.interval=setInterval(this.scrollCallback,50)}},d.prototype.stop=function(){return window.removeEventListener("scroll",this.scrollHandler,!1),window.removeEventListener("resize",this.scrollHandler,!1),null!=this.interval?clearInterval(this.interval):void 0},d.prototype.show=function(a){return this.applyStyle(a),a.className=""+a.className+" "+this.config.animateClass},d.prototype.applyStyle=function(a,b){var c,d,e;return d=a.getAttribute("data-wow-duration"),c=a.getAttribute("data-wow-delay"),e=a.getAttribute("data-wow-iteration"),this.animate(function(f){return function(){return f.customStyle(a,b,d,c,e)}}(this))},d.prototype.animate=function(){return"requestAnimationFrame"in window?function(a){return window.requestAnimationFrame(a)}:function(a){return a()}}(),d.prototype.resetStyle=function(){var a,b,c,d,e;for(d=this.boxes,e=[],b=0,c=d.length;c>b;b++)a=d[b],e.push(a.setAttribute("style","visibility: visible;"));return e},d.prototype.customStyle=function(a,b,c,d,e){return b&&this.cacheAnimationName(a),a.style.visibility=b?"hidden":"visible",c&&this.vendorSet(a.style,{animationDuration:c}),d&&this.vendorSet(a.style,{animationDelay:d}),e&&this.vendorSet(a.style,{animationIterationCount:e}),this.vendorSet(a.style,{animationName:b?"none":this.cachedAnimationName(a)}),a},d.prototype.vendors=["moz","webkit"],d.prototype.vendorSet=function(a,b){var c,d,e,f;f=[];for(c in b)d=b[c],a[""+c]=d,f.push(function(){var b,f,g,h;for(g=this.vendors,h=[],b=0,f=g.length;f>b;b++)e=g[b],h.push(a[""+e+c.charAt(0).toUpperCase()+c.substr(1)]=d);return h}.call(this));return f},d.prototype.vendorCSS=function(a,b){var c,d,e,f,g,h;for(d=window.getComputedStyle(a),c=d.getPropertyCSSValue(b),h=this.vendors,f=0,g=h.length;g>f;f++)e=h[f],c=c||d.getPropertyCSSValue("-"+e+"-"+b);return c},d.prototype.animationName=function(a){var b;try{b=this.vendorCSS(a,"animation-name").cssText}catch(c){b=window.getComputedStyle(a).getPropertyValue("animation-name")}return"none"===b?"":b},d.prototype.cacheAnimationName=function(a){return this.animationNameCache.set(a,this.animationName(a))},d.prototype.cachedAnimationName=function(a){return this.animationNameCache.get(a)},d.prototype.scrollHandler=function(){return this.scrolled=!0},d.prototype.scrollCallback=function(){var a;return this.scrolled&&(this.scrolled=!1,this.boxes=function(){var b,c,d,e;for(d=this.boxes,e=[],b=0,c=d.length;c>b;b++)a=d[b],a&&(this.isVisible(a)?this.show(a):e.push(a));return e}.call(this),!this.boxes.length)?this.stop():void 0},d.prototype.offsetTop=function(a){for(var b;void 0===a.offsetTop;)a=a.parentNode;for(b=a.offsetTop;a=a.offsetParent;)b+=a.offsetTop;return b},d.prototype.isVisible=function(a){var b,c,d,e,f;return c=a.getAttribute("data-wow-offset")||this.config.offset,f=window.pageYOffset,e=f+this.element.clientHeight-c,d=this.offsetTop(a),b=d+a.clientHeight,e>=d&&b>=f},d.prototype.util=function(){return this._util||(this._util=new a)},d.prototype.disabled=function(){return!this.config.mobile&&this.util().isMobile(navigator.userAgent)},d}()}).call(this);
