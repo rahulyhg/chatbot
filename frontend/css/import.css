@@ -9887,9 +9887,11 @@ div#tab_data {
 
 div.scriptData {
   padding-top: 5px;
-  height: 120px;
   overflow-y: scroll;
   margin-bottom: 10px; }
+
+div.scriptData .panel-body {
+  height: auto; }
 
 .tooltips {
   background: #d9edf7;
@@ -10453,6 +10455,12 @@ button.headerbtns:focus {
 .carousel_item img {
   height: 100px;
   width: 90%; }
+
+.carousel_item2 img {
+  width: 100%;
+  opacity: 1;
+  height: auto;
+  max-width: 100%; }
 
 .item-image {
   height: 100px;
