@@ -16,7 +16,7 @@ module.exports.sockets = {
     console.log("DISCONNECT SESSION", session);
       try {
         // Look up the user ID using the connected socket
-        var userId = session.users[sails.sockets.getId(socket)].id;
+        var userId = session.users[sails.sockets.getId(socket)];
 
         // Get the user instance
         User.findOne(userId).populate('rooms').exec(function(err, user) {

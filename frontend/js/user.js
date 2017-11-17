@@ -1,9 +1,10 @@
-userdata = {id:$.jStorage.get("id"),name:$.jStorage.get("fname")};
+userdata = {sid:$.jStorage.get("sid"),name:($.jStorage.get("fname")+' '+$.jStorage.get("fname"))};
 // Update the value in the user name input.
 function updateMyName(me) {
   console.log(me);
+  
   //$('#my-name').val(me.name == 'unknown' ? 'User #' + me.id : me.name);
-  $('#my-name').val(userdata.name+' #'+userdata.id);
+  $('#my-name').val(userdata.name+' #'+me.id);
 }
 
 // Update the current user's username
@@ -17,12 +18,13 @@ function addUser(user) {
   //console.log(user);
   // Get a handle to the user list <select> element
   var select = $('#users-list');
-  if($.jStorage.get("socketId") == user.socketId)
+  // if($.jStorage.get("socketId") == user.socketId)
+  // {
+  //     user.id = userdata.id;
+  //     user.name = userdata.name;
+  // }
+  // else
   {
-      user.id = userdata.id;
-      user.name = userdata.name;
-  }
-  else {
     // Create a new <option> for the <select> with the new user's information
     var option = $('<option id="'+"user-"+user.id+'" value="'+user.id+'">'+(user.name == "unknown" ? "User #" + user.id : user.name)+'</option>');
   }
@@ -59,7 +61,9 @@ function removeUser(user) {
 
 // Add multiple users to the users list.
 function updateUserList(users) {
+  console.log(users);
   users.forEach(function(user) {
+    //console.log(user);
     if (user.id == me.id) {return;}
     addUser(user);
   });

@@ -9,6 +9,128 @@ body { font-family: "Helvetica Neue",Helvetica,Arial,sans-serif; font-size: 14px
 .login{
     margin-top: 30%;
 }
+div.processviews.ng-enter {
+    transition: all 0.2s linear;
+    opacity: 0;
+}
+div.processviews.ng-enter-active {
+    opacity: 1;
+}
+.processviews.ng-enter {
+    -webkit-animation: zoomIn 0.2s;
+    animation: zoomIn 0.2s;
+    opacity: 0;
+}
+.processviews.ng-leave {
+  animation: fadeOut 2s;
+  opacity: 1;
+}
+.processviews.ng-hide-add {
+    -webkit-animation: fadeOut 2.5s;
+    animation: fadeOut 2.5s;
+    display: block !important;
+}
+@keyframes zoomIn {
+  from {
+    opacity: 0;
+    transform: scale3d(.3, .3, .3);
+  }
+  50% {
+    opacity: 1;
+  }
+}
+
+@-webkit-keyframes zoomIn {
+  from {
+    opacity: 0;
+    transform: scale3d(.3, .3, .3);
+    -webkit-transform: scale3d(.3, .3, .3);
+  }
+  50% {
+    opacity: 1;
+  }
+}
+.processtreefadein, .fadeIn {
+    -webkit-transition:all linear 10s !important;
+    -moz-transition:all linear 10s !important;
+    -ms-transition:all linear 10s !important;
+    -o-transition:all linear 10s !important;
+    transition:all linear 10s !important;
+}
+div.processtreefadein.ng-enter-active {
+    opacity: 1;
+}
+.chatType.animated.fadeIn.boxme {
+    -webkit-animation-duration: 5s !important;
+    animation-duration: 5s !important;
+}
+.processtreefadein.ng-enter {
+    -webkit-animation: fadeIn 25s;
+    animation: fadeIn 25s;
+    opacity: 0;
+    -webkit-transition:all linear 10s !important;
+    -moz-transition:all linear 10s !important;
+    -ms-transition:all linear 10s !important;
+    -o-transition:all linear 10s !important;
+    transition:all linear 10s !important;
+    
+    // transition: all 25s linear;
+    // -webkit-animation-delay: 10s;
+}
+.processtreefadein.ng-leave {
+  animation: fadeIn 10s;
+  opacity: 1;
+  -webkit-transition:all linear 10s !important;
+    -moz-transition:all linear 10s !important;
+    -ms-transition:all linear 10s !important;
+    -o-transition:all linear 10s !important;
+    transition:all linear 10s !important;
+    
+//   -webkit-animation-delay: 10s;
+}
+.processtreefadein.ng-hide-add {
+    -webkit-animation: fadeIn 25s;
+    display: block!important;
+}
+@-webkit-keyframes fadeInDown {
+  from {
+    opacity: 0;
+    -webkit-transform: translate3d(0, -100%, 0);
+    transform: translate3d(0, -100%, 0);
+  }
+
+  to {
+    opacity: 1;
+    -webkit-transform: none;
+    transform: none;
+  }
+}
+
+@keyframes fadeInDown {
+  from {
+    opacity: 0;
+    -webkit-transform: translate3d(0, -100%, 0);
+    transform: translate3d(0, -100%, 0);
+  }
+
+  to {
+    opacity: 1;
+    -webkit-transform: none;
+    transform: none;
+  }
+}
+
+.fadeInDown {
+  -webkit-animation-name: fadeInDown;
+  animation-name: fadeInDown;
+}
+
+// .ng-hide-remove {
+//     -webkit-animation: bounceIn 2.5s;
+//     animation: bounceIn 2.5s;
+// }
+ 
+
 .c-hamburger {
   display: block;
   position: relative;

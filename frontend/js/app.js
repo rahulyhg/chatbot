@@ -29,7 +29,7 @@ myApp.config(function ($stateProvider, $urlRouterProvider, $httpProvider, $locat
     // for http request with session
     //$httpProvider.defaults.withCredentials = false;
     ttsProvider.setSettings({ key: '5a1cc1a178c24b89ba23fd6e3b1bb6c5' });
-    //$qProvider.errorOnUnhandledRejections(false);
+    $qProvider.errorOnUnhandledRejections(false);
     IdleProvider.idle(10*60); // 10 minutes idle
     $stateProvider
         .state('home', {
@@ -112,7 +112,7 @@ myApp.run(['$http','$cookies','beforeUnload','$document','$rootScope','Idle','bo
     
     $rootScope.transcript="";
     $rootScope.tabvalue={};
-    $rotated = false;
+    //$rotated = false;
 
     $(document).on('click', '.chat-body .changedthbg', function(){ 
         var stage = $(this).attr("data-bgstage");
@@ -322,10 +322,12 @@ myApp.run(['$http','$cookies','beforeUnload','$document','$rootScope','Idle','bo
         //console.clear();
         //document.querySelector('#devtool-status').innerHTML = checkStatus;
     }, 1000);
-    io.sails.url = 'http://localhost:1337';
-    io.sails.useCORSRouteToGetCookie = false
-
-    
+    // io.sails.url = 'http://localhost:1337';
+    // //io.sails.autoConnect = false;
+    // io.sails.useCORSRouteToGetCookie = false;
+    angular.element(document).ready(function() {
+        new WOW().init();
+    });
     
     
 

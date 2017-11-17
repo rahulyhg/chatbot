@@ -404,5 +404,79 @@ height:30px!important;
     text-shadow:
       .25em 0 0 black,
       .5em 0 0 black;}}
+    
+
+// .zoomIn.ng-enter {
+//   animation: fadeIn 2s;
+//   opacity: 0;
+// }
+
+// .zoomIn.ng-leave {
+//   animation: fadeOut 2s;
+//   opacity: 1;
+// }
+
+.zoomIn {
+  animation: zoomInf 2s infinite;
+  -webkit-animation: zoomInf 2s infinite;
+   animation-iteration-count: 1 !important;
+}
+
+@keyframes zoomInf {
+  from {
+    opacity: 0;
+    transform: scale3d(.3, .3, .3);
+  }
+  50% {
+    opacity: 1;
+  }
+}
+
+@-webkit-keyframes zoomInf {
+  from {
+    opacity: 0;
+    transform: scale3d(.3, .3, .3);
+    -webkit-transform: scale3d(.3, .3, .3);
+  }
+  50% {
+    opacity: 1;
+  }
+}
 
 
+// @keyframes bounceOutf {
+//   20% {
+//     transform: scale3d(.9, .9, .9);
+//   }
+//   50%,
+//   55% {
+//     opacity: 1;
+//     transform: scale3d(1.1, 1.1, 1.1);
+//   }
+//   to {
+//     opacity: 0;
+//     transform: scale3d(.3, .3, .3);
+//   }
+// }
+
+
+// @-webkit-keyframes  bounceOutf {
+//   20% {
+//     -webkit-transform: scale3d(.9, .9, .9);
+//   }
+//   50%,
+//   55% {
+//     opacity: 1;
+//     -webkit-transform: scale3d(1.1, 1.1, 1.1);
+//   }
+//   to {
+//     opacity: 0;
+//     -webkit-transform: scale3d(.3, .3, .3);
+//   }
+// }
+
+
+// .bounceOut {
+//   animation: bounceOutf 5s infinite;
+//   -webkit-animation: bounceOutf 5s infinite;
+// }
