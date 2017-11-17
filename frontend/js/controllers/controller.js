@@ -1731,7 +1731,8 @@ myApp.controller('HomeCtrl', function ($scope,$rootScope, TemplateService, Navig
             $rootScope.tabvalue.elements = ele;
             $rootScope.tabvalue.element_values=ele_val;
             console.log("process");
-            $(".nav.nav-tabs li").first().addClass('active');
+            $("#tab_data .nav-tabs li").first().addClass("active");
+			$("#tab_data .tab-content .tab-pane").first().addClass("active");
             $rootScope.selectTabIndex = 0;
             
             // if(data.node_data)
