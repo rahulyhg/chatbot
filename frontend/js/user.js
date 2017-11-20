@@ -4,7 +4,7 @@ function updateMyName(me) {
   console.log(me);
   
   //$('#my-name').val(me.name == 'unknown' ? 'User #' + me.id : me.name);
-  $('#my-name').val(userdata.name+' #'+me.id);
+  $('#my-name').val(me.name == 'unknown' ? 'User #' + me.id : me.name);
 }
 
 // Update the current user's username

@@ -58,7 +58,12 @@ myApp.directive('img', function ($compile, $parse) {
                     closeBtn: true,
                     padding: 0,
                     helpers: {
-                        media: {}
+                        media: {},
+                        title: {
+                            type: 'inside',
+                            position: 'bottom'
+                        },
+                        //buttons   : {}
                     }
                 });
             }

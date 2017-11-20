@@ -28,5 +28,6 @@ module.exports.models = {
   *                                                                          *
   ***************************************************************************/
   // migrate: 'alter'
-
+   connection: 'memory',
+    migrate: 'drop'
 };

@@ -80,17 +80,17 @@
                                                                 <div >
                                                                     <div class="col-xs-12" >
                                                                         <div class="img-box2">
-                                                                            <a ng-href="http://exponentiadata.co.in:8097/static/images/{{chatRes.product_list[$index].image_name}}"  data-fancybox="imggroup" rel="gallary" data-caption="{{chatRes.product_list[$index].image_text}}" fancybox >
+                                                                            <a ng-href="http://exponentiadata.co.in:8097/static/images/{{chatRes.product_list[$index].image_name}}"  data-fancybox="imggroup" rel="gallary" fancybox  data-caption="{{chatRes.product_list[$index].image_text}}"  >
                                                                                 <img ng-src="http://exponentiadata.co.in:8097/static/images/{{chatRes.product_list[$index].image_name}}" class="img-full">
                                                                             </a>
                                                                         </div>
                                                                          <div class="text-box" ng-if="chatRes.product_list[$index].image_text!=''">
                                                                             <div class="imgtitle2">
-                                                                                <span>
+                                                                                <b><span>
                                                                                     <ng-bind-html  ng-bind-html="chatRes.product_list[$index].image_text">
                                                                                         {{chatRes.product_list[$index].image_text}}
                                                                                     </ng-bind-html>
-                                                                                </span>
+                                                                                </span></b>
                                                                             </div>
                                                                         </div> 
                                                                         <!-- <div class="" >
@@ -139,6 +139,7 @@
                                                     </div> -->
                                                     
                                                     <div class="dthyperlink lastmsg changedthbg stage{{chatRes.bgstage}}" ng-repeat="dthlink in chatRes.DT" data-id="{{dthlink}}" data-url-id="innerLink" data-stage="{{chatRes.Stage}}" data-bgstage="{{chatRes.bgstage}}" ng-if="chatRes.DT.length > 0 && chatRes.Stage=='0'" data-index="{{$index}}"  ng-click="getDthlinkRes(chatRes.Stage,dthlink);" >
+                                                        <span class="lefticon glyphicon glyphicon-chevron-left" style="display:none;"></span>
                                                         {{dthlink}}
                                                     </div>
                                                     

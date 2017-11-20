@@ -118,9 +118,10 @@ myApp.run(['$http','$cookies','beforeUnload','$document','$rootScope','Idle','bo
         var stage = $(this).attr("data-bgstage");
         $(".stage"+stage).css('background-color','#eee');
         $(".stage"+stage).css('color','#1e90ff');
-        
+        $(".stage"+stage+' .lefticon').hide();
         $(this).css('background-color', '#003874');
         $(this).css('color', '#fff');
+        $(this).find(".lefticon").show();
     });     
     $(document).on('click', '.toggler', function(){ 
         $(this).parent().children('ul.tree').toggle(300);
@@ -322,9 +323,9 @@ myApp.run(['$http','$cookies','beforeUnload','$document','$rootScope','Idle','bo
         //console.clear();
         //document.querySelector('#devtool-status').innerHTML = checkStatus;
     }, 1000);
-    io.sails.url = 'http://localhost:1337';
-    //io.sails.autoConnect = false;
-    io.sails.useCORSRouteToGetCookie = false;
+    // io.sails.url = 'http://localhost:1337';
+    // //io.sails.autoConnect = false;
+    // io.sails.useCORSRouteToGetCookie = false;
     angular.element(document).ready(function() {
         new WOW().init();
     });
