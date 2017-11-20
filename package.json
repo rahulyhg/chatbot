@@ -72,7 +72,6 @@
     "sails-wohlig-service": "latest",
     "sails.io.js": "^1.1.13",
     "sendgrid": "^5.0.0",
-    "socket.io-client": "^2.0.4",
     "sails-memory": "~0.10.3"
   },
   "scripts": {

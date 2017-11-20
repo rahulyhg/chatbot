@@ -11129,6 +11129,9 @@ button.headerbtns:focus {
   background: #003874;
   color: #fff; }
 
+.pvtmsg {
+  margin-bottom: 10px; }
+
 .img-box {
   height: 100px;
   width: 100px; }

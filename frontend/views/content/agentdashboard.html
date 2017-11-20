@@ -1,19 +1,26 @@
 <div id="main">
-	<div>
-	    My name: <input type="text" id="my-name"> <button id="update-name">Update</button>
+	<div style="display:none;">
+		<div>
+			My name: <input type="text" id="my-name"> <button id="update-name">Update</button>
+		</div>
+		<h1>Users online</h1>
+		<div>
+			<select id="users-list" size="5"></select>
+			<button id="private-msg-button">Send private message to selected user</button>
+			<!-- <div id="convos"></div> -->
+		</div>
+		<h1>Chat rooms</h1>
+		<div>
+			<select id="rooms-list" size="5"></select>
+			<button id="join-room">Join selected room</button>
+			<button id="new-room">Start a new room</button>
+			<div id="rooms"></div>
+		</div>
 	</div>
-	<h1>Users online</h1>
-	<div>
-	    <select id="users-list" size="5"></select>
-	    <button id="private-msg-button">Send private message to selected user</button>
-	    <div id="convos"></div>
-	</div>
-	<h1>Chat rooms</h1>
-	<div>
-	    <select id="rooms-list" size="5"></select>
-	    <button id="join-room">Join selected room</button>
-	    <button id="new-room">Start a new room</button>
-	    <div id="rooms"></div>
+	<div class="col-md-12">
+		<div class="col-md-6">
+			<div id="convos"></div>
+		</div>
 	</div>
 </div>
 <div id="disconnect" style="display:none">Waiting for reconnect...</div>
