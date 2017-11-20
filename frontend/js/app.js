@@ -322,9 +322,9 @@ myApp.run(['$http','$cookies','beforeUnload','$document','$rootScope','Idle','bo
         //console.clear();
         //document.querySelector('#devtool-status').innerHTML = checkStatus;
     }, 1000);
-    // io.sails.url = 'http://localhost:1337';
-    // //io.sails.autoConnect = false;
-    // io.sails.useCORSRouteToGetCookie = false;
+    io.sails.url = 'http://localhost:1337';
+    //io.sails.autoConnect = false;
+    io.sails.useCORSRouteToGetCookie = false;
     angular.element(document).ready(function() {
         new WOW().init();
     });
