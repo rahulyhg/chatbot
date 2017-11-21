@@ -2206,7 +2206,7 @@ myApp.controller('HomeCtrl', function ($scope,$rootScope, TemplateService, Navig
             //     else {
             //         $rootScope.agentconnected = false;
             //     }
-            });
+            //});
             // addMessageToConversation(window.me.id, "5a0a81e8179172360420c966", msg);
 
             // // Send the message
