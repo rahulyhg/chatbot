@@ -2130,11 +2130,11 @@ myApp.controller('HomeCtrl', function ($scope,$rootScope, TemplateService, Navig
                     var msg = {Text:"Sorry I could not understand",type:"SYS_EMPTY_RES"};
                     $rootScope.pushSystemMsg(0,msg); 
                     $rootScope.showMsgLoader=false;
-                    $rootScope.agentconnected = true;
-                    if($rootScope.agentconnected)
-                    {
-                        $rootScope.sendMsgtoagent(sess2.Text);
-                    }
+                    // $rootScope.agentconnected = true;
+                    // if($rootScope.agentconnected)
+                    // {
+                    //     $rootScope.sendMsgtoagent(sess2.Text);
+                    // }
                     
                 });
             //});
@@ -2154,67 +2154,58 @@ myApp.controller('HomeCtrl', function ($scope,$rootScope, TemplateService, Navig
         }
         $rootScope.sendMsgtoagent = function(msg) {
 
-            io.sails.url = 'http://localhost:1337';
+            // io.sails.url = 'http://localhost:1337';
             
-            //io.sails.connect([io.sails.url]);
-            //sess2.Text
-            // var sockets = io.sails.sockets.clients();
-            // console.log(sockets);
-            
-            // io.socket.get('/chat/addconv',{}, function (resData, jwres){
-            // // ...
-            // });
-            //createPrivateConversationRoom({name:"User #10", id:10});
-            io.socket.get('/user', function (users){
-                var newuser = _.remove(users, function(n) {
-                    return n.access_role  == 4;
-                });
-                if(newuser.length > 0)
-                {
-                    if(!$rootScope.lastagent || newuser.length==1) {
-                        $rootScope.lastagent = newuser[0].sid;
-                        newuser.forEach(function(user) {
-                            if(_.find($rootScope.agentlist, function(o) { return o == user.sid; }))
-                            {
+            // io.socket.get('/user', function (users){
+            //     var newuser = _.remove(users, function(n) {
+            //         return n.access_role  == 4;
+            //     });
+            //     if(newuser.length > 0)
+            //     {
+            //         if(!$rootScope.lastagent || newuser.length==1) {
+            //             $rootScope.lastagent = newuser[0].sid;
+            //             newuser.forEach(function(user) {
+            //                 if(_.find($rootScope.agentlist, function(o) { return o == user.sid; }))
+            //                 {
                                 
-                            }
-                            else 
-                            {
-                                $rootScope.agentlist.push(newuser[0].sid);
-                                $.jStorage.set("agentlist",$rootScope.agentlist);
-                            }
-                        });
+            //                 }
+            //                 else 
+            //                 {
+            //                     $rootScope.agentlist.push(newuser[0].sid);
+            //                     $.jStorage.set("agentlist",$rootScope.agentlist);
+            //                 }
+            //             });
                         
-                    }
-                    else 
-                    {
-                        var allconnected = true;
-                        newuser.forEach(function(user) {
-                            if(_.find($rootScope.agentlist, function(o) { return o == user.sid; }))
-                            {
+            //         }
+            //         else 
+            //         {
+            //             var allconnected = true;
+            //             newuser.forEach(function(user) {
+            //                 if(_.find($rootScope.agentlist, function(o) { return o == user.sid; }))
+            //                 {
                                 
-                            }
-                            else 
-                            {
-                                allconnected = false;
-                                $rootScope.lastagent = user.sid;
-                                $rootScope.agentlist.push(user.sid);
-                                $.jStorage.set("agentlist",$rootScope.agentlist);
-                            }
-                        });
-                        if(allconnected)
-                        {
-                            $rootScope.lastagent = newuser[0].sid;
-                        }
-                    }
-                    //console.log(newuser,"users");
-                    var arr_ind=_.findIndex(newuser, function(o) { return o.sid == $rootScope.lastagent; });
-                    addMessageToConversation(window.me.id, newuser[arr_ind].id, msg);
-                    io.socket.post('/chat/private', {to: newuser[arr_ind].id, msg: msg});
-                }
-                else {
-                    $rootScope.agentconnected = false;
-                }
+            //                 }
+            //                 else 
+            //                 {
+            //                     allconnected = false;
+            //                     $rootScope.lastagent = user.sid;
+            //                     $rootScope.agentlist.push(user.sid);
+            //                     $.jStorage.set("agentlist",$rootScope.agentlist);
+            //                 }
+            //             });
+            //             if(allconnected)
+            //             {
+            //                 $rootScope.lastagent = newuser[0].sid;
+            //             }
+            //         }
+            //         //console.log(newuser,"users");
+            //         var arr_ind=_.findIndex(newuser, function(o) { return o.sid == $rootScope.lastagent; });
+            //         addMessageToConversation(window.me.id, newuser[arr_ind].id, msg);
+            //         io.socket.post('/chat/private', {to: newuser[arr_ind].id, msg: msg});
+            //     }
+            //     else {
+            //         $rootScope.agentconnected = false;
+            //     }
             });
             // addMessageToConversation(window.me.id, "5a0a81e8179172360420c966", msg);
 
