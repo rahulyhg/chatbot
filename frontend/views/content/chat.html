@@ -22,7 +22,7 @@
                     <div class="tab-pane active row" id="chattab" ng-if="chat_tab === 1">
                         <div class="panel-body"> 
                             <ul class="chat">
-                                <li class="{{list.position}} lastchat clearfix" ng-repeat="list in chatlist track by $index">
+                                <li class="{{list.position}} lastchat clearfix" ng-repeat="list in chatlist track by $index " ng-init="$rowIndex = $index">
                                     <span class="chat-img pull-{{list.position}}">
                                         <img ng-src="img/{{list.position == 'left' && 'Tenali.png' || 'logo7.png'}}" alt="BOT" class="img-circle " />
                                     </span>
@@ -74,21 +74,21 @@
                                                     </p>
                                                 </div>
                                                 <div class="chatType" ng-if="list.msg.tiledlist[0].type==='product listing'">
-                                                    <div class='carousel slide' id='myCarousel{{$index}}'>
+                                                    <div class='carousel slide' id='myCarousel{{$rowIndex}}'>
                                                         <div class='carousel-inner'>
                                                             <div class='item carousel_item2' ng-class="{active:!$index}" ng-repeat="imagelist in chatRes.product_list track by $index">
                                                                 <div >
                                                                     <div class="col-xs-12" >
                                                                         <div class="img-box2">
-                                                                            <a ng-href="http://exponentiadata.co.in:8097/static/images/{{chatRes.product_list[$index].image_name}}"  data-fancybox="imggroup" rel="gallary" fancybox  data-caption="{{chatRes.product_list[$index].image_text}}"  >
-                                                                                <img ng-src="http://exponentiadata.co.in:8097/static/images/{{chatRes.product_list[$index].image_name}}" class="img-full">
+                                                                            <a ng-href="http://exponentiadata.co.in:8097/static/images/{{imagelist.image_name}}"  data-fancybox="imggroup" rel="gallary" fancybox  data-caption="{{imagelist.image_text}}"  >
+                                                                                <img ng-src="http://exponentiadata.co.in:8097/static/images/{{imagelist.image_name}}" class="img-full">
                                                                             </a>
                                                                         </div>
-                                                                         <div class="text-box" ng-if="chatRes.product_list[$index].image_text!=''">
+                                                                         <div class="text-box" ng-if="imagelist.image_text!=''">
                                                                             <div class="imgtitle2">
                                                                                 <b><span>
-                                                                                    <ng-bind-html  ng-bind-html="chatRes.product_list[$index].image_text">
-                                                                                        {{chatRes.product_list[$index].image_text}}
+                                                                                    <ng-bind-html  ng-bind-html="imagelist.image_text">
+                                                                                        {{imagelist.image_text}}
                                                                                     </ng-bind-html>
                                                                                 </span></b>
                                                                             </div>
@@ -112,8 +112,8 @@
                                                                 </div>
                                                             </div>
                                                         </div>
-                                                        <a class='left carousel-control' href='#myCarousel{{$index}}' data-slide='prev'><i class='glyphicon glyphicon-chevron-left'></i></a>
-                                                        <a class='right carousel-control' href='#myCarousel{{$index}}' data-slide='next'><i class='glyphicon glyphicon-chevron-right'></i></a>
+                                                        <a class='left carousel-control' href='#myCarousel{{$rowIndex}}' data-slide='prev'><i class='glyphicon glyphicon-chevron-left'></i></a>
+                                                        <a class='right carousel-control' href='#myCarousel{{$rowIndex}}' data-slide='next'><i class='glyphicon glyphicon-chevron-right'></i></a>
                                                     </div>
                                                 </div> 
                                                 <div class="chatType animated fadeIn boxme" ng-if="list.msg.tiledlist[0].type==='DTHyperlink'">

@@ -81,7 +81,7 @@ myApp.run(['$http', 'CSRF_TOKEN', function($http, CSRF_TOKEN) {
 }]);*/
 
 
-myApp.run(['$http','$cookies','beforeUnload','$document','$rootScope','Idle','bowser','Menuservice', function run(  $http, $cookies,beforeUnload,$document,$rootScope,Idle,bowser,Menuservice ){
+myApp.run(['$http','$cookies','beforeUnload','$document','$rootScope','Idle','bowser','Menuservice','$timeout', function run(  $http, $cookies,beforeUnload,$document,$rootScope,Idle,bowser,Menuservice,$timeout ){
     // For CSRF token compatibility with Django
     
     //$http.defaults.xsrfCookieName = 'csrftoken';
@@ -112,7 +112,7 @@ myApp.run(['$http','$cookies','beforeUnload','$document','$rootScope','Idle','bo
     
     $rootScope.transcript="";
     $rootScope.tabvalue={};
-    //$rotated = false;
+    $rotated = false;
 
     $(document).on('click', '.chat-body .changedthbg', function(){ 
         var stage = $(this).attr("data-bgstage");
@@ -159,6 +159,19 @@ myApp.run(['$http','$cookies','beforeUnload','$document','$rootScope','Idle','bo
     //     //$('.mini-submenu').hide();
     // });
     angular.element(document).ready(function () {
+        $timeout(function(){
+            $('.c-hamburger span').css("transform", "rotate(90deg)");				
+            $('.c-hamburger span').css("transition", "transform 1.2s ease");
+            $(".c-hamburger").animate({'background-color': '#ed1c24'}, 'fast');
+            //$('.list-group').show("slide", { direction: "left" }, 1000);
+            $('.list-group').toggle('slide');
+            $rotated = true;
+            $('.expandable').removeClass('col-lg-9').addClass('col-lg-12');
+            $('.expandable2').removeClass('col-lg-5').addClass('col-lg-8');
+           
+        },1000);
+        
+
         $(document).on('click', '#address_change', function(){ 
             $rootScope.openContentModal('Address_Change');
         });
@@ -171,6 +184,9 @@ myApp.run(['$http','$cookies','beforeUnload','$document','$rootScope','Idle','bo
         $(document).on('click', '.name_mismatch_table', function(){ 
             $rootScope.openContentModal('name_mismatch_table');
         });
+        
+
+        
         
     });   
     $(document).on('click', '.faqques a', function(){ 
@@ -215,17 +231,24 @@ myApp.run(['$http','$cookies','beforeUnload','$document','$rootScope','Idle','bo
         }
         else
         {	
-            $('.expandable').removeClass('col-lg-12').addClass('col-lg-9');
-            $('.expandable2').removeClass('col-lg-8').addClass('col-lg-5');
-            $('.c-hamburger span').css("transform", "rotate(0deg)");				
-            $('.c-hamburger span').css("transition", "transform 1.2s ease");
-            $(this).animate({'background-color': '#003874'}, 'fast');
-            //$('.list-group').hide("slide", { direction: "left" }, 1000);
-            $('.list-group').toggle('slide');
-            $rotated = false;
+            $rootScope.rotateoutmenu();
         }
-        console.log($rotated);
     });
+    $rootScope.rotateoutmenu = function() {
+        if($rotated)
+        {
+            $timeout(function(){
+                $('.expandable').removeClass('col-lg-12').addClass('col-lg-9');
+                $('.expandable2').removeClass('col-lg-8').addClass('col-lg-5');
+                $('.c-hamburger span').css("transform", "rotate(0deg)");				
+                $('.c-hamburger span').css("transition", "transform 1.2s ease");
+                $(".c-hamburger").animate({'background-color': '#003874'}, 'fast');
+                //$('.list-group').hide("slide", { direction: "left" }, 1000);
+                $('.list-group').toggle('slide');
+                $rotated = false;
+            });
+        }
+    };
          Idle.watch();
         $document.on("keydown", function(e) {
             if(e.ctrlKey && (e.key == "p" || e.charCode == 16 || e.charCode == 112 || e.keyCode == 80) ){
@@ -323,9 +346,9 @@ myApp.run(['$http','$cookies','beforeUnload','$document','$rootScope','Idle','bo
         //console.clear();
         //document.querySelector('#devtool-status').innerHTML = checkStatus;
     }, 1000);
-    io.sails.url = 'http://localhost:1337';
-    //io.sails.autoConnect = false;
-    io.sails.useCORSRouteToGetCookie = true;
+    // io.sails.url = 'http://localhost:1337';
+    // //io.sails.autoConnect = false;
+    // io.sails.useCORSRouteToGetCookie = true;
     angular.element(document).ready(function() {
         new WOW().init();
     });

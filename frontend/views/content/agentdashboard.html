@@ -1,4 +1,4 @@
-<div id="main">
+<div id="main"  >
 	<div style="display:none;">
 		<div>
 			My name: <input type="text" id="my-name"> <button id="update-name">Update</button>
@@ -18,8 +18,27 @@
 		</div>
 	</div>
 	<div class="col-md-12">
-		<div class="col-md-6">
-			<div id="convos"></div>
+		<div class="row">
+			<div class="col-md-3">
+				<div id="convos" class="" ng-style="{'height':agentpanelheight+ 'px'}">
+					<div class="agentusersidebar row">
+						<div class="userlist">
+							<button class="btn useronline" disabled>
+								<span class="userimg">
+									<img src="img/logo7.png" class="img-fluid">
+								</span>
+								Me
+								<span class="pull-right onlinesymbol">
+									<i class="fa fa-circle" aria-hidden="true"></i>
+								</span>
+							</button>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="col-md-9">
+				<div id="convos_chat"></div>
+			</div>
 		</div>
 	</div>
 </div>
