@@ -10812,6 +10812,14 @@ div#suggestionList {
   overflow-x: hidden;
   height: 100%; }
 
+.newchat {
+  background-color: #0d9dff !important; }
+
+.start_conv, .end_conv {
+  text-align: center;
+  margin-top: 10px;
+  margin-bottom: 10px; }
+
 button.btn.useronline {
   width: 100%;
   background: #fff;

@@ -50,6 +50,27 @@ var controller = {
 
 
     },
+    leaveroom: function(req, res) {
+
+        if ( _.isUndefined(req.param('roomName')) ) {
+            return res.badRequest('`roomName` is required.');
+        }
+
+        if (!req.isSocket) {
+            return res.badRequest('This endpoints only supports socket requests.');
+        }
+
+        var roomName = req.param('roomName');
+        console.log(roomName);
+        sails.sockets.leave(req, roomName, function(err) {
+            if (err) {return res.serverError(err);}
+            return res.json({
+            message: 'Left a fun room called '+roomName+'!'
+            });
+        });
+
+
+    },
     loginFacebook: function (req, res) {
         passport.authenticate('facebook', {
             scope: ['public_profile', 'user_friends', 'email'],
