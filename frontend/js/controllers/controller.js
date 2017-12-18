@@ -374,6 +374,33 @@ myApp.controller('HomeCtrl', function ($scope,$rootScope, TemplateService, Navig
                 
             });
         }
+        $rootScope.disconnect = function() {
+            // userdata = {sid:$.jStorage.get("id"),name:$.jStorage.get("fname")+' '+$.jStorage.get("lname"),access_role:$.jStorage.get("access_role"),id:window.me.id};
+            //     io.socket.post("/user/disconnect",{query:userdata}, function(data){
+            //         console.log(data);
+            //     });
+            //io.socket.reconnects = true;
+            // end of workaround
+            //io.sails.connect();
+
+
+            //io.socket.disconnect(false);
+            //io.socket.reconnect();
+            // io.sails.url = 'http://localhost:1337';
+            // io.sails.connect(io.sails.url,{forceNew: true});
+            // io.connect(io.sails.url,{forceNew: true});
+            // io.socket.put(io.sails.url, {}, function (resData, jwres){
+            //     console.log(resData);
+            //     console.log(jwres);
+            // });
+            // //io.sails.connect("http://localhost:1337");
+            // io.connect("http://localhost:1337", {'forceNew': true});
+            //console.log(window.me.id);
+            // io.socket.delete('/users/'+window.me.id, function (resData) {
+            // resData; // => {id:9, name: 'Timmy Mendez', occupation: 'psychic'}
+            // console.log(resData);
+            // });
+        };
     })
     myApp.controller('DashboardCtrl', function ($scope,$rootScope, TemplateService, NavigationService,CsrfTokenService,Menuservice, $timeout,$http,apiService,$state) {
         $scope.template = TemplateService.getHTML("content/dashboard.html");
@@ -577,7 +604,7 @@ myApp.controller('HomeCtrl', function ($scope,$rootScope, TemplateService, Navig
         // Create the HTML for the room
         var roomHTML = '<div class="userlist"><button type="button" class="btn useronline" data-toggle="collapse" data-target="#collapseExample'+roomName+'" aria-expanded="false" aria-controls="collapseExample'+roomName+'"> <span id="private-username-'+penPal.id+'"><span class="userimg"><img src="img/logo7.png" class="img-fluid"></span>'+penPalName+'</span><span class="pull-right onlinesymbol"><i class="fa fa-circle" aria-hidden="true"></i></span></button></div>';
         var chatconv = '<div class="collapse in" id="collapseExample'+roomName+'"><div id="private-messages-'+penPal.id+'" class="private_conv"></div>'+
-                        '<div class="row"><div class="col-md-9"><input id="private-message-'+penPal.id+'" placeholder="Enter Message" class="form-control pvtmsg"/></div><div class="col-md-3"> <button class="btn btn-primary" id="private-button-'+penPal.id+'"><i class="fa fa-paper-plane" aria-hidden="true"></i></button"></div></div></div>';
+                        '<div class="row"><div class="col-md-9"><input id="private-message-'+penPal.id+'" placeholder="Enter Message" class="form-control pvtmsg"/></div><div class="col-md-3"> <button class="btn btn-primary" id="private-button-'+penPal.id+'" data-sname="'+penPal.sname+'" data_id="'+penPal._id+'" data-socketid="'+penPal.socketId+'"><i class="fa fa-paper-plane" aria-hidden="true"></i></button"></div></div></div>';
         roomDiv.html(roomHTML);
 
         // Add the room to the private conversation area
@@ -596,7 +623,9 @@ myApp.controller('HomeCtrl', function ($scope,$rootScope, TemplateService, Navig
 
         // Get the ID of the user we want to send to
         var recipientId = button.id.split('-')[2];
-
+        var from_socketid=$(this).attr("data-socketid");
+        var from_id=$(this).attr("data_id");
+        var from_sname=$(this).attr("data_sname");
         // Get the message to send
         var message = $('#private-message-'+recipientId).val();
         $('#private-message-'+recipientId).val("");
@@ -606,7 +635,10 @@ myApp.controller('HomeCtrl', function ($scope,$rootScope, TemplateService, Navig
 
         // Send the message
         io.socket.post('/chat/private', {to: recipientId, msg: message});
+            var formData= {msg:message,from_id:$.jStorage.get("id"),fromid:window.me.id,fromname:($.jStorage.get("fname")+' '+$.jStorage.get("lname")),from_socketid:$.jStorage.get("socketId"),toid:recipientId,toname:from_sname,to_id:from_id,to_socketid:from_socketid};
+            apiService.saveagentchat(formData).then(function (data){
 
+            });
         }
 
         // Add HTML for a new message in a private conversation
@@ -705,7 +737,7 @@ myApp.controller('HomeCtrl', function ($scope,$rootScope, TemplateService, Navig
                     // Handle a public message in a room.  Only sockets subscribed to the "message" context of a
                     // Room instance will get this message--see the "join" and "leave" methods of RoomController.js
                     // to see where a socket gets subscribed to a Room instance's "message" context.
-                    case 'messaged':
+                    case 'messaged': 
                     receiveRoomMessage(message.data);
                     break;
 
@@ -756,7 +788,15 @@ myApp.controller('HomeCtrl', function ($scope,$rootScope, TemplateService, Navig
                     // User instance will get this message--see the onConnect logic in config/sockets.js
                     // to see where a new user gets subscribed to their own "message" context
                     case 'messaged':
-                    receivePrivateMessage(message.data);
+                    {
+                        
+                        if(message.data.messagetype && message.data.messagetype == 'disconnect' )
+                        {
+                            removeUser(message.data.from.id);
+                        }
+                        else
+                            receivePrivateMessage(message.data);
+                    }
                     break;
 
                     default:
@@ -2154,6 +2194,7 @@ myApp.controller('HomeCtrl', function ($scope,$rootScope, TemplateService, Navig
             $('#'+roomName).append(div);
 
         }
+        $scope.lastagentid = "";
         $rootScope.lastagentmsg = false;
         $rootScope.sendMsgtoagent = function(msg) {
 
@@ -2216,8 +2257,13 @@ myApp.controller('HomeCtrl', function ($scope,$rootScope, TemplateService, Navig
                         $rootScope.pushSystemMsg(0,msg2); 
                         $rootScope.lastagentmsg = true;
                     }
+                    $scope.lastagentid = newuser[arr_ind].id;
                     addMessageToConversation(window.me.id, newuser[arr_ind].id, msg);
                     io.socket.post('/chat/private', {to: newuser[arr_ind].id, msg: msg});
+                    var formData= {msg:msg,from_id:$.jStorage.get("id"),fromid:window.me.id,fromname:($.jStorage.get("fname")+' '+$.jStorage.get("lname")),from_socketid:$.jStorage.get("socketId"),toid:newuser[arr_ind].id,toname:newuser[arr_ind].sname,to_id:newuser[arr_ind].sid,to_socketid:newuser[arr_ind].socketId};
+                    apiService.saveagentchat(formData).then(function (data){
+
+                    });
                 }
                 else {
                     $rootScope.agentconnected = false;
@@ -2237,10 +2283,22 @@ myApp.controller('HomeCtrl', function ($scope,$rootScope, TemplateService, Navig
             //removeUser(window.menubar.id);
             roomdata = {roomId:$.jStorage.get("lastroomid"),roomName : $.jStorage.get("lastroom"),socketId:$.jStorage.get("socketId"),sid:$.jStorage.get("sid")};
             console.log(roomdata);
-            io.socket.post('/room/leave',{query:roomdata}, function(data){
-            //io.socket.delete('/room/:'+roomdata.roomId+'/users',{query:roomdata}, function(data){
-                console.log(data);
-            });
+            //io.socket.post('/room/leave',{query:roomdata}, function(data){
+            // io.socket.delete('/room/:'+roomdata.roomId+'/users',{id:roomdata.roomId,query:roomdata}, function(data){
+            //     console.log(data);
+                
+            // });
+            
+            //io.connect("http://localhost:1337", {'forceNew': true});
+            //io.disconnect;
+            //io.socket("disconnect");
+            // io.connect("http://localhost:1337", {'forceNew': true});
+            // userdata = {sid:$.jStorage.get("id"),name:$.jStorage.get("fname")+' '+$.jStorage.get("lname"),access_role:$.jStorage.get("access_role")};
+            //     io.socket.get("/user/disconnect",{query:userdata}, function(data){
+            //     });
+            //$rootScope.disconnect();
+            io.socket.post('/chat/private', {to:$scope.lastagentid, msg: '',messagetype:"disconnect"});
+
             $rootScope.agentconnected = false;
             $rootScope.lastagentmsg = false;
         };
