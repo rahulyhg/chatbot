@@ -1,6 +1,41 @@
 var schema = new Schema({
-    chatlist:{
-        type: Array,
+    chatlist:[
+        // type: Array,
+        {
+            date: {
+                 type: Date,
+                 default: Date.now 
+            },
+            from_id:Schema.Types.ObjectId,
+            to_id:Schema.Types.ObjectId,
+            fromid:{
+                type:Number,
+            },
+            toid:{
+                type:Number,
+            },
+            fromname:{
+                type:String,
+            },
+            toname:{
+                type:String,
+            },
+            msg:{
+                type:String,
+            },
+            from_socketid:{
+                type:String,
+            },
+            to_socketid:{
+                type:String,
+            },
+        }
+    ],
+    user1:{
+        type:Schema.Types.ObjectId,
+    },
+    user2: {
+        type:Schema.Types.ObjectId,
     },
     socketid1: {
         type:String
@@ -10,6 +45,9 @@ var schema = new Schema({
     },
     disconnected : {
         type:Boolean
+    },
+    disconnectby:{
+        type:Schema.Types.ObjectId,
     }
 });
 
@@ -31,9 +69,55 @@ module.exports = mongoose.model('agentchat', schema,'agentchat');
 //var chatbot_user_logs = mongoose.model('chatbot_user_logs', userlogschema,"chatbot_user_logs");
 var exports = _.cloneDeep(require("sails-wohlig-service")(schema));
 var model = {
-    
+    setdisconnectsocket:function (data, callback){
+        Agentchat.update({
+            $and : [
+                { $or:[ {'user1':mongoose.Types.ObjectId(data.from_id)}, {'user2':mongoose.Types.ObjectId(data.from_id)}] },
+            ],
+        },{  disconnected: true }, {multi: true},function (err, found) {
+            if (err) {
+                callback(err, null);
+            } 
+            else {
+                if (found) {
+                    callback(null, found);
+                } else {
+                    callback({
+                        message: "-1"
+                    }, null);
+                }
+            }
+
+        });
+    },
+    disconnectuser:function (data, callback){
+        Agentchat.findOneAndUpdate({
+            $and : [
+                { $or:[ {'user1':mongoose.Types.ObjectId(data.from_id)}, {'user1':mongoose.Types.ObjectId(data.to_id)}] },
+                { $or:[ {'user2':mongoose.Types.ObjectId(data.from_id)}, {'user2':mongoose.Types.ObjectId(data.to_id)}] },
+            ],
+            $and : [
+                { $or:[ {'socketid1':data.socketid}, {'socketid2':data.socketid}] },
+                // { $or:[ {'socketid2':data.socketid}, {'socketid2':data.socketid}] },
+            ],
+        },{ $set: { disconnected: true,disconnectby:mongoose.Types.ObjectId(data.disconnectby) }}).exec(function (err, found) {
+            if (err) {
+                callback(err, null);
+            } 
+            else {
+                if (found) {
+                    callback(null, found);
+                } else {
+                    callback({
+                        message: "-1"
+                    }, null);
+                }
+            }
+
+        });
+    },
     savechat:function (data, callback) {
-        Agentchat.find( {
+        Agentchat.findOne( {
             $and : [
                 { $or:[ {'socketid1':data.from_socketid}, {'socketid1':data.to_socketid}] },
                 { $or:[ {'socketid2':data.from_socketid}, {'socketid2':data.to_socketid}] },
@@ -43,8 +127,8 @@ var model = {
                 callback(err, null);
             } 
             else {
-                console.log(found,"found obj");
-                if (found.length > 0) {
+                //console.log(found,"found obj");
+                if (found) {
                     Agentchat.update(
                         { 
                             $and : [
@@ -53,7 +137,7 @@ var model = {
                             ]
                         },
                         { $push: { 
-                            chatlist:[
+                            chatlist:
                                 {
                                     from_id:mongoose.Types.ObjectId(data.from_id),
                                     to_id:mongoose.Types.ObjectId(data.to_id),
@@ -65,14 +149,14 @@ var model = {
                                     from_socketid:data.from_socketid,
                                     to_socketid:data.to_socketid,
                                 }
-                            ] 
+                             
                         } }
                     ).exec(function (err2, updatefound) {
                         if (err2) {
                             callback(err2, null);
                         } 
                         else {
-                            console.log(updatefound,"inside update");
+                            //console.log(updatefound,"inside update");
                             if (updatefound) {
                                 callback(null, updatefound);
                             } else {
@@ -87,6 +171,8 @@ var model = {
                         socketid1: data.from_socketid,
                         socketid2: data.to_socketid,
                         disconnected:false,
+                        user1:mongoose.Types.ObjectId(data.from_id),
+                        user2:mongoose.Types.ObjectId(data.to_id),
                         chatlist:[
                             {
                                 from_id:mongoose.Types.ObjectId(data.from_id),
@@ -106,7 +192,7 @@ var model = {
                         } 
                         else {
                             if (savefound) {
-                                console.log(savefound,"inside update");
+                                //console.log(savefound,"inside update");
                                 callback(null, savefound);
                             } else {
                                 callback({

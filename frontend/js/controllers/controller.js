@@ -16,7 +16,15 @@ myApp.controller('HomeCtrl', function ($scope,$rootScope, TemplateService, Navig
         angular.element(document).ready(function() {
             new WOW().init();
         });
+        
         angular.element(document).ready(function () {
+            $scope.setdisconnectsocket = function(){
+                var formData= {from_id:$.jStorage.get("id")};
+                apiService.setdisconnectsocket(formData).then(function (data){
+
+                });
+            };
+            $scope.setdisconnectsocket();
             apiService.get_session({}).then( function (response) {
                 $cookies.put("csrftoken",response.data.csrf_token);
                 $cookies.put("session_id",response.data.session_id);
@@ -303,9 +311,9 @@ myApp.controller('HomeCtrl', function ($scope,$rootScope, TemplateService, Navig
                 // of the User model to see which messages will be broadcast by default
                 // to subscribed sockets.
                 io.socket.on('user', function messageReceived(message) {
-
+                    console.log(message);
                     switch (message.verb) {
-
+                        
                         // Handle user creation
                         case 'created':
                         addUser(message.data);
@@ -331,7 +339,11 @@ myApp.controller('HomeCtrl', function ($scope,$rootScope, TemplateService, Navig
 
                         // Handle user destruction
                         case 'destroyed':
-                        removeUser(message.id);
+                        {
+                            if($rootScope.lastagent == message.previous.sid)
+                                $rootScope.endConversation(2);
+                            removeUser(message.id);
+                        }
                         break;
 
                         // Handle private messages.  Only sockets subscribed to the "message" context of a
@@ -587,7 +599,7 @@ myApp.controller('HomeCtrl', function ($scope,$rootScope, TemplateService, Navig
 
         // Create the HTML to hold a private conversation between two users
         function createPrivateConversationRoom(penPal) {
-
+        console.log(penPal);
         // Get the ID of the HTML element for this private convo, if there is one
         var roomName = 'private-room-'+penPal.id;
 
@@ -604,7 +616,7 @@ myApp.controller('HomeCtrl', function ($scope,$rootScope, TemplateService, Navig
         // Create the HTML for the room
         var roomHTML = '<div class="userlist"><button type="button" class="btn useronline" data-toggle="collapse" data-target="#collapseExample'+roomName+'" aria-expanded="false" aria-controls="collapseExample'+roomName+'"> <span id="private-username-'+penPal.id+'"><span class="userimg"><img src="img/logo7.png" class="img-fluid"></span>'+penPalName+'</span><span class="pull-right onlinesymbol"><i class="fa fa-circle" aria-hidden="true"></i></span></button></div>';
         var chatconv = '<div class="collapse in" id="collapseExample'+roomName+'"><div id="private-messages-'+penPal.id+'" class="private_conv"></div>'+
-                        '<div class="row"><div class="col-md-9"><input id="private-message-'+penPal.id+'" placeholder="Enter Message" class="form-control pvtmsg"/></div><div class="col-md-3"> <button class="btn btn-primary" id="private-button-'+penPal.id+'" data-sname="'+penPal.sname+'" data_id="'+penPal._id+'" data-socketid="'+penPal.socketId+'"><i class="fa fa-paper-plane" aria-hidden="true"></i></button"></div></div></div>';
+                        '<div class="row"><div class="col-md-9"><input id="private-message-'+penPal.id+'" placeholder="Enter Message" class="form-control pvtmsg"/></div><div class="col-md-3"> <button class="btn btn-primary" id="private-button-'+penPal.id+'" data-sname="'+penPal.sname+'" data_id="'+penPal.sid+'" data-socketid="'+penPal.socketId+'"><i class="fa fa-paper-plane" aria-hidden="true"></i></button"></div></div></div>';
         roomDiv.html(roomHTML);
 
         // Add the room to the private conversation area
@@ -625,7 +637,7 @@ myApp.controller('HomeCtrl', function ($scope,$rootScope, TemplateService, Navig
         var recipientId = button.id.split('-')[2];
         var from_socketid=$(this).attr("data-socketid");
         var from_id=$(this).attr("data_id");
-        var from_sname=$(this).attr("data_sname");
+        var from_sname=$(this).attr("data-sname");
         // Get the message to send
         var message = $('#private-message-'+recipientId).val();
         $('#private-message-'+recipientId).val("");
@@ -2276,13 +2288,26 @@ myApp.controller('HomeCtrl', function ($scope,$rootScope, TemplateService, Navig
             // // Send the message
             // io.socket.post('/chat/private', {to: "5a0a81e8179172360420c966", msg: msg});
         };
-        $rootScope.endConversation = function() {
-            var msg = {Text:"Your Chat has ended.",type:"SYS_CONV_END"};
+        $rootScope.endConversation = function(byrole) {
+            //byrole-1->user,2-> chat agent
+            var disconnectby = "";
+            var endmsg="";
+            if(byrole == 2)
+            {
+                disconnectby=$scope.lastagentid;
+                endmsg = "Your Chat terminated by agent.";
+            }
+            else
+            {
+                disconnectby=$.jStorage.get("id");
+                endmsg = "Your Chat has ended.";
+            }
+            var msg = {Text:endmsg,type:"SYS_CONV_END"};
             $rootScope.pushSystemMsg(0,msg); 
             //io.sails.sockets.leave($.jStorage.get("socketId"), $.jStorage.get("lastroom"));
             //removeUser(window.menubar.id);
-            roomdata = {roomId:$.jStorage.get("lastroomid"),roomName : $.jStorage.get("lastroom"),socketId:$.jStorage.get("socketId"),sid:$.jStorage.get("sid")};
-            console.log(roomdata);
+            // roomdata = {roomId:$.jStorage.get("lastroomid"),roomName : $.jStorage.get("lastroom"),socketId:$.jStorage.get("socketId"),sid:$.jStorage.get("sid")};
+            // console.log(roomdata);
             //io.socket.post('/room/leave',{query:roomdata}, function(data){
             // io.socket.delete('/room/:'+roomdata.roomId+'/users',{id:roomdata.roomId,query:roomdata}, function(data){
             //     console.log(data);
@@ -2297,10 +2322,14 @@ myApp.controller('HomeCtrl', function ($scope,$rootScope, TemplateService, Navig
             //     io.socket.get("/user/disconnect",{query:userdata}, function(data){
             //     });
             //$rootScope.disconnect();
+            
             io.socket.post('/chat/private', {to:$scope.lastagentid, msg: '',messagetype:"disconnect"});
-
             $rootScope.agentconnected = false;
             $rootScope.lastagentmsg = false;
+            var formData= {disconnectby:disconnectby,from_id:$.jStorage.get("id"),to_id:$rootScope.lastagent,socketid:$.jStorage.get("socketId")};
+            apiService.disconnectuser(formData).then(function (data){
+
+            });
         };
         $rootScope.Speaktext = function() {
             //console.log(text);

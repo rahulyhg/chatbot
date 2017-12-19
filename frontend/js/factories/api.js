@@ -3,7 +3,7 @@ myApp.factory('apiService', function ($http, $q, $timeout,CsrfTokenService,$http
     adminurl = "http://104.46.103.162:8097/";
     var adminUrl2 = "http://wohlig.io/api/";
     var adminUrl3 = "http://104.46.103.162:8001/api/"
-    var adminUrl3 = "http://localhost/api/";
+    //var adminUrl3 = "http://localhost/api/";
     //return
     return {
 
@@ -34,6 +34,24 @@ myApp.factory('apiService', function ($http, $q, $timeout,CsrfTokenService,$http
             
             return $http({
                 url:adminUrl3+ "Agentchat/savechat",
+                method: 'POST',
+                data: formData,
+            });
+           
+        },
+        setdisconnectsocket:function(formData, callback) {
+            
+            return $http({
+                url:adminUrl3+ "Agentchat/setdisconnectsocket",
+                method: 'POST',
+                data: formData,
+            });
+           
+        },
+        disconnectuser:function(formData, callback) {
+            
+            return $http({
+                url:adminUrl3+ "Agentchat/disconnectuser",
                 method: 'POST',
                 data: formData,
             });
