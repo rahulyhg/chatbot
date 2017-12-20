@@ -557,6 +557,12 @@ myApp.controller('HomeCtrl', function ($scope,$rootScope, TemplateService, Navig
         $scope.uipage = "agentdashboard";
         $rootScope.access_role = $.jStorage.get("access_role");
         $scope.firstreload = false;
+        $scope.scrollagentChatWindow = function(id) {
+            $timeout(function(){
+                var chatHeight = $("#collapseExampleprivate-room-"+id+" .private_conv").height();
+                $("#collapseExampleprivate-room-"+id+" .private_conv").animate({scrollTop: chatHeight});
+            });
+        };
         if($.jStorage.get("firstreload"))
             $scope.firstreload = true;
         else
@@ -599,12 +605,14 @@ myApp.controller('HomeCtrl', function ($scope,$rootScope, TemplateService, Navig
 
         // Create the HTML to hold a private conversation between two users
         function createPrivateConversationRoom(penPal) {
-        console.log(penPal);
+        
         // Get the ID of the HTML element for this private convo, if there is one
         var roomName = 'private-room-'+penPal.id;
 
         // If HTML for the room already exists, return.
         if ($('#'+roomName).length) {
+            $('#private-message-'+penPal.id).show();
+            $('#private-button-'+penPal.id).show();
             return;
         }
 
@@ -624,7 +632,7 @@ myApp.controller('HomeCtrl', function ($scope,$rootScope, TemplateService, Navig
         $("#convos_chat").append(chatconv);
         // Hook up the "send message" button
         $('#private-button-'+penPal.id).click(onClickSendPrivateMessage);
-
+        
         }
 
         // Callback for when the user clicks the "Send message" button in a private conversation
@@ -651,6 +659,7 @@ myApp.controller('HomeCtrl', function ($scope,$rootScope, TemplateService, Navig
             apiService.saveagentchat(formData).then(function (data){
 
             });
+            $scope.scrollagentChatWindow(recipientId);
         }
 
         // Add HTML for a new message in a private conversation
@@ -664,7 +673,7 @@ myApp.controller('HomeCtrl', function ($scope,$rootScope, TemplateService, Navig
             var div = $('<div style="text-align:'+justify+'"></div>');
             div.html('<strong>'+senderName+'</strong>: '+message);
             $('#'+roomName).append(div);
-
+            $scope.scrollagentChatWindow(senderId);
         }
 
         // Handle an incoming private message from the server.
@@ -1474,6 +1483,7 @@ myApp.controller('HomeCtrl', function ($scope,$rootScope, TemplateService, Navig
                 $rootScope.autocompletelist = [];
                 $rootScope.chatlist.push({id:"id",msg:value,position:"right",curTime: $rootScope.getDatetime()});
                 $rootScope.sendMsgtoagent(value);
+                $rootScope.scrollChatWindow(); 
             }
             else {
 
@@ -2295,7 +2305,7 @@ myApp.controller('HomeCtrl', function ($scope,$rootScope, TemplateService, Navig
             if(byrole == 2)
             {
                 disconnectby=$scope.lastagentid;
-                endmsg = "Your Chat terminated by agent.";
+                endmsg = "Chat terminated by agent.";
             }
             else
             {

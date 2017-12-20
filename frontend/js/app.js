@@ -417,6 +417,10 @@ myApp.run(['$http','$cookies','beforeUnload','$document','$rootScope','Idle','bo
         //document.querySelector('#devtool-status').innerHTML = checkStatus;
     }, 1000);
     io.sails.url = 'http://localhost:1337';
+    //io.sails = {url: "http://localhost:1337",};
+    //io(io.sails.url);
+    //io.sails.connect(io.sails.url);
+    //io.sails.set('origins', 'http://localhost:1337');
     io.sails.autoConnect = true;
     io.sails.useCORSRouteToGetCookie = true;
     angular.element(document).ready(function() {
