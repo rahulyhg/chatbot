@@ -550,7 +550,7 @@ myApp.controller('HomeCtrl', function ($scope,$rootScope, TemplateService, Navig
             })
         };
     })
-    .controller('AgentdashboardCtrl', function ($scope, $rootScope,$resource,TemplateService, NavigationService,CsrfTokenService, $timeout,$http,apiService,$state,$uibModal,Menuservice,tts,$cookies,$sce,$location) {
+    .controller('AgentdashboardCtrl', function ($scope, $rootScope,$resource,TemplateService, NavigationService,CsrfTokenService, $timeout,$http,apiService,$state,$uibModal,Menuservice,tts,$cookies,$sce,$location,$document) {
         $scope.template = TemplateService.getHTML("content/agentdashboard.html");
         TemplateService.title = "Home"; //This is the Title of the Website
         $scope.navigation = NavigationService.getNavigation();
@@ -624,7 +624,7 @@ myApp.controller('HomeCtrl', function ($scope,$rootScope, TemplateService, Navig
         // Create the HTML for the room
         var roomHTML = '<div class="userlist"><button type="button" class="btn useronline" data-toggle="collapse" data-target="#collapseExample'+roomName+'" aria-expanded="false" aria-controls="collapseExample'+roomName+'"> <span id="private-username-'+penPal.id+'"><span class="userimg"><img src="img/logo7.png" class="img-fluid"></span>'+penPalName+'</span><span class="pull-right onlinesymbol"><i class="fa fa-circle" aria-hidden="true"></i></span></button></div>';
         var chatconv = '<div class="collapse in" id="collapseExample'+roomName+'"><div id="private-messages-'+penPal.id+'" class="private_conv"></div>'+
-                        '<div class="row"><div class="col-md-9"><input id="private-message-'+penPal.id+'" placeholder="Enter Message" class="form-control pvtmsg"/></div><div class="col-md-3"> <button class="btn btn-primary" id="private-button-'+penPal.id+'" data-sname="'+penPal.sname+'" data_id="'+penPal.sid+'" data-socketid="'+penPal.socketId+'"><i class="fa fa-paper-plane" aria-hidden="true"></i></button"></div></div></div>';
+                        '<div class="row"><div class="col-md-9"><input id="private-message-'+penPal.id+'" placeholder="Enter Message"  class="form-control pvtmsg"/></div><div class="col-md-3"> <button class="btn btn-primary" id="private-button-'+penPal.id+'" data-sname="'+penPal.sname+'" data_id="'+penPal.sid+'" data-socketid="'+penPal.socketId+'"><i class="fa fa-paper-plane" aria-hidden="true"></i></button"></div></div></div>';
         roomDiv.html(roomHTML);
 
         // Add the room to the private conversation area
@@ -692,6 +692,41 @@ myApp.controller('HomeCtrl', function ($scope,$rootScope, TemplateService, Navig
             //$rootScope.chatlist.push({id:"id",msg:mymsg,position:"left",curTime: $rootScope.getDatetime()});
             //$rootScope.pushSystemMsg(0,mymsg);  
         }
+        angular.element(document).ready(function () {
+            //$('.pvtmsg').keypress(function (e) {
+            // $('.pvtmsg').keyup(function(){
+            //     console.log("entering");
+            //     if (e.which == 13) {
+            //         console.log("entering");
+            //         var id=$(this).attr('id');
+            //         var intid =parseInt(id.split('private-button-'));
+            //         $('#private-button-'+intid).click(onClickSendPrivateMessage);
+            //         return false;    //<---- Add this line
+            //     }
+            // });
+            $(document).on("keyup",".pvtmsg", function(e) {
+                if (e.which == 13) {
+                    console.log("entering");
+                    var id=$(this).attr('id');
+                    var intid =id.split('private-message-');
+                    var myid = intid[1];
+                    console.log(myid);
+                    $('#private-button-'+myid).trigger("click");
+                    //$('#private-button-'+myid).click(onClickSendPrivateMessage);
+                    //return false;    //<---- Add this line
+                }
+            });
+            // function pvtkeyup(e){
+            //     console.log("entering");
+            //     if (e.which == 13) {
+            //         console.log("entering");
+            //         var id=$(this).attr('id');
+            //         var intid =parseInt(id.split('private-button-'));
+            //         $('#private-button-'+intid).click(onClickSendPrivateMessage);
+            //         return false;    //<---- Add this line
+            //     }
+            // }
+        });
         window.me={};
         io.socket.on('connect', function socketConnected() {
 

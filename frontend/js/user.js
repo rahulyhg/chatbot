@@ -52,7 +52,8 @@ function removeUser(user) {
 
   // Post a user status message if we're in a private convo
   if ($('#private-room-'+id).length) {
-    postStatusMessage('private-messages-'+id, userName + ' has disconnected.');
+    //postStatusMessage('private-messages-'+id, userName + ' has disconnected.');
+    postStatusMessage('private-messages-'+id, 'User has disconnected.');
     $('#private-message-'+id).hide();
     $('#private-button-'+id).hide();
   }
