@@ -16,7 +16,8 @@ var myApp = angular.module('myApp', [
     'ngIdle',
     'app.directives',
     'voiceRss',
-    'jlareau.bowser'
+    'jlareau.bowser',
+    'angular-intro'
 ]);
 //angular.module('manage', ['ngResource']);
 // Define all the routes below
