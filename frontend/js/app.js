@@ -119,7 +119,7 @@ myApp.run(['$http','$cookies','beforeUnload','$document','$rootScope','Idle','bo
         $(".stage"+stage).css('background-color','#eee');
         $(".stage"+stage).css('color','#1e90ff');
         $(".stage"+stage+' .lefticon').hide();
-        $(this).css('background-color', '#003874');
+        $(this).css('background-color', '#003366');
         $(this).css('color', '#fff');
         $(this).find(".lefticon").show();
     });     
@@ -162,7 +162,7 @@ myApp.run(['$http','$cookies','beforeUnload','$document','$rootScope','Idle','bo
         $timeout(function(){
             $('.c-hamburger span').css("transform", "rotate(90deg)");				
             $('.c-hamburger span').css("transition", "transform 1.2s ease");
-            $(".c-hamburger").animate({'background-color': '#ed1c24'}, 'fast');
+            $(".c-hamburger").animate({'background-color': '#FF0000'}, 'fast');
             //$('.list-group').show("slide", { direction: "left" }, 1000);
             $('.list-group').toggle('slide');
             $rootScope.rotated = true;
@@ -222,7 +222,7 @@ myApp.run(['$http','$cookies','beforeUnload','$document','$rootScope','Idle','bo
         // {
         //     $('.c-hamburger span').css("transform", "rotate(90deg)");				
         //     $('.c-hamburger span').css("transition", "transform 1.2s ease");
-        //     $(this).animate({'background-color': '#ed1c24'}, 'fast');
+        //     $(this).animate({'background-color': '#FF0000'}, 'fast');
         //     //$('.list-group').show("slide", { direction: "left" }, 1000);
         //     $('.list-group').toggle('slide');
         //     $rootScope.rotated = true;
@@ -242,7 +242,7 @@ myApp.run(['$http','$cookies','beforeUnload','$document','$rootScope','Idle','bo
         //         $('.expandable2').removeClass('col-lg-8').addClass('col-lg-5');
         //         $('.c-hamburger span').css("transform", "rotate(0deg)");				
         //         $('.c-hamburger span').css("transition", "transform 1.2s ease");
-        //         $(".c-hamburger").animate({'background-color': '#003874'}, 'fast');
+        //         $(".c-hamburger").animate({'background-color': '#003366'}, 'fast');
         //         //$('.list-group').hide("slide", { direction: "left" }, 1000);
         //         $('.list-group').toggle('slide');
         //         $rootScope.rotated = false;
@@ -257,7 +257,7 @@ myApp.run(['$http','$cookies','beforeUnload','$document','$rootScope','Idle','bo
                     $('.expandable2').removeClass('col-lg-8').addClass('col-lg-5');
                     $('.c-hamburger span').css("transform", "rotate(0deg)");				
                     $('.c-hamburger span').css("transition", "transform 1.2s ease");
-                    $(".c-hamburger").animate({'background-color': '#003874'}, 'fast');
+                    $(".c-hamburger").animate({'background-color': '#003366'}, 'fast');
                     //$('.list-group').hide("slide", { direction: "left" }, 1000);
                     $('.list-group').toggle('slide');
                     $rootScope.rotated = true;
@@ -270,11 +270,11 @@ myApp.run(['$http','$cookies','beforeUnload','$document','$rootScope','Idle','bo
 
                     $('.c-hamburger span').css("transform", "rotate(90deg)");				
                     $('.c-hamburger span').css("transition", "transform 1.2s ease");
-                    $(".c-hamburger").animate({'background-color': '#ed1c24'}, 'fast');
+                    $(".c-hamburger").animate({'background-color': '#FF0000'}, 'fast');
 
                     // $('.c-hamburger span').css("transform", "rotate(0deg)");				
                     // $('.c-hamburger span').css("transition", "transform 1.2s ease");
-                    // $(".c-hamburger").animate({'background-color': '#003874'}, 'fast');
+                    // $(".c-hamburger").animate({'background-color': '#003366'}, 'fast');
                     //$('.list-group').hide("slide", { direction: "left" }, 1000);
                     $('.list-group').toggle('slide');
                     $rootScope.rotated = false;    
@@ -292,7 +292,7 @@ myApp.run(['$http','$cookies','beforeUnload','$document','$rootScope','Idle','bo
                     // $('.expandable2').removeClass('col-lg-8').addClass('col-lg-5');
                     $('.c-hamburger span').css("transform", "rotate(0deg)");				
                     $('.c-hamburger span').css("transition", "transform 1.2s ease");
-                    $(".c-hamburger").animate({'background-color': '#003874'}, 'fast');
+                    $(".c-hamburger").animate({'background-color': '#003366'}, 'fast');
                     //$('.list-group').hide("slide", { direction: "left" }, 1000);
                     $('.list-group').toggle('slide');
                     $rootScope.rotated = false;
@@ -305,11 +305,11 @@ myApp.run(['$http','$cookies','beforeUnload','$document','$rootScope','Idle','bo
 
                     $('.c-hamburger span').css("transform", "rotate(90deg)");				
                     $('.c-hamburger span').css("transition", "transform 1.2s ease");
-                    $(".c-hamburger").animate({'background-color': '#ed1c24'}, 'fast');
+                    $(".c-hamburger").animate({'background-color': '#FF0000'}, 'fast');
 
                     // $('.c-hamburger span').css("transform", "rotate(0deg)");				
                     // $('.c-hamburger span').css("transition", "transform 1.2s ease");
-                    // $(".c-hamburger").animate({'background-color': '#003874'}, 'fast');
+                    // $(".c-hamburger").animate({'background-color': '#003366'}, 'fast');
                     //$('.list-group').hide("slide", { direction: "left" }, 1000);
                     $('.list-group').toggle('slide');
                     $rootScope.rotated = false;    
