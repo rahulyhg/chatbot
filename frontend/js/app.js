@@ -17,7 +17,7 @@ var myApp = angular.module('myApp', [
     'app.directives',
     'voiceRss',
     'jlareau.bowser',
-    'angular-intro'
+    // 'angular-intro'
 ]);
 //angular.module('manage', ['ngResource']);
 // Define all the routes below
@@ -161,15 +161,14 @@ myApp.run(['$http','$cookies','beforeUnload','$document','$rootScope','Idle','bo
     // });
     angular.element(document).ready(function () {
         $timeout(function(){
-            $('.c-hamburger span').css("transform", "rotate(90deg)");				
-            $('.c-hamburger span').css("transition", "transform 1.2s ease");
-            $(".c-hamburger").animate({'background-color': '#FF0000'}, 'fast');
-            //$('.list-group').show("slide", { direction: "left" }, 1000);
+            // $('.c-hamburger span').css("transform", "rotate(90deg)");				
+            // $('.c-hamburger span').css("transition", "transform 1.2s ease");
+            // $(".c-hamburger").animate({'background-color': '#FF0000'}, 'fast');
             $('.list-group').toggle('slide');
             $rootScope.rotated = true;
             $('.expandable').removeClass('col-lg-9').addClass('col-lg-12');
             $('.expandable2').removeClass('col-lg-5').addClass('col-lg-8');
-           
+            
         },1000);
         
 
@@ -234,6 +233,7 @@ myApp.run(['$http','$cookies','beforeUnload','$document','$rootScope','Idle','bo
         {	
             $rootScope.rotateoutmenu();
         }
+        
     });
     $rootScope.rotateoutmenu = function() {
         // if($rootScope.rotated)
@@ -249,18 +249,22 @@ myApp.run(['$http','$cookies','beforeUnload','$document','$rootScope','Idle','bo
         //         $rootScope.rotated = false;
         //     });
         // }
+        // $('#nav-icon1,#nav-icon2,#nav-icon3,#nav-icon4').click(function(){
+            $("#nav-icon1").toggleClass('open');
+        // });
         if($(".template.content").find('.expandable2').length == 1)
         {
+           
             if($(".expandable2").hasClass('col-lg-8'))
             {
                 $timeout(function(){
                     $('.expandable').removeClass('col-lg-12').addClass('col-lg-9');
                     $('.expandable2').removeClass('col-lg-8').addClass('col-lg-5');
-                    $('.c-hamburger span').css("transform", "rotate(0deg)");				
-                    $('.c-hamburger span').css("transition", "transform 1.2s ease");
-                    $(".c-hamburger").animate({'background-color': '#003366'}, 'fast');
-                    //$('.list-group').hide("slide", { direction: "left" }, 1000);
+                    // $('.c-hamburger span').css("transform", "rotate(0deg)");				
+                    // $('.c-hamburger span').css("transition", "transform 1.2s ease");
+                    //$(".c-hamburger").animate({'background-color': '#003366'}, 'fast');
                     $('.list-group').toggle('slide');
+                    
                     $rootScope.rotated = true;
                 });
             }
@@ -269,14 +273,10 @@ myApp.run(['$http','$cookies','beforeUnload','$document','$rootScope','Idle','bo
                     $('.expandable').removeClass('col-lg-9').addClass('col-lg-12');
                     $('.expandable2').removeClass('col-lg-5').addClass('col-lg-8');
 
-                    $('.c-hamburger span').css("transform", "rotate(90deg)");				
-                    $('.c-hamburger span').css("transition", "transform 1.2s ease");
-                    $(".c-hamburger").animate({'background-color': '#FF0000'}, 'fast');
-
-                    // $('.c-hamburger span').css("transform", "rotate(0deg)");				
+                    // $('.c-hamburger span').css("transform", "rotate(90deg)");				
                     // $('.c-hamburger span').css("transition", "transform 1.2s ease");
-                    // $(".c-hamburger").animate({'background-color': '#003366'}, 'fast');
-                    //$('.list-group').hide("slide", { direction: "left" }, 1000);
+                    //$(".c-hamburger").animate({'background-color': '#FF0000'}, 'fast');
+
                     $('.list-group').toggle('slide');
                     $rootScope.rotated = false;    
                 });
@@ -290,11 +290,9 @@ myApp.run(['$http','$cookies','beforeUnload','$document','$rootScope','Idle','bo
             {
                 $timeout(function(){
                     $('.expandable').removeClass('col-lg-12').addClass('col-lg-9');
-                    // $('.expandable2').removeClass('col-lg-8').addClass('col-lg-5');
-                    $('.c-hamburger span').css("transform", "rotate(0deg)");				
-                    $('.c-hamburger span').css("transition", "transform 1.2s ease");
-                    $(".c-hamburger").animate({'background-color': '#003366'}, 'fast');
-                    //$('.list-group').hide("slide", { direction: "left" }, 1000);
+                    // $('.c-hamburger span').css("transform", "rotate(0deg)");				
+                    // $('.c-hamburger span').css("transition", "transform 1.2s ease");
+                    // $(".c-hamburger").animate({'background-color': '#003366'}, 'fast');
                     $('.list-group').toggle('slide');
                     $rootScope.rotated = false;
                 });
@@ -302,16 +300,11 @@ myApp.run(['$http','$cookies','beforeUnload','$document','$rootScope','Idle','bo
             else {
                 $timeout(function(){
                     $('.expandable').removeClass('col-lg-9').addClass('col-lg-12');
-                    // $('.expandable2').removeClass('col-lg-5').addClass('col-lg-8');
-
-                    $('.c-hamburger span').css("transform", "rotate(90deg)");				
-                    $('.c-hamburger span').css("transition", "transform 1.2s ease");
-                    $(".c-hamburger").animate({'background-color': '#FF0000'}, 'fast');
-
-                    // $('.c-hamburger span').css("transform", "rotate(0deg)");				
+                    
+                    // $('.c-hamburger span').css("transform", "rotate(90deg)");				
                     // $('.c-hamburger span').css("transition", "transform 1.2s ease");
-                    // $(".c-hamburger").animate({'background-color': '#003366'}, 'fast');
-                    //$('.list-group').hide("slide", { direction: "left" }, 1000);
+                    // $(".c-hamburger").animate({'background-color': '#FF0000'}, 'fast');
+
                     $('.list-group').toggle('slide');
                     $rootScope.rotated = false;    
                 });
