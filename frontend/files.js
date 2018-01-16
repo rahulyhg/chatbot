@@ -29,7 +29,8 @@ module.exports = [
   "bower_components/angular-ui-carousel/dist/ui-carousel.min.js",
   "bower_components/angular-bowser/src/angular-bowser.js",
   "bower_components/intro.js/minified/intro.min.js",
-  "bower_components/angular-intro.js/build/angular-intro.min.js",
+  // "bower_components/angular-intro.js/build/angular-intro.min.js",
+  "bower_components/hopscotch/dist/js/hopscotch.min.js",
   //App.js
   'frontend/js/app.js',
 

@@ -13,7 +13,7 @@
 /* ====================================================================================================================
  * FONT-FACE
  * ====================================================================================================================*/
-@import url(../../bower_components/intro.js/introjs.css);
+@import url(../../bower_components/hopscotch/dist/css/hopscotch.min.css);
 @font-face {
   font-family: 'flexslider-icon';
   src: url("fonts/flexslider-icon.eot");
