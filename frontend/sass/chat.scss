@@ -88,6 +88,9 @@ ul#chatTabs {
 .chattab-content {
     padding-top:5px; 
 }
+.nav-tabs > li.active > a, .nav-tabs > li.active > a:hover, .nav-tabs > li.active > a:focus {
+    color: #003366;
+}
 .cals{
     text-align: center;
 }
@@ -141,7 +144,7 @@ li.ui-menu-item {
 }
 .chatbottomtext { 
     font-size: 12px;
-    color: #053c6d;
+    color: #003366;
 }
 .loader_msg { font-style: italic; }
 #firstMsg { font-size: 10px; }
@@ -161,6 +164,18 @@ li.ui-menu-item {
 .greycolor {
     color:#999999 !important;
 }
+.yellowbg {
+    background: #FFCC33;
+}
+.greenbg {
+    background:#C1CD23; 
+}
+.olivebg {
+    background: #82772D;
+}
+.tealbg {
+    background: #005568;
+}
 .themecolor:hover {
     color:#003366 !important;
 }
@@ -171,10 +186,17 @@ li.ui-menu-item {
     padding: 5px !important;
     line-height: 1.428571429;
 }
-.dthpopover {
+.dthpopover .popover-inner {
     height:150px;
     overflow-x: hidden;
     overflow-y: scroll;
+}
+.dthpopover {
+    max-width:250px !important;
+}
+.popoverinfo {
+    padding-left: 0px;
+    padding-right: 0px;
 }
 a.headerbtns:hover { background-color: #0081d9 !important; }
 button.headerbtns:focus { background-color: #003366; outline: none; }
@@ -307,12 +329,12 @@ background-color: #fafafa;
     cursor: pointer;
     text-decoration: underline;
     background: #eee;
-    color: #1e90ff;
+    color: #003366;
     font-style: italic;
     padding: 0.5em 0.5em;
     margin-bottom: 0.2em;
     border-radius: 5px;
-    }
+}
 .left .chat-img{
     margin-left: -8px;
     margin-top: 10px;

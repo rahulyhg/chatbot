@@ -147,15 +147,18 @@
                                                     <!-- <div class="dthyperlink lastmsg" ng-repeat="dthlink in chatRes.DTHyperlink" data-id="{{dthlink}}" data-url-id="innerLink" data-line="{{chatRes.line_no[$index]}}" data-col="{{chatRes.col_no[$index]}}" ng-click="getDthlinkRes(chatRes.col_no[$index],chatRes.line_no[$index],dthlink);">
                                                         {{dthlink}}
                                                     </div> -->
-                                                    <div class="container-fluid">
-                                                        <div class="col-md-11 dthyperlink lastmsg changedthbg stage{{chatRes.bgstage}}" ng-repeat="dthlink in chatRes.DT" data-id="{{dthlink}}" data-url-id="innerLink" data-stage="{{chatRes.Stage}}" data-bgstage="{{chatRes.bgstage}}" ng-if="chatRes.DT.length > 0 && chatRes.Stage=='0'" data-index="{{$index}}"  ng-click="getDthlinkRes(chatRes.Stage,dthlink);" >
+                                                    <div class="container-fluid" ng-repeat="dthlink in chatRes.DT" ng-init="$dthindex = $index">
+                                                        <div class="col-md-11 dthyperlink lastmsg changedthbg stage{{chatRes.bgstage}}"  data-id="{{dthlink}}" data-url-id="innerLink" data-stage="{{chatRes.Stage}}" data-bgstage="{{chatRes.bgstage}}" ng-if="chatRes.DT.length > 0 && chatRes.Stage=='0'" data-index="{{$index}}"  ng-click="getDthlinkRes(chatRes.Stage,dthlink);" >
                                                             <span class="lefticon glyphicon glyphicon-chevron-left" style="display:none;"></span>
                                                             {{dthlink}}
                                                         </div>
-                                                        <div class="col-md-1">
-                                                            <div popover-trigger="'mouseenter'" uib-popover="{{chatRes.System[$index]}}" popover-title="{{dthlink}}" popover-class="dthpopover">
+                                                        
+                                                        <div class="col-md-1 popoverinfo">
+                                                            <!-- <button type="button" class="btn btn-primary" ng-if="(chatRes.System[$dthindex] !== '' && chatRes.System[$dthindex])"  popover-placement="top" uib-popover="{{chatRes.System[$dthindex]}}" popover-title="{{dthlink}}" popover-class="dthpopover">
                                                                 <span class="glyphicon glyphicon-info-sign"></span>
-                                                            </div>
+                                                            </button> -->
+                                                            <span ng-if="(chatRes.System[$dthindex] !== '' && chatRes.System[$dthindex])"  popover-placement="left" uib-popover="{{chatRes.System[$dthindex]}}" popover-title="{{dthlink}}" popover-class="dthpopover" class="glyphicon glyphicon-info-sign"></span>
+                                                                
                                                         </div>
                                                     </div>
                                                     <div ng-if="list.msg.tiledlist[0].images.length > 0">

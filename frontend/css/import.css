@@ -9991,8 +9991,11 @@ html {
 body {
   font-family: "Helvetica Neue",Helvetica,Arial,sans-serif;
   font-size: 14px;
-  color: #333;
+  color: #000;
   padding-top: 0px !important; }
+
+a {
+  color: #003366; }
 
 .hide {
   display: none; }
@@ -10352,7 +10355,7 @@ div.img-box {
 
 .toggler {
   width: 100%;
-  color: #777;
+  color: #999;
   cursor: pointer; }
 
 .toggler .glyphicon {
@@ -10555,7 +10558,7 @@ div.scriptData .panel-body {
   margin-left: 80px; }
 
 .faqques a {
-  background-color: #39B1A8;
+  background-color: #497cb6;
   color: #fff;
   display: inline-block;
   padding: 6px 12px; }
@@ -10589,7 +10592,7 @@ div.scriptData .panel-body {
     border-color: #eeeff1; }
   .dashboard .table_panel {
     font-size: 13px;
-    color: #797979; }
+    color: #999999; }
   .dashboard .task-thumb {
     width: 90px;
     float: left; }
@@ -10602,11 +10605,15 @@ div.scriptData .panel-body {
   .dashboard .task-progress {
     float: left; }
   .dashboard .task-thumb-details h3, .dashboard .task-thumb-details h3 a, .dashboard .task-progress h3, .dashboard .task-progress h3 a {
-    color: #39b5aa;
+    color: #005568;
     font-size: 16px;
     margin: 0;
     padding: 0;
     font-weight: 400; }
+  .dashboard .table_panel a {
+    color: #53b7e8; }
+  .dashboard .table_panel .faqques a {
+    color: #fff; }
   .dashboard .task-thumb-details p, .dashboard .task-progress p {
     padding-top: 5px;
     color: #a4aaba; }
@@ -10659,7 +10666,7 @@ div.scriptData .panel-body {
 .state-overview .value h1, .state-overview .value p {
   margin: 0;
   padding: 0;
-  color: #c6cad6; }
+  color: #cccccc; }
 
 .state-overview .value h1 {
   font-weight: 300; }
@@ -10885,6 +10892,9 @@ ul#chatTabs {
 .chattab-content {
   padding-top: 5px; }
 
+.nav-tabs > li.active > a, .nav-tabs > li.active > a:hover, .nav-tabs > li.active > a:focus {
+  color: #003366; }
+
 .cals {
   text-align: center; }
 
@@ -10938,7 +10948,7 @@ li.ui-menu-item {
 
 .chatbottomtext {
   font-size: 12px;
-  color: #053c6d; }
+  color: #003366; }
 
 .loader_msg {
   font-style: italic; }
@@ -10962,6 +10972,18 @@ li.ui-menu-item {
 .greycolor {
   color: #999999 !important; }
 
+.yellowbg {
+  background: #FFCC33; }
+
+.greenbg {
+  background: #C1CD23; }
+
+.olivebg {
+  background: #82772D; }
+
+.tealbg {
+  background: #005568; }
+
 .themecolor:hover {
   color: #003366 !important; }
 
@@ -10972,10 +10994,17 @@ li.ui-menu-item {
   padding: 5px !important;
   line-height: 1.428571429; }
 
-.dthpopover {
+.dthpopover .popover-inner {
   height: 150px;
   overflow-x: hidden;
   overflow-y: scroll; }
+
+.dthpopover {
+  max-width: 250px !important; }
+
+.popoverinfo {
+  padding-left: 0px;
+  padding-right: 0px; }
 
 a.headerbtns:hover {
   background-color: #0081d9 !important; }
@@ -11106,7 +11135,7 @@ button.headerbtns:focus {
   cursor: pointer;
   text-decoration: underline;
   background: #eee;
-  color: #1e90ff;
+  color: #003366;
   font-style: italic;
   padding: 0.5em 0.5em;
   margin-bottom: 0.2em;

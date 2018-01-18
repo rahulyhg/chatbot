@@ -1,9 +1,9 @@
 *, :before, :after { box-sizing: border-box; }
 
 html{ margin-top: 1px; height: 100%; }
-body { font-family: "Helvetica Neue",Helvetica,Arial,sans-serif; font-size: 14px; color: #333;
+body { font-family: "Helvetica Neue",Helvetica,Arial,sans-serif; font-size: 14px; color: #000;
     padding-top:0px !important; }
-
+a { color:#003366; }
 .hide { display: none; }
 .clear { clear: both; }
 .login{
@@ -401,7 +401,7 @@ div.img-box { height: 100px; /*background: #ccc;*/ display: table-cell; vertical
       }
       .toggler{
         width: 100%;
-        color: #777;
+        color: #999;
         cursor: pointer;
       }
     .toggler .glyphicon {
@@ -610,7 +610,7 @@ div.scriptData .panel-body {
     margin-left: 80px;
 }
 .faqques a {
-    background-color: #39B1A8;
+    background-color: #497cb6;
     // border-color: #ccc;
     color: #fff;
     display: inline-block;
@@ -652,7 +652,7 @@ div.scriptData .panel-body {
     /*personal task*/
     .table_panel {
         font-size: 13px;
-        color:#797979;
+        color:#999999;
     }
     .task-thumb {
         width: 90px;
@@ -674,13 +674,18 @@ div.scriptData .panel-body {
     }
 
     .task-thumb-details h3, .task-thumb-details h3 a, .task-progress h3, .task-progress h3 a {
-        color: #39b5aa;
+        color: #005568;
         font-size: 16px;
         margin: 0;
         padding: 0;
         font-weight: 400;
     }
-
+    .table_panel a {
+        color:#53b7e8;
+    }
+    .table_panel .faqques a {
+        color:#fff;
+    }
     .task-thumb-details p, .task-progress p {
         padding-top: 5px;
         color: #a4aaba;
@@ -756,7 +761,7 @@ div.scriptData .panel-body {
 .state-overview .value h1, .state-overview .value p  {
     margin: 0;
     padding: 0;
-    color: #c6cad6;
+    color: #cccccc;
 }
 
 .state-overview .value h1 {
