@@ -276,6 +276,9 @@
                 
                     </ul>
                 <ul class="nav navbar-nav navbar-right">
+                    <li ng-if="uipage == 'dashboard'">
+                        <a ng-href="/" class="greycolor themecolor"><span class="glyphicon glyphicon-comment"></span> Chat</a>
+                    </li>
                     <li>
                         <div class="searchbar">
                             <input type="text" class="searchTerm" ng-change="findTopic(topicSearch);" placeholder="What are you looking for?" ng-model="topicSearch">

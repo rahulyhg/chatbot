@@ -15,6 +15,14 @@ myApp.controller('HomeCtrl', function ($scope,$rootScope, TemplateService, Navig
         ];
         angular.element(document).ready(function() {
             new WOW().init();
+            if(!$rootScope.rotated)
+            {
+                $timeout(function(){
+                    $rootScope.rotateoutmenu();
+                },500);   
+            }
+                //$( ".c-hamburger" ).trigger( "click" ); 
+                
         });
         
         angular.element(document).ready(function () {
@@ -238,7 +246,7 @@ myApp.controller('HomeCtrl', function ($scope,$rootScope, TemplateService, Navig
         $rootScope.access_role = $.jStorage.get("access_role");
         angular.element(document).ready(function () {
             option ={};
-            hopscotch.startTour(tour);
+            //hopscotch.startTour(tour);
             // ngIntroService.setOptions($scope.IntroOptions);
             // ngIntroService.onAfterChange(function(targetElement) {
             //     if(targetElement == 'stepclick1'){
@@ -626,6 +634,9 @@ myApp.controller('HomeCtrl', function ($scope,$rootScope, TemplateService, Navig
         TemplateService.title = "Dashboard"; //This is the Title of the Website
         $scope.navigation = NavigationService.getNavigation();
         $rootScope.uipage="dashboard";
+        $timeout(function(){
+            $rootScope.rotateoutmenu();
+        },500);
     })
     .controller('LoginCtrl', function ($scope, TemplateService, NavigationService,CsrfTokenService, $timeout, toastr, $http,$state,apiService,$uibModal,$filter,Idle,$rootScope) {
         $scope.template = TemplateService.getHTML("login.html");
@@ -670,7 +681,7 @@ myApp.controller('HomeCtrl', function ($scope,$rootScope, TemplateService, Navig
                         $.jStorage.set("branch", callback.data.data.branch);
                         $.jStorage.set("access_role", callback.data.data.accessrole);
                         $.jStorage.set("sessionid", callback.data.data.sessionid);
-
+                        
                         $scope.sessiondata = {
                             id_string : callback.data.data._id,
                             //data : {},
@@ -2434,12 +2445,26 @@ myApp.controller('HomeCtrl', function ($scope,$rootScope, TemplateService, Navig
                     // var msg = {Text:"Sorry I could not understand",type:"SYS_EMPTY_RES"};
                     // $rootScope.pushSystemMsg(0,msg); 
                     $rootScope.showMsgLoader=false;
-                    $rootScope.agentconnected = true;
-                    if($rootScope.agentconnected)
-                    {
-                        $rootScope.sendMsgtoagent(sess2.Text);
-                    }
-                    
+                    io.socket.get('/user', function (users){
+                        var newuser = _.remove(users, function(n) {
+                            return n.access_role  == 4;
+                        });
+                        if(newuser.length > 0)
+                        {
+                            $rootScope.agentconnected = true;
+                            if($rootScope.agentconnected)
+                            {
+                                $rootScope.sendMsgtoagent(sess2.Text);
+                            }
+
+                        }
+                        else
+                        {
+                            $rootScope.agentconnected = false;
+                            var msg3 = {Text:"Sorry I could not understand",type:"SYS_EMPTY_RES"};
+                            $rootScope.pushSystemMsg(0,msg3); 
+                        }
+                    });
                 });
             //});
             $rootScope.autocompletelist = [];

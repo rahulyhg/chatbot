@@ -160,16 +160,16 @@ myApp.run(['$http','$cookies','beforeUnload','$document','$rootScope','Idle','bo
     //     //$('.mini-submenu').hide();
     // });
     angular.element(document).ready(function () {
-        $timeout(function(){
-            // $('.c-hamburger span').css("transform", "rotate(90deg)");				
-            // $('.c-hamburger span').css("transition", "transform 1.2s ease");
-            // $(".c-hamburger").animate({'background-color': '#FF0000'}, 'fast');
-            $('.list-group').toggle('slide');
-            $rootScope.rotated = true;
-            $('.expandable').removeClass('col-lg-9').addClass('col-lg-12');
-            $('.expandable2').removeClass('col-lg-5').addClass('col-lg-8');
+        // $timeout(function(){
+        //     // $('.c-hamburger span').css("transform", "rotate(90deg)");				
+        //     // $('.c-hamburger span').css("transition", "transform 1.2s ease");
+        //     // $(".c-hamburger").animate({'background-color': '#FF0000'}, 'fast');
+        //     $('.list-group').toggle('slide');
+        //     $rootScope.rotated = true;
+        //     $('.expandable').removeClass('col-lg-9').addClass('col-lg-12');
+        //     $('.expandable2').removeClass('col-lg-5').addClass('col-lg-8');
             
-        },1000);
+        // },1000);
         
 
         $(document).on('click', '#address_change', function(){ 

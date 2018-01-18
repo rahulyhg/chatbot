@@ -131,8 +131,8 @@ div.processtreefadein.ng-enter-active {
 // }
  
 #nav-icon1, #nav-icon2, #nav-icon3, #nav-icon4 {
-  width: 60px;
-  height: 45px;
+  width: 40px;
+  height: 35px;
   position: relative;
 //   margin: 50px auto;
   -webkit-transform: rotate(0deg);
@@ -148,12 +148,13 @@ div.processtreefadein.ng-enter-active {
     border: 0px solid;
     outline: none;
     overflow: hidden;
+        margin-top: 10px;
 }
 
 #nav-icon1 span, #nav-icon3 span, #nav-icon4 span {
   display: block;
   position: absolute;
-  height: 9px;
+  height: 6px;
   width: 100%;
   background: #003366;
   border-radius: 9px;
@@ -176,15 +177,15 @@ div.processtreefadein.ng-enter-active {
 }
 
 #nav-icon1 span:nth-child(2) {
-  top: 18px;
+  top: 12px;
 }
 
 #nav-icon1 span:nth-child(3) {
-  top: 36px;
+  top: 24px;
 }
 
 #nav-icon1.open span:nth-child(1) {
-  top: 18px;
+  top: 15px;
   -webkit-transform: rotate(135deg);
   -moz-transform: rotate(135deg);
   -o-transform: rotate(135deg);
@@ -197,7 +198,7 @@ div.processtreefadein.ng-enter-active {
 }
 
 #nav-icon1.open span:nth-child(3) {
-  top: 18px;
+  top: 15px;
   -webkit-transform: rotate(-135deg);
   -moz-transform: rotate(-135deg);
   -o-transform: rotate(-135deg);

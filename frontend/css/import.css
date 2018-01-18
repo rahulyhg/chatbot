@@ -10092,8 +10092,8 @@ div.processtreefadein.ng-enter-active {
   animation-name: fadeInDown; }
 
 #nav-icon1, #nav-icon2, #nav-icon3, #nav-icon4 {
-  width: 60px;
-  height: 45px;
+  width: 40px;
+  height: 35px;
   position: relative;
   -webkit-transform: rotate(0deg);
   transform: rotate(0deg);
@@ -10102,12 +10102,13 @@ div.processtreefadein.ng-enter-active {
   background: transparent;
   border: 0px solid;
   outline: none;
-  overflow: hidden; }
+  overflow: hidden;
+  margin-top: 10px; }
 
 #nav-icon1 span, #nav-icon3 span, #nav-icon4 span {
   display: block;
   position: absolute;
-  height: 9px;
+  height: 6px;
   width: 100%;
   background: #003366;
   border-radius: 9px;
@@ -10124,13 +10125,13 @@ div.processtreefadein.ng-enter-active {
   top: 0px; }
 
 #nav-icon1 span:nth-child(2) {
-  top: 18px; }
+  top: 12px; }
 
 #nav-icon1 span:nth-child(3) {
-  top: 36px; }
+  top: 24px; }
 
 #nav-icon1.open span:nth-child(1) {
-  top: 18px;
+  top: 15px;
   -webkit-transform: rotate(135deg);
   transform: rotate(135deg); }
 
@@ -10139,7 +10140,7 @@ div.processtreefadein.ng-enter-active {
   left: -60px; }
 
 #nav-icon1.open span:nth-child(3) {
-  top: 18px;
+  top: 15px;
   -webkit-transform: rotate(-135deg);
   transform: rotate(-135deg); }
 
@@ -10918,7 +10919,7 @@ li.ui-menu-item {
   padding: 0px 3px; }
 
 li.ui-menu-item:hover, li.ui-menu-item.active {
-  background: #003874 !important;
+  background: #003366 !important;
   color: #fff !important; }
 
 li.ui-menu-item:hover > .highlighted, li.ui-menu-item.active > .highlighted {
@@ -10953,7 +10954,16 @@ li.ui-menu-item {
 
 .profileDetail span {
   font-weight: bold;
-  color: #204d74; }
+  color: #003366; }
+
+.bluecolor {
+  color: #003366 !important; }
+
+.greycolor {
+  color: #999999 !important; }
+
+.themecolor:hover {
+  color: #003366 !important; }
 
 .headerbtns {
   margin-top: 8px;
@@ -10962,11 +10972,16 @@ li.ui-menu-item {
   padding: 5px !important;
   line-height: 1.428571429; }
 
+.dthpopover {
+  height: 150px;
+  overflow-x: hidden;
+  overflow-y: scroll; }
+
 a.headerbtns:hover {
   background-color: #0081d9 !important; }
 
 button.headerbtns:focus {
-  background-color: #003874;
+  background-color: #003366;
   outline: none; }
 
 .autolist .highlighted {
@@ -11048,7 +11063,7 @@ button.headerbtns:focus {
   border-color: #0b354c; }
 
 .chatinputgroup .hover_effect {
-  background: #003874; }
+  background: #003366; }
 
 .chatinputgroup .hover_effect i {
   color: #fff;
@@ -11058,8 +11073,8 @@ button.headerbtns:focus {
 
 .panel-primary > .panel-heading {
   color: #fff;
-  background-color: #003874;
-  border-color: #003874; }
+  background-color: #003366;
+  border-color: #003366; }
 
 .btn-group .btn-default {
   color: #fff;
@@ -11117,7 +11132,7 @@ button.headerbtns:focus {
   position: relative; }
 
 .right .chat-body {
-  background: #003874;
+  background: #003366;
   color: #e2e2e2;
   border-top-right-radius: 0em;
   box-shadow: -1px 1px 1px 0px rgba(0, 0, 0, 0.4);
@@ -11146,7 +11161,7 @@ button.headerbtns:focus {
   right: -10px;
   width: 0;
   height: 0;
-  border: 5px solid #003874;
+  border: 5px solid #003366;
   border-right-color: transparent;
   border-bottom-color: transparent; }
 
@@ -11175,7 +11190,7 @@ button.headerbtns:focus {
   text-align: center;
   padding: 5px 0;
   /* font-size: 6px; */
-  background: #003874;
+  background: #003366;
   color: #fff; }
 
 .pvtmsg {
