@@ -1,7 +1,7 @@
 var globalLocale = moment.locale('hi');
 var localLocale = moment();
 
-myApp.controller('HomeCtrl', function ($scope,$rootScope, TemplateService, NavigationService,CsrfTokenService,Menuservice, $timeout,$http,apiService,$state,$cookies) {
+myApp.controller('HomeCtrl', function ($scope,$rootScope, TemplateService, NavigationService,CsrfTokenService,Menuservice, $timeout,$http,apiService,$state,$cookies,$location) {
         $scope.template = TemplateService.getHTML("content/home.html");
         TemplateService.title = "Home"; //This is the Title of the Website
         $scope.navigation = NavigationService.getNavigation();
@@ -405,6 +405,11 @@ myApp.controller('HomeCtrl', function ($scope,$rootScope, TemplateService, Navig
         
         console.log($.jStorage.get("notloggedin"));
         angular.element(document).ready(function () {
+            if(!$.jStorage.get('freload'))
+            {
+                $.jStorage.set('freload',true);
+                $location.reload();
+            }
             if(!$.jStorage.get("notloggedin"))
             {
                 //Chatapp
@@ -636,6 +641,9 @@ myApp.controller('HomeCtrl', function ($scope,$rootScope, TemplateService, Navig
         TemplateService.title = "Dashboard"; //This is the Title of the Website
         $scope.navigation = NavigationService.getNavigation();
         $rootScope.uipage="dashboard";
+        angular.element(document).ready(function () {
+            $.jStorage.set('freload',false);
+        });
         $timeout(function(){
             $rootScope.rotateoutmenu();
         },500);
