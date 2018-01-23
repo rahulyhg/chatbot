@@ -657,7 +657,7 @@ myApp.controller('HomeCtrl', function ($scope,$rootScope, TemplateService, Navig
         else if($.jStorage.get('access_role')==4)
             $state.go("agentdashboard");
         else 
-            $state.go("home");
+            $state.go("dashboard");
         $scope.login = function(username,password)
         {
             CsrfTokenService.getCookie("csrftoken").then(function(token) {
