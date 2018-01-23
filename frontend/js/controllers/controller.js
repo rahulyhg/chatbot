@@ -405,10 +405,10 @@ myApp.controller('HomeCtrl', function ($scope,$rootScope, TemplateService, Navig
         
         console.log($.jStorage.get("notloggedin"));
         angular.element(document).ready(function () {
-            if(!$.jStorage.get('freload'))
+            if(!$.jStorage.get('firstreload'))
             {
-                $.jStorage.set('freload',true);
-                $location.reload();
+                $.jStorage.set('firstreload',true);
+                location.reload();
             }
             if(!$.jStorage.get("notloggedin"))
             {
@@ -642,7 +642,7 @@ myApp.controller('HomeCtrl', function ($scope,$rootScope, TemplateService, Navig
         $scope.navigation = NavigationService.getNavigation();
         $rootScope.uipage="dashboard";
         angular.element(document).ready(function () {
-            $.jStorage.set('freload',false);
+            $.jStorage.set('firstreload',false);
         });
         $timeout(function(){
             $rootScope.rotateoutmenu();
