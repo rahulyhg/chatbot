@@ -326,7 +326,7 @@ var parts=["source","protocol","authority","userInfo","user","password","host","
       // Absorb opts
       self.useCORSRouteToGetCookie = opts.useCORSRouteToGetCookie;
       //self.url = opts.url;
-      self.url = "http://localhost:1337";
+      self.url = "http://exponentiadata.co.in:9161";
       // Set up "eventQueue" to hold event handlers which have not been set on the actual raw socket yet.
       self.eventQueue = {};
 

@@ -413,7 +413,7 @@ myApp.controller('HomeCtrl', function ($scope,$rootScope, TemplateService, Navig
              * Front-end code and event handling for sailsChat
              *
              */
-            //io.connect('http://localhost:1337');
+            //io.connect('http://exponentiadata.co.in:9161');
             // if($.jStorage.get("socketId"))
             //     io.socket.connected[$.jStorage.get("socketId")].disconnect();
                 //io.socket.get("/user/disconnect",{query:$.jStorage.get("sid")}, function(data){});
@@ -613,15 +613,15 @@ myApp.controller('HomeCtrl', function ($scope,$rootScope, TemplateService, Navig
 
             //io.socket.disconnect(false);
             //io.socket.reconnect();
-            // io.sails.url = 'http://localhost:1337';
+            // io.sails.url = 'http://exponentiadata.co.in:9161';
             // io.sails.connect(io.sails.url,{forceNew: true});
             // io.connect(io.sails.url,{forceNew: true});
             // io.socket.put(io.sails.url, {}, function (resData, jwres){
             //     console.log(resData);
             //     console.log(jwres);
             // });
-            // //io.sails.connect("http://localhost:1337");
-            // io.connect("http://localhost:1337", {'forceNew': true});
+            // //io.sails.connect("http://exponentiadata.co.in:9161");
+            // io.connect("http://exponentiadata.co.in:9161", {'forceNew': true});
             //console.log(window.me.id);
             // io.socket.delete('/users/'+window.me.id, function (resData) {
             // resData; // => {id:9, name: 'Timmy Mendez', occupation: 'psychic'}
@@ -792,7 +792,7 @@ myApp.controller('HomeCtrl', function ($scope,$rootScope, TemplateService, Navig
         $timeout(function(){
             $scope.agentpanelheight = $(window).height()-55;
         },3000);
-        io.sails.url = 'http://localhost:1337';
+        io.sails.url = 'http://exponentiadata.co.in:9161';
         function startPrivateConversation() {
 
         // Get the user list
@@ -2487,7 +2487,7 @@ myApp.controller('HomeCtrl', function ($scope,$rootScope, TemplateService, Navig
         $rootScope.lastagentmsg = false;
         $rootScope.sendMsgtoagent = function(msg) {
 
-            io.sails.url = 'http://localhost:1337';
+            io.sails.url = 'http://exponentiadata.co.in:9161';
             
             io.socket.get('/user', function (users){
                 var newuser = _.remove(users, function(n) {
@@ -2591,10 +2591,10 @@ myApp.controller('HomeCtrl', function ($scope,$rootScope, TemplateService, Navig
                 
             // });
             
-            //io.connect("http://localhost:1337", {'forceNew': true});
+            //io.connect("http://exponentiadata.co.in:9161", {'forceNew': true});
             //io.disconnect;
             //io.socket("disconnect");
-            // io.connect("http://localhost:1337", {'forceNew': true});
+            // io.connect("http://exponentiadata.co.in:9161", {'forceNew': true});
             // userdata = {sid:$.jStorage.get("id"),name:$.jStorage.get("fname")+' '+$.jStorage.get("lname"),access_role:$.jStorage.get("access_role")};
             //     io.socket.get("/user/disconnect",{query:userdata}, function(data){
             //     });
