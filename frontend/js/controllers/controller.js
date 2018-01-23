@@ -654,6 +654,8 @@ myApp.controller('HomeCtrl', function ($scope,$rootScope, TemplateService, Navig
         //console.log($.jStorage.get("notloggedin"));
         if($.jStorage.get("notloggedin"))
             $rootScope.notLoggedin = true;
+        else if($.jStorage.get('access_role')==4)
+            $state.go("agentdashboard");
         else 
             $state.go("home");
         $scope.login = function(username,password)
