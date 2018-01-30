@@ -1,9 +1,15 @@
-
+@font-face {
+    font-family: "Frutiger_LT_45_Light";
+    src: url("../fonts/Frutiger_LT_45_Light.ttf");
+}
 #chat_panel{
     display: none;
-    font-family: 'Roboto', sans-serif;
+    font-family: 'Frutiger_LT_45_Light', sans-serif;
     height:600px;
     position: relative;
+}
+.expandable2 .content {
+    min-height: 0px !important;
 }
 .page-header, .dashboardheader {
     background: url('../img/enter-key.jpg') center center no-repeat;
@@ -11,7 +17,7 @@
     padding: 40px!important; 
 }
 .page-header .heading , .dashboardheader .heading {
-    font-family: Lato,sans-serif;
+    font-family: 'Frutiger_LT_45_Light',sans-serif;
     font-weight: 300;
     font-size: 22px;
     text-transform: uppercase;
@@ -99,6 +105,7 @@ ul#chatTabs {
 .chatTime {     
     width: 100%;
     float: left; 
+    font-size: 10px;
 }
 .panel-footer {
     padding-bottom: 0px;
@@ -176,7 +183,13 @@ li.ui-menu-item {
 }
 .profileDetail span { 
     font-weight:bold;
-    color:#003366;
+    color:#fff;
+}
+ul.profilelist .chatlink a { 
+    color:#fff !important;
+}
+li.profileDetail small {
+    color: #fff;
 }
 .bluecolor {
     color:#003366 !important;
@@ -205,6 +218,8 @@ li.ui-menu-item {
     color: #fff !important;
     padding: 5px !important;
     line-height: 1.428571429;
+    border: 1px solid #fff;
+    border-radius: 4px;
 }
 .dthpopover .popover-inner {
     height:150px;
@@ -312,8 +327,8 @@ width:90%;
  }
 .panel-primary>.panel-heading {
     color: #fff;
-    background-color: #003366;
-    border-color: #003366;
+    background-color: #999;
+    border-color: #999;
 }
 .btn-group .btn-default {
     color: #fff;
@@ -336,7 +351,7 @@ background-color: #fafafa;
 .clickImage{
     /*display:none;*/
     width: auto;
-    height: 140px;
+    height: 115px;
     // margin: auto;
     // position: absolute;
     z-index: 10;
@@ -359,6 +374,15 @@ background-color: #fafafa;
 }
 .redbg2 {
     background-color: #EF4123 !important;
+}
+.bluebg5 {
+    background-color: #53B7E8 !important;
+}
+.bluebg4 {
+    background-color: #497CB6 !important
+}
+.greybg3 {
+    background-color: #ebebec !important;
 }
 .chat-body .dthyperlink {
     cursor: pointer;
@@ -391,7 +415,9 @@ background-color: #fafafa;
 }
 .right .chat-body{
     background: #003366;
+    background: #ccc;
     color: #e2e2e2;
+    color: #000;
     border-top-right-radius: 0em;
     box-shadow: -1px 1px 1px 0px rgba(0,0,0,0.4);
     display: table;
@@ -406,7 +432,7 @@ background-color: #fafafa;
     left: -10px;
     width: 0;
     height: 0;
-    border: 5px solid #d9edf7;
+    border: 5px solid #ccc;
     border-left-color: transparent;
     border-bottom-color: transparent;
 }
@@ -417,14 +443,16 @@ background-color: #fafafa;
     right: -10px;
     width: 0;
     height: 0;
-    border: 5px solid #003366;
+    border: 5px solid #ccc;
     border-right-color: transparent;
     border-bottom-color: transparent;
 }
 .left .chat-body{
     border-top-left-radius: 0em;
     background: #d9edf7;
+    background: #ccc;
     color:#2d2d2d;
+    color:#000;
     box-shadow: 1px 1px 1px 0px rgba(0,0,0,0.4);
     display: table;
     left: 0;

@@ -1823,14 +1823,14 @@ myApp.controller('HomeCtrl', function ($scope,$rootScope, TemplateService, Navig
                 }
             }
         };
-        
-        if($.jStorage.get("showchat"))
-        {
-            if($rootScope.uipage != 'dashboard')
-                 $rootScope.showChatwindow();
-        }
-        else
-            $rootScope.minimizeChatwindow();
+        $rootScope.showChatwindow();
+        // if($.jStorage.get("showchat"))
+        // {
+        //     if($rootScope.uipage != 'dashboard')
+        //          $rootScope.showChatwindow();
+        // }
+        // else
+        //     $rootScope.minimizeChatwindow();
 
         $rootScope.ratecardSubmit = function(coldata,rowdata) {
             $scope.formData = {csrfmiddlewaretoken:$rootScope.getCookie("csrftoken"),user_id:$cookies.get("session_id"),user_input:coldata+","+rowdata,auto_id:"",auto_value:"",coldata:coldata,rowdata:rowdata,type:"rate card"};

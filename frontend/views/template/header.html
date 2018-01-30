@@ -276,12 +276,12 @@
                 
                     </ul>
                 <ul class="nav navbar-nav navbar-right profilelist">
-                    <li ng-if="uipage == 'dashboard'">
-                        <a ng-href="/" class="greycolor themecolor"><span class="glyphicon glyphicon-comment"></span> Chat</a>
+                    <li ng-if="uipage == 'dashboard'" class="chatlink">
+                        <a ng-href="/" class=""><span class="glyphicon glyphicon-comment"></span> Chat</a>
                     </li>
                     <li ng-if="uipage == 'home'">
                         <div class="searchbar">
-                            <input type="text" class="searchTerm" ng-change="findTopic(topicSearch);" placeholder="What are you looking for?" ng-model="topicSearch">
+                            <input type="text" class="searchTerm" ng-change="findTopic(topicSearch);" placeholder="I am looking for..." ng-model="topicSearch">
                             <button type="submit" class="searchButton">
                                 <i class="fa fa-search" aria-hidden="true"></i>
                             </button>
@@ -297,7 +297,7 @@
                 </div><!-- /.navbar-collapse -->
             </div><!-- /.container-fluid -->
         </nav>
-        <div id="chatImage" ng-if="uipage!=='dashboard' && uipage!='agentdashboard'"  class="step1click"><img class="clickImage chatbotimg" id="clickImage" src="img/Tenali.png" ng-controller="ChatCtrl" id="stepclick1" ng-click="showChatwindow();"></div>
+        <div id="chatImage" ng-if="uipage!=='dashboard' && uipage!='agentdashboard'"  class="step1click"><img class="clickImage chatbotimg" id="clickImage" src="img/k.png" ng-controller="ChatCtrl" id="stepclick1" ng-click="showChatwindow();"></div>
         <div class="col-lg-3 list-group" ng-if="uipage!='agentdashboard'">
         <div class="topic_col hidden-xs" ng-style="{height: iframeHeight + 'px'}">
             <!-- <div class="searchbar">

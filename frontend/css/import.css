@@ -9989,7 +9989,7 @@ html {
   height: 100%; }
 
 body {
-  font-family: "Helvetica Neue",Helvetica,Arial,sans-serif;
+  font-family: 'Frutiger_LT_45_Light',"serif",Helvetica,Arial,sans-serif;
   font-size: 14px;
   color: #000;
   padding-top: 0px !important; }
@@ -10114,6 +10114,7 @@ div.processtreefadein.ng-enter-active {
   height: 6px;
   width: 100%;
   background: #003366;
+  background: #fff;
   border-radius: 9px;
   opacity: 1;
   left: 0;
@@ -10122,7 +10123,8 @@ div.processtreefadein.ng-enter-active {
   transition: .25s ease-in-out; }
 
 .c-hamburger.open span {
-  background: #FF0000 !important; }
+  background: #FF0000 !important;
+  background: #fff !important; }
 
 #nav-icon1 span:nth-child(1) {
   top: 0px; }
@@ -10195,8 +10197,11 @@ div.processtreefadein.ng-enter-active {
   border: 0px !important;
   border-radius: 0px !important; }
 
-.profilelist {
-  background-color: #003874; }
+ul.profilelist {
+  background-color: #003874 !important;
+  padding-left: 15px;
+  padding-right: 15px;
+  margin-right: -30px; }
 
 .chat-container {
   width: 380px;
@@ -10437,7 +10442,7 @@ div.scriptData .panel-body {
 .searchTerm {
   float: left;
   width: 85%;
-  border: 3px solid #003874;
+  border: 0px solid #003874;
   margin-top: 5px;
   padding: 5px;
   height: 30px;
@@ -10450,7 +10455,7 @@ div.scriptData .panel-body {
   margin-top: 5px;
   width: 15%;
   height: 30px;
-  border: 1px solid #003874;
+  border: 1px solid #fff;
   background: #003874;
   text-align: center;
   color: #fff;
@@ -10564,8 +10569,7 @@ div.scriptData .panel-body {
   margin-left: 80px; }
 
 .faqques a {
-  background-color: #497cb6;
-  color: #fff;
+  color: #003874;
   display: inline-block;
   padding: 6px 12px; }
 
@@ -10586,13 +10590,16 @@ div.scriptData .panel-body {
   display: -ms-grid;
   display: grid; }
 
-.widget.widget-dashboard.redbg5, .widget.widget-dashboard.redbg4, .widget.widget-dashboard.redbg2 {
+.widget.widget-dashboard {
   padding: 15px;
-  color: #fff; }
+  color: #fff;
+  color: #003874;
+  color: #005568; }
 
 .widget.widget-dashboard {
   margin-bottom: 15px;
-  background-color: #fff; }
+  background-color: #fff;
+  background-color: #ebebec; }
 
 .widget.widget-dashboard table {
   margin-bottom: 0; }
@@ -10962,18 +10969,18 @@ div.scriptData .panel-body {
   .dashboard .task-progress {
     float: left; }
   .dashboard .task-thumb-details h3, .dashboard .task-thumb-details h3 a, .dashboard .task-progress h3, .dashboard .task-progress h3 a {
-    color: #fff;
-    font-size: 14px;
+    color: #666;
+    font-size: 22px;
     margin: 0;
     padding: 0;
     font-weight: 400; }
   .dashboard .table_panel a {
-    color: #53b7e8; }
+    color: #003874; }
   .dashboard .table_panel table {
     background: #fff !important;
     box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.14); }
   .dashboard .table_panel .faqques a {
-    color: #fff; }
+    color: #003874; }
   .dashboard .task-thumb-details p, .dashboard .task-progress p {
     padding-top: 5px;
     color: #a4aaba; }
@@ -11004,9 +11011,10 @@ div.scriptData .panel-body {
   .dashboard .progress-panel {
     padding-bottom: 5px;
     background: #003874;
+    background: #fff;
     padding-top: 10px;
-    border-top-right-radius: 14px;
-    border-top-left-radius: 14px;
+    border-top-right-radius: 0px;
+    border-top-left-radius: 0px;
     border-bottom: 2px solid #196090; }
 
 /*===== Info blocks =====*/
@@ -11036,13 +11044,17 @@ div.scriptData .panel-body {
   filter: alpha(Opacity=80);
   color: #fff; }
 
+.info-blocks a {
+  color: #000 !important; }
+
 .top-info {
   margin: 16px 14px 14px 14px; }
 
 .top-info > a {
   display: block;
   font-weight: 600;
-  text-transform: uppercase; }
+  text-transform: uppercase;
+  color: #000 !important; }
 
 .top-info > a:hover {
   opacity: 0.8;
@@ -11236,11 +11248,18 @@ span.bottom-info.redbg {
   #chat_panel {
     height: 300px !important; } }
 
+@font-face {
+  font-family: "Frutiger_LT_45_Light";
+  src: url("../fonts/Frutiger_LT_45_Light.ttf"); }
+
 #chat_panel {
   display: none;
-  font-family: 'Roboto', sans-serif;
+  font-family: 'Frutiger_LT_45_Light', sans-serif;
   height: 600px;
   position: relative; }
+
+.expandable2 .content {
+  min-height: 0px !important; }
 
 .page-header, .dashboardheader {
   background: url("../img/enter-key.jpg") center center no-repeat;
@@ -11248,7 +11267,7 @@ span.bottom-info.redbg {
   padding: 40px !important; }
 
 .page-header .heading, .dashboardheader .heading {
-  font-family: Lato,sans-serif;
+  font-family: 'Frutiger_LT_45_Light',sans-serif;
   font-weight: 300;
   font-size: 22px;
   text-transform: uppercase;
@@ -11334,7 +11353,8 @@ ul#chatTabs {
 
 .chatTime {
   width: 100%;
-  float: left; }
+  float: left;
+  font-size: 10px; }
 
 .panel-footer {
   padding-bottom: 0px;
@@ -11416,7 +11436,13 @@ li.ui-menu-item {
 
 .profileDetail span {
   font-weight: bold;
-  color: #003366; }
+  color: #fff; }
+
+ul.profilelist .chatlink a {
+  color: #fff !important; }
+
+li.profileDetail small {
+  color: #fff; }
 
 .bluecolor {
   color: #003366 !important; }
@@ -11444,7 +11470,9 @@ li.ui-menu-item {
   margin-left: 20px;
   color: #fff !important;
   padding: 5px !important;
-  line-height: 1.428571429; }
+  line-height: 1.428571429;
+  border: 1px solid #fff;
+  border-radius: 4px; }
 
 .dthpopover .popover-inner {
   height: 150px;
@@ -11554,8 +11582,8 @@ button.headerbtns:focus {
 
 .panel-primary > .panel-heading {
   color: #fff;
-  background-color: #003366;
-  border-color: #003366; }
+  background-color: #999;
+  border-color: #999; }
 
 .btn-group .btn-default {
   color: #fff;
@@ -11598,6 +11626,15 @@ button.headerbtns:focus {
 .redbg2 {
   background-color: #EF4123 !important; }
 
+.bluebg5 {
+  background-color: #53B7E8 !important; }
+
+.bluebg4 {
+  background-color: #497CB6 !important; }
+
+.greybg3 {
+  background-color: #ebebec !important; }
+
 .chat-body .dthyperlink {
   cursor: pointer;
   text-decoration: underline;
@@ -11629,7 +11666,9 @@ button.headerbtns:focus {
 
 .right .chat-body {
   background: #003366;
+  background: #ccc;
   color: #e2e2e2;
+  color: #000;
   border-top-right-radius: 0em;
   box-shadow: -1px 1px 1px 0px rgba(0, 0, 0, 0.4);
   display: table;
@@ -11646,7 +11685,7 @@ button.headerbtns:focus {
   left: -10px;
   width: 0;
   height: 0;
-  border: 5px solid #d9edf7;
+  border: 5px solid #ccc;
   border-left-color: transparent;
   border-bottom-color: transparent; }
 
@@ -11657,14 +11696,16 @@ button.headerbtns:focus {
   right: -10px;
   width: 0;
   height: 0;
-  border: 5px solid #003366;
+  border: 5px solid #ccc;
   border-right-color: transparent;
   border-bottom-color: transparent; }
 
 .left .chat-body {
   border-top-left-radius: 0em;
   background: #d9edf7;
+  background: #ccc;
   color: #2d2d2d;
+  color: #000;
   box-shadow: 1px 1px 1px 0px rgba(0, 0, 0, 0.4);
   display: table;
   left: 0; }
