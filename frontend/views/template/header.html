@@ -39,7 +39,7 @@
                             <!-- <button id="nav-icon1" class="c-hamburger c-hamburger--rot mini-submenu hidden-xs">
                             <span>toggle menu</span>
                             </button> -->
-                            <button id="nav-icon1" class="c-hamburger c-hamburger--rot mini-submenu hidden-xs">
+                            <button id="nav-icon1" class="c-hamburger c-hamburger--rot mini-submenu hidden-xs open">
                                 <span></span>
                                 <span></span>
                                 <span></span>
@@ -47,7 +47,7 @@
                         </li>
                         <li>
                             <a class="navbar-brand" href="#">
-                                 <img src="img/kotak_logo.png" class="img-responsive"> 
+                                 <img src="img/kotak-logo.png" class="img-responsive"> 
                             </a>
                         </li>
                     </ul>
@@ -275,11 +275,11 @@
                         </li>
                 
                     </ul>
-                <ul class="nav navbar-nav navbar-right">
+                <ul class="nav navbar-nav navbar-right profilelist">
                     <li ng-if="uipage == 'dashboard'">
                         <a ng-href="/" class="greycolor themecolor"><span class="glyphicon glyphicon-comment"></span> Chat</a>
                     </li>
-                    <li>
+                    <li ng-if="uipage == 'home'">
                         <div class="searchbar">
                             <input type="text" class="searchTerm" ng-change="findTopic(topicSearch);" placeholder="What are you looking for?" ng-model="topicSearch">
                             <button type="submit" class="searchButton">

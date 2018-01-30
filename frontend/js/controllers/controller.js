@@ -648,6 +648,30 @@ myApp.controller('HomeCtrl', function ($scope,$rootScope, TemplateService, Navig
             $rootScope.rotateoutmenu();
         },500);
     })
+    myApp.controller('Dashboard2Ctrl', function ($scope,$rootScope, TemplateService, NavigationService,CsrfTokenService,Menuservice, $timeout,$http,apiService,$state) {
+        $scope.template = TemplateService.getHTML("content/dashboard2.html");
+        TemplateService.title = "Dashboard"; //This is the Title of the Website
+        $scope.navigation = NavigationService.getNavigation();
+        $rootScope.uipage="dashboard";
+        angular.element(document).ready(function () {
+            $.jStorage.set('firstreload',false);
+        });
+        $timeout(function(){
+            $rootScope.rotateoutmenu();
+        },500);
+    })
+    myApp.controller('Dashboard3Ctrl', function ($scope,$rootScope, TemplateService, NavigationService,CsrfTokenService,Menuservice, $timeout,$http,apiService,$state) {
+        $scope.template = TemplateService.getHTML("content/dashboard3.html");
+        TemplateService.title = "Dashboard"; //This is the Title of the Website
+        $scope.navigation = NavigationService.getNavigation();
+        $rootScope.uipage="dashboard";
+        angular.element(document).ready(function () {
+            $.jStorage.set('firstreload',false);
+        });
+        $timeout(function(){
+            $rootScope.rotateoutmenu();
+        },500);
+    })
     .controller('LoginCtrl', function ($scope, TemplateService, NavigationService,CsrfTokenService, $timeout, toastr, $http,$state,apiService,$uibModal,$filter,Idle,$rootScope) {
         $scope.template = TemplateService.getHTML("login.html");
         TemplateService.title = "Login"; //This is the Title of the Website

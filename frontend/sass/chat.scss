@@ -5,6 +5,26 @@
     height:600px;
     position: relative;
 }
+.page-header, .dashboardheader {
+    background: url('../img/enter-key.jpg') center center no-repeat;
+    margin:0px !important;
+    padding: 40px!important; 
+}
+.page-header .heading , .dashboardheader .heading {
+    font-family: Lato,sans-serif;
+    font-weight: 300;
+    font-size: 22px;
+    text-transform: uppercase;
+    margin-bottom: 5px;
+    color: #333;
+    display: inline-block;
+}
+.page-header .heading .sub-heading {
+    display: block;
+    color: #888;
+    font-size: 16px;
+    text-transform: initial!important;
+}
 div#suggestionList {
     position: relative;
 }
@@ -325,6 +345,21 @@ background-color: #fafafa;
     cursor:pointer;
 }
 .redtext { color:#FF0000; }
+.redbg { 
+    background-color: #FF0000;
+}
+.bluebg {
+    background-color: #003874;
+}
+.redbg4 {
+    background-color: #F37032 !important;
+}
+.redbg5 {
+    background-color: #C41425 !important;
+}
+.redbg2 {
+    background-color: #EF4123 !important;
+}
 .chat-body .dthyperlink {
     cursor: pointer;
     text-decoration: underline;
