@@ -660,6 +660,30 @@ myApp.controller('HomeCtrl', function ($scope,$rootScope, TemplateService, Navig
             $rootScope.rotateoutmenu();
         },500);
     })
+    myApp.controller('Dashboard4Ctrl', function ($scope,$rootScope, TemplateService, NavigationService,CsrfTokenService,Menuservice, $timeout,$http,apiService,$state) {
+        $scope.template = TemplateService.getHTML("content/dashboard4.html");
+        TemplateService.title = "Dashboard"; //This is the Title of the Website
+        $scope.navigation = NavigationService.getNavigation();
+        $rootScope.uipage="dashboard";
+        angular.element(document).ready(function () {
+            $.jStorage.set('firstreload',false);
+        });
+        $timeout(function(){
+            $rootScope.rotateoutmenu();
+        },500);
+    })
+    myApp.controller('Dashboard5Ctrl', function ($scope,$rootScope, TemplateService, NavigationService,CsrfTokenService,Menuservice, $timeout,$http,apiService,$state) {
+        $scope.template = TemplateService.getHTML("content/dashboard5.html");
+        TemplateService.title = "Dashboard"; //This is the Title of the Website
+        $scope.navigation = NavigationService.getNavigation();
+        $rootScope.uipage="dashboard";
+        angular.element(document).ready(function () {
+            $.jStorage.set('firstreload',false);
+        });
+        $timeout(function(){
+            $rootScope.rotateoutmenu();
+        },500);
+    })
     myApp.controller('Dashboard3Ctrl', function ($scope,$rootScope, TemplateService, NavigationService,CsrfTokenService,Menuservice, $timeout,$http,apiService,$state) {
         $scope.template = TemplateService.getHTML("content/dashboard3.html");
         TemplateService.title = "Dashboard"; //This is the Title of the Website
@@ -1823,7 +1847,8 @@ myApp.controller('HomeCtrl', function ($scope,$rootScope, TemplateService, Navig
                 }
             }
         };
-        $rootScope.showChatwindow();
+        if($rootScope.uipage !='login' && !angular.isUndefined($rootScope.uipage))
+            $rootScope.showChatwindow();
         // if($.jStorage.get("showchat"))
         // {
         //     if($rootScope.uipage != 'dashboard')

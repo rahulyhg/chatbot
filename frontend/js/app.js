@@ -53,6 +53,16 @@ myApp.config(function ($stateProvider, $urlRouterProvider, $httpProvider, $locat
             templateUrl: tempateURL,
             controller: 'Dashboard3Ctrl'
         })
+        .state('dashboard4', {
+            url: "/dashboard4",
+            templateUrl: tempateURL,
+            controller: 'Dashboard4Ctrl'
+        })
+        .state('dashboard5', {
+            url: "/dashboard5",
+            templateUrl: tempateURL,
+            controller: 'Dashboard5Ctrl'
+        })
         .state('agentdashboard', {
             url: "/agentdashboard",
             templateUrl: tempateURL,
