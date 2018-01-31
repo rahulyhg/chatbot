@@ -705,7 +705,9 @@ myApp.controller('HomeCtrl', function ($scope,$rootScope, TemplateService, Navig
 
         $scope.loginbg = 1;
         $scope.iframeHeight = window.innerHeight;
-        $scope.uipage="login";
+        $rootScope.uipage="login";
+        if($rootScope.uipage !='login' && !angular.isUndefined($rootScope.uipage))
+            $rootScope.showChatwindow();
         $scope.formSubmitted = false;
         $scope.loginerror=0;
         //$rootScope.notLoggedin = false;
