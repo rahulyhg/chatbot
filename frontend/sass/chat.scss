@@ -327,8 +327,8 @@ width:90%;
  }
 .panel-primary>.panel-heading {
     color: #fff;
-    background-color: #999;
-    border-color: #999;
+    background-color: #ff0000;
+    border-color: #ff0000;
 }
 .btn-group .btn-default {
     color: #fff;
@@ -415,9 +415,9 @@ background-color: #fafafa;
 }
 .right .chat-body{
     background: #003366;
-    background: #ccc;
+    background: #ff0000;
     color: #e2e2e2;
-    color: #000;
+    color: #fff;
     border-top-right-radius: 0em;
     box-shadow: -1px 1px 1px 0px rgba(0,0,0,0.4);
     display: table;
@@ -432,7 +432,7 @@ background-color: #fafafa;
     left: -10px;
     width: 0;
     height: 0;
-    border: 5px solid #ccc;
+    border: 5px solid #fff;
     border-left-color: transparent;
     border-bottom-color: transparent;
 }
@@ -443,16 +443,16 @@ background-color: #fafafa;
     right: -10px;
     width: 0;
     height: 0;
-    border: 5px solid #ccc;
+    border: 5px solid #ff0000;
     border-right-color: transparent;
     border-bottom-color: transparent;
 }
 .left .chat-body{
     border-top-left-radius: 0em;
     background: #d9edf7;
-    background: #ccc;
+    background: #fff;
     color:#2d2d2d;
-    color:#000;
+    color:#003874;
     box-shadow: 1px 1px 1px 0px rgba(0,0,0,0.4);
     display: table;
     left: 0;

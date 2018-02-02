@@ -490,7 +490,7 @@ div.scriptData .panel-body {
 .searchTerm {
   float: left;
   width: 85%;
-  border: 0px solid #003874;
+  border: 1px solid #003874;
   margin-top: 5px;
   padding: 5px;
   height: 30px;
@@ -501,9 +501,9 @@ div.scriptData .panel-body {
 }
 
 .searchButton {
-    margin-top: 5px;
+    margin-top: 4px;
     width: 15%;
-    height: 30px;
+    height: 32px;
     border: 1px solid #fff;
     background: #003874;
     text-align: center;
@@ -698,7 +698,7 @@ div.scriptData .panel-body {
 
 .card .card-header {
     box-shadow: 0 10px 30px -12px rgba(0, 0, 0, 0.42), 0 4px 25px 0px rgba(0, 0, 0, 0.12), 0 8px 10px -5px rgba(0, 0, 0, 0.2);
-    margin: -20px 15px 0;
+    margin: -20px 20px 0;
     border-radius: 3px;
     padding: 15px;
     background-color: #999999;
@@ -1131,6 +1131,9 @@ h6.small.fw-600.text-uppercase.text-muted.mb-0 {
     box-shadow: 0 0 5px rgba(39, 38, 53, 0.1);
     .progress-panel {
         border-bottom: 0px !important;
+    }
+    h3.card-title {
+        font-size: 16px;
     }
 }
 
