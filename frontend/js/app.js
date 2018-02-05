@@ -41,7 +41,7 @@ myApp.config(function ($stateProvider, $urlRouterProvider, $httpProvider, $locat
         .state('dashboard', {
             url: "/dashboard",
             templateUrl: tempateURL,
-            controller: 'DashboardCtrl'
+            controller: 'Dashboard5Ctrl'
         })
         .state('dashboard2', {
             url: "/dashboard2",
