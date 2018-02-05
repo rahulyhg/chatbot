@@ -10476,6 +10476,12 @@ div.scriptData .panel-body {
     position: absolute;
     width: 0;
 }*/
+.finaldashboard {
+  width: 920px; }
+
+.profilemodal {
+  overflow-x: scroll; }
+
 .topic_col {
   border-right: 2px solid #ddd;
   width: 100%;

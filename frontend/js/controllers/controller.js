@@ -1680,6 +1680,21 @@ myApp.controller('HomeCtrl', function ($scope,$rootScope, TemplateService, Navig
             });
             
         };
+        $scope.$modalInstanceds = {};
+        $rootScope.openMydashboard = function() {
+            $scope.$modalInstanceds = $uibModal.open({
+                scope: $scope,
+                animation: true,
+                size: 'lg',
+                templateUrl: 'views/modal/profile.html',
+                //controller: 'CommonCtrl'
+            });
+        };
+        $scope.Mydashboardcancel = function() {
+            //console.log("dismissing");
+            $scope.$modalInstanceds.dismiss('cancel');
+            //$scope.$modalInstance.close();
+        };
         $rootScope.showChatwindow = function () {
             newlist = $.jStorage.get("chatlist");
             // if(!newlist || newlist == null)
