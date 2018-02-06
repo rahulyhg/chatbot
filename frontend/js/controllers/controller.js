@@ -1904,7 +1904,7 @@ myApp.controller('HomeCtrl', function ($scope,$rootScope, TemplateService, Navig
             });
 
         };
-        $rootScope.getDthlinkRes = function(stage,dthlink,index) {
+        $rootScope.getDthlinkRes = function(stage,dthlink,tiledlist) {
             //console.log(colno,lineno,dthlink);
             //mysession = $.jStorage.get("sessiondata");
             var mysession = {};
@@ -1914,6 +1914,7 @@ myApp.controller('HomeCtrl', function ($scope,$rootScope, TemplateService, Navig
             //mysession.DTHline=lineno;
             //mysession.DTHcol=colno;
             mysession.DTHstage=stage;
+            mysession.tiledlist = tiledlist;
             // formData = {};
             // formData.DTHcol = colno;
             // formData.DTHline = lineno;

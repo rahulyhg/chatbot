@@ -148,7 +148,7 @@
                                                         {{dthlink}}
                                                     </div> -->
                                                     <div class="container-fluid" ng-repeat="dthlink in chatRes.DT" ng-init="$dthindex = $index">
-                                                        <div class="col-md-11 dthyperlink lastmsg changedthbg stage{{chatRes.bgstage}}"  data-id="{{dthlink}}" data-url-id="innerLink" data-stage="{{chatRes.Stage}}" data-bgstage="{{chatRes.bgstage}}" ng-if="chatRes.DT.length > 0 && chatRes.Stage=='0'" data-index="{{$index}}"  ng-click="getDthlinkRes(chatRes.Stage,dthlink);" >
+                                                        <div class="col-md-11 dthyperlink lastmsg changedthbg stage{{chatRes.bgstage}}"  data-id="{{dthlink}}" data-url-id="innerLink" data-stage="{{chatRes.Stage}}" data-bgstage="{{chatRes.bgstage}}" ng-if="chatRes.DT.length > 0 " data-index="{{$index}}"  ng-click="getDthlinkRes(chatRes.Stage,dthlink,chatRes);" >
                                                             <span class="lefticon glyphicon glyphicon-chevron-left" style="display:none;"></span>
                                                             {{dthlink}}
                                                         </div>

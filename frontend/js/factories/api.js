@@ -1,8 +1,8 @@
 myApp.factory('apiService', function ($http, $q, $timeout,CsrfTokenService,$httpParamSerializer) {
     //adminurl = "http://wohlig.co.in/chatbotapi/index.php/json/";
-    adminurl = "http://104.46.103.162:8097/";
+    adminurl = "http://exponentiadata.co.in:8097/";
     var adminUrl2 = "http://wohlig.io/api/";
-    var adminUrl3 = "http://104.46.103.162:8001/api/"
+    var adminUrl3 = "http://exponentiadata.co.in:8001/api/"
     //var adminUrl3 = "http://localhost/api/";
     //return
     return {
@@ -175,11 +175,12 @@ myApp.factory('apiService', function ($http, $q, $timeout,CsrfTokenService,$http
         },
         getDthlinkRes:function(formData,callback){
             //console.log(formData);
+            
             return    $http({
                 url:adminurl+'outDTL/'+formData.user_id+"/",
                 //url: adminUrl3 + 'Chatbotautolist/getDthlink',
                 method: 'POST',
-                data:$.param(formData),
+                data:$httpParamSerializer(formData),
                 headers: {'Content-Type': 'application/x-www-form-urlencoded;charset=utf-8','X-CSRFToken':formData.csrfmiddlewaretoken },
             });
             
