@@ -186,6 +186,19 @@ myApp.factory('apiService', function ($http, $q, $timeout,CsrfTokenService,$http
             
             
         },
+        outprocess:function(formData,callback){
+            //console.log(formData);
+            
+            return    $http({
+                url:adminurl+'outprocess/'+formData.user_id+"/",
+                //url: adminUrl3 + 'Chatbotautolist/getDthlink',
+                method: 'POST',
+                data:$httpParamSerializer(formData),
+                headers: {'Content-Type': 'application/x-www-form-urlencoded;charset=utf-8','X-CSRFToken':formData.csrfmiddlewaretoken },
+            });
+            
+            
+        },
         forgotpassword:function(formData, callback) {
             
             return $http({

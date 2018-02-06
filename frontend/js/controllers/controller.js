@@ -1904,6 +1904,196 @@ myApp.controller('HomeCtrl', function ($scope,$rootScope, TemplateService, Navig
             });
 
         };
+        angular.element(document).ready(function () {
+            $(document).on('click', 'a.dtfaq', function(){
+                console.log("clickedddd");
+                tiledlist = [];
+                var stage = $(this).attr("data-stage");
+                var journey = $(this).attr("data-journey");
+                var dthlink = $(this).text();
+                tiledlist[0] ={Journey_Name:journey,Stage:stage} ;
+                //tiledlist[0]['Stage'] = stage;
+                $rootScope.getDthlinkRes(stage,dthlink,tiledlist);
+            });
+        });
+        angular.element(document).ready(function () {
+            $(document).on('click', 'a.ratecard', function(){
+                
+                var dthlink = $(this).text();
+                formData = {csrfmiddlewaretoken:$rootScope.getCookie("csrftoken"),user_id:$cookies.get("session_id"),user_input:dthlink,auto_id:'',auto_value:''};
+                apiService.outprocess(formData).then(function (data){
+                        //console.log(data);
+                    
+                        if(data.data.tiledlist[0].topic)
+                             $("#topic").text(data.data.tiledlist[0].topic);
+                    angular.forEach(data.data.tiledlist, function(value, key) {
+                        //console.log(value);
+                        if(value.type=="text")
+                        {
+							//console.log(data.data.tiledlist[0].text);
+                        	$rootScope.pushSystemMsg(0,data.data);
+                            $rootScope.showMsgLoader = false;
+                            $timeout(function(){
+                                var textspeech = data.data.tiledlist[0].Text;
+                                
+                                
+                                //$.jStorage.set("texttospeak",textspeech);
+
+                                $('#mybtn_trigger').trigger('click');
+                                
+                            },200);
+                            
+                            return false;
+                        }
+                        if(value.type=="rate card")
+                        {
+                            $rootScope.pushSystemMsg(0,data.data);
+                            $rootScope.showMsgLoader = false;
+                            
+                            // $(".r_c_col").val($(".r_c_col option:first").val());
+                            // $(".r_c_row").val($(".r_c_row option:first").val());
+
+                            // var firstOption = $('.r_c_col option:first');
+                            // firstOption.attr('selected', true);
+                            // $('.r_c_col').attr('selectedIndex', 0);
+                            $timeout(function(){
+                                $('select.r_c_col:last option:nth-child(2)').attr("selected", "selected");
+                                $('select.r_c_row:last option:nth-child(2)').attr("selected", "selected");
+                                $("select.r_c_col:last").trigger('change');
+                                $("select.r_c_row:last").trigger('change');
+                            },1000);
+                            
+                            return false;
+                        }
+                        else if(value.type=="DTHyperlink")
+                        {
+                           $rootScope.DthResponse(0,data.data);  
+                           $timeout(function(){
+                                var textspeech = data.data.tiledlist[0].Text;
+                                _.each(data.data.tiledlist[0].DTHyperlink,function(v,k){
+                                    textspeech += v;
+                                });
+                                $.jStorage.set("texttospeak",textspeech);
+
+                                $('#mybtn_trigger').trigger('click');
+                                
+                            },200);
+                        }
+                        else if(value.type=="Instruction")
+                        {
+							
+                           $rootScope.InstructionResponse(0,data.data);  
+                           
+                        }
+                        if(value.type=="product listing")
+                        {
+                            $rootScope.pushSystemMsg(0,data.data);
+                            $rootScope.showMsgLoader = false;
+                            $timeout(function(){
+                            $('.carousel').carousel({
+                                interval: false,
+                                wrap: false
+                            });
+                            $('.carousel').find('.item').first().addClass('active');
+                            },2000);
+                            
+                            return false;
+                        }
+                    });
+                });
+            });
+        });
+        angular.element(document).ready(function () {
+            $(document).on('click', 'a.productlisting', function(){
+                
+                var dthlink = $(this).text();
+                formData = {csrfmiddlewaretoken:$rootScope.getCookie("csrftoken"),user_id:$cookies.get("session_id"),user_input:dthlink,auto_id:'',auto_value:''};
+                apiService.outprocess(formData).then(function (data){
+                        //console.log(data);
+                    
+                        if(data.data.tiledlist[0].topic)
+                             $("#topic").text(data.data.tiledlist[0].topic);
+                    angular.forEach(data.data.tiledlist, function(value, key) {
+                        //console.log(value);
+                        if(value.type=="text")
+                        {
+							//console.log(data.data.tiledlist[0].text);
+                        	$rootScope.pushSystemMsg(0,data.data);
+                            $rootScope.showMsgLoader = false;
+                            $timeout(function(){
+                                var textspeech = data.data.tiledlist[0].Text;
+                                
+                                
+                                //$.jStorage.set("texttospeak",textspeech);
+
+                                $('#mybtn_trigger').trigger('click');
+                                
+                            },200);
+                            
+                            return false;
+                        }
+                        if(value.type=="rate card")
+                        {
+                            $rootScope.pushSystemMsg(0,data.data);
+                            $rootScope.showMsgLoader = false;
+                            
+                            // $(".r_c_col").val($(".r_c_col option:first").val());
+                            // $(".r_c_row").val($(".r_c_row option:first").val());
+
+                            // var firstOption = $('.r_c_col option:first');
+                            // firstOption.attr('selected', true);
+                            // $('.r_c_col').attr('selectedIndex', 0);
+                            $timeout(function(){
+                                $('select.r_c_col:last option:nth-child(2)').attr("selected", "selected");
+                                $('select.r_c_row:last option:nth-child(2)').attr("selected", "selected");
+                                $("select.r_c_col:last").trigger('change');
+                                $("select.r_c_row:last").trigger('change');
+                            },1000);
+                            
+                            return false;
+                        }
+                        else if(value.type=="DTHyperlink")
+                        {
+                           $rootScope.DthResponse(0,data.data);  
+                           $timeout(function(){
+                                var textspeech = data.data.tiledlist[0].Text;
+                                _.each(data.data.tiledlist[0].DTHyperlink,function(v,k){
+                                    textspeech += v;
+                                });
+                                $.jStorage.set("texttospeak",textspeech);
+
+                                $('#mybtn_trigger').trigger('click');
+                                
+                            },200);
+                        }
+                        else if(value.type=="Instruction")
+                        {
+							
+                           $rootScope.InstructionResponse(0,data.data);  
+                           
+                        }
+                        if(value.type=="product listing")
+                        {
+                            $rootScope.pushSystemMsg(0,data.data);
+                            $rootScope.showMsgLoader = false;
+                            $timeout(function(){
+                            $('.carousel').carousel({
+                                interval: false,
+                                wrap: false
+                            });
+                            $('.carousel').find('.item').first().addClass('active');
+                            },2000);
+                            
+                            return false;
+                        }
+                    });
+                });
+            });
+        });
+        $rootScope.to_trusted = function(html_code) {
+            console.log(html_code);
+            return $sce.trustAsHtml(html_code);
+        };
         $rootScope.getDthlinkRes = function(stage,dthlink,tiledlist) {
             //console.log(colno,lineno,dthlink);
             //mysession = $.jStorage.get("sessiondata");

@@ -134,7 +134,8 @@ myApp.run(['$http','$cookies','beforeUnload','$document','$rootScope','Idle','bo
     $rootScope.transcript="";
     $rootScope.tabvalue={};
     $rootScope.rotated = false;
-
+    
+    
     $(document).on('click', '.chat-body .changedthbg', function(){ 
         var stage = $(this).attr("data-bgstage");
         $(".stage"+stage).css('background-color','#eee');
