@@ -147,7 +147,25 @@ myApp.directive('img', function ($compile, $parse) {
             }
         }
     })
-   
+    .directive('parseUrl', function () {
+        //var urlPattern = /(http|ftp|https):\/\/[\w-]+(\.[\w-]+)+([\w.,@?^=%&amp;:\/~+#-]*[\w@?^=%&amp;\/~+#-])?/gi;
+        var urlPattern ="/^[a-zA-Z0-9]*$/";
+        return {
+            restrict: 'A',
+            require: 'ngModel',
+            replace: true,
+            scope: {
+                props: '=parseUrl',
+                ngModel: '=ngModel'
+            },
+            link: function compile(scope, element, attrs, controller) {
+                scope.$watch('ngModel', function (value) {
+                    var html = value.replace(urlPattern, '<a target="' + scope.props.target + '" href="$&">$&</a>') + " | " + scope.props.otherProp;
+                    element.html(html);
+                });
+            }
+        };
+    })
     myApp.directive('ngRightClick', function($parse) {
         return function(scope, element, attrs) {
             var fn = $parse(attrs.ngRightClick);
