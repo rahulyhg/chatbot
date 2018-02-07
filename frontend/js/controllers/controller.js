@@ -24,7 +24,16 @@ myApp.controller('HomeCtrl', function ($scope,$rootScope, TemplateService, Navig
                 //$( ".c-hamburger" ).trigger( "click" ); 
                 
         });
-        
+        $rootScope.newuser = function() {
+            apiService.get_session({}).then( function (response) {
+                $cookies.put("csrftoken",response.data.csrf_token);
+                $cookies.put("session_id",response.data.session_id);
+                $.jStorage.set("csrftoken",response.data.csrf_token);
+                $rootScope.session_id =response.data.session_id;
+                $rootScope.chatlist = [];
+                //console.log(response.data);
+            });
+        };
         angular.element(document).ready(function () {
             $scope.setdisconnectsocket = function(){
                 var formData= {from_id:$.jStorage.get("id")};
@@ -37,6 +46,7 @@ myApp.controller('HomeCtrl', function ($scope,$rootScope, TemplateService, Navig
                 $cookies.put("csrftoken",response.data.csrf_token);
                 $cookies.put("session_id",response.data.session_id);
                 $.jStorage.set("csrftoken",response.data.csrf_token);
+                $rootScope.session_id =response.data.session_id;
                 //console.log(response.data);
             });
             var mydiv = "Hello How are you <blargh src='image.jpg' /> see you tomorrow";
