@@ -1915,7 +1915,19 @@ myApp.controller('HomeCtrl', function ($scope,$rootScope, TemplateService, Navig
 
         };
         angular.element(document).ready(function () {
-            $(document).on('click', 'a.dtfaq', function(){
+            //$("a.dtfaq").click( function() {
+            // $('.dtfaq').click(function(e){
+            //     e.preventDefault();
+            //     tiledlist = [];
+            //     var stage = $(this).attr("data-stage");
+            //     var journey = $(this).attr("data-journey");
+            //     var dthlink = $(this).text();
+            //     tiledlist[0] ={Journey_Name:journey,Stage:stage} ;
+            //     //tiledlist[0]['Stage'] = stage;
+            //     $rootScope.getDthlinkRes(stage,dthlink,tiledlist);
+            // }).click();
+            $(document).unbind("click").on('click', 'a.dtfaq', function(e){
+             //$(document).unbind("click").click( function(){
                 console.log("clickedddd");
                 tiledlist = [];
                 var stage = $(this).attr("data-stage");
@@ -1924,10 +1936,12 @@ myApp.controller('HomeCtrl', function ($scope,$rootScope, TemplateService, Navig
                 tiledlist[0] ={Journey_Name:journey,Stage:stage} ;
                 //tiledlist[0]['Stage'] = stage;
                 $rootScope.getDthlinkRes(stage,dthlink,tiledlist);
+                //e.preventDefault();
             });
         });
         angular.element(document).ready(function () {
-            $(document).on('click', 'a.ratecard', function(){
+            $(document).unbind("click").on('click', 'a.ratecard', function(e){
+            //$(document).on('click', 'a.ratecard', function(){
                 
                 var dthlink = $(this).text();
                 formData = {csrfmiddlewaretoken:$rootScope.getCookie("csrftoken"),user_id:$cookies.get("session_id"),user_input:dthlink,auto_id:'',auto_value:''};
@@ -2014,7 +2028,8 @@ myApp.controller('HomeCtrl', function ($scope,$rootScope, TemplateService, Navig
             });
         });
         angular.element(document).ready(function () {
-            $(document).on('click', 'a.productlisting', function(){
+            $(document).unbind("click").on('click', 'a.productlisting', function(e){
+            //$(document).on('click', 'a.productlisting', function(){
                 
                 var dthlink = $(this).text();
                 formData = {csrfmiddlewaretoken:$rootScope.getCookie("csrftoken"),user_id:$cookies.get("session_id"),user_input:dthlink,auto_id:'',auto_value:''};
