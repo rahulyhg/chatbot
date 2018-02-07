@@ -48,6 +48,15 @@ myApp.factory('apiService', function ($http, $q, $timeout,CsrfTokenService,$http
             });
            
         },
+		getguidelinedata:function(formData, callback) {
+            
+            return $http({
+                url:adminUrl3+ "Guidelines/getdetail",
+                method: 'POST',
+                data: formData,
+            });
+           
+        },
         disconnectuser:function(formData, callback) {
             
             return $http({

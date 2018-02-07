@@ -2271,52 +2271,52 @@ myApp.controller('HomeCtrl', function ($scope,$rootScope, TemplateService, Navig
             $scope.$viewmodalInstance1.dismiss('cancel');
         };
         $rootScope.DthResponse = function(id,data) {
-        if(data.tiledlist[0].DT )
-        {
-            if( data.tiledlist[0].DT.length > 0  || data.tiledlist[0].Text != "")
-            {
-				//if()
+			if(data.tiledlist[0].DT )
+			{
+				if( data.tiledlist[0].DT.length > 0  || data.tiledlist[0].Text != "")
 				{
-					
-					// var images = Array();
-					// var process = Array();
-                    // process = data.tiledlist[0].Process;
-                    // var dtstage = data.tiledlist[0].Stage;
-                    // var dtstage = dtstage.replace(".", "");
-                    // data.tiledlist[0].bgstage = dtstage;
-					// /*_.each(data.tiledlist[0].Process,function(v,k){
-					// 	if (v.indexOf(".png") >= 0) 
-					// });*/
-					//  images = _.remove(process, function(n) {
-					//   return n.indexOf(".png") >= 0;
-					// });
-					// //console.log(images);
-					// data.tiledlist[0].Process =process;
-					// data.tiledlist[0].images =images; //|| images.length > 0
-					if(data.tiledlist[0].DT.length > 0 || ( data.tiledlist[0].Text != "" && data.tiledlist[0].Text)  )
-                        $rootScope.pushSystemMsg(id,data);
-                    if(data.tiledlist[0].Stage != '0')
-                    {
-                        if(!data.tiledlist[0].Script || data.tiledlist[0].Script.length== 0 )
-                            $rootScope.tabHeight = window.innerHeight-53;
-                        else
-                            $rootScope.tabHeight = 300;
-                    }
-					// if(images.length > 0)
-					// {
-					// 	$timeout(function(){
-					// 		$('#myCarousel2').carousel({
-					// 			interval: false,
-					// 			wrap: false
-					// 		});
-					// 		$('#myCarousel2').find('.item').first().addClass('active');
-					// 	},2000);
+					//if()
+					{
 						
-					// }
+						// var images = Array();
+						// var process = Array();
+						// process = data.tiledlist[0].Process;
+						// var dtstage = data.tiledlist[0].Stage;
+						// var dtstage = dtstage.replace(".", "");
+						// data.tiledlist[0].bgstage = dtstage;
+						// /*_.each(data.tiledlist[0].Process,function(v,k){
+						// 	if (v.indexOf(".png") >= 0) 
+						// });*/
+						//  images = _.remove(process, function(n) {
+						//   return n.indexOf(".png") >= 0;
+						// });
+						// //console.log(images);
+						// data.tiledlist[0].Process =process;
+						// data.tiledlist[0].images =images; //|| images.length > 0
+						if(data.tiledlist[0].DT.length > 0 || ( data.tiledlist[0].Text != "" && data.tiledlist[0].Text)  )
+							$rootScope.pushSystemMsg(id,data);
+						if(data.tiledlist[0].Stage != '0')
+						{
+							if(!data.tiledlist[0].Script || data.tiledlist[0].Script.length== 0 )
+								$rootScope.tabHeight = window.innerHeight-53;
+							else
+								$rootScope.tabHeight = 300;
+						}
+						// if(images.length > 0)
+						// {
+						// 	$timeout(function(){
+						// 		$('#myCarousel2').carousel({
+						// 			interval: false,
+						// 			wrap: false
+						// 		});
+						// 		$('#myCarousel2').find('.item').first().addClass('active');
+						// 	},2000);
+							
+						// }
+					}
 				}
-            }
-        }   
-            
+			}   
+			
             $rootScope.collapse_arr = new Array();
             var process = data.tiledlist[0].Process;
             // _.each(process,function(v,k){
@@ -2332,7 +2332,7 @@ myApp.controller('HomeCtrl', function ($scope,$rootScope, TemplateService, Navig
             //     }
             // });
             data.tiledlist[0].Process = process;
-            var ele = ele = new Array("Process");
+            var ele = new Array("Process");
             var ele_val = new Array(data.tiledlist[0]);
             $rootScope.showMsgLoader = false; 
             
@@ -2381,15 +2381,27 @@ myApp.controller('HomeCtrl', function ($scope,$rootScope, TemplateService, Navig
                 // ele_val.push(data.tiledlist[0]);
                 $rootScope.tabHeight = window.innerHeight-120-53;
             }
-            $rootScope.tabvalue.elements = [];
-            $rootScope.tabvalue.element_values=[];
-            $rootScope.tabvalue.elements = ele;
-            $rootScope.tabvalue.element_values=ele_val;
-            $rootScope.selectTabIndex = 0;
-			$timeout(function(){
-				$("#tab_data .nav-tabs li").first().addClass("active");
-				$("#tab_data .tab-content .tab-pane").first().addClass("active");
-			},4000);
+			if(data.tiledlist[0].Journey_Name && data.tiledlist[0].Journey_Name != '')
+			{
+				formData1 = {Journey_Name:data.tiledlist[0].Journey_Name};
+				apiService.getguidelinedata(formData1).then(function (guidedata){
+					if(guidedata.data.data.length > 0)
+					{
+						ele.push('Guidelines');
+						ele_val.push(guidedata.data.data);
+					}
+					$rootScope.tabvalue.elements = [];
+					$rootScope.tabvalue.element_values=[];
+					$rootScope.tabvalue.elements = ele;
+					$rootScope.tabvalue.element_values=ele_val;
+					$rootScope.selectTabIndex = 0;
+					$timeout(function(){
+						$("#tab_data .nav-tabs li").first().addClass("active");
+						$("#tab_data .tab-content .tab-pane").first().addClass("active");
+					},4000);
+				});
+			}
+            
             
             
             

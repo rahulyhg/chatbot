@@ -15,2024 +15,5158 @@ this.activeTarget=b,this.clear();var c=this.selector+'[data-target="'+b+'"],'+th
  * Copyright 2012 WooThemes
  * Contributing Author: Tyler Smith
  */!function($){var e=!0;$.flexslider=function(t,a){var n=$(t);n.vars=$.extend({},$.flexslider.defaults,a);var i=n.vars.namespace,s=window.navigator&&window.navigator.msPointerEnabled&&window.MSGesture,r=("ontouchstart"in window||s||window.DocumentTouch&&document instanceof DocumentTouch)&&n.vars.touch,o="click touchend MSPointerUp keyup",l="",c,d="vertical"===n.vars.direction,u=n.vars.reverse,v=n.vars.itemWidth>0,p="fade"===n.vars.animation,m=""!==n.vars.asNavFor,f={};$.data(t,"flexslider",n),f={init:function(){n.animating=!1,n.currentSlide=parseInt(n.vars.startAt?n.vars.startAt:0,10),isNaN(n.currentSlide)&&(n.currentSlide=0),n.animatingTo=n.currentSlide,n.atEnd=0===n.currentSlide||n.currentSlide===n.last,n.containerSelector=n.vars.selector.substr(0,n.vars.selector.search(" ")),n.slides=$(n.vars.selector,n),n.container=$(n.containerSelector,n),n.count=n.slides.length,n.syncExists=$(n.vars.sync).length>0,"slide"===n.vars.animation&&(n.vars.animation="swing"),n.prop=d?"top":"marginLeft",n.args={},n.manualPause=!1,n.stopped=!1,n.started=!1,n.startTimeout=null,n.transitions=!n.vars.video&&!p&&n.vars.useCSS&&function(){var e=document.createElement("div"),t=["perspectiveProperty","WebkitPerspective","MozPerspective","OPerspective","msPerspective"];for(var a in t)if(void 0!==e.style[t[a]])return n.pfx=t[a].replace("Perspective","").toLowerCase(),n.prop="-"+n.pfx+"-transform",!0;return!1}(),n.ensureAnimationEnd="",""!==n.vars.controlsContainer&&(n.controlsContainer=$(n.vars.controlsContainer).length>0&&$(n.vars.controlsContainer)),""!==n.vars.manualControls&&(n.manualControls=$(n.vars.manualControls).length>0&&$(n.vars.manualControls)),""!==n.vars.customDirectionNav&&(n.customDirectionNav=2===$(n.vars.customDirectionNav).length&&$(n.vars.customDirectionNav)),n.vars.randomize&&(n.slides.sort(function(){return Math.round(Math.random())-.5}),n.container.empty().append(n.slides)),n.doMath(),n.setup("init"),n.vars.controlNav&&f.controlNav.setup(),n.vars.directionNav&&f.directionNav.setup(),n.vars.keyboard&&(1===$(n.containerSelector).length||n.vars.multipleKeyboard)&&$(document).bind("keyup",function(e){var t=e.keyCode;if(!n.animating&&(39===t||37===t)){var a=39===t?n.getTarget("next"):37===t?n.getTarget("prev"):!1;n.flexAnimate(a,n.vars.pauseOnAction)}}),n.vars.mousewheel&&n.bind("mousewheel",function(e,t,a,i){e.preventDefault();var s=0>t?n.getTarget("next"):n.getTarget("prev");n.flexAnimate(s,n.vars.pauseOnAction)}),n.vars.pausePlay&&f.pausePlay.setup(),n.vars.slideshow&&n.vars.pauseInvisible&&f.pauseInvisible.init(),n.vars.slideshow&&(n.vars.pauseOnHover&&n.hover(function(){n.manualPlay||n.manualPause||n.pause()},function(){n.manualPause||n.manualPlay||n.stopped||n.play()}),n.vars.pauseInvisible&&f.pauseInvisible.isHidden()||(n.vars.initDelay>0?n.startTimeout=setTimeout(n.play,n.vars.initDelay):n.play())),m&&f.asNav.setup(),r&&n.vars.touch&&f.touch(),(!p||p&&n.vars.smoothHeight)&&$(window).bind("resize orientationchange focus",f.resize),n.find("img").attr("draggable","false"),setTimeout(function(){n.vars.start(n)},200)},asNav:{setup:function(){n.asNav=!0,n.animatingTo=Math.floor(n.currentSlide/n.move),n.currentItem=n.currentSlide,n.slides.removeClass(i+"active-slide").eq(n.currentItem).addClass(i+"active-slide"),s?(t._slider=n,n.slides.each(function(){var e=this;e._gesture=new MSGesture,e._gesture.target=e,e.addEventListener("MSPointerDown",function(e){e.preventDefault(),e.currentTarget._gesture&&e.currentTarget._gesture.addPointer(e.pointerId)},!1),e.addEventListener("MSGestureTap",function(e){e.preventDefault();var t=$(this),a=t.index();$(n.vars.asNavFor).data("flexslider").animating||t.hasClass("active")||(n.direction=n.currentItem<a?"next":"prev",n.flexAnimate(a,n.vars.pauseOnAction,!1,!0,!0))})})):n.slides.on(o,function(e){e.preventDefault();var t=$(this),a=t.index(),s=t.offset().left-$(n).scrollLeft();0>=s&&t.hasClass(i+"active-slide")?n.flexAnimate(n.getTarget("prev"),!0):$(n.vars.asNavFor).data("flexslider").animating||t.hasClass(i+"active-slide")||(n.direction=n.currentItem<a?"next":"prev",n.flexAnimate(a,n.vars.pauseOnAction,!1,!0,!0))})}},controlNav:{setup:function(){n.manualControls?f.controlNav.setupManual():f.controlNav.setupPaging()},setupPaging:function(){var e="thumbnails"===n.vars.controlNav?"control-thumbs":"control-paging",t=1,a,s;if(n.controlNavScaffold=$('<ol class="'+i+"control-nav "+i+e+'"></ol>'),n.pagingCount>1)for(var r=0;r<n.pagingCount;r++){s=n.slides.eq(r),void 0===s.attr("data-thumb-alt")&&s.attr("data-thumb-alt","");var c=""!==s.attr("data-thumb-alt")?c=' alt="'+s.attr("data-thumb-alt")+'"':"";if(a="thumbnails"===n.vars.controlNav?'<img src="'+s.attr("data-thumb")+'"'+c+"/>":'<a href="#">'+t+"</a>","thumbnails"===n.vars.controlNav&&!0===n.vars.thumbCaptions){var d=s.attr("data-thumbcaption");""!==d&&void 0!==d&&(a+='<span class="'+i+'caption">'+d+"</span>")}n.controlNavScaffold.append("<li>"+a+"</li>"),t++}n.controlsContainer?$(n.controlsContainer).append(n.controlNavScaffold):n.append(n.controlNavScaffold),f.controlNav.set(),f.controlNav.active(),n.controlNavScaffold.delegate("a, img",o,function(e){if(e.preventDefault(),""===l||l===e.type){var t=$(this),a=n.controlNav.index(t);t.hasClass(i+"active")||(n.direction=a>n.currentSlide?"next":"prev",n.flexAnimate(a,n.vars.pauseOnAction))}""===l&&(l=e.type),f.setToClearWatchedEvent()})},setupManual:function(){n.controlNav=n.manualControls,f.controlNav.active(),n.controlNav.bind(o,function(e){if(e.preventDefault(),""===l||l===e.type){var t=$(this),a=n.controlNav.index(t);t.hasClass(i+"active")||(a>n.currentSlide?n.direction="next":n.direction="prev",n.flexAnimate(a,n.vars.pauseOnAction))}""===l&&(l=e.type),f.setToClearWatchedEvent()})},set:function(){var e="thumbnails"===n.vars.controlNav?"img":"a";n.controlNav=$("."+i+"control-nav li "+e,n.controlsContainer?n.controlsContainer:n)},active:function(){n.controlNav.removeClass(i+"active").eq(n.animatingTo).addClass(i+"active")},update:function(e,t){n.pagingCount>1&&"add"===e?n.controlNavScaffold.append($('<li><a href="#">'+n.count+"</a></li>")):1===n.pagingCount?n.controlNavScaffold.find("li").remove():n.controlNav.eq(t).closest("li").remove(),f.controlNav.set(),n.pagingCount>1&&n.pagingCount!==n.controlNav.length?n.update(t,e):f.controlNav.active()}},directionNav:{setup:function(){var e=$('<ul class="'+i+'direction-nav"><li class="'+i+'nav-prev"><a class="'+i+'prev" href="#">'+n.vars.prevText+'</a></li><li class="'+i+'nav-next"><a class="'+i+'next" href="#">'+n.vars.nextText+"</a></li></ul>");n.customDirectionNav?n.directionNav=n.customDirectionNav:n.controlsContainer?($(n.controlsContainer).append(e),n.directionNav=$("."+i+"direction-nav li a",n.controlsContainer)):(n.append(e),n.directionNav=$("."+i+"direction-nav li a",n)),f.directionNav.update(),n.directionNav.bind(o,function(e){e.preventDefault();var t;""!==l&&l!==e.type||(t=$(this).hasClass(i+"next")?n.getTarget("next"):n.getTarget("prev"),n.flexAnimate(t,n.vars.pauseOnAction)),""===l&&(l=e.type),f.setToClearWatchedEvent()})},update:function(){var e=i+"disabled";1===n.pagingCount?n.directionNav.addClass(e).attr("tabindex","-1"):n.vars.animationLoop?n.directionNav.removeClass(e).removeAttr("tabindex"):0===n.animatingTo?n.directionNav.removeClass(e).filter("."+i+"prev").addClass(e).attr("tabindex","-1"):n.animatingTo===n.last?n.directionNav.removeClass(e).filter("."+i+"next").addClass(e).attr("tabindex","-1"):n.directionNav.removeClass(e).removeAttr("tabindex")}},pausePlay:{setup:function(){var e=$('<div class="'+i+'pauseplay"><a href="#"></a></div>');n.controlsContainer?(n.controlsContainer.append(e),n.pausePlay=$("."+i+"pauseplay a",n.controlsContainer)):(n.append(e),n.pausePlay=$("."+i+"pauseplay a",n)),f.pausePlay.update(n.vars.slideshow?i+"pause":i+"play"),n.pausePlay.bind(o,function(e){e.preventDefault(),""!==l&&l!==e.type||($(this).hasClass(i+"pause")?(n.manualPause=!0,n.manualPlay=!1,n.pause()):(n.manualPause=!1,n.manualPlay=!0,n.play())),""===l&&(l=e.type),f.setToClearWatchedEvent()})},update:function(e){"play"===e?n.pausePlay.removeClass(i+"pause").addClass(i+"play").html(n.vars.playText):n.pausePlay.removeClass(i+"play").addClass(i+"pause").html(n.vars.pauseText)}},touch:function(){function e(e){e.stopPropagation(),n.animating?e.preventDefault():(n.pause(),t._gesture.addPointer(e.pointerId),T=0,c=d?n.h:n.w,f=Number(new Date),l=v&&u&&n.animatingTo===n.last?0:v&&u?n.limit-(n.itemW+n.vars.itemMargin)*n.move*n.animatingTo:v&&n.currentSlide===n.last?n.limit:v?(n.itemW+n.vars.itemMargin)*n.move*n.currentSlide:u?(n.last-n.currentSlide+n.cloneOffset)*c:(n.currentSlide+n.cloneOffset)*c)}function a(e){e.stopPropagation();var a=e.target._slider;if(a){var n=-e.translationX,i=-e.translationY;return T+=d?i:n,m=T,y=d?Math.abs(T)<Math.abs(-n):Math.abs(T)<Math.abs(-i),e.detail===e.MSGESTURE_FLAG_INERTIA?void setImmediate(function(){t._gesture.stop()}):void((!y||Number(new Date)-f>500)&&(e.preventDefault(),!p&&a.transitions&&(a.vars.animationLoop||(m=T/(0===a.currentSlide&&0>T||a.currentSlide===a.last&&T>0?Math.abs(T)/c+2:1)),a.setProps(l+m,"setTouch"))))}}function i(e){e.stopPropagation();var t=e.target._slider;if(t){if(t.animatingTo===t.currentSlide&&!y&&null!==m){var a=u?-m:m,n=a>0?t.getTarget("next"):t.getTarget("prev");t.canAdvance(n)&&(Number(new Date)-f<550&&Math.abs(a)>50||Math.abs(a)>c/2)?t.flexAnimate(n,t.vars.pauseOnAction):p||t.flexAnimate(t.currentSlide,t.vars.pauseOnAction,!0)}r=null,o=null,m=null,l=null,T=0}}var r,o,l,c,m,f,g,h,S,y=!1,x=0,b=0,T=0;s?(t.style.msTouchAction="none",t._gesture=new MSGesture,t._gesture.target=t,t.addEventListener("MSPointerDown",e,!1),t._slider=n,t.addEventListener("MSGestureChange",a,!1),t.addEventListener("MSGestureEnd",i,!1)):(g=function(e){n.animating?e.preventDefault():(window.navigator.msPointerEnabled||1===e.touches.length)&&(n.pause(),c=d?n.h:n.w,f=Number(new Date),x=e.touches[0].pageX,b=e.touches[0].pageY,l=v&&u&&n.animatingTo===n.last?0:v&&u?n.limit-(n.itemW+n.vars.itemMargin)*n.move*n.animatingTo:v&&n.currentSlide===n.last?n.limit:v?(n.itemW+n.vars.itemMargin)*n.move*n.currentSlide:u?(n.last-n.currentSlide+n.cloneOffset)*c:(n.currentSlide+n.cloneOffset)*c,r=d?b:x,o=d?x:b,t.addEventListener("touchmove",h,!1),t.addEventListener("touchend",S,!1))},h=function(e){x=e.touches[0].pageX,b=e.touches[0].pageY,m=d?r-b:r-x,y=d?Math.abs(m)<Math.abs(x-o):Math.abs(m)<Math.abs(b-o);var t=500;(!y||Number(new Date)-f>t)&&(e.preventDefault(),!p&&n.transitions&&(n.vars.animationLoop||(m/=0===n.currentSlide&&0>m||n.currentSlide===n.last&&m>0?Math.abs(m)/c+2:1),n.setProps(l+m,"setTouch")))},S=function(e){if(t.removeEventListener("touchmove",h,!1),n.animatingTo===n.currentSlide&&!y&&null!==m){var a=u?-m:m,i=a>0?n.getTarget("next"):n.getTarget("prev");n.canAdvance(i)&&(Number(new Date)-f<550&&Math.abs(a)>50||Math.abs(a)>c/2)?n.flexAnimate(i,n.vars.pauseOnAction):p||n.flexAnimate(n.currentSlide,n.vars.pauseOnAction,!0)}t.removeEventListener("touchend",S,!1),r=null,o=null,m=null,l=null},t.addEventListener("touchstart",g,!1))},resize:function(){!n.animating&&n.is(":visible")&&(v||n.doMath(),p?f.smoothHeight():v?(n.slides.width(n.computedW),n.update(n.pagingCount),n.setProps()):d?(n.viewport.height(n.h),n.setProps(n.h,"setTotal")):(n.vars.smoothHeight&&f.smoothHeight(),n.newSlides.width(n.computedW),n.setProps(n.computedW,"setTotal")))},smoothHeight:function(e){if(!d||p){var t=p?n:n.viewport;e?t.animate({height:n.slides.eq(n.animatingTo).innerHeight()},e):t.innerHeight(n.slides.eq(n.animatingTo).innerHeight())}},sync:function(e){var t=$(n.vars.sync).data("flexslider"),a=n.animatingTo;switch(e){case"animate":t.flexAnimate(a,n.vars.pauseOnAction,!1,!0);break;case"play":t.playing||t.asNav||t.play();break;case"pause":t.pause()}},uniqueID:function(e){return e.filter("[id]").add(e.find("[id]")).each(function(){var e=$(this);e.attr("id",e.attr("id")+"_clone")}),e},pauseInvisible:{visProp:null,init:function(){var e=f.pauseInvisible.getHiddenProp();if(e){var t=e.replace(/[H|h]idden/,"")+"visibilitychange";document.addEventListener(t,function(){f.pauseInvisible.isHidden()?n.startTimeout?clearTimeout(n.startTimeout):n.pause():n.started?n.play():n.vars.initDelay>0?setTimeout(n.play,n.vars.initDelay):n.play()})}},isHidden:function(){var e=f.pauseInvisible.getHiddenProp();return e?document[e]:!1},getHiddenProp:function(){var e=["webkit","moz","ms","o"];if("hidden"in document)return"hidden";for(var t=0;t<e.length;t++)if(e[t]+"Hidden"in document)return e[t]+"Hidden";return null}},setToClearWatchedEvent:function(){clearTimeout(c),c=setTimeout(function(){l=""},3e3)}},n.flexAnimate=function(e,t,a,s,o){if(n.vars.animationLoop||e===n.currentSlide||(n.direction=e>n.currentSlide?"next":"prev"),m&&1===n.pagingCount&&(n.direction=n.currentItem<e?"next":"prev"),!n.animating&&(n.canAdvance(e,o)||a)&&n.is(":visible")){if(m&&s){var l=$(n.vars.asNavFor).data("flexslider");if(n.atEnd=0===e||e===n.count-1,l.flexAnimate(e,!0,!1,!0,o),n.direction=n.currentItem<e?"next":"prev",l.direction=n.direction,Math.ceil((e+1)/n.visible)-1===n.currentSlide||0===e)return n.currentItem=e,n.slides.removeClass(i+"active-slide").eq(e).addClass(i+"active-slide"),!1;n.currentItem=e,n.slides.removeClass(i+"active-slide").eq(e).addClass(i+"active-slide"),e=Math.floor(e/n.visible)}if(n.animating=!0,n.animatingTo=e,t&&n.pause(),n.vars.before(n),n.syncExists&&!o&&f.sync("animate"),n.vars.controlNav&&f.controlNav.active(),v||n.slides.removeClass(i+"active-slide").eq(e).addClass(i+"active-slide"),n.atEnd=0===e||e===n.last,n.vars.directionNav&&f.directionNav.update(),e===n.last&&(n.vars.end(n),n.vars.animationLoop||n.pause()),p)r?(n.slides.eq(n.currentSlide).css({opacity:0,zIndex:1}),n.slides.eq(e).css({opacity:1,zIndex:2}),n.wrapup(c)):(n.slides.eq(n.currentSlide).css({zIndex:1}).animate({opacity:0},n.vars.animationSpeed,n.vars.easing),n.slides.eq(e).css({zIndex:2}).animate({opacity:1},n.vars.animationSpeed,n.vars.easing,n.wrapup));else{var c=d?n.slides.filter(":first").height():n.computedW,g,h,S;v?(g=n.vars.itemMargin,S=(n.itemW+g)*n.move*n.animatingTo,h=S>n.limit&&1!==n.visible?n.limit:S):h=0===n.currentSlide&&e===n.count-1&&n.vars.animationLoop&&"next"!==n.direction?u?(n.count+n.cloneOffset)*c:0:n.currentSlide===n.last&&0===e&&n.vars.animationLoop&&"prev"!==n.direction?u?0:(n.count+1)*c:u?(n.count-1-e+n.cloneOffset)*c:(e+n.cloneOffset)*c,n.setProps(h,"",n.vars.animationSpeed),n.transitions?(n.vars.animationLoop&&n.atEnd||(n.animating=!1,n.currentSlide=n.animatingTo),n.container.unbind("webkitTransitionEnd transitionend"),n.container.bind("webkitTransitionEnd transitionend",function(){clearTimeout(n.ensureAnimationEnd),n.wrapup(c)}),clearTimeout(n.ensureAnimationEnd),n.ensureAnimationEnd=setTimeout(function(){n.wrapup(c)},n.vars.animationSpeed+100)):n.container.animate(n.args,n.vars.animationSpeed,n.vars.easing,function(){n.wrapup(c)})}n.vars.smoothHeight&&f.smoothHeight(n.vars.animationSpeed)}},n.wrapup=function(e){p||v||(0===n.currentSlide&&n.animatingTo===n.last&&n.vars.animationLoop?n.setProps(e,"jumpEnd"):n.currentSlide===n.last&&0===n.animatingTo&&n.vars.animationLoop&&n.setProps(e,"jumpStart")),n.animating=!1,n.currentSlide=n.animatingTo,n.vars.after(n)},n.animateSlides=function(){!n.animating&&e&&n.flexAnimate(n.getTarget("next"))},n.pause=function(){clearInterval(n.animatedSlides),n.animatedSlides=null,n.playing=!1,n.vars.pausePlay&&f.pausePlay.update("play"),n.syncExists&&f.sync("pause")},n.play=function(){n.playing&&clearInterval(n.animatedSlides),n.animatedSlides=n.animatedSlides||setInterval(n.animateSlides,n.vars.slideshowSpeed),n.started=n.playing=!0,n.vars.pausePlay&&f.pausePlay.update("pause"),n.syncExists&&f.sync("play")},n.stop=function(){n.pause(),n.stopped=!0},n.canAdvance=function(e,t){var a=m?n.pagingCount-1:n.last;return t?!0:m&&n.currentItem===n.count-1&&0===e&&"prev"===n.direction?!0:m&&0===n.currentItem&&e===n.pagingCount-1&&"next"!==n.direction?!1:e!==n.currentSlide||m?n.vars.animationLoop?!0:n.atEnd&&0===n.currentSlide&&e===a&&"next"!==n.direction?!1:!n.atEnd||n.currentSlide!==a||0!==e||"next"!==n.direction:!1},n.getTarget=function(e){return n.direction=e,"next"===e?n.currentSlide===n.last?0:n.currentSlide+1:0===n.currentSlide?n.last:n.currentSlide-1},n.setProps=function(e,t,a){var i=function(){var a=e?e:(n.itemW+n.vars.itemMargin)*n.move*n.animatingTo,i=function(){if(v)return"setTouch"===t?e:u&&n.animatingTo===n.last?0:u?n.limit-(n.itemW+n.vars.itemMargin)*n.move*n.animatingTo:n.animatingTo===n.last?n.limit:a;switch(t){case"setTotal":return u?(n.count-1-n.currentSlide+n.cloneOffset)*e:(n.currentSlide+n.cloneOffset)*e;case"setTouch":return u?e:e;case"jumpEnd":return u?e:n.count*e;case"jumpStart":return u?n.count*e:e;default:return e}}();return-1*i+"px"}();n.transitions&&(i=d?"translate3d(0,"+i+",0)":"translate3d("+i+",0,0)",a=void 0!==a?a/1e3+"s":"0s",n.container.css("-"+n.pfx+"-transition-duration",a),n.container.css("transition-duration",a)),n.args[n.prop]=i,(n.transitions||void 0===a)&&n.container.css(n.args),n.container.css("transform",i)},n.setup=function(e){if(p)n.slides.css({width:"100%","float":"left",marginRight:"-100%",position:"relative"}),"init"===e&&(r?n.slides.css({opacity:0,display:"block",webkitTransition:"opacity "+n.vars.animationSpeed/1e3+"s ease",zIndex:1}).eq(n.currentSlide).css({opacity:1,zIndex:2}):0==n.vars.fadeFirstSlide?n.slides.css({opacity:0,display:"block",zIndex:1}).eq(n.currentSlide).css({zIndex:2}).css({opacity:1}):n.slides.css({opacity:0,display:"block",zIndex:1}).eq(n.currentSlide).css({zIndex:2}).animate({opacity:1},n.vars.animationSpeed,n.vars.easing)),n.vars.smoothHeight&&f.smoothHeight();else{var t,a;"init"===e&&(n.viewport=$('<div class="'+i+'viewport"></div>').css({overflow:"hidden",position:"relative"}).appendTo(n).append(n.container),n.cloneCount=0,n.cloneOffset=0,u&&(a=$.makeArray(n.slides).reverse(),n.slides=$(a),n.container.empty().append(n.slides))),n.vars.animationLoop&&!v&&(n.cloneCount=2,n.cloneOffset=1,"init"!==e&&n.container.find(".clone").remove(),n.container.append(f.uniqueID(n.slides.first().clone().addClass("clone")).attr("aria-hidden","true")).prepend(f.uniqueID(n.slides.last().clone().addClass("clone")).attr("aria-hidden","true"))),n.newSlides=$(n.vars.selector,n),t=u?n.count-1-n.currentSlide+n.cloneOffset:n.currentSlide+n.cloneOffset,d&&!v?(n.container.height(200*(n.count+n.cloneCount)+"%").css("position","absolute").width("100%"),setTimeout(function(){n.newSlides.css({display:"block"}),n.doMath(),n.viewport.height(n.h),n.setProps(t*n.h,"init")},"init"===e?100:0)):(n.container.width(200*(n.count+n.cloneCount)+"%"),n.setProps(t*n.computedW,"init"),setTimeout(function(){n.doMath(),n.newSlides.css({width:n.computedW,marginRight:n.computedM,"float":"left",display:"block"}),n.vars.smoothHeight&&f.smoothHeight()},"init"===e?100:0))}v||n.slides.removeClass(i+"active-slide").eq(n.currentSlide).addClass(i+"active-slide"),n.vars.init(n)},n.doMath=function(){var e=n.slides.first(),t=n.vars.itemMargin,a=n.vars.minItems,i=n.vars.maxItems;n.w=void 0===n.viewport?n.width():n.viewport.width(),n.h=e.height(),n.boxPadding=e.outerWidth()-e.width(),v?(n.itemT=n.vars.itemWidth+t,n.itemM=t,n.minW=a?a*n.itemT:n.w,n.maxW=i?i*n.itemT-t:n.w,n.itemW=n.minW>n.w?(n.w-t*(a-1))/a:n.maxW<n.w?(n.w-t*(i-1))/i:n.vars.itemWidth>n.w?n.w:n.vars.itemWidth,n.visible=Math.floor(n.w/n.itemW),n.move=n.vars.move>0&&n.vars.move<n.visible?n.vars.move:n.visible,n.pagingCount=Math.ceil((n.count-n.visible)/n.move+1),n.last=n.pagingCount-1,n.limit=1===n.pagingCount?0:n.vars.itemWidth>n.w?n.itemW*(n.count-1)+t*(n.count-1):(n.itemW+t)*n.count-n.w-t):(n.itemW=n.w,n.itemM=t,n.pagingCount=n.count,n.last=n.count-1),n.computedW=n.itemW-n.boxPadding,n.computedM=n.itemM},n.update=function(e,t){n.doMath(),v||(e<n.currentSlide?n.currentSlide+=1:e<=n.currentSlide&&0!==e&&(n.currentSlide-=1),n.animatingTo=n.currentSlide),n.vars.controlNav&&!n.manualControls&&("add"===t&&!v||n.pagingCount>n.controlNav.length?f.controlNav.update("add"):("remove"===t&&!v||n.pagingCount<n.controlNav.length)&&(v&&n.currentSlide>n.last&&(n.currentSlide-=1,n.animatingTo-=1),f.controlNav.update("remove",n.last))),n.vars.directionNav&&f.directionNav.update()},n.addSlide=function(e,t){var a=$(e);n.count+=1,n.last=n.count-1,d&&u?void 0!==t?n.slides.eq(n.count-t).after(a):n.container.prepend(a):void 0!==t?n.slides.eq(t).before(a):n.container.append(a),n.update(t,"add"),n.slides=$(n.vars.selector+":not(.clone)",n),n.setup(),n.vars.added(n)},n.removeSlide=function(e){var t=isNaN(e)?n.slides.index($(e)):e;n.count-=1,n.last=n.count-1,isNaN(e)?$(e,n.slides).remove():d&&u?n.slides.eq(n.last).remove():n.slides.eq(e).remove(),n.doMath(),n.update(t,"remove"),n.slides=$(n.vars.selector+":not(.clone)",n),n.setup(),n.vars.removed(n)},f.init()},$(window).blur(function(t){e=!1}).focus(function(t){e=!0}),$.flexslider.defaults={namespace:"flex-",selector:".slides > li",animation:"fade",easing:"swing",direction:"horizontal",reverse:!1,animationLoop:!0,smoothHeight:!1,startAt:0,slideshow:!0,slideshowSpeed:7e3,animationSpeed:600,initDelay:0,randomize:!1,fadeFirstSlide:!0,thumbCaptions:!1,pauseOnAction:!0,pauseOnHover:!1,pauseInvisible:!0,useCSS:!0,touch:!0,video:!1,controlNav:!0,directionNav:!0,prevText:"Previous",nextText:"Next",keyboard:!0,multipleKeyboard:!1,mousewheel:!1,pausePlay:!1,pauseText:"Pause",playText:"Play",controlsContainer:"",manualControls:"",customDirectionNav:"",sync:"",asNavFor:"",itemWidth:0,itemMargin:0,minItems:1,maxItems:0,move:0,allowOneSlide:!0,start:function(){},before:function(){},after:function(){},end:function(){},added:function(){},removed:function(){},init:function(){}},$.fn.flexslider=function(e){if(void 0===e&&(e={}),"object"==typeof e)return this.each(function(){var t=$(this),a=e.selector?e.selector:".slides > li",n=t.find(a);1===n.length&&e.allowOneSlide===!1||0===n.length?(n.fadeIn(400),e.start&&e.start(t)):void 0===t.data("flexslider")&&new $.flexslider(this,e)});var t=$(this).data("flexslider");switch(e){case"play":t.play();break;case"pause":t.pause();break;case"stop":t.stop();break;case"next":t.flexAnimate(t.getTarget("next"),!0);break;case"prev":case"previous":t.flexAnimate(t.getTarget("prev"),!0);break;default:"number"==typeof e&&t.flexAnimate(e,!0)}}}(jQuery);
-/*!
- * fancyBox - jQuery Plugin
- * version: 2.1.5 (Fri, 14 Jun 2013)
- * requires jQuery v1.6 or later
- *
- * Examples at http://fancyapps.com/fancybox/
- * License: www.fancyapps.com/fancybox/#license
- *
- * Copyright 2012 Janis Skarnelis - janis@fancyapps.com
- *
- */
-
+// ==================================================
+// fancyBox v3.2.5
+//
+// Licensed GPLv3 for open source use
+// or fancyBox Commercial License for commercial use
+//
+// http://fancyapps.com/fancybox/
+// Copyright 2017 fancyApps
+//
+// ==================================================
 ;(function (window, document, $, undefined) {
-	"use strict";
+    'use strict';
 
-	var H = $("html"),
-		W = $(window),
-		D = $(document),
-		F = $.fancybox = function () {
-			F.open.apply( this, arguments );
-		},
-		IE =  navigator.userAgent.match(/msie/i),
-		didUpdate	= null,
-		isTouch		= document.createTouch !== undefined,
+    // If there's no jQuery, fancyBox can't work
+    // =========================================
 
-		isQuery	= function(obj) {
-			return obj && obj.hasOwnProperty && obj instanceof $;
-		},
-		isString = function(str) {
-			return str && $.type(str) === "string";
-		},
-		isPercentage = function(str) {
-			return isString(str) && str.indexOf('%') > 0;
-		},
-		isScrollable = function(el) {
-			return (el && !(el.style.overflow && el.style.overflow === 'hidden') && ((el.clientWidth && el.scrollWidth > el.clientWidth) || (el.clientHeight && el.scrollHeight > el.clientHeight)));
-		},
-		getScalar = function(orig, dim) {
-			var value = parseInt(orig, 10) || 0;
+    if ( !$ ) {
+        return;
+    }
 
-			if (dim && isPercentage(orig)) {
-				value = F.getViewport()[ dim ] / 100 * value;
-			}
+    // Check if fancyBox is already initialized
+    // ========================================
 
-			return Math.ceil(value);
-		},
-		getValue = function(value, dim) {
-			return getScalar(value, dim) + 'px';
-		};
+    if ( $.fn.fancybox ) {
 
-	$.extend(F, {
-		// The current version of fancyBox
-		version: '2.1.5',
+        if ( 'console' in window ) {
+            console.log( 'fancyBox already initialized' );
+        }
 
-		defaults: {
-			padding : 15,
-			margin  : 20,
+        return;
+    }
 
-			width     : 800,
-			height    : 600,
-			minWidth  : 100,
-			minHeight : 100,
-			maxWidth  : 9999,
-			maxHeight : 9999,
-			pixelRatio: 1, // Set to 2 for retina display support
+    // Private default settings
+    // ========================
 
-			autoSize   : true,
-			autoHeight : false,
-			autoWidth  : false,
+    var defaults = {
 
-			autoResize  : true,
-			autoCenter  : !isTouch,
-			fitToView   : true,
-			aspectRatio : false,
-			topRatio    : 0.5,
-			leftRatio   : 0.5,
+        // Enable infinite gallery navigation
+        loop : false,
 
-			scrolling : 'auto', // 'auto', 'yes' or 'no'
-			wrapCSS   : '',
+        // Space around image, ignored if zoomed-in or viewport width is smaller than 800px
+        margin : [44, 0],
 
-			arrows     : true,
-			closeBtn   : true,
-			closeClick : false,
-			nextClick  : false,
-			mouseWheel : true,
-			autoPlay   : false,
-			playSpeed  : 3000,
-			preload    : 3,
-			modal      : false,
-			loop       : true,
+        // Horizontal space between slides
+        gutter : 50,
 
-			ajax  : {
-				dataType : 'html',
-				headers  : { 'X-fancyBox': true }
-			},
-			iframe : {
-				scrolling : 'auto',
-				preload   : true
-			},
-			swf : {
-				wmode: 'transparent',
-				allowfullscreen   : 'true',
-				allowscriptaccess : 'always'
-			},
+        // Enable keyboard navigation
+        keyboard : true,
 
-			keys  : {
-				next : {
-					13 : 'left', // enter
-					34 : 'up',   // page down
-					39 : 'left', // right arrow
-					40 : 'up'    // down arrow
-				},
-				prev : {
-					8  : 'right',  // backspace
-					33 : 'down',   // page up
-					37 : 'right',  // left arrow
-					38 : 'down'    // up arrow
-				},
-				close  : [27], // escape key
-				play   : [32], // space - start/stop slideshow
-				toggle : [70]  // letter "f" - toggle fullscreen
-			},
+        // Should display navigation arrows at the screen edges
+        arrows : true,
 
-			direction : {
-				next : 'left',
-				prev : 'right'
-			},
+        // Should display infobar (counter and arrows at the top)
+        infobar : true,
 
-			scrollOutside  : true,
+        // Should display toolbar (buttons at the top)
+        toolbar : true,
 
-			// Override some properties
-			index   : 0,
-			type    : null,
-			href    : null,
-			content : null,
-			title   : null,
+        // What buttons should appear in the top right corner.
+        // Buttons will be created using templates from `btnTpl` option
+        // and they will be placed into toolbar (class="fancybox-toolbar"` element)
+        buttons : [
+            'slideShow',
+            'fullScreen',
+            'thumbs',
+            'share',
+            //'download',
+            //'zoom',
+            'close'
+        ],
 
-			// HTML templates
-			tpl: {
-				wrap     : '<div class="fancybox-wrap" tabIndex="-1"><div class="fancybox-skin"><div class="fancybox-outer"><div class="fancybox-inner"></div></div></div></div>',
-				image    : '<img class="fancybox-image" src="{href}" alt="" />',
-				iframe   : '<iframe id="fancybox-frame{rnd}" name="fancybox-frame{rnd}" class="fancybox-iframe" frameborder="0" vspace="0" hspace="0" webkitAllowFullScreen mozallowfullscreen allowFullScreen' + (IE ? ' allowtransparency="true"' : '') + '></iframe>',
-				error    : '<p class="fancybox-error">The requested content cannot be loaded.<br/>Please try again later.</p>',
-				closeBtn : '<a title="Close" class="fancybox-item fancybox-close" href="javascript:;"></a>',
-				next     : '<a title="Next" class="fancybox-nav fancybox-next" href="javascript:;"><span></span></a>',
-				prev     : '<a title="Previous" class="fancybox-nav fancybox-prev" href="javascript:;"><span></span></a>',
-				loading  : '<div id="fancybox-loading"><div></div></div>'
-			},
+        // Detect "idle" time in seconds
+        idleTime : 3,
 
-			// Properties for each animation type
-			// Opening fancyBox
-			openEffect  : 'fade', // 'elastic', 'fade' or 'none'
-			openSpeed   : 250,
-			openEasing  : 'swing',
-			openOpacity : true,
-			openMethod  : 'zoomIn',
+        // Should display buttons at top right corner of the content
+        // If 'auto' - they will be created for content having type 'html', 'inline' or 'ajax'
+        // Use template from `btnTpl.smallBtn` for customization
+        smallBtn : 'auto',
 
-			// Closing fancyBox
-			closeEffect  : 'fade', // 'elastic', 'fade' or 'none'
-			closeSpeed   : 250,
-			closeEasing  : 'swing',
-			closeOpacity : true,
-			closeMethod  : 'zoomOut',
+        // Disable right-click and use simple image protection for images
+        protect : false,
 
-			// Changing next gallery item
-			nextEffect : 'elastic', // 'elastic', 'fade' or 'none'
-			nextSpeed  : 250,
-			nextEasing : 'swing',
-			nextMethod : 'changeIn',
+        // Shortcut to make content "modal" - disable keyboard navigtion, hide buttons, etc
+        modal : false,
 
-			// Changing previous gallery item
-			prevEffect : 'elastic', // 'elastic', 'fade' or 'none'
-			prevSpeed  : 250,
-			prevEasing : 'swing',
-			prevMethod : 'changeOut',
+        image : {
 
-			// Enable default helpers
-			helpers : {
-				overlay : true,
-				title   : true
-			},
+            // Wait for images to load before displaying
+            // Requires predefined image dimensions
+            // If 'auto' - will zoom in thumbnail if 'width' and 'height' attributes are found
+            preload : "auto"
 
-			// Callbacks
-			onCancel     : $.noop, // If canceling
-			beforeLoad   : $.noop, // Before loading
-			afterLoad    : $.noop, // After loading
-			beforeShow   : $.noop, // Before changing in current item
-			afterShow    : $.noop, // After opening
-			beforeChange : $.noop, // Before changing gallery item
-			beforeClose  : $.noop, // Before closing
-			afterClose   : $.noop  // After closing
-		},
+        },
 
-		//Current state
-		group    : {}, // Selected group
-		opts     : {}, // Group options
-		previous : null,  // Previous element
-		coming   : null,  // Element being loaded
-		current  : null,  // Currently loaded element
-		isActive : false, // Is activated
-		isOpen   : false, // Is currently open
-		isOpened : false, // Have been fully opened at least once
+        ajax : {
 
-		wrap  : null,
-		skin  : null,
-		outer : null,
-		inner : null,
+            // Object containing settings for ajax request
+            settings : {
 
-		player : {
-			timer    : null,
-			isActive : false
-		},
+                // This helps to indicate that request comes from the modal
+                // Feel free to change naming
+                data : {
+                    fancybox : true
+                }
+            }
 
-		// Loaders
-		ajaxLoad   : null,
-		imgPreload : null,
+        },
 
-		// Some collections
-		transitions : {},
-		helpers     : {},
+        iframe : {
 
-		/*
-		 *	Static methods
-		 */
+            // Iframe template
+            tpl : '<iframe id="fancybox-frame{rnd}" name="fancybox-frame{rnd}" class="fancybox-iframe" frameborder="0" vspace="0" hspace="0" webkitAllowFullScreen mozallowfullscreen allowFullScreen allowtransparency="true" src=""></iframe>',
 
-		open: function (group, opts) {
-			if (!group) {
-				return;
-			}
+            // Preload iframe before displaying it
+            // This allows to calculate iframe content width and height
+            // (note: Due to "Same Origin Policy", you can't get cross domain data).
+            preload : true,
 
-			if (!$.isPlainObject(opts)) {
-				opts = {};
-			}
+            // Custom CSS styling for iframe wrapping element
+            // You can use this to set custom iframe dimensions
+            css : {},
 
-			// Close if already active
-			if (false === F.close(true)) {
-				return;
-			}
+            // Iframe tag attributes
+            attr : {
+                scrolling : 'auto'
+            }
 
-			// Normalize group
-			if (!$.isArray(group)) {
-				group = isQuery(group) ? $(group).get() : [group];
-			}
+        },
 
-			// Recheck if the type of each element is `object` and set content type (image, ajax, etc)
-			$.each(group, function(i, element) {
-				var obj = {},
-					href,
-					title,
-					content,
-					type,
-					rez,
-					hrefParts,
-					selector;
+        // Default content type if cannot be detected automatically
+        defaultType : 'image',
 
-				if ($.type(element) === "object") {
-					// Check if is DOM element
-					if (element.nodeType) {
-						element = $(element);
-					}
+        // Open/close animation type
+        // Possible values:
+        //   false            - disable
+        //   "zoom"           - zoom images from/to thumbnail
+        //   "fade"
+        //   "zoom-in-out"
+        //
+        animationEffect : "zoom",
 
-					if (isQuery(element)) {
-						obj = {
-							href    : element.data('fancybox-href') || element.attr('href'),
-							title   : $('<div/>').text( element.data('fancybox-title') || element.attr('title') || '' ).html(),
-							isDom   : true,
-							element : element
-						};
+        // Duration in ms for open/close animation
+        animationDuration : 500,
 
-						if ($.metadata) {
-							$.extend(true, obj, element.metadata());
-						}
+        // Should image change opacity while zooming
+        // If opacity is "auto", then opacity will be changed if image and thumbnail have different aspect ratios
+        zoomOpacity : "auto",
 
-					} else {
-						obj = element;
-					}
-				}
+        // Transition effect between slides
+        //
+        // Possible values:
+        //   false            - disable
+        //   "fade'
+        //   "slide'
+        //   "circular'
+        //   "tube'
+        //   "zoom-in-out'
+        //   "rotate'
+        //
+        transitionEffect : "fade",
 
-				href  = opts.href  || obj.href || (isString(element) ? element : null);
-				title = opts.title !== undefined ? opts.title : obj.title || '';
+        // Duration in ms for transition animation
+        transitionDuration : 366,
 
-				content = opts.content || obj.content;
-				type    = content ? 'html' : (opts.type  || obj.type);
+        // Custom CSS class for slide element
+        slideClass : '',
 
-				if (!type && obj.isDom) {
-					type = element.data('fancybox-type');
+        // Custom CSS class for layout
+        baseClass : '',
 
-					if (!type) {
-						rez  = element.prop('class').match(/fancybox\.(\w+)/);
-						type = rez ? rez[1] : null;
-					}
-				}
+        // Base template for layout
+        baseTpl	:
+            '<div class="fancybox-container" role="dialog" tabindex="-1">' +
+                '<div class="fancybox-bg"></div>' +
+                '<div class="fancybox-inner">' +
+                    '<div class="fancybox-infobar">' +
+                        '<span data-fancybox-index></span>&nbsp;/&nbsp;<span data-fancybox-count></span>' +
+                    '</div>' +
+                    '<div class="fancybox-toolbar">{{buttons}}</div>' +
+                    '<div class="fancybox-navigation">{{arrows}}</div>' +
+                    '<div class="fancybox-stage"></div>' +
+                    '<div class="fancybox-caption-wrap"><div class="fancybox-caption"></div></div>' +
+                '</div>' +
+            '</div>',
 
-				if (isString(href)) {
-					// Try to guess the content type
-					if (!type) {
-						if (F.isImage(href)) {
-							type = 'image';
+        // Loading indicator template
+        spinnerTpl : '<div class="fancybox-loading"></div>',
 
-						} else if (F.isSWF(href)) {
-							type = 'swf';
+        // Error message template
+        errorTpl : '<div class="fancybox-error"><p>{{ERROR}}<p></div>',
 
-						} else if (href.charAt(0) === '#') {
-							type = 'inline';
+        btnTpl : {
 
-						} else if (isString(element)) {
-							type    = 'html';
-							content = element;
-						}
-					}
+            download : '<a download data-fancybox-download class="fancybox-button fancybox-button--download" title="{{DOWNLOAD}}">' +
+                        '<svg viewBox="0 0 40 40">' +
+                            '<path d="M20,23 L20,8 L20,23 L13,16 L20,23 L27,16 L20,23 M26,28 L13,28 L27,28 L14,28" />' +
+                        '</svg>' +
+                    '</a>',
 
-					// Split url into two pieces with source url and content selector, e.g,
-					// "/mypage.html #my_id" will load "/mypage.html" and display element having id "my_id"
-					if (type === 'ajax') {
-						hrefParts = href.split(/\s+/, 2);
-						href      = hrefParts.shift();
-						selector  = hrefParts.shift();
-					}
-				}
+            zoom : '<button data-fancybox-zoom class="fancybox-button fancybox-button--zoom" title="{{ZOOM}}">' +
+                        '<svg viewBox="0 0 40 40">' +
+                            '<path d="M 18,17 m-8,0 a 8,8 0 1,0 16,0 a 8,8 0 1,0 -16,0 M25,23 L31,29 L25,23" />' +
+                        '</svg>' +
+                    '</button>',
 
-				if (!content) {
-					if (type === 'inline') {
-						if (href) {
-							content = $( isString(href) ? href.replace(/.*(?=#[^\s]+$)/, '') : href ); //strip for ie7
+            close : '<button data-fancybox-close class="fancybox-button fancybox-button--close" title="{{CLOSE}}">' +
+                        '<svg viewBox="0 0 40 40">' +
+                            '<path d="M10,10 L30,30 M30,10 L10,30" />' +
+                        '</svg>' +
+                    '</button>',
 
-						} else if (obj.isDom) {
-							content = element;
-						}
+            // This small close button will be appended to your html/inline/ajax content by default,
+            // if "smallBtn" option is not set to false
+            smallBtn   : '<button data-fancybox-close class="fancybox-close-small" title="{{CLOSE}}"></button>',
 
-					} else if (type === 'html') {
-						content = href;
+            // Arrows
+            arrowLeft : '<button data-fancybox-prev class="fancybox-button fancybox-button--arrow_left" title="{{PREV}}">' +
+                            '<svg viewBox="0 0 40 40">' +
+                              '<path d="M10,20 L30,20 L10,20 L18,28 L10,20 L18,12 L10,20"></path>' +
+                            '</svg>' +
+                          '</button>',
 
-					} else if (!type && !href && obj.isDom) {
-						type    = 'inline';
-						content = element;
-					}
-				}
+            arrowRight : '<button data-fancybox-next class="fancybox-button fancybox-button--arrow_right" title="{{NEXT}}">' +
+                          '<svg viewBox="0 0 40 40">' +
+                            '<path d="M30,20 L10,20 L30,20 L22,28 L30,20 L22,12 L30,20"></path>' +
+                          '</svg>' +
+                        '</button>'
+        },
 
-				$.extend(obj, {
-					href     : href,
-					type     : type,
-					content  : content,
-					title    : title,
-					selector : selector
-				});
+        // Container is injected into this element
+        parentEl : 'body',
 
-				group[ i ] = obj;
-			});
 
-			// Extend the defaults
-			F.opts = $.extend(true, {}, F.defaults, opts);
+        // Focus handling
+        // ==============
 
-			// All options are merged recursive except keys
-			if (opts.keys !== undefined) {
-				F.opts.keys = opts.keys ? $.extend({}, F.defaults.keys, opts.keys) : false;
-			}
+        // Try to focus on the first focusable element after opening
+        autoFocus : false,
 
-			F.group = group;
+        // Put focus back to active element after closing
+        backFocus : true,
 
-			return F._start(F.opts.index);
+        // Do not let user to focus on element outside modal content
+        trapFocus : true,
+
+
+        // Module specific options
+        // =======================
+
+        fullScreen : {
+            autoStart : false,
+        },
+
+        // Set `touch: false` to disable dragging/swiping
+        touch : {
+            vertical : true,  // Allow to drag content vertically
+            momentum : true   // Continue movement after releasing mouse/touch when panning
+        },
+
+        // Hash value when initializing manually,
+        // set `false` to disable hash change
+        hash : null,
+
+        // Customize or add new media types
+        // Example:
+        /*
+        media : {
+            youtube : {
+                params : {
+                    autoplay : 0
+                }
+            }
+        }
+        */
+        media : {},
+
+        slideShow : {
+            autoStart : false,
+            speed     : 4000
+        },
+
+        thumbs : {
+			autoStart   : false,                  // Display thumbnails on opening
+			hideOnClose : true,                   // Hide thumbnail grid when closing animation starts
+			parentEl    : '.fancybox-container',  // Container is injected into this element
+			axis        : 'y'                     // Vertical (y) or horizontal (x) scrolling
 		},
 
-		// Cancel image loading or abort ajax request
-		cancel: function () {
-			var coming = F.coming;
+        // Callbacks
+        //==========
+
+        // See Documentation/API/Events for more information
+        // Example:
+        /*
+            afterShow: function( instance, current ) {
+                 console.info( 'Clicked element:' );
+                 console.info( current.opts.$orig );
+            }
+        */
+
+        onInit       : $.noop,  // When instance has been initialized
+
+        beforeLoad   : $.noop,  // Before the content of a slide is being loaded
+        afterLoad    : $.noop,  // When the content of a slide is done loading
+
+        beforeShow   : $.noop,  // Before open animation starts
+        afterShow    : $.noop,  // When content is done loading and animating
+
+        beforeClose  : $.noop,  // Before the instance attempts to close. Return false to cancel the close.
+        afterClose   : $.noop,  // After instance has been closed
+
+        onActivate   : $.noop,  // When instance is brought to front
+        onDeactivate : $.noop,  // When other instance has been activated
+
+
+        // Interaction
+        // ===========
+
+        // Use options below to customize taken action when user clicks or double clicks on the fancyBox area,
+        // each option can be string or method that returns value.
+        //
+        // Possible values:
+        //   "close"           - close instance
+        //   "next"            - move to next gallery item
+        //   "nextOrClose"     - move to next gallery item or close if gallery has only one item
+        //   "toggleControls"  - show/hide controls
+        //   "zoom"            - zoom image (if loaded)
+        //   false             - do nothing
+
+        // Clicked on the content
+        clickContent : function( current, event ) {
+            return current.type === 'image' ? 'zoom' : false;
+        },
+
+        // Clicked on the slide
+        clickSlide : 'close',
+
+        // Clicked on the background (backdrop) element
+        clickOutside : 'close',
+
+        // Same as previous two, but for double click
+        dblclickContent : false,
+        dblclickSlide   : false,
+        dblclickOutside : false,
+
+
+        // Custom options when mobile device is detected
+        // =============================================
+
+        mobile : {
+            margin : 0,
+
+            clickContent : function( current, event ) {
+                return current.type === 'image' ? 'toggleControls' : false;
+            },
+            clickSlide : function( current, event ) {
+                return current.type === 'image' ? 'toggleControls' : 'close';
+            },
+            dblclickContent : function( current, event ) {
+                return current.type === 'image' ? 'zoom' : false;
+            },
+            dblclickSlide : function( current, event ) {
+                return current.type === 'image' ? 'zoom' : false;
+            }
+        },
+
+
+        // Internationalization
+        // ============
+
+        lang : 'en',
+        i18n : {
+            'en' : {
+                CLOSE       : 'Close',
+                NEXT        : 'Next',
+                PREV        : 'Previous',
+                ERROR       : 'The requested content cannot be loaded. <br/> Please try again later.',
+                PLAY_START  : 'Start slideshow',
+                PLAY_STOP   : 'Pause slideshow',
+                FULL_SCREEN : 'Full screen',
+                THUMBS      : 'Thumbnails',
+                DOWNLOAD    : 'Download',
+                SHARE       : 'Share',
+                ZOOM        : 'Zoom'
+            },
+            'de' : {
+                CLOSE       : 'Schliessen',
+                NEXT        : 'Weiter',
+                PREV        : 'Zurück',
+                ERROR       : 'Die angeforderten Daten konnten nicht geladen werden. <br/> Bitte versuchen Sie es später nochmal.',
+                PLAY_START  : 'Diaschau starten',
+                PLAY_STOP   : 'Diaschau beenden',
+                FULL_SCREEN : 'Vollbild',
+                THUMBS      : 'Vorschaubilder',
+                DOWNLOAD    : 'Herunterladen',
+                SHARE       : 'Teilen',
+                ZOOM        : 'Maßstab'
+            }
+        }
 
-			if (coming && false === F.trigger('onCancel')) {
-				return;
-			}
+    };
 
-			F.hideLoading();
+    // Few useful variables and methods
+    // ================================
 
-			if (!coming) {
-				return;
-			}
-
-			if (F.ajaxLoad) {
-				F.ajaxLoad.abort();
-			}
-
-			F.ajaxLoad = null;
+    var $W = $(window);
+    var $D = $(document);
 
-			if (F.imgPreload) {
-				F.imgPreload.onload = F.imgPreload.onerror = null;
-			}
+    var called = 0;
 
-			if (coming.wrap) {
-				coming.wrap.stop(true, true).trigger('onReset').remove();
-			}
 
-			F.coming = null;
-
-			// If the first item has been canceled, then clear everything
-			if (!F.current) {
-				F._afterZoomOut( coming );
-			}
-		},
-
-		// Start closing animation if is open; remove immediately if opening/closing
-		close: function (event) {
-			F.cancel();
-
-			if (false === F.trigger('beforeClose')) {
-				return;
-			}
-
-			F.unbindEvents();
-
-			if (!F.isActive) {
-				return;
-			}
-
-			if (!F.isOpen || event === true) {
-				$('.fancybox-wrap').stop(true).trigger('onReset').remove();
+    // Check if an object is a jQuery object and not a native JavaScript object
+    // ========================================================================
 
-				F._afterZoomOut();
+    var isQuery = function ( obj ) {
+        return obj && obj.hasOwnProperty && obj instanceof $;
+    };
 
-			} else {
-				F.isOpen = F.isOpened = false;
-				F.isClosing = true;
 
-				$('.fancybox-item, .fancybox-nav').remove();
+    // Handle multiple browsers for "requestAnimationFrame" and "cancelAnimationFrame"
+    // ===============================================================================
 
-				F.wrap.stop(true, true).removeClass('fancybox-opened');
+    var requestAFrame = (function () {
+        return window.requestAnimationFrame ||
+                window.webkitRequestAnimationFrame ||
+                window.mozRequestAnimationFrame ||
+                window.oRequestAnimationFrame ||
+                // if all else fails, use setTimeout
+                function (callback) {
+                    return window.setTimeout(callback, 1000 / 60);
+                };
+    })();
 
-				F.transitions[ F.current.closeMethod ]();
-			}
-		},
 
-		// Manage slideshow:
-		//   $.fancybox.play(); - toggle slideshow
-		//   $.fancybox.play( true ); - start
-		//   $.fancybox.play( false ); - stop
-		play: function ( action ) {
-			var clear = function () {
-					clearTimeout(F.player.timer);
-				},
-				set = function () {
-					clear();
+    // Detect the supported transition-end event property name
+    // =======================================================
 
-					if (F.current && F.player.isActive) {
-						F.player.timer = setTimeout(F.next, F.current.playSpeed);
-					}
-				},
-				stop = function () {
-					clear();
+    var transitionEnd = (function () {
+        var t, el = document.createElement("fakeelement");
 
-					D.unbind('.player');
+        var transitions = {
+            "transition"      : "transitionend",
+            "OTransition"     : "oTransitionEnd",
+            "MozTransition"   : "transitionend",
+            "WebkitTransition": "webkitTransitionEnd"
+        };
 
-					F.player.isActive = false;
+        for (t in transitions) {
+            if (el.style[t] !== undefined){
+                return transitions[t];
+            }
+        }
 
-					F.trigger('onPlayEnd');
-				},
-				start = function () {
-					if (F.current && (F.current.loop || F.current.index < F.group.length - 1)) {
-						F.player.isActive = true;
+        return 'transitionend';
+    })();
 
-						D.bind({
-							'onCancel.player beforeClose.player' : stop,
-							'onUpdate.player'   : set,
-							'beforeLoad.player' : clear
-						});
 
-						set();
+    // Force redraw on an element.
+    // This helps in cases where the browser doesn't redraw an updated element properly.
+    // =================================================================================
 
-						F.trigger('onPlayStart');
-					}
-				};
+    var forceRedraw = function( $el ) {
+        return ( $el && $el.length && $el[0].offsetHeight );
+    };
 
-			if (action === true || (!F.player.isActive && action !== false)) {
-				start();
-			} else {
-				stop();
-			}
-		},
 
-		// Navigate to next gallery item
-		next: function ( direction ) {
-			var current = F.current;
+    // Class definition
+    // ================
 
-			if (current) {
-				if (!isString(direction)) {
-					direction = current.direction.next;
-				}
+    var FancyBox = function( content, opts, index ) {
+        var self = this;
 
-				F.jumpto(current.index + 1, direction, 'next');
-			}
-		},
+        self.opts = $.extend( true, { index : index }, $.fancybox.defaults, opts || {} );
 
-		// Navigate to previous gallery item
-		prev: function ( direction ) {
-			var current = F.current;
+        if ( $.fancybox.isMobile ) {
+            self.opts = $.extend( true, {}, self.opts, self.opts.mobile );
+        }
 
-			if (current) {
-				if (!isString(direction)) {
-					direction = current.direction.prev;
-				}
+        // Exclude buttons option from deep merging
+        if ( opts && $.isArray( opts.buttons ) ) {
+            self.opts.buttons = opts.buttons;
+        }
 
-				F.jumpto(current.index - 1, direction, 'prev');
-			}
-		},
+        self.id    = self.opts.id || ++called;
+        self.group = [];
 
-		// Navigate to gallery item by index
-		jumpto: function ( index, direction, router ) {
-			var current = F.current;
+        self.currIndex = parseInt( self.opts.index, 10 ) || 0;
+        self.prevIndex = null;
 
-			if (!current) {
-				return;
-			}
+        self.prevPos = null;
+        self.currPos = 0;
 
-			index = getScalar(index);
+        self.firstRun = null;
 
-			F.direction = direction || current.direction[ (index >= current.index ? 'next' : 'prev') ];
-			F.router    = router || 'jumpto';
+        // Create group elements from original item collection
+        self.createGroup( content );
 
-			if (current.loop) {
-				if (index < 0) {
-					index = current.group.length + (index % current.group.length);
-				}
+        if ( !self.group.length ) {
+            return;
+        }
 
-				index = index % current.group.length;
-			}
+        // Save last active element and current scroll position
+        self.$lastFocus = $(document.activeElement).blur();
 
-			if (current.group[ index ] !== undefined) {
-				F.cancel();
+        // Collection of gallery objects
+        self.slides = {};
 
-				F._start(index);
-			}
-		},
+        self.init();
+    };
 
-		// Center inside viewport and toggle position type to fixed or absolute if needed
-		reposition: function (e, onlyAbsolute) {
-			var current = F.current,
-				wrap    = current ? current.wrap : null,
-				pos;
+    $.extend(FancyBox.prototype, {
 
-			if (wrap) {
-				pos = F._getPosition(onlyAbsolute);
+        // Create DOM structure
+        // ====================
 
-				if (e && e.type === 'scroll') {
-					delete pos.position;
+        init : function() {
+            var self = this,
+                firstItem      = self.group[ self.currIndex ],
+                firstItemOpts  = firstItem.opts,
+                scrollbarWidth = $.fancybox.scrollbarWidth,
+                $scrollDiv,
+                $container,
+                buttonStr;
 
-					wrap.stop(true, true).animate(pos, 200);
+            self.scrollTop  = $D.scrollTop();
+            self.scrollLeft = $D.scrollLeft();
 
-				} else {
-					wrap.css(pos);
 
-					current.pos = $.extend({}, current.dim, pos);
-				}
-			}
-		},
+            // Hide scrollbars
+            // ===============
 
-		update: function (e) {
-			var type = (e && e.originalEvent && e.originalEvent.type),
-				anyway = !type || type === 'orientationchange';
+            if ( !$.fancybox.getInstance() ) {
 
-			if (anyway) {
-				clearTimeout(didUpdate);
+                $( 'body' ).addClass( 'fancybox-active' );
 
-				didUpdate = null;
-			}
+                // iOS hack
+                if ( /iPad|iPhone|iPod/.test(navigator.userAgent) && !window.MSStream ) {
 
-			if (!F.isOpen || didUpdate) {
-				return;
-			}
+                    // iOS has problems for input elements inside fixed containers,
+                    // the workaround is to apply `position: fixed` to `<body>` element,
+                    // unfortunately, this makes it lose the scrollbars and forces address bar to appear.
 
-			didUpdate = setTimeout(function() {
-				var current = F.current;
+                    if ( firstItem.type !== 'image' ) {
+                        $( 'body' ).css( 'top', $( 'body' ).scrollTop() * -1 ).addClass( 'fancybox-iosfix' );
+                    }
 
-				if (!current || F.isClosing) {
-					return;
-				}
+                } else if ( !$.fancybox.isMobile && document.body.scrollHeight > window.innerHeight ) {
 
-				F.wrap.removeClass('fancybox-tmp');
+                    if ( scrollbarWidth === undefined ) {
+                        $scrollDiv = $('<div style="width:50px;height:50px;overflow:scroll;" />').appendTo( 'body' );
 
-				if (anyway || type === 'load' || (type === 'resize' && current.autoResize)) {
-					F._setDimension();
-				}
+                        scrollbarWidth = $.fancybox.scrollbarWidth = $scrollDiv[0].offsetWidth - $scrollDiv[0].clientWidth;
 
-				if (!(type === 'scroll' && current.canShrink)) {
-					F.reposition(e);
-				}
+                        $scrollDiv.remove();
+                    }
 
-				F.trigger('onUpdate');
+                    $( 'head' ).append( '<style id="fancybox-style-noscroll" type="text/css">.compensate-for-scrollbar { margin-right: ' + scrollbarWidth + 'px; }</style>' );
+                    $( 'body' ).addClass( 'compensate-for-scrollbar' );
+                }
+            }
 
-				didUpdate = null;
 
-			}, (anyway && !isTouch ? 0 : 300));
-		},
+            // Build html markup and set references
+            // ====================================
 
-		// Shrink content to fit inside viewport or restore if resized
-		toggle: function ( action ) {
-			if (F.isOpen) {
-				F.current.fitToView = $.type(action) === "boolean" ? action : !F.current.fitToView;
+            // Build html code for buttons and insert into main template
+            buttonStr = '';
 
-				// Help browser to restore document dimensions
-				if (isTouch) {
-					F.wrap.removeAttr('style').addClass('fancybox-tmp');
+            $.each( firstItemOpts.buttons, function( index, value ) {
+                buttonStr += ( firstItemOpts.btnTpl[ value ] || '' );
+            });
 
-					F.trigger('onUpdate');
-				}
+            // Create markup from base template, it will be initially hidden to
+            // avoid unnecessary work like painting while initializing is not complete
+            $container = $(
+                self.translate( self,
+                    firstItemOpts.baseTpl
+                        .replace( '\{\{buttons\}\}', buttonStr )
+                        .replace( '\{\{arrows\}\}', firstItemOpts.btnTpl.arrowLeft + firstItemOpts.btnTpl.arrowRight )
+                )
+            )
+                .attr( 'id', 'fancybox-container-' + self.id )
+                .addClass( 'fancybox-is-hidden' )
+                .addClass( firstItemOpts.baseClass )
+                .data( 'FancyBox', self )
+                .appendTo( firstItemOpts.parentEl );
 
-				F.update();
-			}
-		},
+            // Create object holding references to jQuery wrapped nodes
+            self.$refs = {
+                container : $container
+            };
 
-		hideLoading: function () {
-			D.unbind('.loading');
+            [ 'bg', 'inner', 'infobar', 'toolbar', 'stage', 'caption', 'navigation' ].forEach(function(item) {
+                self.$refs[ item ] = $container.find( '.fancybox-' + item );
+            });
 
-			$('#fancybox-loading').remove();
-		},
+            self.trigger( 'onInit' );
 
-		showLoading: function () {
-			var el, viewport;
+            // Enable events, deactive previous instances
+            self.activate();
 
-			F.hideLoading();
+            // Build slides, load and reveal content
+            self.jumpTo( self.currIndex );
+        },
 
-			el = $(F.opts.tpl.loading).click(F.cancel).appendTo('body');
 
-			// If user will press the escape-button, the request will be canceled
-			D.bind('keydown.loading', function(e) {
-				if ((e.which || e.keyCode) === 27) {
-					e.preventDefault();
+        // Simple i18n support - replaces object keys found in template
+        // with corresponding values
+        // ============================================================
 
-					F.cancel();
-				}
-			});
+        translate : function( obj, str ) {
+            var arr = obj.opts.i18n[ obj.opts.lang ];
 
-			if (!F.defaults.fixed) {
-				viewport = F.getViewport();
+            return str.replace(/\{\{(\w+)\}\}/g, function(match, n) {
+                var value = arr[n];
 
-				el.css({
-					position : 'absolute',
-					top  : (viewport.h * 0.5) + viewport.y,
-					left : (viewport.w * 0.5) + viewport.x
-				});
-			}
+                if ( value === undefined ) {
+                    return match;
+                }
 
-			F.trigger('onLoading');
-		},
+                return value;
+            });
+        },
 
-		getViewport: function () {
-			var locked = (F.current && F.current.locked) || false,
-				rez    = {
-					x: W.scrollLeft(),
-					y: W.scrollTop()
-				};
+        // Create array of gally item objects
+        // Check if each object has valid type and content
+        // ===============================================
 
-			if (locked && locked.length) {
-				rez.w = locked[0].clientWidth;
-				rez.h = locked[0].clientHeight;
+        createGroup : function ( content ) {
+            var self  = this;
+            var items = $.makeArray( content );
 
-			} else {
-				// See http://bugs.jquery.com/ticket/6724
-				rez.w = isTouch && window.innerWidth  ? window.innerWidth  : W.width();
-				rez.h = isTouch && window.innerHeight ? window.innerHeight : W.height();
-			}
+            $.each(items, function( i, item ) {
+                var obj  = {},
+                    opts = {},
+                    $item,
+                    type,
+                    src,
+                    srcParts;
 
-			return rez;
-		},
+                // Step 1 - Make sure we have an object
+                // ====================================
 
-		// Unbind the keyboard / clicking actions
-		unbindEvents: function () {
-			if (F.wrap && isQuery(F.wrap)) {
-				F.wrap.unbind('.fb');
-			}
-
-			D.unbind('.fb');
-			W.unbind('.fb');
-		},
-
-		bindEvents: function () {
-			var current = F.current,
-				keys;
-
-			if (!current) {
-				return;
-			}
-
-			// Changing document height on iOS devices triggers a 'resize' event,
-			// that can change document height... repeating infinitely
-			W.bind('orientationchange.fb' + (isTouch ? '' : ' resize.fb') + (current.autoCenter && !current.locked ? ' scroll.fb' : ''), F.update);
-
-			keys = current.keys;
-
-			if (keys) {
-				D.bind('keydown.fb', function (e) {
-					var code   = e.which || e.keyCode,
-						target = e.target || e.srcElement;
-
-					// Skip esc key if loading, because showLoading will cancel preloading
-					if (code === 27 && F.coming) {
-						return false;
-					}
-
-					// Ignore key combinations and key events within form elements
-					if (!e.ctrlKey && !e.altKey && !e.shiftKey && !e.metaKey && !(target && (target.type || $(target).is('[contenteditable]')))) {
-						$.each(keys, function(i, val) {
-							if (current.group.length > 1 && val[ code ] !== undefined) {
-								F[ i ]( val[ code ] );
-
-								e.preventDefault();
-								return false;
-							}
-
-							if ($.inArray(code, val) > -1) {
-								F[ i ] ();
-
-								e.preventDefault();
-								return false;
-							}
-						});
-					}
-				});
-			}
-
-			if ($.fn.mousewheel && current.mouseWheel) {
-				F.wrap.bind('mousewheel.fb', function (e, delta, deltaX, deltaY) {
-					var target = e.target || null,
-						parent = $(target),
-						canScroll = false;
-
-					while (parent.length) {
-						if (canScroll || parent.is('.fancybox-skin') || parent.is('.fancybox-wrap')) {
-							break;
-						}
-
-						canScroll = isScrollable( parent[0] );
-						parent    = $(parent).parent();
-					}
-
-					if (delta !== 0 && !canScroll) {
-						if (F.group.length > 1 && !current.canShrink) {
-							if (deltaY > 0 || deltaX > 0) {
-								F.prev( deltaY > 0 ? 'down' : 'left' );
-
-							} else if (deltaY < 0 || deltaX < 0) {
-								F.next( deltaY < 0 ? 'up' : 'right' );
-							}
-
-							e.preventDefault();
-						}
-					}
-				});
-			}
-		},
-
-		trigger: function (event, o) {
-			var ret, obj = o || F.coming || F.current;
-
-			if (obj) {
-				if ($.isFunction( obj[event] )) {
-					ret = obj[event].apply(obj, Array.prototype.slice.call(arguments, 1));
-				}
-
-				if (ret === false) {
-					return false;
-				}
-
-				if (obj.helpers) {
-					$.each(obj.helpers, function (helper, opts) {
-						if (opts && F.helpers[helper] && $.isFunction(F.helpers[helper][event])) {
-							F.helpers[helper][event]($.extend(true, {}, F.helpers[helper].defaults, opts), obj);
-						}
-					});
-				}
-			}
-
-			D.trigger(event);
-		},
-
-		isImage: function (str) {
-			return isString(str) && str.match(/(^data:image\/.*,)|(\.(jp(e|g|eg)|gif|png|bmp|webp|svg)((\?|#).*)?$)/i);
-		},
-
-		isSWF: function (str) {
-			return isString(str) && str.match(/\.(swf)((\?|#).*)?$/i);
-		},
-
-		_start: function (index) {
-			var coming = {},
-				obj,
-				href,
-				type,
-				margin,
-				padding;
-
-			index = getScalar( index );
-			obj   = F.group[ index ] || null;
-
-			if (!obj) {
-				return false;
-			}
-
-			coming = $.extend(true, {}, F.opts, obj);
-
-			// Convert margin and padding properties to array - top, right, bottom, left
-			margin  = coming.margin;
-			padding = coming.padding;
-
-			if ($.type(margin) === 'number') {
-				coming.margin = [margin, margin, margin, margin];
-			}
-
-			if ($.type(padding) === 'number') {
-				coming.padding = [padding, padding, padding, padding];
-			}
-
-			// 'modal' propery is just a shortcut
-			if (coming.modal) {
-				$.extend(true, coming, {
-					closeBtn   : false,
-					closeClick : false,
-					nextClick  : false,
-					arrows     : false,
-					mouseWheel : false,
-					keys       : null,
-					helpers: {
-						overlay : {
-							closeClick : false
-						}
-					}
-				});
-			}
-
-			// 'autoSize' property is a shortcut, too
-			if (coming.autoSize) {
-				coming.autoWidth = coming.autoHeight = true;
-			}
-
-			if (coming.width === 'auto') {
-				coming.autoWidth = true;
-			}
-
-			if (coming.height === 'auto') {
-				coming.autoHeight = true;
-			}
-
-			/*
-			 * Add reference to the group, so it`s possible to access from callbacks, example:
-			 * afterLoad : function() {
-			 *     this.title = 'Image ' + (this.index + 1) + ' of ' + this.group.length + (this.title ? ' - ' + this.title : '');
-			 * }
-			 */
-
-			coming.group  = F.group;
-			coming.index  = index;
-
-			// Give a chance for callback or helpers to update coming item (type, title, etc)
-			F.coming = coming;
-
-			if (false === F.trigger('beforeLoad')) {
-				F.coming = null;
-
-				return;
-			}
-
-			type = coming.type;
-			href = coming.href;
-
-			if (!type) {
-				F.coming = null;
-
-				//If we can not determine content type then drop silently or display next/prev item if looping through gallery
-				if (F.current && F.router && F.router !== 'jumpto') {
-					F.current.index = index;
-
-					return F[ F.router ]( F.direction );
-				}
-
-				return false;
-			}
-
-			F.isActive = true;
-
-			if (type === 'image' || type === 'swf') {
-				coming.autoHeight = coming.autoWidth = false;
-				coming.scrolling  = 'visible';
-			}
-
-			if (type === 'image') {
-				coming.aspectRatio = true;
-			}
-
-			if (type === 'iframe' && isTouch) {
-				coming.scrolling = 'scroll';
-			}
-
-			// Build the neccessary markup
-			coming.wrap = $(coming.tpl.wrap).addClass('fancybox-' + (isTouch ? 'mobile' : 'desktop') + ' fancybox-type-' + type + ' fancybox-tmp ' + coming.wrapCSS).appendTo( coming.parent || 'body' );
-
-			$.extend(coming, {
-				skin  : $('.fancybox-skin',  coming.wrap),
-				outer : $('.fancybox-outer', coming.wrap),
-				inner : $('.fancybox-inner', coming.wrap)
-			});
-
-			$.each(["Top", "Right", "Bottom", "Left"], function(i, v) {
-				coming.skin.css('padding' + v, getValue(coming.padding[ i ]));
-			});
-
-			F.trigger('onReady');
-
-			// Check before try to load; 'inline' and 'html' types need content, others - href
-			if (type === 'inline' || type === 'html') {
-				if (!coming.content || !coming.content.length) {
-					return F._error( 'content' );
-				}
-
-			} else if (!href) {
-				return F._error( 'href' );
-			}
-
-			if (type === 'image') {
-				F._loadImage();
-
-			} else if (type === 'ajax') {
-				F._loadAjax();
-
-			} else if (type === 'iframe') {
-				F._loadIframe();
-
-			} else {
-				F._afterLoad();
-			}
-		},
-
-		_error: function ( type ) {
-			$.extend(F.coming, {
-				type       : 'html',
-				autoWidth  : true,
-				autoHeight : true,
-				minWidth   : 0,
-				minHeight  : 0,
-				scrolling  : 'no',
-				hasError   : type,
-				content    : F.coming.tpl.error
-			});
-
-			F._afterLoad();
-		},
-
-		_loadImage: function () {
-			// Reset preload image so it is later possible to check "complete" property
-			var img = F.imgPreload = new Image();
-
-			img.onload = function () {
-				this.onload = this.onerror = null;
-
-				F.coming.width  = this.width / F.opts.pixelRatio;
-				F.coming.height = this.height / F.opts.pixelRatio;
-
-				F._afterLoad();
-			};
-
-			img.onerror = function () {
-				this.onload = this.onerror = null;
-
-				F._error( 'image' );
-			};
-
-			img.src = F.coming.href;
-
-			if (img.complete !== true) {
-				F.showLoading();
-			}
-		},
-
-		_loadAjax: function () {
-			var coming = F.coming;
-
-			F.showLoading();
-
-			F.ajaxLoad = $.ajax($.extend({}, coming.ajax, {
-				url: coming.href,
-				error: function (jqXHR, textStatus) {
-					if (F.coming && textStatus !== 'abort') {
-						F._error( 'ajax', jqXHR );
-
-					} else {
-						F.hideLoading();
-					}
-				},
-				success: function (data, textStatus) {
-					if (textStatus === 'success') {
-						coming.content = data;
-
-						F._afterLoad();
-					}
-				}
-			}));
-		},
-
-		_loadIframe: function() {
-			var coming = F.coming,
-				iframe = $(coming.tpl.iframe.replace(/\{rnd\}/g, new Date().getTime()))
-					.attr('scrolling', isTouch ? 'auto' : coming.iframe.scrolling)
-					.attr('src', coming.href);
-
-			// This helps IE
-			$(coming.wrap).bind('onReset', function () {
-				try {
-					$(this).find('iframe').hide().attr('src', '//about:blank').end().empty();
-				} catch (e) {}
-			});
-
-			if (coming.iframe.preload) {
-				F.showLoading();
-
-				iframe.one('load', function() {
-					$(this).data('ready', 1);
-
-					// iOS will lose scrolling if we resize
-					if (!isTouch) {
-						$(this).bind('load.fb', F.update);
-					}
-
-					// Without this trick:
-					//   - iframe won't scroll on iOS devices
-					//   - IE7 sometimes displays empty iframe
-					$(this).parents('.fancybox-wrap').width('100%').removeClass('fancybox-tmp').show();
-
-					F._afterLoad();
-				});
-			}
-
-			coming.content = iframe.appendTo( coming.inner );
-
-			if (!coming.iframe.preload) {
-				F._afterLoad();
-			}
-		},
-
-		_preloadImages: function() {
-			var group   = F.group,
-				current = F.current,
-				len     = group.length,
-				cnt     = current.preload ? Math.min(current.preload, len - 1) : 0,
-				item,
-				i;
-
-			for (i = 1; i <= cnt; i += 1) {
-				item = group[ (current.index + i ) % len ];
-
-				if (item.type === 'image' && item.href) {
-					new Image().src = item.href;
-				}
-			}
-		},
-
-		_afterLoad: function () {
-			var coming   = F.coming,
-				previous = F.current,
-				placeholder = 'fancybox-placeholder',
-				current,
-				content,
-				type,
-				scrolling,
-				href,
-				embed;
-
-			F.hideLoading();
-
-			if (!coming || F.isActive === false) {
-				return;
-			}
-
-			if (false === F.trigger('afterLoad', coming, previous)) {
-				coming.wrap.stop(true).trigger('onReset').remove();
-
-				F.coming = null;
-
-				return;
-			}
-
-			if (previous) {
-				F.trigger('beforeChange', previous);
-
-				previous.wrap.stop(true).removeClass('fancybox-opened')
-					.find('.fancybox-item, .fancybox-nav')
-					.remove();
-			}
-
-			F.unbindEvents();
-
-			current   = coming;
-			content   = coming.content;
-			type      = coming.type;
-			scrolling = coming.scrolling;
-
-			$.extend(F, {
-				wrap  : current.wrap,
-				skin  : current.skin,
-				outer : current.outer,
-				inner : current.inner,
-				current  : current,
-				previous : previous
-			});
-
-			href = current.href;
-
-			switch (type) {
-				case 'inline':
-				case 'ajax':
-				case 'html':
-					if (current.selector) {
-						content = $('<div>').html(content).find(current.selector);
-
-					} else if (isQuery(content)) {
-						if (!content.data(placeholder)) {
-							content.data(placeholder, $('<div class="' + placeholder + '"></div>').insertAfter( content ).hide() );
-						}
-
-						content = content.show().detach();
-
-						current.wrap.bind('onReset', function () {
-							if ($(this).find(content).length) {
-								content.hide().replaceAll( content.data(placeholder) ).data(placeholder, false);
-							}
-						});
-					}
-				break;
-
-				case 'image':
-					content = current.tpl.image.replace(/\{href\}/g, href);
-				break;
-
-				case 'swf':
-					content = '<object id="fancybox-swf" classid="clsid:D27CDB6E-AE6D-11cf-96B8-444553540000" width="100%" height="100%"><param name="movie" value="' + href + '"></param>';
-					embed   = '';
-
-					$.each(current.swf, function(name, val) {
-						content += '<param name="' + name + '" value="' + val + '"></param>';
-						embed   += ' ' + name + '="' + val + '"';
-					});
-
-					content += '<embed src="' + href + '" type="application/x-shockwave-flash" width="100%" height="100%"' + embed + '></embed></object>';
-				break;
-			}
-
-			if (!(isQuery(content) && content.parent().is(current.inner))) {
-				current.inner.append( content );
-			}
-
-			// Give a chance for helpers or callbacks to update elements
-			F.trigger('beforeShow');
-
-			// Set scrolling before calculating dimensions
-			current.inner.css('overflow', scrolling === 'yes' ? 'scroll' : (scrolling === 'no' ? 'hidden' : scrolling));
-
-			// Set initial dimensions and start position
-			F._setDimension();
-
-			F.reposition();
-
-			F.isOpen = false;
-			F.coming = null;
-
-			F.bindEvents();
-
-			if (!F.isOpened) {
-				$('.fancybox-wrap').not( current.wrap ).stop(true).trigger('onReset').remove();
-
-			} else if (previous.prevMethod) {
-				F.transitions[ previous.prevMethod ]();
-			}
-
-			F.transitions[ F.isOpened ? current.nextMethod : current.openMethod ]();
-
-			F._preloadImages();
-		},
-
-		_setDimension: function () {
-			var viewport   = F.getViewport(),
-				steps      = 0,
-				canShrink  = false,
-				canExpand  = false,
-				wrap       = F.wrap,
-				skin       = F.skin,
-				inner      = F.inner,
-				current    = F.current,
-				width      = current.width,
-				height     = current.height,
-				minWidth   = current.minWidth,
-				minHeight  = current.minHeight,
-				maxWidth   = current.maxWidth,
-				maxHeight  = current.maxHeight,
-				scrolling  = current.scrolling,
-				scrollOut  = current.scrollOutside ? current.scrollbarWidth : 0,
-				margin     = current.margin,
-				wMargin    = getScalar(margin[1] + margin[3]),
-				hMargin    = getScalar(margin[0] + margin[2]),
-				wPadding,
-				hPadding,
-				wSpace,
-				hSpace,
-				origWidth,
-				origHeight,
-				origMaxWidth,
-				origMaxHeight,
-				ratio,
-				width_,
-				height_,
-				maxWidth_,
-				maxHeight_,
-				iframe,
-				body;
-
-			// Reset dimensions so we could re-check actual size
-			wrap.add(skin).add(inner).width('auto').height('auto').removeClass('fancybox-tmp');
-
-			wPadding = getScalar(skin.outerWidth(true)  - skin.width());
-			hPadding = getScalar(skin.outerHeight(true) - skin.height());
-
-			// Any space between content and viewport (margin, padding, border, title)
-			wSpace = wMargin + wPadding;
-			hSpace = hMargin + hPadding;
-
-			origWidth  = isPercentage(width)  ? (viewport.w - wSpace) * getScalar(width)  / 100 : width;
-			origHeight = isPercentage(height) ? (viewport.h - hSpace) * getScalar(height) / 100 : height;
-
-			if (current.type === 'iframe') {
-				iframe = current.content;
-
-				if (current.autoHeight && iframe && iframe.data('ready') === 1) {
-					try {
-						if (iframe[0].contentWindow.document.location) {
-							inner.width( origWidth ).height(9999);
-
-							body = iframe.contents().find('body');
-
-							if (scrollOut) {
-								body.css('overflow-x', 'hidden');
-							}
-
-							origHeight = body.outerHeight(true);
-						}
-
-					} catch (e) {}
-				}
-
-			} else if (current.autoWidth || current.autoHeight) {
-				inner.addClass( 'fancybox-tmp' );
-
-				// Set width or height in case we need to calculate only one dimension
-				if (!current.autoWidth) {
-					inner.width( origWidth );
-				}
-
-				if (!current.autoHeight) {
-					inner.height( origHeight );
-				}
-
-				if (current.autoWidth) {
-					origWidth = inner.width();
-				}
-
-				if (current.autoHeight) {
-					origHeight = inner.height();
-				}
-
-				inner.removeClass( 'fancybox-tmp' );
-			}
-
-			width  = getScalar( origWidth );
-			height = getScalar( origHeight );
-
-			ratio  = origWidth / origHeight;
-
-			// Calculations for the content
-			minWidth  = getScalar(isPercentage(minWidth) ? getScalar(minWidth, 'w') - wSpace : minWidth);
-			maxWidth  = getScalar(isPercentage(maxWidth) ? getScalar(maxWidth, 'w') - wSpace : maxWidth);
-
-			minHeight = getScalar(isPercentage(minHeight) ? getScalar(minHeight, 'h') - hSpace : minHeight);
-			maxHeight = getScalar(isPercentage(maxHeight) ? getScalar(maxHeight, 'h') - hSpace : maxHeight);
-
-			// These will be used to determine if wrap can fit in the viewport
-			origMaxWidth  = maxWidth;
-			origMaxHeight = maxHeight;
-
-			if (current.fitToView) {
-				maxWidth  = Math.min(viewport.w - wSpace, maxWidth);
-				maxHeight = Math.min(viewport.h - hSpace, maxHeight);
-			}
-
-			maxWidth_  = viewport.w - wMargin;
-			maxHeight_ = viewport.h - hMargin;
-
-			if (current.aspectRatio) {
-				if (width > maxWidth) {
-					width  = maxWidth;
-					height = getScalar(width / ratio);
-				}
-
-				if (height > maxHeight) {
-					height = maxHeight;
-					width  = getScalar(height * ratio);
-				}
-
-				if (width < minWidth) {
-					width  = minWidth;
-					height = getScalar(width / ratio);
-				}
-
-				if (height < minHeight) {
-					height = minHeight;
-					width  = getScalar(height * ratio);
-				}
-
-			} else {
-				width = Math.max(minWidth, Math.min(width, maxWidth));
-
-				if (current.autoHeight && current.type !== 'iframe') {
-					inner.width( width );
-
-					height = inner.height();
-				}
-
-				height = Math.max(minHeight, Math.min(height, maxHeight));
-			}
-
-			// Try to fit inside viewport (including the title)
-			if (current.fitToView) {
-				inner.width( width ).height( height );
-
-				wrap.width( width + wPadding );
-
-				// Real wrap dimensions
-				width_  = wrap.width();
-				height_ = wrap.height();
-
-				if (current.aspectRatio) {
-					while ((width_ > maxWidth_ || height_ > maxHeight_) && width > minWidth && height > minHeight) {
-						if (steps++ > 19) {
-							break;
-						}
-
-						height = Math.max(minHeight, Math.min(maxHeight, height - 10));
-						width  = getScalar(height * ratio);
-
-						if (width < minWidth) {
-							width  = minWidth;
-							height = getScalar(width / ratio);
-						}
-
-						if (width > maxWidth) {
-							width  = maxWidth;
-							height = getScalar(width / ratio);
-						}
-
-						inner.width( width ).height( height );
-
-						wrap.width( width + wPadding );
-
-						width_  = wrap.width();
-						height_ = wrap.height();
-					}
-
-				} else {
-					width  = Math.max(minWidth,  Math.min(width,  width  - (width_  - maxWidth_)));
-					height = Math.max(minHeight, Math.min(height, height - (height_ - maxHeight_)));
-				}
-			}
-
-			if (scrollOut && scrolling === 'auto' && height < origHeight && (width + wPadding + scrollOut) < maxWidth_) {
-				width += scrollOut;
-			}
-
-			inner.width( width ).height( height );
-
-			wrap.width( width + wPadding );
-
-			width_  = wrap.width();
-			height_ = wrap.height();
-
-			canShrink = (width_ > maxWidth_ || height_ > maxHeight_) && width > minWidth && height > minHeight;
-			canExpand = current.aspectRatio ? (width < origMaxWidth && height < origMaxHeight && width < origWidth && height < origHeight) : ((width < origMaxWidth || height < origMaxHeight) && (width < origWidth || height < origHeight));
-
-			$.extend(current, {
-				dim : {
-					width	: getValue( width_ ),
-					height	: getValue( height_ )
-				},
-				origWidth  : origWidth,
-				origHeight : origHeight,
-				canShrink  : canShrink,
-				canExpand  : canExpand,
-				wPadding   : wPadding,
-				hPadding   : hPadding,
-				wrapSpace  : height_ - skin.outerHeight(true),
-				skinSpace  : skin.height() - height
-			});
-
-			if (!iframe && current.autoHeight && height > minHeight && height < maxHeight && !canExpand) {
-				inner.height('auto');
-			}
-		},
-
-		_getPosition: function (onlyAbsolute) {
-			var current  = F.current,
-				viewport = F.getViewport(),
-				margin   = current.margin,
-				width    = F.wrap.width()  + margin[1] + margin[3],
-				height   = F.wrap.height() + margin[0] + margin[2],
-				rez      = {
-					position: 'absolute',
-					top  : margin[0],
-					left : margin[3]
-				};
-
-			if (current.autoCenter && current.fixed && !onlyAbsolute && height <= viewport.h && width <= viewport.w) {
-				rez.position = 'fixed';
-
-			} else if (!current.locked) {
-				rez.top  += viewport.y;
-				rez.left += viewport.x;
-			}
-
-			rez.top  = getValue(Math.max(rez.top,  rez.top  + ((viewport.h - height) * current.topRatio)));
-			rez.left = getValue(Math.max(rez.left, rez.left + ((viewport.w - width)  * current.leftRatio)));
-
-			return rez;
-		},
-
-		_afterZoomIn: function () {
-			var current = F.current;
-
-			if (!current) {
-				return;
-			}
-
-			F.isOpen = F.isOpened = true;
-
-			F.wrap.css('overflow', 'visible').addClass('fancybox-opened').hide().show(0);
-
-			F.update();
-
-			// Assign a click event
-			if ( current.closeClick || (current.nextClick && F.group.length > 1) ) {
-				F.inner.css('cursor', 'pointer').bind('click.fb', function(e) {
-					if (!$(e.target).is('a') && !$(e.target).parent().is('a')) {
-						e.preventDefault();
-
-						F[ current.closeClick ? 'close' : 'next' ]();
-					}
-				});
-			}
-
-			// Create a close button
-			if (current.closeBtn) {
-				$(current.tpl.closeBtn).appendTo(F.skin).bind('click.fb', function(e) {
-					e.preventDefault();
-
-					F.close();
-				});
-			}
-
-			// Create navigation arrows
-			if (current.arrows && F.group.length > 1) {
-				if (current.loop || current.index > 0) {
-					$(current.tpl.prev).appendTo(F.outer).bind('click.fb', F.prev);
-				}
-
-				if (current.loop || current.index < F.group.length - 1) {
-					$(current.tpl.next).appendTo(F.outer).bind('click.fb', F.next);
-				}
-			}
-
-			F.trigger('afterShow');
-
-			// Stop the slideshow if this is the last item
-			if (!current.loop && current.index === current.group.length - 1) {
-
-				F.play( false );
-
-			} else if (F.opts.autoPlay && !F.player.isActive) {
-				F.opts.autoPlay = false;
-
-				F.play(true);
-			}
-		},
-
-		_afterZoomOut: function ( obj ) {
-			obj = obj || F.current;
-
-			$('.fancybox-wrap').trigger('onReset').remove();
-
-			$.extend(F, {
-				group  : {},
-				opts   : {},
-				router : false,
-				current   : null,
-				isActive  : false,
-				isOpened  : false,
-				isOpen    : false,
-				isClosing : false,
-				wrap   : null,
-				skin   : null,
-				outer  : null,
-				inner  : null
-			});
-
-			F.trigger('afterClose', obj);
+                if ( $.isPlainObject( item ) ) {
+
+                    // We probably have manual usage here, something like
+                    // $.fancybox.open( [ { src : "image.jpg", type : "image" } ] )
+
+                    obj  = item;
+                    opts = item.opts || item;
+
+                } else if ( $.type( item ) === 'object' && $( item ).length ) {
+
+                    // Here we probably have jQuery collection returned by some selector
+                    $item = $( item );
+
+                    opts = $item.data();
+                    opts = $.extend( {}, opts, opts.options || {} );
+
+                    // Here we store clicked element
+                    opts.$orig = $item;
+
+                    obj.src = opts.src || $item.attr( 'href' );
+
+                    // Assume that simple syntax is used, for example:
+                    //   `$.fancybox.open( $("#test"), {} );`
+                    if ( !obj.type && !obj.src ) {
+                        obj.type = 'inline';
+                        obj.src  = item;
+                    }
+
+                } else {
+
+                    // Assume we have a simple html code, for example:
+                    //   $.fancybox.open( '<div><h1>Hi!</h1></div>' );
+
+                    obj = {
+                        type : 'html',
+                        src  : item + ''
+                    };
+
+                }
+
+                // Each gallery object has full collection of options
+                obj.opts = $.extend( true, {}, self.opts, opts );
+
+                // Do not merge buttons array
+                if ( $.isArray( opts.buttons ) ) {
+                    obj.opts.buttons = opts.buttons;
+                }
+
+
+                // Step 2 - Make sure we have content type, if not - try to guess
+                // ==============================================================
+
+                type = obj.type || obj.opts.type;
+                src  = obj.src || '';
+
+                if ( !type && src ) {
+                    if ( src.match(/(^data:image\/[a-z0-9+\/=]*,)|(\.(jp(e|g|eg)|gif|png|bmp|webp|svg|ico)((\?|#).*)?$)/i) ) {
+                        type = 'image';
+
+                    } else if ( src.match(/\.(pdf)((\?|#).*)?$/i) ) {
+                        type = 'pdf';
+
+                    } else if ( src.charAt(0) === '#' ) {
+                        type = 'inline';
+                    }
+                }
+
+                if ( type ) {
+                    obj.type = type;
+
+                } else {
+                    self.trigger( 'objectNeedsType', obj );
+                }
+
+
+                // Step 3 - Some adjustments
+                // =========================
+
+                obj.index = self.group.length;
+
+                // Check if $orig and $thumb objects exist
+                if ( obj.opts.$orig && !obj.opts.$orig.length ) {
+                    delete obj.opts.$orig;
+                }
+
+                if ( !obj.opts.$thumb && obj.opts.$orig ) {
+                    obj.opts.$thumb = obj.opts.$orig.find( 'img:first' );
+                }
+
+                if ( obj.opts.$thumb && !obj.opts.$thumb.length ) {
+                    delete obj.opts.$thumb;
+                }
+
+                // "caption" is a "special" option, it can be used to customize caption per gallery item ..
+                if ( $.type( obj.opts.caption ) === 'function' ) {
+                    obj.opts.caption = obj.opts.caption.apply( item, [ self, obj ] );
+                }
+
+                if ( $.type( self.opts.caption ) === 'function' ) {
+                    obj.opts.caption = self.opts.caption.apply( item, [ self, obj ] );
+                }
+
+                // Make sure we have caption as a string or jQuery object
+                if ( !( obj.opts.caption instanceof $ ) ) {
+                    obj.opts.caption = obj.opts.caption === undefined ? '' : obj.opts.caption + '';
+                }
+
+                // Check if url contains "filter" used to filter the content
+                // Example: "ajax.html #something"
+                if ( type === 'ajax' ) {
+                    srcParts = src.split(/\s+/, 2);
+
+                    if ( srcParts.length > 1 ) {
+                        obj.src = srcParts.shift();
+
+                        obj.opts.filter = srcParts.shift();
+                    }
+                }
+
+                if ( obj.opts.smallBtn == 'auto' ) {
+
+                    if ( $.inArray( type, ['html', 'inline', 'ajax'] ) > -1 ) {
+                        obj.opts.toolbar  = false;
+                        obj.opts.smallBtn = true;
+
+                    } else {
+                        obj.opts.smallBtn = false;
+                    }
+
+                }
+
+                // If the type is "pdf", then simply load file into iframe
+                if ( type === 'pdf' ) {
+                    obj.type = 'iframe';
+
+                    obj.opts.iframe.preload = false;
+                }
+
+                // Hide all buttons and disable interactivity for modal items
+                if ( obj.opts.modal ) {
+
+                    obj.opts = $.extend(true, obj.opts, {
+                        // Remove buttons
+                        infobar : 0,
+                        toolbar : 0,
+
+                        smallBtn : 0,
+
+                        // Disable keyboard navigation
+                        keyboard : 0,
+
+                        // Disable some modules
+                        slideShow  : 0,
+                        fullScreen : 0,
+                        thumbs     : 0,
+                        touch      : 0,
+
+                        // Disable click event handlers
+                        clickContent    : false,
+                        clickSlide      : false,
+                        clickOutside    : false,
+                        dblclickContent : false,
+                        dblclickSlide   : false,
+                        dblclickOutside : false
+                    });
+
+                }
+
+                // Step 4 - Add processed object to group
+                // ======================================
+
+                self.group.push( obj );
+
+            });
+
+        },
+
+
+        // Attach an event handler functions for:
+        //   - navigation buttons
+        //   - browser scrolling, resizing;
+        //   - focusing
+        //   - keyboard
+        //   - detect idle
+        // ======================================
+
+        addEvents : function() {
+            var self = this;
+
+            self.removeEvents();
+
+            // Make navigation elements clickable
+            self.$refs.container.on('click.fb-close', '[data-fancybox-close]', function(e) {
+                e.stopPropagation();
+                e.preventDefault();
+
+                self.close( e );
+
+            }).on( 'click.fb-prev touchend.fb-prev', '[data-fancybox-prev]', function(e) {
+                e.stopPropagation();
+                e.preventDefault();
+
+                self.previous();
+
+            }).on( 'click.fb-next touchend.fb-next', '[data-fancybox-next]', function(e) {
+                e.stopPropagation();
+                e.preventDefault();
+
+                self.next();
+
+            }).on( 'click.fb', '[data-fancybox-zoom]', function(e) {
+                // Click handler for zoom button
+                self[ self.isScaledDown() ? 'scaleToActual' : 'scaleToFit' ]();
+            });
+
+
+            // Handle page scrolling and browser resizing
+            $W.on('orientationchange.fb resize.fb', function(e) {
+
+                if ( e && e.originalEvent && e.originalEvent.type === "resize" ) {
+
+                    requestAFrame(function() {
+                        self.update();
+                    });
+
+                } else {
+
+                    self.$refs.stage.hide();
+
+                    setTimeout(function() {
+                        self.$refs.stage.show();
+
+                        self.update();
+                    }, 600);
+
+                }
+
+            });
+
+            // Trap keyboard focus inside of the modal, so the user does not accidentally tab outside of the modal
+            // (a.k.a. "escaping the modal")
+            $D.on('focusin.fb', function(e) {
+                var instance = $.fancybox ? $.fancybox.getInstance() : null;
+
+                if ( instance.isClosing || !instance.current || !instance.current.opts.trapFocus || $( e.target ).hasClass( 'fancybox-container' ) || $( e.target ).is( document ) ) {
+                    return;
+                }
+
+                if ( instance && $( e.target ).css( 'position' ) !== 'fixed' && !instance.$refs.container.has( e.target ).length ) {
+                    e.stopPropagation();
+
+                    instance.focus();
+
+                    // Sometimes page gets scrolled, set it back
+                    $W.scrollTop( self.scrollTop ).scrollLeft( self.scrollLeft );
+                }
+            });
+
+
+            // Enable keyboard navigation
+            $D.on('keydown.fb', function (e) {
+                var current = self.current,
+                    keycode = e.keyCode || e.which;
+
+                if ( !current || !current.opts.keyboard ) {
+                    return;
+                }
+
+                if ( $(e.target).is('input') || $(e.target).is('textarea') ) {
+                    return;
+                }
+
+                // Backspace and Esc keys
+                if ( keycode === 8 || keycode === 27 ) {
+                    e.preventDefault();
+
+                    self.close( e );
+
+                    return;
+                }
+
+                // Left arrow and Up arrow
+                if ( keycode === 37 || keycode === 38 ) {
+                    e.preventDefault();
+
+                    self.previous();
+
+                    return;
+                }
+
+                // Righ arrow and Down arrow
+                if ( keycode === 39 || keycode === 40 ) {
+                    e.preventDefault();
+
+                    self.next();
+
+                    return;
+                }
+
+                self.trigger('afterKeydown', e, keycode);
+            });
+
+
+            // Hide controls after some inactivity period
+            if ( self.group[ self.currIndex ].opts.idleTime ) {
+                self.idleSecondsCounter = 0;
+
+                $D.on('mousemove.fb-idle mouseleave.fb-idle mousedown.fb-idle touchstart.fb-idle touchmove.fb-idle scroll.fb-idle keydown.fb-idle', function(e) {
+                    self.idleSecondsCounter = 0;
+
+                    if ( self.isIdle ) {
+                        self.showControls();
+                    }
+
+                    self.isIdle = false;
+                });
+
+                self.idleInterval = window.setInterval(function() {
+                    self.idleSecondsCounter++;
+
+                    if ( self.idleSecondsCounter >= self.group[ self.currIndex ].opts.idleTime ) {
+                        self.isIdle = true;
+                        self.idleSecondsCounter = 0;
+
+                        self.hideControls();
+                    }
+
+                }, 1000);
+            }
+
+        },
+
+
+        // Remove events added by the core
+        // ===============================
+
+        removeEvents : function() {
+            var self = this;
+
+            $W.off( 'orientationchange.fb resize.fb' );
+            $D.off( 'focusin.fb keydown.fb .fb-idle' );
+
+            this.$refs.container.off( '.fb-close .fb-prev .fb-next' );
+
+            if ( self.idleInterval ) {
+                window.clearInterval( self.idleInterval );
+
+                self.idleInterval = null;
+            }
+        },
+
+
+        // Change to previous gallery item
+        // ===============================
+
+        previous : function( duration ) {
+            return this.jumpTo( this.currPos - 1, duration );
+        },
+
+
+        // Change to next gallery item
+        // ===========================
+
+        next : function( duration ) {
+            return this.jumpTo( this.currPos + 1, duration );
+        },
+
+
+        // Switch to selected gallery item
+        // ===============================
+
+        jumpTo : function ( pos, duration, slide ) {
+            var self = this,
+                firstRun,
+                loop,
+                current,
+                previous,
+                canvasWidth,
+                currentPos,
+                transitionProps;
+
+            var groupLen = self.group.length;
+
+            if ( self.isSliding || self.isClosing || ( self.isAnimating && self.firstRun ) ) {
+                return;
+            }
+
+            pos  = parseInt( pos, 10 );
+            loop = self.current ? self.current.opts.loop : self.opts.loop;
+
+            if ( !loop && ( pos < 0 || pos >= groupLen ) ) {
+                return false;
+            }
+
+            firstRun = self.firstRun = ( self.firstRun === null );
+
+            if ( groupLen < 2 && !firstRun && !!self.isSliding ) {
+                return;
+            }
+
+            previous = self.current;
+
+            self.prevIndex = self.currIndex;
+            self.prevPos   = self.currPos;
+
+            // Create slides
+            current = self.createSlide( pos );
+
+            if ( groupLen > 1 ) {
+                if ( loop || current.index > 0 ) {
+                    self.createSlide( pos - 1 );
+                }
+
+                if ( loop || current.index < groupLen - 1 ) {
+                    self.createSlide( pos + 1 );
+                }
+            }
+
+            self.current   = current;
+            self.currIndex = current.index;
+            self.currPos   = current.pos;
+
+            self.trigger( 'beforeShow', firstRun );
+
+            self.updateControls();
+
+            currentPos = $.fancybox.getTranslate( current.$slide );
+
+            current.isMoved        = ( currentPos.left !== 0 || currentPos.top !== 0 ) && !current.$slide.hasClass( 'fancybox-animated' );
+            current.forcedDuration = undefined;
+
+            if ( $.isNumeric( duration ) ) {
+                current.forcedDuration = duration;
+            } else {
+                duration = current.opts[ firstRun ? 'animationDuration' : 'transitionDuration' ];
+            }
+
+            duration = parseInt( duration, 10 );
+
+            // Fresh start - reveal container, current slide and start loading content
+            if ( firstRun ) {
+
+                if ( current.opts.animationEffect && duration ) {
+                    self.$refs.container.css( 'transition-duration', duration + 'ms' );
+                }
+
+                self.$refs.container.removeClass( 'fancybox-is-hidden' );
+
+                forceRedraw( self.$refs.container );
+
+                self.$refs.container.addClass( 'fancybox-is-open' );
+
+                // Make first slide visible (to display loading icon, if needed)
+                current.$slide.addClass( 'fancybox-slide--current' );
+
+                self.loadSlide( current );
+
+                self.preload();
+
+                return;
+            }
+
+            // Clean up
+            $.each(self.slides, function( index, slide ) {
+                $.fancybox.stop( slide.$slide );
+            });
+
+            // Make current that slide is visible even if content is still loading
+            current.$slide.removeClass( 'fancybox-slide--next fancybox-slide--previous' ).addClass( 'fancybox-slide--current' );
+
+            // If slides have been dragged, animate them to correct position
+            if ( current.isMoved ) {
+                canvasWidth = Math.round( current.$slide.width() );
+
+                $.each(self.slides, function( index, slide ) {
+                    var pos = slide.pos - current.pos;
+
+                    $.fancybox.animate( slide.$slide, {
+                        top  : 0,
+                        left : ( pos * canvasWidth ) + ( pos * slide.opts.gutter )
+                    }, duration, function() {
+
+                        slide.$slide.removeAttr('style').removeClass( 'fancybox-slide--next fancybox-slide--previous' );
+
+                        if ( slide.pos === self.currPos ) {
+                            current.isMoved = false;
+
+                            self.complete();
+                        }
+                    });
+                });
+
+            } else {
+                self.$refs.stage.children().removeAttr( 'style' );
+            }
+
+            // Start transition that reveals current content
+            // or wait when it will be loaded
+
+            if ( current.isLoaded ) {
+                self.revealContent( current );
+
+            } else {
+                self.loadSlide( current );
+            }
+
+            self.preload();
+
+            if ( previous.pos === current.pos ) {
+                return;
+            }
+
+            // Handle previous slide
+            // =====================
+
+            transitionProps = 'fancybox-slide--' + ( previous.pos > current.pos ? 'next' : 'previous' );
+
+            previous.$slide.removeClass( 'fancybox-slide--complete fancybox-slide--current fancybox-slide--next fancybox-slide--previous' );
+
+            previous.isComplete = false;
+
+            if ( !duration || ( !current.isMoved && !current.opts.transitionEffect ) ) {
+                return;
+            }
+
+            if ( current.isMoved ) {
+                previous.$slide.addClass( transitionProps );
+
+            } else {
+
+                transitionProps = 'fancybox-animated ' + transitionProps + ' fancybox-fx-' + current.opts.transitionEffect;
+
+                $.fancybox.animate( previous.$slide, transitionProps, duration, function() {
+                    previous.$slide.removeClass( transitionProps ).removeAttr( 'style' );
+                });
+
+            }
+
+        },
+
+
+        // Create new "slide" element
+        // These are gallery items  that are actually added to DOM
+        // =======================================================
+
+        createSlide : function( pos ) {
+
+            var self = this;
+            var $slide;
+            var index;
+
+            index = pos % self.group.length;
+            index = index < 0 ? self.group.length + index : index;
+
+            if ( !self.slides[ pos ] && self.group[ index ] ) {
+                $slide = $('<div class="fancybox-slide"></div>').appendTo( self.$refs.stage );
+
+                self.slides[ pos ] = $.extend( true, {}, self.group[ index ], {
+                    pos      : pos,
+                    $slide   : $slide,
+                    isLoaded : false,
+                });
+
+                self.updateSlide( self.slides[ pos ] );
+            }
+
+            return self.slides[ pos ];
+        },
+
+
+        // Scale image to the actual size of the image
+        // ===========================================
+
+        scaleToActual : function( x, y, duration ) {
+
+            var self = this;
+
+            var current = self.current;
+            var $what   = current.$content;
+
+            var imgPos, posX, posY, scaleX, scaleY;
+
+            var canvasWidth  = parseInt( current.$slide.width(), 10 );
+            var canvasHeight = parseInt( current.$slide.height(), 10 );
+
+            var newImgWidth  = current.width;
+            var newImgHeight = current.height;
+
+            if ( !( current.type == 'image' && !current.hasError) || !$what || self.isAnimating ) {
+                return;
+            }
+
+            $.fancybox.stop( $what );
+
+            self.isAnimating = true;
+
+            x = x === undefined ? canvasWidth  * 0.5  : x;
+            y = y === undefined ? canvasHeight * 0.5  : y;
+
+            imgPos = $.fancybox.getTranslate( $what );
+
+            scaleX  = newImgWidth  / imgPos.width;
+            scaleY  = newImgHeight / imgPos.height;
+
+            // Get center position for original image
+            posX = ( canvasWidth * 0.5  - newImgWidth * 0.5 );
+            posY = ( canvasHeight * 0.5 - newImgHeight * 0.5 );
+
+            // Make sure image does not move away from edges
+            if ( newImgWidth > canvasWidth ) {
+                posX = imgPos.left * scaleX - ( ( x * scaleX ) - x );
+
+                if ( posX > 0 ) {
+                    posX = 0;
+                }
+
+                if ( posX <  canvasWidth - newImgWidth ) {
+                    posX = canvasWidth - newImgWidth;
+                }
+            }
+
+            if ( newImgHeight > canvasHeight) {
+                posY = imgPos.top  * scaleY - ( ( y * scaleY ) - y );
+
+                if ( posY > 0 ) {
+                    posY = 0;
+                }
+
+                if ( posY <  canvasHeight - newImgHeight ) {
+                    posY = canvasHeight - newImgHeight;
+                }
+            }
+
+            self.updateCursor( newImgWidth, newImgHeight );
+
+            $.fancybox.animate( $what, {
+                top    : posY,
+                left   : posX,
+                scaleX : scaleX,
+                scaleY : scaleY
+            }, duration || 330, function() {
+                self.isAnimating = false;
+            });
+
+            // Stop slideshow
+            if ( self.SlideShow && self.SlideShow.isActive ) {
+                self.SlideShow.stop();
+            }
+        },
+
+
+        // Scale image to fit inside parent element
+        // ========================================
+
+        scaleToFit : function( duration ) {
+
+            var self = this;
+
+            var current = self.current;
+            var $what   = current.$content;
+            var end;
+
+            if ( !( current.type == 'image' && !current.hasError) || !$what || self.isAnimating ) {
+                return;
+            }
+
+            $.fancybox.stop( $what );
+
+            self.isAnimating = true;
+
+            end = self.getFitPos( current );
+
+            self.updateCursor( end.width, end.height );
+
+            $.fancybox.animate( $what, {
+                top    : end.top,
+                left   : end.left,
+                scaleX : end.width  / $what.width(),
+                scaleY : end.height / $what.height()
+            }, duration || 330, function() {
+                self.isAnimating = false;
+            });
+
+        },
+
+        // Calculate image size to fit inside viewport
+        // ===========================================
+
+        getFitPos : function( slide ) {
+            var self  = this;
+            var $what = slide.$content;
+
+            var imgWidth  = slide.width;
+            var imgHeight = slide.height;
+
+            var margin = slide.opts.margin;
+
+            var canvasWidth, canvasHeight, minRatio, width, height;
+
+            if ( !$what || !$what.length || ( !imgWidth && !imgHeight) ) {
+                return false;
+            }
+
+            // Convert "margin to CSS style: [ top, right, bottom, left ]
+            if ( $.type( margin ) === "number" ) {
+                margin = [ margin, margin ];
+            }
+
+            if ( margin.length == 2 ) {
+                margin = [ margin[0], margin[1], margin[0], margin[1] ];
+            }
+
+            // We can not use $slide width here, because it can have different diemensions while in transiton
+            canvasWidth  = parseInt( self.$refs.stage.width(), 10 )  - ( margin[ 1 ] + margin[ 3 ] );
+            canvasHeight = parseInt( self.$refs.stage.height(), 10 ) - ( margin[ 0 ] + margin[ 2 ] );
+
+            minRatio = Math.min(1, canvasWidth / imgWidth, canvasHeight / imgHeight );
+
+            width  = Math.floor( minRatio * imgWidth );
+            height = Math.floor( minRatio * imgHeight );
+
+            // Use floor rounding to make sure it really fits
+            return {
+                top    : Math.floor( ( canvasHeight - height ) * 0.5 ) + margin[ 0 ],
+                left   : Math.floor( ( canvasWidth  - width )  * 0.5 ) + margin[ 3 ],
+                width  : width,
+                height : height
+            };
+
+        },
+
+
+        // Update position and content of all slides
+        // =========================================
+
+        update : function() {
+
+            var self = this;
+
+            $.each( self.slides, function( key, slide ) {
+                self.updateSlide( slide );
+            });
+
+        },
+
+
+        // Update slide position and scale content to fit
+        // ==============================================
+
+        updateSlide : function( slide ) {
+
+            var self  = this;
+            var $what = slide.$content;
+
+            if ( $what && ( slide.width || slide.height ) ) {
+                self.isAnimating = false;
+                
+                $.fancybox.stop( $what );
+
+                $.fancybox.setTranslate( $what, self.getFitPos( slide ) );
+
+                if ( slide.pos === self.currPos ) {
+                    self.updateCursor();
+                }
+            }
+
+            slide.$slide.trigger( 'refresh' );
+
+            self.trigger( 'onUpdate', slide );
+
+        },
+
+        // Update cursor style depending if content can be zoomed
+        // ======================================================
+
+        updateCursor : function( nextWidth, nextHeight ) {
+
+            var self = this;
+            var isScaledDown;
+
+            var $container = self.$refs.container.removeClass( 'fancybox-is-zoomable fancybox-can-zoomIn fancybox-can-drag fancybox-can-zoomOut' );
+
+            if ( !self.current || self.isClosing ) {
+                return;
+            }
+
+            if ( self.isZoomable() ) {
+
+                $container.addClass( 'fancybox-is-zoomable' );
+
+                if ( nextWidth !== undefined && nextHeight !== undefined ) {
+                    isScaledDown = nextWidth < self.current.width && nextHeight < self.current.height;
+
+                } else {
+                    isScaledDown = self.isScaledDown();
+                }
+
+                if ( isScaledDown ) {
+
+                    // If image is scaled down, then, obviously, it can be zoomed to full size
+                    $container.addClass( 'fancybox-can-zoomIn' );
+
+                } else {
+
+                    if ( self.current.opts.touch ) {
+
+                        // If image size ir largen than available available and touch module is not disable,
+                        // then user can do panning
+                        $container.addClass( 'fancybox-can-drag' );
+
+                    } else {
+                        $container.addClass( 'fancybox-can-zoomOut' );
+                    }
+
+                }
+
+            } else if ( self.current.opts.touch ) {
+                $container.addClass( 'fancybox-can-drag' );
+            }
+
+        },
+
+
+        // Check if current slide is zoomable
+        // ==================================
+
+        isZoomable : function() {
+
+            var self = this;
+
+            var current = self.current;
+            var fitPos;
+
+            if ( !current || self.isClosing ) {
+                return;
+            }
+
+            // Assume that slide is zoomable if
+            //   - image is loaded successfuly
+            //   - click action is "zoom"
+            //   - actual size of the image is smaller than available area
+            if ( current.type === 'image' && current.isLoaded && !current.hasError &&
+                ( current.opts.clickContent === 'zoom' || ( $.isFunction( current.opts.clickContent ) && current.opts.clickContent( current ) ===  "zoom" ) )
+            ) {
+
+                fitPos = self.getFitPos( current );
+
+                if ( current.width > fitPos.width || current.height > fitPos.height ) {
+                    return true;
+                }
+
+            }
+
+            return false;
+
+        },
+
+
+        // Check if current image dimensions are smaller than actual
+        // =========================================================
+
+        isScaledDown : function() {
+
+            var self = this;
+
+            var current = self.current;
+            var $what   = current.$content;
+
+            var rez = false;
+
+            if ( $what ) {
+                rez = $.fancybox.getTranslate( $what );
+                rez = rez.width < current.width || rez.height < current.height;
+            }
+
+            return rez;
+
+        },
+
+
+        // Check if image dimensions exceed parent element
+        // ===============================================
+
+        canPan : function() {
+
+            var self = this;
+
+            var current = self.current;
+            var $what   = current.$content;
+
+            var rez = false;
+
+            if ( $what ) {
+                rez = self.getFitPos( current );
+                rez = Math.abs( $what.width() - rez.width ) > 1  || Math.abs( $what.height() - rez.height ) > 1;
+
+            }
+
+            return rez;
+
+        },
+
+
+        // Load content into the slide
+        // ===========================
+
+        loadSlide : function( slide ) {
+
+            var self = this, type, $slide;
+            var ajaxLoad;
+
+            if ( slide.isLoading ) {
+                return;
+            }
+
+            if ( slide.isLoaded ) {
+                return;
+            }
+
+            slide.isLoading = true;
+
+            self.trigger( 'beforeLoad', slide );
+
+            type   = slide.type;
+            $slide = slide.$slide;
+
+            $slide
+                .off( 'refresh' )
+                .trigger( 'onReset' )
+                .addClass( 'fancybox-slide--' + ( type || 'unknown' ) )
+                .addClass( slide.opts.slideClass );
+
+            // Create content depending on the type
+
+            switch ( type ) {
+
+                case 'image':
+
+                    self.setImage( slide );
+
+                break;
+
+                case 'iframe':
+
+                    self.setIframe( slide );
+
+                break;
+
+                case 'html':
+
+                    self.setContent( slide, slide.src || slide.content );
+
+                break;
+
+                case 'inline':
+
+                    if ( $( slide.src ).length ) {
+                        self.setContent( slide, $( slide.src ) );
+
+                    } else {
+                        self.setError( slide );
+                    }
+
+                break;
+
+                case 'ajax':
+
+                    self.showLoading( slide );
+
+                    ajaxLoad = $.ajax( $.extend( {}, slide.opts.ajax.settings, {
+                        url : slide.src,
+                        success : function ( data, textStatus ) {
+
+                            if ( textStatus === 'success' ) {
+                                self.setContent( slide, data );
+                            }
+
+                        },
+                        error : function ( jqXHR, textStatus ) {
+
+                            if ( jqXHR && textStatus !== 'abort' ) {
+                                self.setError( slide );
+                            }
+
+                        }
+                    }));
+
+                    $slide.one( 'onReset', function () {
+                        ajaxLoad.abort();
+                    });
+
+                break;
+
+                default:
+
+                    self.setError( slide );
+
+                break;
+
+            }
+
+            return true;
+
+        },
+
+
+        // Use thumbnail image, if possible
+        // ================================
+
+        setImage : function( slide ) {
+
+            var self   = this;
+            var srcset = slide.opts.srcset || slide.opts.image.srcset;
+
+            var found, temp, pxRatio, windowWidth;
+
+            // If we have "srcset", then we need to find matching "src" value.
+            // This is necessary, because when you set an src attribute, the browser will preload the image
+            // before any javascript or even CSS is applied.
+            if ( srcset ) {
+                pxRatio     = window.devicePixelRatio || 1;
+                windowWidth = window.innerWidth  * pxRatio;
+
+                temp = srcset.split(',').map(function ( el ) {
+            		var ret = {};
+
+            		el.trim().split(/\s+/).forEach(function ( el, i ) {
+                        var value = parseInt( el.substring(0, el.length - 1), 10 );
+
+            			if ( i === 0 ) {
+            				return ( ret.url = el );
+            			}
+
+                        if ( value ) {
+                            ret.value   = value;
+                            ret.postfix = el[ el.length - 1 ];
+                        }
+
+            		});
+
+            		return ret;
+            	});
+
+                // Sort by value
+                temp.sort(function (a, b) {
+                  return a.value - b.value;
+                });
+
+                // Ok, now we have an array of all srcset values
+                for ( var j = 0; j < temp.length; j++ ) {
+                    var el = temp[ j ];
+
+                    if ( ( el.postfix === 'w' && el.value >= windowWidth ) || ( el.postfix === 'x' && el.value >= pxRatio ) ) {
+                        found = el;
+                        break;
+                    }
+                }
+
+                // If not found, take the last one
+                if ( !found && temp.length ) {
+                    found = temp[ temp.length - 1 ];
+                }
+
+                if ( found ) {
+                    slide.src = found.url;
+
+                    // If we have default width/height values, we can calculate height for matching source
+                    if ( slide.width && slide.height && found.postfix == 'w' ) {
+                        slide.height = ( slide.width / slide.height ) * found.value;
+                        slide.width  = found.value;
+                    }
+                }
+            }
+
+            // This will be wrapper containing both ghost and actual image
+            slide.$content = $('<div class="fancybox-image-wrap"></div>')
+                .addClass( 'fancybox-is-hidden' )
+                .appendTo( slide.$slide );
+
+
+            // If we have a thumbnail, we can display it while actual image is loading
+            // Users will not stare at black screen and actual image will appear gradually
+            if ( slide.opts.preload !== false && slide.opts.width && slide.opts.height && ( slide.opts.thumb || slide.opts.$thumb ) ) {
+
+                slide.width  = slide.opts.width;
+                slide.height = slide.opts.height;
+
+                slide.$ghost = $('<img />')
+                    .one('error', function() {
+
+                        $(this).remove();
+
+                        slide.$ghost = null;
+
+                        self.setBigImage( slide );
+
+                    })
+                    .one('load', function() {
+
+                        self.afterLoad( slide );
+
+                        self.setBigImage( slide );
+
+                    })
+                    .addClass( 'fancybox-image' )
+                    .appendTo( slide.$content )
+                    .attr( 'src', slide.opts.thumb || slide.opts.$thumb.attr( 'src' ) );
+
+            } else {
+
+                self.setBigImage( slide );
+
+            }
+
+        },
+
+
+        // Create full-size image
+        // ======================
+
+        setBigImage : function ( slide ) {
+            var self = this;
+            var $img = $('<img />');
+
+            slide.$image = $img
+                .one('error', function() {
+
+                    self.setError( slide );
+
+                })
+                .one('load', function() {
+
+                    // Clear timeout that checks if loading icon needs to be displayed
+                    clearTimeout( slide.timouts );
+
+                    slide.timouts = null;
+
+                    if ( self.isClosing ) {
+                        return;
+                    }
+
+                    slide.width  = this.naturalWidth;
+                    slide.height = this.naturalHeight;
+
+                    if ( slide.opts.image.srcset ) {
+                        $img.attr( 'sizes', '100vw' ).attr( 'srcset', slide.opts.image.srcset );
+                    }
+
+                    self.hideLoading( slide );
+
+                    if ( slide.$ghost ) {
+
+                        slide.timouts = setTimeout(function() {
+                            slide.timouts = null;
+
+                            slide.$ghost.hide();
+
+                        }, Math.min( 300, Math.max( 1000, slide.height / 1600 ) ) );
+
+                    } else {
+                        self.afterLoad( slide );
+                    }
+
+                })
+                .addClass( 'fancybox-image' )
+                .attr('src', slide.src)
+                .appendTo( slide.$content );
+
+            if ( ( $img[0].complete || $img[0].readyState == "complete" ) && $img[0].naturalWidth && $img[0].naturalHeight ) {
+                  $img.trigger( 'load' );
+
+            } else if( $img[0].error ) {
+                 $img.trigger( 'error' );
+
+            } else {
+
+                slide.timouts = setTimeout(function() {
+                    if ( !$img[0].complete && !slide.hasError ) {
+                        self.showLoading( slide );
+                    }
+
+                }, 100);
+
+            }
+
+        },
+
+
+        // Create iframe wrapper, iframe and bindings
+        // ==========================================
+
+        setIframe : function( slide ) {
+            var self	= this,
+                opts    = slide.opts.iframe,
+                $slide	= slide.$slide,
+                $iframe;
+
+            slide.$content = $('<div class="fancybox-content' + ( opts.preload ? ' fancybox-is-hidden' : '' ) + '"></div>')
+                .css( opts.css )
+                .appendTo( $slide );
+
+            $iframe = $( opts.tpl.replace(/\{rnd\}/g, new Date().getTime()) )
+                .attr( opts.attr )
+                .appendTo( slide.$content );
+
+            if ( opts.preload ) {
+
+                self.showLoading( slide );
+
+                // Unfortunately, it is not always possible to determine if iframe is successfully loaded
+                // (due to browser security policy)
+
+                $iframe.on('load.fb error.fb', function(e) {
+                    this.isReady = 1;
+
+                    slide.$slide.trigger( 'refresh' );
+
+                    self.afterLoad( slide );
+                });
+
+                // Recalculate iframe content size
+                // ===============================
+
+                $slide.on('refresh.fb', function() {
+                    var $wrap = slide.$content,
+                        frameWidth  = opts.css.width,
+                        frameHeight = opts.css.height,
+                        scrollWidth,
+                        $contents,
+                        $body;
+
+                    if ( $iframe[0].isReady !== 1 ) {
+                        return;
+                    }
+
+                    // Check if content is accessible,
+                    // it will fail if frame is not with the same origin
+
+                    try {
+                        $contents = $iframe.contents();
+                        $body     = $contents.find('body');
+
+                    } catch (ignore) {}
+
+                    // Calculate dimensions for the wrapper
+                    if ( $body && $body.length ) {
+
+                        if ( frameWidth === undefined ) {
+                            scrollWidth = $iframe[0].contentWindow.document.documentElement.scrollWidth;
+
+                            frameWidth = Math.ceil( $body.outerWidth(true) + ( $wrap.width() - scrollWidth ) );
+                            frameWidth += $wrap.outerWidth() - $wrap.innerWidth();
+                        }
+
+                        if ( frameHeight === undefined ) {
+                            frameHeight = Math.ceil( $body.outerHeight(true) );
+                            frameHeight += $wrap.outerHeight() - $wrap.innerHeight();
+                        }
+
+                        // Resize wrapper to fit iframe content
+                        if ( frameWidth ) {
+                            $wrap.width( frameWidth );
+                        }
+
+                        if ( frameHeight ) {
+                            $wrap.height( frameHeight );
+                        }
+                    }
+
+                    $wrap.removeClass( 'fancybox-is-hidden' );
+
+                });
+
+            } else {
+
+                this.afterLoad( slide );
+
+            }
+
+            $iframe.attr( 'src', slide.src );
+
+            if ( slide.opts.smallBtn === true ) {
+                slide.$content.prepend( self.translate( slide, slide.opts.btnTpl.smallBtn ) );
+            }
+
+            // Remove iframe if closing or changing gallery item
+            $slide.one( 'onReset', function () {
+
+                // This helps IE not to throw errors when closing
+                try {
+
+                    $( this ).find( 'iframe' ).hide().attr( 'src', '//about:blank' );
+
+                } catch ( ignore ) {}
+
+                $( this ).empty();
+
+                slide.isLoaded = false;
+
+            });
+
+        },
+
+
+        // Wrap and append content to the slide
+        // ======================================
+
+        setContent : function ( slide, content ) {
+
+            var self = this;
+
+            if ( self.isClosing ) {
+                return;
+            }
+
+            self.hideLoading( slide );
+
+            slide.$slide.empty();
+
+            if ( isQuery( content ) && content.parent().length ) {
+
+                // If content is a jQuery object, then it will be moved to the slide.
+                // The placeholder is created so we will know where to put it back.
+                // If user is navigating gallery fast, then the content might be already inside fancyBox
+                // =====================================================================================
+
+                // Make sure content is not already moved to fancyBox
+                content.parent( '.fancybox-slide--inline' ).trigger( 'onReset' );
+
+                // Create temporary element marking original place of the content
+                slide.$placeholder = $( '<div></div>' ).hide().insertAfter( content );
+
+                // Make sure content is visible
+                content.css('display', 'inline-block');
+
+            } else if ( !slide.hasError ) {
+
+                // If content is just a plain text, try to convert it to html
+                if ( $.type( content ) === 'string' ) {
+                    content = $('<div>').append( $.trim( content ) ).contents();
+
+                    // If we have text node, then add wrapping element to make vertical alignment work
+                    if ( content[0].nodeType === 3 ) {
+                        content = $('<div>').html( content );
+                    }
+                }
+
+                // If "filter" option is provided, then filter content
+                if ( slide.opts.filter ) {
+                    content = $('<div>').html( content ).find( slide.opts.filter );
+                }
+
+            }
+
+            slide.$slide.one('onReset', function () {
+
+                // Put content back
+                if ( slide.$placeholder ) {
+                    slide.$placeholder.after( content.hide() ).remove();
+
+                    slide.$placeholder = null;
+                }
+
+                // Remove custom close button
+                if ( slide.$smallBtn ) {
+                    slide.$smallBtn.remove();
+
+                    slide.$smallBtn = null;
+                }
+
+                // Remove content and mark slide as not loaded
+                if ( !slide.hasError ) {
+                    $(this).empty();
+
+                    slide.isLoaded = false;
+                }
+
+            });
+
+            slide.$content = $( content ).appendTo( slide.$slide );
+
+            this.afterLoad( slide );
+        },
+
+        // Display error message
+        // =====================
+
+        setError : function ( slide ) {
+
+            slide.hasError = true;
+
+            slide.$slide.removeClass( 'fancybox-slide--' + slide.type );
+
+            this.setContent( slide, this.translate( slide, slide.opts.errorTpl ) );
+
+        },
+
+
+        // Show loading icon inside the slide
+        // ==================================
+
+        showLoading : function( slide ) {
+
+            var self = this;
+
+            slide = slide || self.current;
+
+            if ( slide && !slide.$spinner ) {
+                slide.$spinner = $( self.opts.spinnerTpl ).appendTo( slide.$slide );
+            }
+
+        },
+
+        // Remove loading icon from the slide
+        // ==================================
+
+        hideLoading : function( slide ) {
+
+            var self = this;
+
+            slide = slide || self.current;
+
+            if ( slide && slide.$spinner ) {
+                slide.$spinner.remove();
+
+                delete slide.$spinner;
+            }
+
+        },
+
+
+        // Adjustments after slide content has been loaded
+        // ===============================================
+
+        afterLoad : function( slide ) {
+
+            var self = this;
+
+            if ( self.isClosing ) {
+                return;
+            }
+
+            slide.isLoading = false;
+            slide.isLoaded  = true;
+
+            self.trigger( 'afterLoad', slide );
+
+            self.hideLoading( slide );
+
+            if ( slide.opts.smallBtn && !slide.$smallBtn ) {
+                slide.$smallBtn = $( self.translate( slide, slide.opts.btnTpl.smallBtn ) ).appendTo( slide.$content.filter('div,form').first() );
+            }
+
+            if ( slide.opts.protect && slide.$content && !slide.hasError ) {
+
+                // Disable right click
+                slide.$content.on( 'contextmenu.fb', function( e ) {
+                     if ( e.button == 2 ) {
+                         e.preventDefault();
+                     }
+
+                    return true;
+                });
+
+                // Add fake element on top of the image
+                // This makes a bit harder for user to select image
+                if ( slide.type === 'image' ) {
+                    $( '<div class="fancybox-spaceball"></div>' ).appendTo( slide.$content );
+                }
+
+            }
+
+            self.revealContent( slide );
+
+        },
+
+
+        // Make content visible
+        // This method is called right after content has been loaded or
+        // user navigates gallery and transition should start
+        // ============================================================
+
+        revealContent : function( slide ) {
+
+            var self   = this;
+            var $slide = slide.$slide;
+
+            var effect, effectClassName, duration, opacity, end, start = false;
+
+            effect   = slide.opts[ self.firstRun ? 'animationEffect'   : 'transitionEffect' ];
+            duration = slide.opts[ self.firstRun ? 'animationDuration' : 'transitionDuration' ];
+
+            duration = parseInt( slide.forcedDuration === undefined ? duration : slide.forcedDuration, 10 );
+
+            if ( slide.isMoved || slide.pos !== self.currPos || !duration ) {
+                effect = false;
+            }
+
+            // Check if can zoom
+            if ( effect === 'zoom' && !( slide.pos === self.currPos && duration && slide.type === 'image' && !slide.hasError && ( start = self.getThumbPos( slide ) ) ) ) {
+                effect = 'fade';
+            }
+
+            // Zoom animation
+            // ==============
+
+            if ( effect === 'zoom' ) {
+                end = self.getFitPos( slide );
+
+                end.scaleX = end.width  / start.width;
+                end.scaleY = end.height / start.height;
+
+                delete end.width;
+                delete end.height;
+
+                // Check if we need to animate opacity
+                opacity = slide.opts.zoomOpacity;
+
+                if ( opacity == 'auto' ) {
+                    opacity = Math.abs( slide.width / slide.height - start.width / start.height ) > 0.1;
+                }
+
+                if ( opacity ) {
+                    start.opacity = 0.1;
+                    end.opacity   = 1;
+                }
+
+                // Draw image at start position
+                $.fancybox.setTranslate( slide.$content.removeClass( 'fancybox-is-hidden' ), start );
+
+                forceRedraw( slide.$content );
+
+                // Start animation
+                $.fancybox.animate( slide.$content, end, duration, function() {
+                    self.complete();
+                });
+
+                return;
+            }
+
+            self.updateSlide( slide );
+
+
+            // Simply show content
+            // ===================
+
+            if ( !effect ) {
+                forceRedraw( $slide );
+
+                slide.$content.removeClass( 'fancybox-is-hidden' );
+
+                if ( slide.pos === self.currPos ) {
+                    self.complete();
+                }
+
+                return;
+            }
+
+            $.fancybox.stop( $slide );
+
+            effectClassName = 'fancybox-animated fancybox-slide--' + ( slide.pos >= self.prevPos ? 'next' : 'previous' ) + ' fancybox-fx-' + effect;
+
+            $slide.removeAttr( 'style' ).removeClass( 'fancybox-slide--current fancybox-slide--next fancybox-slide--previous' ).addClass( effectClassName );
+
+            slide.$content.removeClass( 'fancybox-is-hidden' );
+
+            //Force reflow for CSS3 transitions
+            forceRedraw( $slide );
+
+            $.fancybox.animate( $slide, 'fancybox-slide--current', duration, function(e) {
+                $slide.removeClass( effectClassName ).removeAttr( 'style' );
+
+                if ( slide.pos === self.currPos ) {
+                    self.complete();
+                }
+
+            }, true);
+
+        },
+
+
+        // Check if we can and have to zoom from thumbnail
+        //================================================
+
+        getThumbPos : function( slide ) {
+
+            var self = this;
+            var rez  = false;
+
+            // Check if element is inside the viewport by at least 1 pixel
+            var isElementVisible = function( $el ) {
+                var element = $el[0];
+
+                var elementRect = element.getBoundingClientRect();
+                var parentRects = [];
+
+                var visibleInAllParents;
+
+                while ( element.parentElement !== null ) {
+                    if ( $(element.parentElement).css('overflow') === 'hidden'  || $(element.parentElement).css('overflow') === 'auto' ) {
+                        parentRects.push(element.parentElement.getBoundingClientRect());
+                    }
+
+                    element = element.parentElement;
+                }
+
+                visibleInAllParents = parentRects.every(function(parentRect){
+                    var visiblePixelX = Math.min(elementRect.right, parentRect.right) - Math.max(elementRect.left, parentRect.left);
+                    var visiblePixelY = Math.min(elementRect.bottom, parentRect.bottom) - Math.max(elementRect.top, parentRect.top);
+
+                    return visiblePixelX > 0 && visiblePixelY > 0;
+                });
+
+                return visibleInAllParents &&
+                    elementRect.bottom > 0 && elementRect.right > 0 &&
+                    elementRect.left < $(window).width() && elementRect.top < $(window).height();
+            };
+
+            var $thumb   = slide.opts.$thumb;
+            var thumbPos = $thumb ? $thumb.offset() : 0;
+            var slidePos;
+
+            if ( thumbPos && $thumb[0].ownerDocument === document && isElementVisible( $thumb ) ) {
+                slidePos = self.$refs.stage.offset();
+
+                rez = {
+                    top    : thumbPos.top  - slidePos.top  + parseFloat( $thumb.css( "border-top-width" ) || 0 ),
+                    left   : thumbPos.left - slidePos.left + parseFloat( $thumb.css( "border-left-width" ) || 0 ),
+                    width  : $thumb.width(),
+                    height : $thumb.height(),
+                    scaleX : 1,
+                    scaleY : 1
+                };
+            }
+
+            return rez;
+        },
+
+
+        // Final adjustments after current gallery item is moved to position
+        // and it`s content is loaded
+        // ==================================================================
+
+        complete : function() {
+
+            var self = this;
+
+            var current = self.current;
+            var slides  = {};
+
+            if ( current.isMoved || !current.isLoaded || current.isComplete ) {
+                return;
+            }
+
+            current.isComplete = true;
+
+            current.$slide.siblings().trigger( 'onReset' );
+
+            // Trigger any CSS3 transiton inside the slide
+            forceRedraw( current.$slide );
+
+            current.$slide.addClass( 'fancybox-slide--complete' );
+
+            // Remove unnecessary slides
+            $.each( self.slides, function( key, slide ) {
+                if ( slide.pos >= self.currPos - 1 && slide.pos <= self.currPos + 1 ) {
+                    slides[ slide.pos ] = slide;
+
+                } else if ( slide ) {
+
+                    $.fancybox.stop( slide.$slide );
+
+                    slide.$slide.off().remove();
+                }
+            });
+
+            self.slides = slides;
+
+            self.updateCursor();
+
+            self.trigger( 'afterShow' );
+
+            // Try to focus on the first focusable element
+            if ( $( document.activeElement ).is( '[disabled]' ) || ( current.opts.autoFocus && !( current.type == 'image' || current.type === 'iframe' ) ) ) {
+                self.focus();
+            }
+
+        },
+
+
+        // Preload next and previous slides
+        // ================================
+
+        preload : function() {
+            var self = this;
+            var next, prev;
+
+            if ( self.group.length < 2 ) {
+                return;
+            }
+
+            next  = self.slides[ self.currPos + 1 ];
+            prev  = self.slides[ self.currPos - 1 ];
+
+            if ( next && next.type === 'image' ) {
+                self.loadSlide( next );
+            }
+
+            if ( prev && prev.type === 'image' ) {
+                self.loadSlide( prev );
+            }
+
+        },
+
+
+        // Try to find and focus on the first focusable element
+        // ====================================================
+
+        focus : function() {
+            var current = this.current;
+            var $el;
+
+            if ( this.isClosing ) {
+                return;
+            }
+
+            if ( current && current.isComplete ) {
+
+                // Look for first input with autofocus attribute
+                $el = current.$slide.find('input[autofocus]:enabled:visible:first');
+
+                if ( !$el.length ) {
+                    $el = current.$slide.find('button,:input,[tabindex],a').filter(':enabled:visible:first');
+                }
+            }
+
+            $el = $el && $el.length ? $el : this.$refs.container;
+
+            $el.focus();
+        },
+
+
+        // Activates current instance - brings container to the front and enables keyboard,
+        // notifies other instances about deactivating
+        // =================================================================================
+
+        activate : function () {
+            var self = this;
+
+            // Deactivate all instances
+            $( '.fancybox-container' ).each(function () {
+                var instance = $(this).data( 'FancyBox' );
+
+                // Skip self and closing instances
+                if (instance && instance.id !== self.id && !instance.isClosing) {
+                    instance.trigger( 'onDeactivate' );
+
+                    instance.removeEvents();
+
+                    instance.isVisible = false;
+                }
+
+            });
+
+            self.isVisible = true;
+
+            if ( self.current || self.isIdle ) {
+                self.update();
+
+                self.updateControls();
+            }
+
+            self.trigger( 'onActivate' );
+
+            self.addEvents();
+        },
+
+
+        // Start closing procedure
+        // This will start "zoom-out" animation if needed and clean everything up afterwards
+        // =================================================================================
+
+        close : function( e, d ) {
+
+            var self    = this;
+            var current = self.current;
+
+            var effect, duration;
+            var $what, opacity, start, end;
+
+            var done = function() {
+                self.cleanUp( e );
+            };
+
+            if ( self.isClosing ) {
+                return false;
+            }
+
+            self.isClosing = true;
+
+            // If beforeClose callback prevents closing, make sure content is centered
+            if ( self.trigger( 'beforeClose', e ) === false ) {
+                self.isClosing = false;
+
+                requestAFrame(function() {
+                    self.update();
+                });
+
+                return false;
+            }
+
+            // Remove all events
+            // If there are multiple instances, they will be set again by "activate" method
+            self.removeEvents();
+
+            if ( current.timouts ) {
+                clearTimeout( current.timouts );
+            }
+
+            $what    = current.$content;
+            effect   = current.opts.animationEffect;
+            duration = $.isNumeric( d ) ? d : ( effect ? current.opts.animationDuration : 0 );
+
+            // Remove other slides
+            current.$slide.off( transitionEnd ).removeClass( 'fancybox-slide--complete fancybox-slide--next fancybox-slide--previous fancybox-animated' );
+
+            current.$slide.siblings().trigger( 'onReset' ).remove();
+
+            // Trigger animations
+            if ( duration ) {
+                self.$refs.container.removeClass( 'fancybox-is-open' ).addClass( 'fancybox-is-closing' );
+            }
+
+            // Clean up
+            self.hideLoading( current );
+
+            self.hideControls();
+
+            self.updateCursor();
+
+            // Check if possible to zoom-out
+            if ( effect === 'zoom' && !( e !== true && $what && duration && current.type === 'image' && !current.hasError && ( end = self.getThumbPos( current ) ) ) ) {
+                effect = 'fade';
+            }
+
+            if ( effect === 'zoom' ) {
+                $.fancybox.stop( $what );
+
+                start = $.fancybox.getTranslate( $what );
+
+                start.width  = start.width  * start.scaleX;
+                start.height = start.height * start.scaleY;
+
+                // Check if we need to animate opacity
+                opacity = current.opts.zoomOpacity;
+
+                if ( opacity == 'auto' ) {
+                    opacity = Math.abs( current.width / current.height - end.width / end.height ) > 0.1;
+                }
+
+                if ( opacity ) {
+                    end.opacity = 0;
+                }
+
+                start.scaleX = start.width  / end.width;
+                start.scaleY = start.height / end.height;
+
+                start.width  = end.width;
+                start.height = end.height;
+
+                $.fancybox.setTranslate( current.$content, start );
+
+                forceRedraw( current.$content );
+
+                $.fancybox.animate( current.$content, end, duration, done );
+
+                return true;
+            }
+
+            if ( effect && duration ) {
+
+                // If skip animation
+                if ( e === true ) {
+                    setTimeout( done, duration );
+
+                } else {
+                    $.fancybox.animate( current.$slide.removeClass( 'fancybox-slide--current' ), 'fancybox-animated fancybox-slide--previous fancybox-fx-' + effect, duration, done );
+                }
+
+            } else {
+                done();
+            }
+
+            return true;
+        },
+
+
+        // Final adjustments after removing the instance
+        // =============================================
+
+        cleanUp : function( e ) {
+            var self  = this,
+                $body = $( 'body' ),
+                instance,
+                offset;
+
+            self.current.$slide.trigger( 'onReset' );
+
+            self.$refs.container.empty().remove();
+
+            self.trigger( 'afterClose', e );
+
+            // Place back focus
+            if ( self.$lastFocus && !!self.current.opts.backFocus ) {
+                self.$lastFocus.focus();
+            }
+
+            self.current = null;
+
+            // Check if there are other instances
+            instance = $.fancybox.getInstance();
+
+            if ( instance ) {
+                instance.activate();
+
+            } else {
+
+                $W.scrollTop( self.scrollTop ).scrollLeft( self.scrollLeft );
+
+                $body.removeClass( 'fancybox-active compensate-for-scrollbar' );
+
+                if ( $body.hasClass( 'fancybox-iosfix' ) ) {
+                    offset = parseInt(document.body.style.top, 10);
+
+                    $body.removeClass( 'fancybox-iosfix' ).css( 'top', '' ).scrollTop( offset * -1 );
+                }
+
+                $( '#fancybox-style-noscroll' ).remove();
+
+            }
+
+        },
+
+
+        // Call callback and trigger an event
+        // ==================================
+
+        trigger : function( name, slide ) {
+            var args  = Array.prototype.slice.call(arguments, 1),
+                self  = this,
+                obj   = slide && slide.opts ? slide : self.current,
+                rez;
+
+            if ( obj ) {
+                args.unshift( obj );
+
+            } else {
+                obj = self;
+            }
+
+            args.unshift( self );
+
+            if ( $.isFunction( obj.opts[ name ] ) ) {
+                rez = obj.opts[ name ].apply( obj, args );
+            }
+
+            if ( rez === false ) {
+                return rez;
+            }
+
+            if ( name === 'afterClose' || !self.$refs ) {
+                $D.trigger( name + '.fb', args );
+
+            } else {
+                self.$refs.container.trigger( name + '.fb', args );
+            }
+
+        },
+
+
+        // Update infobar values, navigation button states and reveal caption
+        // ==================================================================
+
+        updateControls : function ( force ) {
+
+            var self = this;
+
+            var current  = self.current,
+                index    = current.index,
+                caption  = current.opts.caption,
+                $container = self.$refs.container,
+                $caption   = self.$refs.caption;
+
+            // Recalculate content dimensions
+            current.$slide.trigger( 'refresh' );
+
+            self.$caption = caption && caption.length ? $caption.html( caption ) : null;
+
+            if ( !self.isHiddenControls && !self.isIdle ) {
+                self.showControls();
+            }
+
+            // Update info and navigation elements
+            $container.find('[data-fancybox-count]').html( self.group.length );
+            $container.find('[data-fancybox-index]').html( index + 1 );
+
+            $container.find('[data-fancybox-prev]').prop( 'disabled', ( !current.opts.loop && index <= 0 ) );
+            $container.find('[data-fancybox-next]').prop( 'disabled', ( !current.opts.loop && index >= self.group.length - 1 ) );
+
+            if ( current.type === 'image' ) {
+
+                // Update download button source
+                $container.find('[data-fancybox-download]').attr( 'href', current.opts.image.src || current.src ).show();
+
+            } else {
+                $container.find('[data-fancybox-download],[data-fancybox-zoom]').hide();
+            }
+        },
+
+        // Hide toolbar and caption
+        // ========================
+
+        hideControls : function () {
+
+            this.isHiddenControls = true;
+
+            this.$refs.container.removeClass( 'fancybox-show-infobar fancybox-show-toolbar fancybox-show-caption fancybox-show-nav' );
+
+        },
+
+        showControls : function() {
+            var self = this;
+            var opts = self.current ? self.current.opts : self.opts;
+            var $container = self.$refs.container;
+
+            self.isHiddenControls   = false;
+            self.idleSecondsCounter = 0;
+
+            $container
+                .toggleClass( 'fancybox-show-toolbar', !!( opts.toolbar && opts.buttons ) )
+                .toggleClass( 'fancybox-show-infobar', !!( opts.infobar && self.group.length > 1 ) )
+                .toggleClass( 'fancybox-show-nav',     !!( opts.arrows && self.group.length > 1 ) )
+                .toggleClass( 'fancybox-is-modal',     !!opts.modal );
+
+            if ( self.$caption ) {
+                $container.addClass( 'fancybox-show-caption ');
+
+            } else {
+               $container.removeClass( 'fancybox-show-caption' );
+           }
+
+       },
+
+
+       // Toggle toolbar and caption
+       // ==========================
+
+       toggleControls : function() {
+           if ( this.isHiddenControls ) {
+               this.showControls();
+
+           } else {
+               this.hideControls();
+           }
+
+       },
+
+
+    });
+
+
+    $.fancybox = {
+
+        version  : "3.2.5",
+        defaults : defaults,
+
+
+        // Get current instance and execute a command.
+        //
+        // Examples of usage:
+        //
+        //   $instance = $.fancybox.getInstance();
+        //   $.fancybox.getInstance().jumpTo( 1 );
+        //   $.fancybox.getInstance( 'jumpTo', 1 );
+        //   $.fancybox.getInstance( function() {
+        //       console.info( this.currIndex );
+        //   });
+        // ======================================================
+
+        getInstance : function ( command ) {
+            var instance = $('.fancybox-container:not(".fancybox-is-closing"):last').data( 'FancyBox' );
+            var args     = Array.prototype.slice.call(arguments, 1);
+
+            if ( instance instanceof FancyBox ) {
+
+                if ( $.type( command ) === 'string' ) {
+                    instance[ command ].apply( instance, args );
+
+                } else if ( $.type( command ) === 'function' ) {
+                    command.apply( instance, args );
+                }
+
+                return instance;
+            }
+
+            return false;
+
+        },
+
+
+        // Create new instance
+        // ===================
+
+        open : function ( items, opts, index ) {
+            return new FancyBox( items, opts, index );
+        },
+
+
+        // Close current or all instances
+        // ==============================
+
+        close : function ( all ) {
+            var instance = this.getInstance();
+
+            if ( instance ) {
+                instance.close();
+
+                // Try to find and close next instance
+
+                if ( all === true ) {
+                    this.close();
+                }
+            }
+
+        },
+
+        // Close instances and unbind all events
+        // ==============================
+
+        destroy : function() {
+
+            this.close( true );
+
+            $D.off( 'click.fb-start' );
+
+        },
+
+
+        // Try to detect mobile devices
+        // ============================
+
+        isMobile : document.createTouch !== undefined && /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent),
+
+
+        // Detect if 'translate3d' support is available
+        // ============================================
+
+        use3d : (function() {
+            var div = document.createElement('div');
+
+            return window.getComputedStyle && window.getComputedStyle( div ).getPropertyValue('transform') && !(document.documentMode && document.documentMode < 11);
+        }()),
+
+        // Helper function to get current visual state of an element
+        // returns array[ top, left, horizontal-scale, vertical-scale, opacity ]
+        // =====================================================================
+
+        getTranslate : function( $el ) {
+            var matrix;
+
+            if ( !$el || !$el.length ) {
+                return false;
+            }
+
+            matrix  = $el.eq( 0 ).css('transform');
+
+            if ( matrix && matrix.indexOf( 'matrix' ) !== -1 ) {
+                matrix = matrix.split('(')[1];
+                matrix = matrix.split(')')[0];
+                matrix = matrix.split(',');
+            } else {
+                matrix = [];
+            }
+
+            if ( matrix.length ) {
+
+                // If IE
+                if ( matrix.length > 10 ) {
+                    matrix = [ matrix[13], matrix[12], matrix[0], matrix[5] ];
+
+                } else {
+                    matrix = [ matrix[5], matrix[4], matrix[0], matrix[3]];
+                }
+
+                matrix = matrix.map(parseFloat);
+
+            } else {
+                matrix = [ 0, 0, 1, 1 ];
+
+                var transRegex = /\.*translate\((.*)px,(.*)px\)/i;
+                var transRez = transRegex.exec( $el.eq( 0 ).attr('style') );
+
+                if ( transRez ) {
+                    matrix[ 0 ] = parseFloat( transRez[2] );
+                    matrix[ 1 ] = parseFloat( transRez[1] );
+                }
+            }
+
+            return {
+                top     : matrix[ 0 ],
+                left    : matrix[ 1 ],
+                scaleX  : matrix[ 2 ],
+                scaleY  : matrix[ 3 ],
+                opacity : parseFloat( $el.css('opacity') ),
+                width   : $el.width(),
+                height  : $el.height()
+            };
+
+        },
+
+
+        // Shortcut for setting "translate3d" properties for element
+        // Can set be used to set opacity, too
+        // ========================================================
+
+        setTranslate : function( $el, props ) {
+            var str  = '';
+            var css  = {};
+
+            if ( !$el || !props ) {
+                return;
+            }
+
+            if ( props.left !== undefined || props.top !== undefined ) {
+                str = ( props.left === undefined ? $el.position().left : props.left )  + 'px, ' + ( props.top === undefined ? $el.position().top : props.top ) + 'px';
+
+                if ( this.use3d ) {
+                    str = 'translate3d(' + str + ', 0px)';
+
+                } else {
+                    str = 'translate(' + str + ')';
+                }
+            }
+
+            if ( props.scaleX !== undefined && props.scaleY !== undefined ) {
+                str = (str.length ? str + ' ' : '') + 'scale(' + props.scaleX + ', ' + props.scaleY + ')';
+            }
+
+            if ( str.length ) {
+                css.transform = str;
+            }
+
+            if ( props.opacity !== undefined ) {
+                css.opacity = props.opacity;
+            }
+
+            if ( props.width !== undefined ) {
+                css.width = props.width;
+            }
+
+            if ( props.height !== undefined ) {
+                css.height = props.height;
+            }
+
+            return $el.css( css );
+        },
+
+
+        // Simple CSS transition handler
+        // =============================
+
+        animate : function ( $el, to, duration, callback, leaveAnimationName ) {
+            if ( $.isFunction( duration ) ) {
+                callback = duration;
+                duration = null;
+            }
+
+            if ( !$.isPlainObject( to ) ) {
+                $el.removeAttr('style');
+            }
+
+            $el.on( transitionEnd, function(e) {
+
+                // Skip events from child elements and z-index change
+                if ( e && e.originalEvent && ( !$el.is( e.originalEvent.target ) || e.originalEvent.propertyName == 'z-index' ) ) {
+                    return;
+                }
+
+                $.fancybox.stop( $el );
+
+                if ( $.isPlainObject( to ) ) {
+
+                    if ( to.scaleX !== undefined && to.scaleY !== undefined ) {
+                        $el.css( 'transition-duration', '' );
+
+                        to.width  = Math.round( $el.width()  * to.scaleX );
+                        to.height = Math.round( $el.height() * to.scaleY );
+
+                        to.scaleX = 1;
+                        to.scaleY = 1;
+
+                        $.fancybox.setTranslate( $el, to );
+                    }
+
+                } else if ( leaveAnimationName !== true ) {
+                    $el.removeClass( to );
+                }
+
+                if ( $.isFunction( callback ) ) {
+                    callback( e );
+                }
+
+            });
+
+            if ( $.isNumeric( duration ) ) {
+                $el.css( 'transition-duration', duration + 'ms' );
+            }
+
+            if ( $.isPlainObject( to ) ) {
+                $.fancybox.setTranslate( $el, to );
+
+            } else {
+                $el.addClass( to );
+            }
+
+            if ( to.scaleX && $el.hasClass( 'fancybox-image-wrap' ) ) {
+                $el.parent().addClass( 'fancybox-is-scaling' );
+            }
+
+            // Make sure that `transitionend` callback gets fired
+            $el.data("timer", setTimeout(function() {
+                $el.trigger( 'transitionend' );
+            }, duration + 16));
+
+        },
+
+        stop : function( $el ) {
+            clearTimeout( $el.data("timer") );
+
+            $el.off( 'transitionend' ).css( 'transition-duration', '' );
+
+            if ( $el.hasClass( 'fancybox-image-wrap' ) ) {
+                $el.parent().removeClass( 'fancybox-is-scaling' );
+            }
+        }
+
+    };
+
+
+    // Default click handler for "fancyboxed" links
+    // ============================================
+
+    function _run( e ) {
+        var $target	= $( e.currentTarget ),
+            opts	= e.data ? e.data.options : {},
+            value	= $target.attr( 'data-fancybox' ) || '',
+            index	= 0,
+            items   = [];
+
+        // Avoid opening multiple times
+        if ( e.isDefaultPrevented() ) {
+            return;
+        }
+
+        e.preventDefault();
+
+        // Get all related items and find index for clicked one
+        if ( value ) {
+            items = opts.selector ? $( opts.selector ) : ( e.data ? e.data.items : [] );
+            items = items.length ? items.filter( '[data-fancybox="' + value + '"]' ) : $( '[data-fancybox="' + value + '"]' );
+
+            index = items.index( $target );
+
+            // Sometimes current item can not be found
+            // (for example, when slider clones items)
+            if ( index < 0 ) {
+                index = 0;
+            }
+
+        } else {
+            items = [ $target ];
+        }
+
+        $.fancybox.open( items, opts, index );
+    }
+
+
+    // Create a jQuery plugin
+    // ======================
+
+    $.fn.fancybox = function (options) {
+        var selector;
+
+        options  = options || {};
+        selector = options.selector || false;
+
+        if ( selector ) {
+
+            $( 'body' ).off( 'click.fb-start', selector ).on( 'click.fb-start', selector, {
+                options : options
+            }, _run );
+
+        } else {
+
+            this.off( 'click.fb-start' ).on( 'click.fb-start', {
+                items   : this,
+                options : options
+            }, _run);
+
+        }
+
+        return this;
+    };
+
+
+    // Self initializing plugin
+    // ========================
+
+    $D.on( 'click.fb-start', '[data-fancybox]', _run );
+
+}( window, document, window.jQuery || jQuery ));
+
+// ==========================================================================
+//
+// Media
+// Adds additional media type support
+//
+// ==========================================================================
+;(function ($) {
+
+	'use strict';
+
+	// Formats matching url to final form
+
+	var format = function (url, rez, params) {
+		if ( !url ) {
+			return;
 		}
+
+		params = params || '';
+
+		if ( $.type(params) === "object" ) {
+			params = $.param(params, true);
+		}
+
+		$.each(rez, function (key, value) {
+			url = url.replace('$' + key, value || '');
+		});
+
+		if (params.length) {
+			url += (url.indexOf('?') > 0 ? '&' : '?') + params;
+		}
+
+		return url;
+	};
+
+	// Object containing properties for each media type
+
+	var defaults = {
+		youtube : {
+			matcher : /(youtube\.com|youtu\.be|youtube\-nocookie\.com)\/(watch\?(.*&)?v=|v\/|u\/|embed\/?)?(videoseries\?list=(.*)|[\w-]{11}|\?listType=(.*)&list=(.*))(.*)/i,
+			params  : {
+				autoplay : 1,
+				autohide : 1,
+				fs  : 1,
+				rel : 0,
+				hd  : 1,
+				wmode : 'transparent',
+				enablejsapi : 1,
+				html5 : 1
+			},
+			paramPlace : 8,
+			type  : 'iframe',
+			url   : '//www.youtube.com/embed/$4',
+			thumb : '//img.youtube.com/vi/$4/hqdefault.jpg'
+		},
+
+		vimeo : {
+			matcher : /^.+vimeo.com\/(.*\/)?([\d]+)(.*)?/,
+			params  : {
+				autoplay : 1,
+				hd : 1,
+				show_title    : 1,
+				show_byline   : 1,
+				show_portrait : 0,
+				fullscreen    : 1,
+				api : 1
+			},
+			paramPlace : 3,
+			type : 'iframe',
+			url : '//player.vimeo.com/video/$2'
+		},
+
+		metacafe : {
+			matcher : /metacafe.com\/watch\/(\d+)\/(.*)?/,
+			type    : 'iframe',
+			url     : '//www.metacafe.com/embed/$1/?ap=1'
+		},
+
+		dailymotion : {
+			matcher : /dailymotion.com\/video\/(.*)\/?(.*)/,
+			params : {
+				additionalInfos : 0,
+				autoStart : 1
+			},
+			type : 'iframe',
+			url  : '//www.dailymotion.com/embed/video/$1'
+		},
+
+		vine : {
+			matcher : /vine.co\/v\/([a-zA-Z0-9\?\=\-]+)/,
+			type    : 'iframe',
+			url     : '//vine.co/v/$1/embed/simple'
+		},
+
+		instagram : {
+			matcher : /(instagr\.am|instagram\.com)\/p\/([a-zA-Z0-9_\-]+)\/?/i,
+			type    : 'image',
+			url     : '//$1/p/$2/media/?size=l'
+		},
+
+		// Examples:
+		// http://maps.google.com/?ll=48.857995,2.294297&spn=0.007666,0.021136&t=m&z=16
+		// https://www.google.com/maps/@37.7852006,-122.4146355,14.65z
+		// https://www.google.com/maps/place/Googleplex/@37.4220041,-122.0833494,17z/data=!4m5!3m4!1s0x0:0x6c296c66619367e0!8m2!3d37.4219998!4d-122.0840572
+		gmap_place : {
+			matcher : /(maps\.)?google\.([a-z]{2,3}(\.[a-z]{2})?)\/(((maps\/(place\/(.*)\/)?\@(.*),(\d+.?\d+?)z))|(\?ll=))(.*)?/i,
+			type    : 'iframe',
+			url     : function (rez) {
+				return '//maps.google.' + rez[2] + '/?ll=' + ( rez[9] ? rez[9] + '&z=' + Math.floor(  rez[10]  ) + ( rez[12] ? rez[12].replace(/^\//, "&") : '' )  : rez[12] ) + '&output=' + ( rez[12] && rez[12].indexOf('layer=c') > 0 ? 'svembed' : 'embed' );
+			}
+		},
+
+		// Examples:
+		// https://www.google.com/maps/search/Empire+State+Building/
+		// https://www.google.com/maps/search/?api=1&query=centurylink+field
+		// https://www.google.com/maps/search/?api=1&query=47.5951518,-122.3316393
+		gmap_search : {
+			matcher : /(maps\.)?google\.([a-z]{2,3}(\.[a-z]{2})?)\/(maps\/search\/)(.*)/i,
+			type    : 'iframe',
+			url     : function (rez) {
+				return '//maps.google.' + rez[2] + '/maps?q=' + rez[5].replace('query=', 'q=').replace('api=1', '') + '&output=embed';
+			}
+		}
+	};
+
+	$(document).on('objectNeedsType.fb', function (e, instance, item) {
+
+		var url	 = item.src || '',
+			type = false,
+			media,
+			thumb,
+			rez,
+			params,
+			urlParams,
+			paramObj,
+			provider;
+
+		media = $.extend( true, {}, defaults, item.opts.media );
+
+		// Look for any matching media type
+		$.each(media, function ( providerName, providerOpts ) {
+			rez = url.match( providerOpts.matcher );
+
+			if ( !rez ) {
+				return;
+			}
+
+			type     = providerOpts.type;
+			paramObj = {};
+
+			if ( providerOpts.paramPlace && rez[ providerOpts.paramPlace ] ) {
+				urlParams = rez[ providerOpts.paramPlace ];
+
+				if ( urlParams[ 0 ] == '?' ) {
+					urlParams = urlParams.substring(1);
+				}
+
+				urlParams = urlParams.split('&');
+
+				for ( var m = 0; m < urlParams.length; ++m ) {
+					var p = urlParams[ m ].split('=', 2);
+
+					if ( p.length == 2 ) {
+						paramObj[ p[0] ] = decodeURIComponent( p[1].replace(/\+/g, " ") );
+					}
+				}
+			}
+
+			params = $.extend( true, {}, providerOpts.params, item.opts[ providerName ], paramObj );
+
+			url   = $.type( providerOpts.url ) === "function" ? providerOpts.url.call( this, rez, params, item ) : format( providerOpts.url, rez, params );
+			thumb = $.type( providerOpts.thumb ) === "function" ? providerOpts.thumb.call( this, rez, params, item ) : format( providerOpts.thumb, rez );
+
+			if ( providerName === 'vimeo' ) {
+				url = url.replace('&%23', '#');
+			}
+
+			return false;
+		});
+
+		// If it is found, then change content type and update the url
+
+		if ( type ) {
+			item.src  = url;
+			item.type = type;
+
+			if ( !item.opts.thumb && !( item.opts.$thumb && item.opts.$thumb.length ) ) {
+				item.opts.thumb = thumb;
+			}
+
+			if ( type === 'iframe' ) {
+				$.extend(true, item.opts, {
+					iframe : {
+						preload : false,
+						attr : {
+							scrolling : "no"
+						}
+					}
+				});
+
+				item.contentProvider = provider;
+
+				item.opts.slideClass += ' fancybox-slide--' + ( provider == 'gmap_place' || provider == 'gmap_search' ? 'map' : 'video' );
+			}
+
+		} else if ( url ) {
+			item.type = item.opts.defaultType;
+		}
+
 	});
 
-	/*
-	 *	Default transitions
-	 */
-
-	F.transitions = {
-		getOrigPosition: function () {
-			var current  = F.current,
-				element  = current.element,
-				orig     = current.orig,
-				pos      = {},
-				width    = 50,
-				height   = 50,
-				hPadding = current.hPadding,
-				wPadding = current.wPadding,
-				viewport = F.getViewport();
-
-			if (!orig && current.isDom && element.is(':visible')) {
-				orig = element.find('img:first');
-
-				if (!orig.length) {
-					orig = element;
-				}
-			}
-
-			if (isQuery(orig)) {
-				pos = orig.offset();
-
-				if (orig.is('img')) {
-					width  = orig.outerWidth();
-					height = orig.outerHeight();
-				}
-
-			} else {
-				pos.top  = viewport.y + (viewport.h - height) * current.topRatio;
-				pos.left = viewport.x + (viewport.w - width)  * current.leftRatio;
-			}
-
-			if (F.wrap.css('position') === 'fixed' || current.locked) {
-				pos.top  -= viewport.y;
-				pos.left -= viewport.x;
-			}
-
-			pos = {
-				top     : getValue(pos.top  - hPadding * current.topRatio),
-				left    : getValue(pos.left - wPadding * current.leftRatio),
-				width   : getValue(width  + wPadding),
-				height  : getValue(height + hPadding)
-			};
-
-			return pos;
-		},
-
-		step: function (now, fx) {
-			var ratio,
-				padding,
-				value,
-				prop       = fx.prop,
-				current    = F.current,
-				wrapSpace  = current.wrapSpace,
-				skinSpace  = current.skinSpace;
-
-			if (prop === 'width' || prop === 'height') {
-				ratio = fx.end === fx.start ? 1 : (now - fx.start) / (fx.end - fx.start);
-
-				if (F.isClosing) {
-					ratio = 1 - ratio;
-				}
-
-				padding = prop === 'width' ? current.wPadding : current.hPadding;
-				value   = now - padding;
-
-				F.skin[ prop ](  getScalar( prop === 'width' ?  value : value - (wrapSpace * ratio) ) );
-				F.inner[ prop ]( getScalar( prop === 'width' ?  value : value - (wrapSpace * ratio) - (skinSpace * ratio) ) );
-			}
-		},
-
-		zoomIn: function () {
-			var current  = F.current,
-				startPos = current.pos,
-				effect   = current.openEffect,
-				elastic  = effect === 'elastic',
-				endPos   = $.extend({opacity : 1}, startPos);
-
-			// Remove "position" property that breaks older IE
-			delete endPos.position;
-
-			if (elastic) {
-				startPos = this.getOrigPosition();
-
-				if (current.openOpacity) {
-					startPos.opacity = 0.1;
-				}
-
-			} else if (effect === 'fade') {
-				startPos.opacity = 0.1;
-			}
-
-			F.wrap.css(startPos).animate(endPos, {
-				duration : effect === 'none' ? 0 : current.openSpeed,
-				easing   : current.openEasing,
-				step     : elastic ? this.step : null,
-				complete : F._afterZoomIn
-			});
-		},
-
-		zoomOut: function () {
-			var current  = F.current,
-				effect   = current.closeEffect,
-				elastic  = effect === 'elastic',
-				endPos   = {opacity : 0.1};
-
-			if (elastic) {
-				endPos = this.getOrigPosition();
-
-				if (current.closeOpacity) {
-					endPos.opacity = 0.1;
-				}
-			}
-
-			F.wrap.animate(endPos, {
-				duration : effect === 'none' ? 0 : current.closeSpeed,
-				easing   : current.closeEasing,
-				step     : elastic ? this.step : null,
-				complete : F._afterZoomOut
-			});
-		},
-
-		changeIn: function () {
-			var current   = F.current,
-				effect    = current.nextEffect,
-				startPos  = current.pos,
-				endPos    = { opacity : 1 },
-				direction = F.direction,
-				distance  = 200,
-				field;
-
-			startPos.opacity = 0.1;
-
-			if (effect === 'elastic') {
-				field = direction === 'down' || direction === 'up' ? 'top' : 'left';
-
-				if (direction === 'down' || direction === 'right') {
-					startPos[ field ] = getValue(getScalar(startPos[ field ]) - distance);
-					endPos[ field ]   = '+=' + distance + 'px';
-
-				} else {
-					startPos[ field ] = getValue(getScalar(startPos[ field ]) + distance);
-					endPos[ field ]   = '-=' + distance + 'px';
-				}
-			}
-
-			// Workaround for http://bugs.jquery.com/ticket/12273
-			if (effect === 'none') {
-				F._afterZoomIn();
-
-			} else {
-				F.wrap.css(startPos).animate(endPos, {
-					duration : current.nextSpeed,
-					easing   : current.nextEasing,
-					complete : F._afterZoomIn
-				});
-			}
-		},
-
-		changeOut: function () {
-			var previous  = F.previous,
-				effect    = previous.prevEffect,
-				endPos    = { opacity : 0.1 },
-				direction = F.direction,
-				distance  = 200;
-
-			if (effect === 'elastic') {
-				endPos[ direction === 'down' || direction === 'up' ? 'top' : 'left' ] = ( direction === 'up' || direction === 'left' ? '-' : '+' ) + '=' + distance + 'px';
-			}
-
-			previous.wrap.animate(endPos, {
-				duration : effect === 'none' ? 0 : previous.prevSpeed,
-				easing   : previous.prevEasing,
-				complete : function () {
-					$(this).trigger('onReset').remove();
-				}
-			});
-		}
-	};
-
-	/*
-	 *	Overlay helper
-	 */
-
-	F.helpers.overlay = {
-		defaults : {
-			closeClick : true,      // if true, fancyBox will be closed when user clicks on the overlay
-			speedOut   : 200,       // duration of fadeOut animation
-			showEarly  : true,      // indicates if should be opened immediately or wait until the content is ready
-			css        : {},        // custom CSS properties
-			locked     : !isTouch,  // if true, the content will be locked into overlay
-			fixed      : true       // if false, the overlay CSS position property will not be set to "fixed"
-		},
-
-		overlay : null,      // current handle
-		fixed   : false,     // indicates if the overlay has position "fixed"
-		el      : $('html'), // element that contains "the lock"
-
-		// Public methods
-		create : function(opts) {
-			var parent;
-
-			opts = $.extend({}, this.defaults, opts);
-
-			if (this.overlay) {
-				this.close();
-			}
-
-			parent = F.coming ? F.coming.parent : opts.parent;
-
-			this.overlay = $('<div class="fancybox-overlay"></div>').appendTo( parent && parent.length ? parent : 'body' );
-			this.fixed   = false;
-
-			if (opts.fixed && F.defaults.fixed) {
-				this.overlay.addClass('fancybox-overlay-fixed');
-
-				this.fixed = true;
-			}
-		},
-
-		open : function(opts) {
-			var that = this;
-
-			opts = $.extend({}, this.defaults, opts);
-
-			if (this.overlay) {
-				this.overlay.unbind('.overlay').width('auto').height('auto');
-
-			} else {
-				this.create(opts);
-			}
-
-			if (!this.fixed) {
-				W.bind('resize.overlay', $.proxy( this.update, this) );
-
-				this.update();
-			}
-
-			if (opts.closeClick) {
-				this.overlay.bind('click.overlay', function(e) {
-					if ($(e.target).hasClass('fancybox-overlay')) {
-						if (F.isActive) {
-							F.close();
-						} else {
-							that.close();
-						}
-
-						return false;
-					}
-				});
-			}
-
-			this.overlay.css( opts.css ).show();
-		},
-
-		close : function() {
-			W.unbind('resize.overlay');
-
-			if (this.el.hasClass('fancybox-lock')) {
-				$('.fancybox-margin').removeClass('fancybox-margin');
-
-				this.el.removeClass('fancybox-lock');
-
-				W.scrollTop( this.scrollV ).scrollLeft( this.scrollH );
-			}
-
-			$('.fancybox-overlay').remove().hide();
-
-			$.extend(this, {
-				overlay : null,
-				fixed   : false
-			});
-		},
-
-		// Private, callbacks
-
-		update : function () {
-			var width = '100%', offsetWidth;
-
-			// Reset width/height so it will not mess
-			this.overlay.width(width).height('100%');
-
-			// jQuery does not return reliable result for IE
-			if (IE) {
-				offsetWidth = Math.max(document.documentElement.offsetWidth, document.body.offsetWidth);
-
-				if (D.width() > offsetWidth) {
-					width = D.width();
-				}
-
-			} else if (D.width() > W.width()) {
-				width = D.width();
-			}
-
-			this.overlay.width(width).height(D.height());
-		},
-
-		// This is where we can manipulate DOM, because later it would cause iframes to reload
-		onReady : function (opts, obj) {
-			var overlay = this.overlay;
-
-			$('.fancybox-overlay').stop(true, true);
-
-			if (!overlay) {
-				this.create(opts);
-			}
-
-			if (opts.locked && this.fixed && obj.fixed) {
-				obj.locked = this.overlay.append( obj.wrap );
-				obj.fixed  = false;
-			}
-
-			if (opts.showEarly === true) {
-				this.beforeShow.apply(this, arguments);
-			}
-		},
-
-		beforeShow : function(opts, obj) {
-			if (obj.locked && !this.el.hasClass('fancybox-lock')) {
-				if (this.fixPosition !== false) {
-					$('*:not(object)').filter(function(){
-						return ($(this).css('position') === 'fixed' && !$(this).hasClass("fancybox-overlay") && !$(this).hasClass("fancybox-wrap") );
-					}).addClass('fancybox-margin');
-				}
-
-				this.el.addClass('fancybox-margin');
-
-				this.scrollV = W.scrollTop();
-				this.scrollH = W.scrollLeft();
-
-				this.el.addClass('fancybox-lock');
-
-				W.scrollTop( this.scrollV ).scrollLeft( this.scrollH );
-			}
-
-			this.open(opts);
-		},
-
-		onUpdate : function() {
-			if (!this.fixed) {
-				this.update();
-			}
-		},
-
-		afterClose: function (opts) {
-			// Remove overlay if exists and fancyBox is not opening
-			// (e.g., it is not being open using afterClose callback)
-			if (this.overlay && !F.coming) {
-				this.overlay.fadeOut(opts.speedOut, $.proxy( this.close, this ));
+}( window.jQuery || jQuery ));
+
+// ==========================================================================
+//
+// Guestures
+// Adds touch guestures, handles click and tap events
+//
+// ==========================================================================
+;(function (window, document, $) {
+	'use strict';
+
+	var requestAFrame = (function () {
+        return window.requestAnimationFrame ||
+                window.webkitRequestAnimationFrame ||
+                window.mozRequestAnimationFrame ||
+                window.oRequestAnimationFrame ||
+                // if all else fails, use setTimeout
+                function (callback) {
+                    return window.setTimeout(callback, 1000 / 60);
+                };
+    })();
+
+
+    var cancelAFrame = (function () {
+        return window.cancelAnimationFrame ||
+                window.webkitCancelAnimationFrame ||
+                window.mozCancelAnimationFrame ||
+                window.oCancelAnimationFrame ||
+                function (id) {
+                    window.clearTimeout(id);
+                };
+    })();
+
+
+	var pointers = function( e ) {
+		var result = [];
+
+		e = e.originalEvent || e || window.e;
+		e = e.touches && e.touches.length ? e.touches : ( e.changedTouches && e.changedTouches.length ? e.changedTouches : [ e ] );
+
+		for ( var key in e ) {
+
+			if ( e[ key ].pageX ) {
+				result.push( { x : e[ key ].pageX, y : e[ key ].pageY } );
+
+			} else if ( e[ key ].clientX ) {
+				result.push( { x : e[ key ].clientX, y : e[ key ].clientY } );
 			}
 		}
+
+		return result;
 	};
 
-	/*
-	 *	Title helper
-	 */
+	var distance = function( point2, point1, what ) {
+		if ( !point1 || !point2 ) {
+			return 0;
+		}
 
-	F.helpers.title = {
-		defaults : {
-			type     : 'float', // 'float', 'inside', 'outside' or 'over',
-			position : 'bottom' // 'top' or 'bottom'
-		},
+		if ( what === 'x' ) {
+			return point2.x - point1.x;
 
-		beforeShow: function (opts) {
-			var current = F.current,
-				text    = current.title,
-				type    = opts.type,
-				title,
-				target;
+		} else if ( what === 'y' ) {
+			return point2.y - point1.y;
+		}
 
-			if ($.isFunction(text)) {
-				text = text.call(current.element, current);
+		return Math.sqrt( Math.pow( point2.x - point1.x, 2 ) + Math.pow( point2.y - point1.y, 2 ) );
+	};
+
+	var isClickable = function( $el ) {
+
+		if ( $el.is('a,area,button,[role="button"],input,label,select,summary,textarea') || $.isFunction( $el.get(0).onclick ) || $el.data('selectable') ) {
+			return true;
+		}
+
+		// Check for attributes like data-fancybox-next or data-fancybox-close
+		for ( var i = 0, atts = $el[0].attributes, n = atts.length; i < n; i++ ) {
+            if ( atts[i].nodeName.substr(0, 14) === 'data-fancybox-' ) {
+                return true;
+            }
+        }
+
+	 	return false;
+	};
+
+	var hasScrollbars = function( el ) {
+		var overflowY = window.getComputedStyle( el )['overflow-y'];
+		var overflowX = window.getComputedStyle( el )['overflow-x'];
+
+		var vertical   = (overflowY === 'scroll' || overflowY === 'auto') && el.scrollHeight > el.clientHeight;
+		var horizontal = (overflowX === 'scroll' || overflowX === 'auto') && el.scrollWidth > el.clientWidth;
+
+		return vertical || horizontal;
+	};
+
+	var isScrollable = function ( $el ) {
+		var rez = false;
+
+		while ( true ) {
+			rez	= hasScrollbars( $el.get(0) );
+
+			if ( rez ) {
+				break;
 			}
 
-			if (!isString(text) || $.trim(text) === '') {
+			$el = $el.parent();
+
+			if ( !$el.length || $el.hasClass( 'fancybox-stage' ) || $el.is( 'body' ) ) {
+				break;
+			}
+		}
+
+		return rez;
+	};
+
+
+	var Guestures = function ( instance ) {
+		var self = this;
+
+		self.instance = instance;
+
+		self.$bg        = instance.$refs.bg;
+		self.$stage     = instance.$refs.stage;
+		self.$container = instance.$refs.container;
+
+		self.destroy();
+
+		self.$container.on( 'touchstart.fb.touch mousedown.fb.touch', $.proxy(self, 'ontouchstart') );
+	};
+
+	Guestures.prototype.destroy = function() {
+		this.$container.off( '.fb.touch' );
+	};
+
+	Guestures.prototype.ontouchstart = function( e ) {
+		var self = this;
+
+		var $target  = $( e.target );
+		var instance = self.instance;
+		var current  = instance.current;
+		var $content = current.$content;
+
+		var isTouchDevice = ( e.type == 'touchstart' );
+
+		// Do not respond to both events
+		if ( isTouchDevice ) {
+	        self.$container.off( 'mousedown.fb.touch' );
+	    }
+
+		// Ignore clicks while zooming or closing
+		if ( !current || self.instance.isAnimating || self.instance.isClosing ) {
+			e.stopPropagation();
+			e.preventDefault();
+
+			return;
+		}
+
+		// Ignore right click
+		if ( e.originalEvent && e.originalEvent.button == 2 ) {
+			return;
+		}
+
+		// Ignore taping on links, buttons, input elements
+		if ( !$target.length || isClickable( $target ) || isClickable( $target.parent() ) ) {
+			return;
+		}
+
+		// Ignore clicks on the scrollbar
+		if ( e.originalEvent.clientX > $target[0].clientWidth + $target.offset().left ) {
+			return;
+		}
+
+		self.startPoints = pointers( e );
+
+		// Prevent zooming if already swiping
+		if ( !self.startPoints || ( self.startPoints.length > 1 && instance.isSliding ) ) {
+			return;
+		}
+
+		self.$target  = $target;
+		self.$content = $content;
+		self.canTap   = true;
+		self.opts     = current.opts.touch;
+
+		$(document).off( '.fb.touch' );
+
+		$(document).on( isTouchDevice ? 'touchend.fb.touch touchcancel.fb.touch' : 'mouseup.fb.touch mouseleave.fb.touch',  $.proxy(self, "ontouchend"));
+		$(document).on( isTouchDevice ? 'touchmove.fb.touch' : 'mousemove.fb.touch',  $.proxy(self, "ontouchmove"));
+
+		if ( !(self.opts || instance.canPan() ) || !( $target.is( self.$stage ) || self.$stage.find( $target ).length ) ) {
+
+			// Prevent ghosting
+			if ( $target.is('img') ) {
+				e.preventDefault();
+			}
+
+			return;
+		}
+
+		e.stopPropagation();
+
+		if ( !( $.fancybox.isMobile && ( isScrollable( self.$target ) || isScrollable( self.$target.parent() ) ) ) ) {
+			e.preventDefault();
+		}
+
+		self.canvasWidth  = Math.round( current.$slide[0].clientWidth );
+		self.canvasHeight = Math.round( current.$slide[0].clientHeight );
+
+		self.startTime = new Date().getTime();
+		self.distanceX = self.distanceY = self.distance = 0;
+
+		self.isPanning = false;
+		self.isSwiping = false;
+		self.isZooming = false;
+
+		self.sliderStartPos  = self.sliderLastPos || { top: 0, left: 0 };
+		self.contentStartPos = $.fancybox.getTranslate( self.$content );
+		self.contentLastPos  = null;
+
+		if ( self.startPoints.length === 1 && !self.isZooming ) {
+			self.canTap = !instance.isSliding;
+
+			if ( current.type === 'image' && ( self.contentStartPos.width > self.canvasWidth + 1 || self.contentStartPos.height > self.canvasHeight + 1 ) ) {
+
+				$.fancybox.stop( self.$content );
+
+				self.$content.css( 'transition-duration', '0ms' );
+
+				self.isPanning = true;
+
+			} else {
+
+				self.isSwiping = true;
+			}
+
+			self.$container.addClass('fancybox-controls--isGrabbing');
+		}
+
+		if ( self.startPoints.length === 2 && !instance.isAnimating && !current.hasError && current.type === 'image' && ( current.isLoaded || current.$ghost ) ) {
+			self.isZooming = true;
+
+			self.isSwiping = false;
+			self.isPanning = false;
+
+			$.fancybox.stop( self.$content );
+
+			self.$content.css( 'transition-duration', '0ms' );
+
+			self.centerPointStartX = ( ( self.startPoints[0].x + self.startPoints[1].x ) * 0.5 ) - $(window).scrollLeft();
+			self.centerPointStartY = ( ( self.startPoints[0].y + self.startPoints[1].y ) * 0.5 ) - $(window).scrollTop();
+
+			self.percentageOfImageAtPinchPointX = ( self.centerPointStartX - self.contentStartPos.left ) / self.contentStartPos.width;
+			self.percentageOfImageAtPinchPointY = ( self.centerPointStartY - self.contentStartPos.top  ) / self.contentStartPos.height;
+
+			self.startDistanceBetweenFingers = distance( self.startPoints[0], self.startPoints[1] );
+		}
+
+	};
+
+	Guestures.prototype.ontouchmove = function( e ) {
+
+		var self = this;
+
+		self.newPoints = pointers( e );
+
+		if ( $.fancybox.isMobile && ( isScrollable( self.$target ) || isScrollable( self.$target.parent() ) ) ) {
+			e.stopPropagation();
+
+			self.canTap = false;
+
+			return;
+		}
+
+		if ( !( self.opts || self.instance.canPan() ) || !self.newPoints || !self.newPoints.length ) {
+			return;
+		}
+
+		self.distanceX = distance( self.newPoints[0], self.startPoints[0], 'x' );
+		self.distanceY = distance( self.newPoints[0], self.startPoints[0], 'y' );
+
+		self.distance = distance( self.newPoints[0], self.startPoints[0] );
+
+		// Skip false ontouchmove events (Chrome)
+		if ( self.distance > 0 ) {
+
+			if ( !( self.$target.is( self.$stage ) || self.$stage.find( self.$target ).length ) ) {
 				return;
 			}
 
-			title = $('<div class="fancybox-title fancybox-title-' + type + '-wrap">' + text + '</div>');
+			e.stopPropagation();
+			e.preventDefault();
 
-			switch (type) {
-				case 'inside':
-					target = F.skin;
+			if ( self.isSwiping ) {
+				self.onSwipe();
+
+			} else if ( self.isPanning ) {
+				self.onPan();
+
+			} else if ( self.isZooming ) {
+				self.onZoom();
+			}
+
+		}
+
+	};
+
+	Guestures.prototype.onSwipe = function() {
+
+		var self = this;
+
+		var swiping = self.isSwiping;
+		var left    = self.sliderStartPos.left || 0;
+		var angle;
+
+		if ( swiping === true ) {
+
+			if ( Math.abs( self.distance ) > 10 )  {
+
+				self.canTap = false;
+
+				if ( self.instance.group.length < 2 && self.opts.vertical ) {
+					self.isSwiping  = 'y';
+
+				} else if ( self.instance.isSliding || self.opts.vertical === false || ( self.opts.vertical === 'auto' && $( window ).width() > 800 ) ) {
+					self.isSwiping  = 'x';
+
+				} else {
+					angle = Math.abs( Math.atan2( self.distanceY, self.distanceX ) * 180 / Math.PI );
+
+					self.isSwiping = ( angle > 45 && angle < 135 ) ? 'y' : 'x';
+				}
+
+				self.instance.isSliding = self.isSwiping;
+
+				// Reset points to avoid jumping, because we dropped first swipes to calculate the angle
+				self.startPoints = self.newPoints;
+
+				$.each(self.instance.slides, function( index, slide ) {
+					$.fancybox.stop( slide.$slide );
+
+					slide.$slide.css( 'transition-duration', '0ms' );
+
+					slide.inTransition = false;
+
+					if ( slide.pos === self.instance.current.pos ) {
+						self.sliderStartPos.left = $.fancybox.getTranslate( slide.$slide ).left;
+					}
+				});
+
+				//self.instance.current.isMoved = true;
+
+				// Stop slideshow
+				if ( self.instance.SlideShow && self.instance.SlideShow.isActive ) {
+					self.instance.SlideShow.stop();
+				}
+			}
+
+		} else {
+
+			if ( swiping == 'x' ) {
+
+				// Sticky edges
+				if ( self.distanceX > 0 && ( self.instance.group.length < 2 || ( self.instance.current.index === 0 && !self.instance.current.opts.loop ) ) ) {
+					left = left + Math.pow( self.distanceX, 0.8 );
+
+				} else if ( self.distanceX < 0 && ( self.instance.group.length < 2 || ( self.instance.current.index === self.instance.group.length - 1 && !self.instance.current.opts.loop ) ) ) {
+					left = left - Math.pow( -self.distanceX, 0.8 );
+
+				} else {
+					left = left + self.distanceX;
+				}
+
+			}
+
+			self.sliderLastPos = {
+				top  : swiping == 'x' ? 0 : self.sliderStartPos.top + self.distanceY,
+				left : left
+			};
+
+			if ( self.requestId ) {
+				cancelAFrame( self.requestId );
+
+				self.requestId = null;
+			}
+
+			self.requestId = requestAFrame(function() {
+
+				if ( self.sliderLastPos ) {
+					$.each(self.instance.slides, function( index, slide ) {
+						var pos = slide.pos - self.instance.currPos;
+
+						$.fancybox.setTranslate( slide.$slide, {
+							top  : self.sliderLastPos.top,
+							left : self.sliderLastPos.left + ( pos * self.canvasWidth ) + ( pos * slide.opts.gutter )
+						});
+					});
+
+					self.$container.addClass( 'fancybox-is-sliding' );
+				}
+
+			});
+
+		}
+
+	};
+
+	Guestures.prototype.onPan = function() {
+
+		var self = this;
+
+		var newOffsetX, newOffsetY, newPos;
+
+		self.canTap = false;
+
+		if ( self.contentStartPos.width > self.canvasWidth ) {
+			newOffsetX = self.contentStartPos.left + self.distanceX;
+
+		} else {
+			newOffsetX = self.contentStartPos.left;
+		}
+
+		newOffsetY = self.contentStartPos.top + self.distanceY;
+
+		newPos = self.limitMovement( newOffsetX, newOffsetY, self.contentStartPos.width, self.contentStartPos.height );
+
+		newPos.scaleX = self.contentStartPos.scaleX;
+		newPos.scaleY = self.contentStartPos.scaleY;
+
+		self.contentLastPos = newPos;
+
+		if ( self.requestId ) {
+			cancelAFrame( self.requestId );
+
+			self.requestId = null;
+		}
+
+		self.requestId = requestAFrame(function() {
+			$.fancybox.setTranslate( self.$content, self.contentLastPos );
+		});
+	};
+
+	// Make panning sticky to the edges
+	Guestures.prototype.limitMovement = function( newOffsetX, newOffsetY, newWidth, newHeight ) {
+
+		var self = this;
+
+		var minTranslateX, minTranslateY, maxTranslateX, maxTranslateY;
+
+		var canvasWidth  = self.canvasWidth;
+		var canvasHeight = self.canvasHeight;
+
+		var currentOffsetX = self.contentStartPos.left;
+		var currentOffsetY = self.contentStartPos.top;
+
+		var distanceX = self.distanceX;
+		var distanceY = self.distanceY;
+
+		// Slow down proportionally to traveled distance
+
+		minTranslateX = Math.max(0, canvasWidth  * 0.5 - newWidth  * 0.5 );
+		minTranslateY = Math.max(0, canvasHeight * 0.5 - newHeight * 0.5 );
+
+		maxTranslateX = Math.min( canvasWidth  - newWidth,  canvasWidth  * 0.5 - newWidth  * 0.5 );
+		maxTranslateY = Math.min( canvasHeight - newHeight, canvasHeight * 0.5 - newHeight * 0.5 );
+
+		if ( newWidth > canvasWidth ) {
+
+			//   ->
+			if ( distanceX > 0 && newOffsetX > minTranslateX ) {
+				newOffsetX = minTranslateX - 1 + Math.pow( -minTranslateX + currentOffsetX + distanceX, 0.8 ) || 0;
+			}
+
+			//    <-
+			if ( distanceX  < 0 && newOffsetX < maxTranslateX ) {
+				newOffsetX = maxTranslateX + 1 - Math.pow( maxTranslateX - currentOffsetX - distanceX, 0.8 ) || 0;
+			}
+
+		}
+
+		if ( newHeight > canvasHeight ) {
+
+			//   \/
+			if ( distanceY > 0 && newOffsetY > minTranslateY ) {
+				newOffsetY = minTranslateY - 1 + Math.pow(-minTranslateY + currentOffsetY + distanceY, 0.8 ) || 0;
+			}
+
+			//   /\
+			if ( distanceY < 0 && newOffsetY < maxTranslateY ) {
+				newOffsetY = maxTranslateY + 1 - Math.pow ( maxTranslateY - currentOffsetY - distanceY, 0.8 ) || 0;
+			}
+
+		}
+
+		return {
+			top  : newOffsetY,
+			left : newOffsetX
+		};
+
+	};
+
+
+	Guestures.prototype.limitPosition = function( newOffsetX, newOffsetY, newWidth, newHeight ) {
+
+		var self = this;
+
+		var canvasWidth  = self.canvasWidth;
+		var canvasHeight = self.canvasHeight;
+
+		if ( newWidth > canvasWidth ) {
+			newOffsetX = newOffsetX > 0 ? 0 : newOffsetX;
+			newOffsetX = newOffsetX < canvasWidth - newWidth ? canvasWidth - newWidth : newOffsetX;
+
+		} else {
+
+			// Center horizontally
+			newOffsetX = Math.max( 0, canvasWidth / 2 - newWidth / 2 );
+
+		}
+
+		if ( newHeight > canvasHeight ) {
+			newOffsetY = newOffsetY > 0 ? 0 : newOffsetY;
+			newOffsetY = newOffsetY < canvasHeight - newHeight ? canvasHeight - newHeight : newOffsetY;
+
+		} else {
+
+			// Center vertically
+			newOffsetY = Math.max( 0, canvasHeight / 2 - newHeight / 2 );
+
+		}
+
+		return {
+			top  : newOffsetY,
+			left : newOffsetX
+		};
+
+	};
+
+	Guestures.prototype.onZoom = function() {
+
+		var self = this;
+
+		// Calculate current distance between points to get pinch ratio and new width and height
+
+		var currentWidth  = self.contentStartPos.width;
+		var currentHeight = self.contentStartPos.height;
+
+		var currentOffsetX = self.contentStartPos.left;
+		var currentOffsetY = self.contentStartPos.top;
+
+		var endDistanceBetweenFingers = distance( self.newPoints[0], self.newPoints[1] );
+
+		var pinchRatio = endDistanceBetweenFingers / self.startDistanceBetweenFingers;
+
+		var newWidth  = Math.floor( currentWidth  * pinchRatio );
+		var newHeight = Math.floor( currentHeight * pinchRatio );
+
+		// This is the translation due to pinch-zooming
+		var translateFromZoomingX = (currentWidth  - newWidth)  * self.percentageOfImageAtPinchPointX;
+		var translateFromZoomingY = (currentHeight - newHeight) * self.percentageOfImageAtPinchPointY;
+
+		//Point between the two touches
+
+		var centerPointEndX = ((self.newPoints[0].x + self.newPoints[1].x) / 2) - $(window).scrollLeft();
+		var centerPointEndY = ((self.newPoints[0].y + self.newPoints[1].y) / 2) - $(window).scrollTop();
+
+		// And this is the translation due to translation of the centerpoint
+		// between the two fingers
+
+		var translateFromTranslatingX = centerPointEndX - self.centerPointStartX;
+		var translateFromTranslatingY = centerPointEndY - self.centerPointStartY;
+
+		// The new offset is the old/current one plus the total translation
+
+		var newOffsetX = currentOffsetX + ( translateFromZoomingX + translateFromTranslatingX );
+		var newOffsetY = currentOffsetY + ( translateFromZoomingY + translateFromTranslatingY );
+
+		var newPos = {
+			top    : newOffsetY,
+			left   : newOffsetX,
+			scaleX : self.contentStartPos.scaleX * pinchRatio,
+			scaleY : self.contentStartPos.scaleY * pinchRatio
+		};
+
+		self.canTap = false;
+
+		self.newWidth  = newWidth;
+		self.newHeight = newHeight;
+
+		self.contentLastPos = newPos;
+
+		if ( self.requestId ) {
+			cancelAFrame( self.requestId );
+
+			self.requestId = null;
+		}
+
+		self.requestId = requestAFrame(function() {
+			$.fancybox.setTranslate( self.$content, self.contentLastPos );
+		});
+
+	};
+
+	Guestures.prototype.ontouchend = function( e ) {
+
+		var self = this;
+		var dMs  = Math.max( (new Date().getTime() ) - self.startTime, 1);
+
+		var swiping = self.isSwiping;
+		var panning = self.isPanning;
+		var zooming = self.isZooming;
+
+		self.endPoints = pointers( e );
+
+		self.$container.removeClass( 'fancybox-controls--isGrabbing' );
+
+		$(document).off( '.fb.touch' );
+
+		if ( self.requestId ) {
+			cancelAFrame( self.requestId );
+
+			self.requestId = null;
+		}
+
+		self.isSwiping = false;
+		self.isPanning = false;
+		self.isZooming = false;
+
+		if ( self.canTap )  {
+			return self.onTap( e );
+		}
+
+		self.speed = 366;
+
+		// Speed in px/ms
+		self.velocityX = self.distanceX / dMs * 0.5;
+		self.velocityY = self.distanceY / dMs * 0.5;
+
+		self.speedX = Math.max( self.speed * 0.5, Math.min( self.speed * 1.5, ( 1 / Math.abs( self.velocityX ) ) * self.speed ) );
+
+		if ( panning ) {
+			self.endPanning();
+
+		} else if ( zooming ) {
+			self.endZooming();
+
+		} else {
+			self.endSwiping( swiping );
+		}
+
+		return;
+	};
+
+	Guestures.prototype.endSwiping = function( swiping ) {
+
+		var self = this;
+		var ret = false;
+
+		self.instance.isSliding = false;
+		self.sliderLastPos      = null;
+
+		// Close if swiped vertically / navigate if horizontally
+		if ( swiping == 'y' && Math.abs( self.distanceY ) > 50 ) {
+
+			// Continue vertical movement
+			$.fancybox.animate( self.instance.current.$slide, {
+				top     : self.sliderStartPos.top + self.distanceY + ( self.velocityY * 150 ),
+				opacity : 0
+			}, 150 );
+
+			ret = self.instance.close( true, 300 );
+
+		} else if ( swiping == 'x' && self.distanceX > 50 && self.instance.group.length > 1 ) {
+			ret = self.instance.previous( self.speedX );
+
+		} else if ( swiping == 'x' && self.distanceX < -50  && self.instance.group.length > 1 ) {
+			ret = self.instance.next( self.speedX );
+		}
+
+		if ( ret === false && ( swiping == 'x' || swiping == 'y' ) ) {
+			self.instance.jumpTo( self.instance.current.index, 150 );
+		}
+
+		self.$container.removeClass( 'fancybox-is-sliding' );
+
+	};
+
+	// Limit panning from edges
+	// ========================
+
+	Guestures.prototype.endPanning = function() {
+
+		var self = this;
+		var newOffsetX, newOffsetY, newPos;
+
+		if ( !self.contentLastPos ) {
+			return;
+		}
+
+		if ( self.opts.momentum === false ) {
+			newOffsetX = self.contentLastPos.left;
+			newOffsetY = self.contentLastPos.top;
+
+		} else {
+
+			// Continue movement
+			newOffsetX = self.contentLastPos.left + ( self.velocityX * self.speed );
+			newOffsetY = self.contentLastPos.top  + ( self.velocityY * self.speed );
+		}
+
+		newPos = self.limitPosition( newOffsetX, newOffsetY, self.contentStartPos.width, self.contentStartPos.height );
+
+		 newPos.width  = self.contentStartPos.width;
+		 newPos.height = self.contentStartPos.height;
+
+		$.fancybox.animate( self.$content, newPos, 330 );
+	};
+
+
+	Guestures.prototype.endZooming = function() {
+
+		var self = this;
+
+		var current = self.instance.current;
+
+		var newOffsetX, newOffsetY, newPos, reset;
+
+		var newWidth  = self.newWidth;
+		var newHeight = self.newHeight;
+
+		if ( !self.contentLastPos ) {
+			return;
+		}
+
+		newOffsetX = self.contentLastPos.left;
+		newOffsetY = self.contentLastPos.top;
+
+		reset = {
+		   	top    : newOffsetY,
+		   	left   : newOffsetX,
+		   	width  : newWidth,
+		   	height : newHeight,
+			scaleX : 1,
+			scaleY : 1
+	   };
+
+	   // Reset scalex/scaleY values; this helps for perfomance and does not break animation
+	   $.fancybox.setTranslate( self.$content, reset );
+
+		if ( newWidth < self.canvasWidth && newHeight < self.canvasHeight ) {
+			self.instance.scaleToFit( 150 );
+
+		} else if ( newWidth > current.width || newHeight > current.height ) {
+			self.instance.scaleToActual( self.centerPointStartX, self.centerPointStartY, 150 );
+
+		} else {
+
+			newPos = self.limitPosition( newOffsetX, newOffsetY, newWidth, newHeight );
+
+			// Switch from scale() to width/height or animation will not work correctly
+			$.fancybox.setTranslate( self.content, $.fancybox.getTranslate( self.$content ) );
+
+			$.fancybox.animate( self.$content, newPos, 150 );
+		}
+
+	};
+
+	Guestures.prototype.onTap = function(e) {
+		var self    = this;
+		var $target = $( e.target );
+
+		var instance = self.instance;
+		var current  = instance.current;
+
+		var endPoints = ( e && pointers( e ) ) || self.startPoints;
+
+		var tapX = endPoints[0] ? endPoints[0].x - self.$stage.offset().left : 0;
+		var tapY = endPoints[0] ? endPoints[0].y - self.$stage.offset().top  : 0;
+
+		var where;
+
+		var process = function ( prefix ) {
+
+			var action = current.opts[ prefix ];
+
+			if ( $.isFunction( action ) ) {
+				action = action.apply( instance, [ current, e ] );
+			}
+
+			if ( !action) {
+				return;
+			}
+
+			switch ( action ) {
+
+				case "close" :
+
+					instance.close( self.startEvent );
+
 				break;
 
-				case 'outside':
-					target = F.wrap;
+				case "toggleControls" :
+
+					instance.toggleControls( true );
+
 				break;
 
-				case 'over':
-					target = F.inner;
+				case "next" :
+
+					instance.next();
+
 				break;
 
-				default: // 'float'
-					target = F.skin;
+				case "nextOrClose" :
 
-					title.appendTo('body');
+					if ( instance.group.length > 1 ) {
+						instance.next();
 
-					if (IE) {
-						title.width( title.width() );
+					} else {
+						instance.close( self.startEvent );
 					}
 
-					title.wrapInner('<span class="child"></span>');
+				break;
 
-					//Increase bottom margin so this title will also fit into viewport
-					F.current.margin[2] += Math.abs( getScalar(title.css('margin-bottom')) );
+				case "zoom" :
+
+					if ( current.type == 'image' && ( current.isLoaded || current.$ghost ) ) {
+
+						if ( instance.canPan() ) {
+							instance.scaleToFit();
+
+						} else if ( instance.isScaledDown() ) {
+							instance.scaleToActual( tapX, tapY );
+
+						} else if ( instance.group.length < 2 ) {
+							instance.close( self.startEvent );
+						}
+					}
+
 				break;
 			}
 
-			title[ (opts.position === 'top' ? 'prependTo'  : 'appendTo') ](target);
+		};
+
+		// Ignore right click
+		if ( e.originalEvent && e.originalEvent.button == 2 ) {
+			return;
 		}
-	};
 
-	// jQuery plugin initialization
-	$.fn.fancybox = function (options) {
-		var index,
-			that     = $(this),
-			selector = this.selector || '',
-			run      = function(e) {
-				var what = $(this).blur(), idx = index, relType, relVal;
+		// Skip if current slide is not in the center
+		if ( instance.isSliding ) {
+			return;
+		}
 
-				if (!(e.ctrlKey || e.altKey || e.shiftKey || e.metaKey) && !what.is('.fancybox-wrap')) {
-					relType = options.groupAttr || 'data-fancybox-group';
-					relVal  = what.attr(relType);
+		// Skip if clicked on the scrollbar
+		if ( tapX > $target[0].clientWidth + $target.offset().left ) {
+			return;
+		}
 
-					if (!relVal) {
-						relType = 'rel';
-						relVal  = what.get(0)[ relType ];
-					}
+		// Check where is clicked
+		if ( $target.is( '.fancybox-bg,.fancybox-inner,.fancybox-outer,.fancybox-container' ) ) {
+			where = 'Outside';
 
-					if (relVal && relVal !== '' && relVal !== 'nofollow') {
-						what = selector.length ? $(selector) : that;
-						what = what.filter('[' + relType + '="' + relVal + '"]');
-						idx  = what.index(this);
-					}
+		} else if ( $target.is( '.fancybox-slide' ) ) {
+			where = 'Slide';
 
-					options.index = idx;
-
-					// Stop an event from bubbling if everything is fine
-					if (F.open(what, options) !== false) {
-						e.preventDefault();
-					}
-				}
-			};
-
-		options = options || {};
-		index   = options.index || 0;
-
-		if (!selector || options.live === false) {
-			that.unbind('click.fb-start').bind('click.fb-start', run);
+		} else if  ( instance.current.$content && instance.current.$content.has( e.target ).length ) {
+		 	where = 'Content';
 
 		} else {
-			D.undelegate(selector, 'click.fb-start').delegate(selector + ":not('.fancybox-item, .fancybox-nav')", 'click.fb-start', run);
+			return;
 		}
 
-		this.filter('[data-fancybox-start=1]').trigger('click');
+		// Check if this is a double tap
+		if ( self.tapped ) {
+
+			// Stop previously created single tap
+			clearTimeout( self.tapped );
+			self.tapped = null;
+
+			// Skip if distance between taps is too big
+			if ( Math.abs( tapX - self.tapX ) > 50 || Math.abs( tapY - self.tapY ) > 50 || instance.isSliding ) {
+				return this;
+			}
+
+			// OK, now we assume that this is a double-tap
+			process( 'dblclick' + where );
+
+		} else {
+
+			// Single tap will be processed if user has not clicked second time within 300ms
+			// or there is no need to wait for double-tap
+			self.tapX = tapX;
+			self.tapY = tapY;
+
+			if ( current.opts[ 'dblclick' + where ] && current.opts[ 'dblclick' + where ] !== current.opts[ 'click' + where ] ) {
+				self.tapped = setTimeout(function() {
+					self.tapped = null;
+
+					process( 'click' + where );
+
+				}, 300);
+
+			} else {
+				process( 'click' + where );
+			}
+
+		}
 
 		return this;
 	};
 
-	// Tests that need a body at doc ready
-	D.ready(function() {
-		var w1, w2;
-
-		if ( $.scrollbarWidth === undefined ) {
-			// http://benalman.com/projects/jquery-misc-plugins/#scrollbarwidth
-			$.scrollbarWidth = function() {
-				var parent = $('<div style="width:50px;height:50px;overflow:auto"><div/></div>').appendTo('body'),
-					child  = parent.children(),
-					width  = child.innerWidth() - child.height( 99 ).innerWidth();
-
-				parent.remove();
-
-				return width;
-			};
+	$(document).on('onActivate.fb', function (e, instance) {
+		if ( instance && !instance.Guestures ) {
+			instance.Guestures = new Guestures( instance );
 		}
-
-		if ( $.support.fixedPosition === undefined ) {
-			$.support.fixedPosition = (function() {
-				var elem  = $('<div style="position:fixed;top:20px;"></div>').appendTo('body'),
-					fixed = ( elem[0].offsetTop === 20 || elem[0].offsetTop === 15 );
-
-				elem.remove();
-
-				return fixed;
-			}());
-		}
-
-		$.extend(F.defaults, {
-			scrollbarWidth : $.scrollbarWidth(),
-			fixed  : $.support.fixedPosition,
-			parent : $('body')
-		});
-
-		//Get real width of page scroll-bar
-		w1 = $(window).width();
-
-		H.addClass('fancybox-lock-test');
-
-		w2 = $(window).width();
-
-		H.removeClass('fancybox-lock-test');
-
-		$("<style type='text/css'>.fancybox-margin{margin-right:" + (w2 - w1) + "px;}</style>").appendTo("head");
 	});
 
-}(window, document, jQuery));
+	$(document).on('beforeClose.fb', function (e, instance) {
+		if ( instance && instance.Guestures ) {
+			instance.Guestures.destroy();
+		}
+	});
+
+
+}( window, document, window.jQuery || jQuery ));
+
+// ==========================================================================
+//
+// SlideShow
+// Enables slideshow functionality
+//
+// Example of usage:
+// $.fancybox.getInstance().SlideShow.start()
+//
+// ==========================================================================
+;(function (document, $) {
+	'use strict';
+
+	$.extend(true, $.fancybox.defaults, {
+		btnTpl : {
+			slideShow :
+				'<button data-fancybox-play class="fancybox-button fancybox-button--play" title="{{PLAY_START}}">' +
+					'<svg viewBox="0 0 40 40">' +
+						'<path d="M13,12 L27,20 L13,27 Z" />' +
+						'<path d="M15,10 v19 M23,10 v19" />' +
+					'</svg>' +
+				'</button>'
+		},
+		slideShow : {
+			autoStart : false,
+            speed     : 3000
+		}
+	});
+
+	var SlideShow = function( instance ) {
+		this.instance = instance;
+		this.init();
+	};
+
+	$.extend( SlideShow.prototype, {
+		timer    : null,
+		isActive : false,
+		$button  : null,
+
+		init : function() {
+			var self = this;
+
+			self.$button = self.instance.$refs.toolbar.find('[data-fancybox-play]').on('click', function() {
+				self.toggle();
+			});
+
+			if ( self.instance.group.length < 2 || !self.instance.group[ self.instance.currIndex ].opts.slideShow ) {
+				self.$button.hide();
+			}
+		},
+
+		set : function( force ) {
+			var self = this;
+
+			// Check if reached last element
+			if ( self.instance && self.instance.current && (force === true || self.instance.current.opts.loop || self.instance.currIndex < self.instance.group.length - 1 )) {
+				self.timer = setTimeout(function() {
+					if ( self.isActive ) {
+						self.instance.jumpTo( (self.instance.currIndex + 1) % self.instance.group.length );
+					}
+
+				}, self.instance.current.opts.slideShow.speed);
+
+			} else {
+				self.stop();
+				self.instance.idleSecondsCounter = 0;
+				self.instance.showControls();
+			}
+		},
+
+		clear : function() {
+			var self = this;
+
+			clearTimeout( self.timer );
+
+			self.timer = null;
+		},
+
+		start : function() {
+			var self = this;
+			var current = self.instance.current;
+
+			if ( current ) {
+				self.isActive = true;
+
+				self.$button
+					.attr( 'title', current.opts.i18n[ current.opts.lang ].PLAY_STOP )
+					.removeClass( 'fancybox-button--play' )
+					.addClass( 'fancybox-button--pause' );
+
+					self.set( true );
+			}
+		},
+
+		stop : function() {
+			var self = this;
+			var current = self.instance.current;
+
+			self.clear();
+
+			self.$button
+				.attr( 'title', current.opts.i18n[ current.opts.lang ].PLAY_START )
+				.removeClass( 'fancybox-button--pause' )
+				.addClass( 'fancybox-button--play' );
+
+			self.isActive = false;
+		},
+
+		toggle : function() {
+			var self = this;
+
+			if ( self.isActive ) {
+				self.stop();
+
+			} else {
+				self.start();
+			}
+		}
+
+	});
+
+	$(document).on({
+		'onInit.fb' : function(e, instance) {
+			if ( instance && !instance.SlideShow ) {
+				instance.SlideShow = new SlideShow( instance );
+			}
+		},
+
+		'beforeShow.fb' : function(e, instance, current, firstRun) {
+			var SlideShow = instance && instance.SlideShow;
+
+			if ( firstRun ) {
+
+				if ( SlideShow && current.opts.slideShow.autoStart ) {
+					SlideShow.start();
+				}
+
+			} else if ( SlideShow && SlideShow.isActive )  {
+				SlideShow.clear();
+			}
+		},
+
+		'afterShow.fb' : function(e, instance, current) {
+			var SlideShow = instance && instance.SlideShow;
+
+			if ( SlideShow && SlideShow.isActive ) {
+				SlideShow.set();
+			}
+		},
+
+		'afterKeydown.fb' : function(e, instance, current, keypress, keycode) {
+			var SlideShow = instance && instance.SlideShow;
+
+			// "P" or Spacebar
+			if ( SlideShow && current.opts.slideShow && ( keycode === 80 || keycode === 32 ) && !$(document.activeElement).is( 'button,a,input' ) ) {
+				keypress.preventDefault();
+
+				SlideShow.toggle();
+			}
+		},
+
+		'beforeClose.fb onDeactivate.fb' : function(e, instance) {
+			var SlideShow = instance && instance.SlideShow;
+
+			if ( SlideShow ) {
+				SlideShow.stop();
+			}
+		}
+	});
+
+	// Page Visibility API to pause slideshow when window is not active
+	$(document).on("visibilitychange", function() {
+		var instance  = $.fancybox.getInstance();
+		var SlideShow = instance && instance.SlideShow;
+
+		if ( SlideShow && SlideShow.isActive ) {
+			if ( document.hidden ) {
+				SlideShow.clear();
+
+			} else {
+				SlideShow.set();
+			}
+		}
+	});
+
+}( document, window.jQuery || jQuery ));
+
+// ==========================================================================
+//
+// FullScreen
+// Adds fullscreen functionality
+//
+// ==========================================================================
+;(function (document, $) {
+	'use strict';
+
+	// Collection of methods supported by user browser
+	var fn = (function () {
+
+		var fnMap = [
+			[
+				'requestFullscreen',
+				'exitFullscreen',
+				'fullscreenElement',
+				'fullscreenEnabled',
+				'fullscreenchange',
+				'fullscreenerror'
+			],
+			// new WebKit
+			[
+				'webkitRequestFullscreen',
+				'webkitExitFullscreen',
+				'webkitFullscreenElement',
+				'webkitFullscreenEnabled',
+				'webkitfullscreenchange',
+				'webkitfullscreenerror'
+
+			],
+			// old WebKit (Safari 5.1)
+			[
+				'webkitRequestFullScreen',
+				'webkitCancelFullScreen',
+				'webkitCurrentFullScreenElement',
+				'webkitCancelFullScreen',
+				'webkitfullscreenchange',
+				'webkitfullscreenerror'
+
+			],
+			[
+				'mozRequestFullScreen',
+				'mozCancelFullScreen',
+				'mozFullScreenElement',
+				'mozFullScreenEnabled',
+				'mozfullscreenchange',
+				'mozfullscreenerror'
+			],
+			[
+				'msRequestFullscreen',
+				'msExitFullscreen',
+				'msFullscreenElement',
+				'msFullscreenEnabled',
+				'MSFullscreenChange',
+				'MSFullscreenError'
+			]
+		];
+
+		var val;
+		var ret = {};
+		var i, j;
+
+		for ( i = 0; i < fnMap.length; i++ ) {
+			val = fnMap[ i ];
+
+			if ( val && val[ 1 ] in document ) {
+				for ( j = 0; j < val.length; j++ ) {
+					ret[ fnMap[ 0 ][ j ] ] = val[ j ];
+				}
+
+				return ret;
+			}
+		}
+
+		return false;
+	})();
+
+	// If browser does not have Full Screen API, then simply unset default button template and stop
+	if ( !fn ) {
+
+		if ( $ && $.fancybox ) {
+			$.fancybox.defaults.btnTpl.fullScreen = false;
+		}
+
+		return;
+	}
+
+	var FullScreen = {
+
+		request : function ( elem ) {
+
+			elem = elem || document.documentElement;
+
+			elem[ fn.requestFullscreen ]( elem.ALLOW_KEYBOARD_INPUT );
+
+		},
+		exit : function () {
+
+			document[ fn.exitFullscreen ]();
+
+		},
+		toggle : function ( elem ) {
+
+			elem = elem || document.documentElement;
+
+			if ( this.isFullscreen() ) {
+				this.exit();
+
+			} else {
+				this.request( elem );
+			}
+
+		},
+		isFullscreen : function()  {
+
+			return Boolean( document[ fn.fullscreenElement ] );
+
+		},
+		enabled : function()  {
+
+			return Boolean( document[ fn.fullscreenEnabled ] );
+
+		}
+	};
+
+	$.extend(true, $.fancybox.defaults, {
+		btnTpl : {
+			fullScreen :
+				'<button data-fancybox-fullscreen class="fancybox-button fancybox-button--fullscreen" title="{{FULL_SCREEN}}">' +
+					'<svg viewBox="0 0 40 40">' +
+						'<path d="M9,12 h22 v16 h-22 v-16 v16 h22 v-16 Z" />' +
+					'</svg>' +
+				'</button>'
+		},
+		fullScreen : {
+			autoStart : false
+		}
+	});
+
+	$(document).on({
+		'onInit.fb' : function(e, instance) {
+			var $container;
+
+			if ( instance && instance.group[ instance.currIndex ].opts.fullScreen ) {
+				$container = instance.$refs.container;
+
+				$container.on('click.fb-fullscreen', '[data-fancybox-fullscreen]', function(e) {
+
+					e.stopPropagation();
+					e.preventDefault();
+
+					FullScreen.toggle( $container[ 0 ] );
+
+				});
+
+				if ( instance.opts.fullScreen && instance.opts.fullScreen.autoStart === true ) {
+					FullScreen.request( $container[ 0 ] );
+				}
+
+				// Expose API
+				instance.FullScreen = FullScreen;
+
+			} else if ( instance ) {
+				instance.$refs.toolbar.find('[data-fancybox-fullscreen]').hide();
+			}
+
+		},
+
+		'afterKeydown.fb' : function(e, instance, current, keypress, keycode) {
+
+			// "P" or Spacebar
+			if ( instance && instance.FullScreen && keycode === 70 ) {
+				keypress.preventDefault();
+
+				instance.FullScreen.toggle( instance.$refs.container[ 0 ] );
+			}
+
+		},
+
+		'beforeClose.fb' : function( instance ) {
+			if ( instance && instance.FullScreen ) {
+				FullScreen.exit();
+			}
+		}
+	});
+
+	$(document).on(fn.fullscreenchange, function() {
+		var isFullscreen = FullScreen.isFullscreen(),
+			instance = $.fancybox.getInstance();
+
+		if ( instance ) {
+
+			// If image is zooming, then force to stop and reposition properly
+			if ( instance.current && instance.current.type === 'image' && instance.isAnimating ) {
+				instance.current.$content.css( 'transition', 'none' );
+
+				instance.isAnimating = false;
+
+				instance.update( true, true, 0 );
+			}
+
+			instance.trigger( 'onFullscreenChange', isFullscreen );
+
+			instance.$refs.container.toggleClass( 'fancybox-is-fullscreen', isFullscreen );
+		}
+
+	});
+
+}( document, window.jQuery || jQuery ));
+
+// ==========================================================================
+//
+// Thumbs
+// Displays thumbnails in a grid
+//
+// ==========================================================================
+;(function (document, $) {
+	'use strict';
+
+	// Make sure there are default values
+	$.fancybox.defaults = $.extend(true, {
+		btnTpl : {
+			thumbs :
+			'<button data-fancybox-thumbs class="fancybox-button fancybox-button--thumbs" title="{{THUMBS}}">' +
+				'<svg viewBox="0 0 120 120">' +
+					'<path d="M30,30 h14 v14 h-14 Z M50,30 h14 v14 h-14 Z M70,30 h14 v14 h-14 Z M30,50 h14 v14 h-14 Z M50,50 h14 v14 h-14 Z M70,50 h14 v14 h-14 Z M30,70 h14 v14 h-14 Z M50,70 h14 v14 h-14 Z M70,70 h14 v14 h-14 Z" />' +
+				'</svg>' +
+			'</button>'
+		},
+		thumbs : {
+			autoStart   : false,                  // Display thumbnails on opening
+			hideOnClose : true,                   // Hide thumbnail grid when closing animation starts
+			parentEl    : '.fancybox-container',  // Container is injected into this element
+			axis        : 'y'                     // Vertical (y) or horizontal (x) scrolling
+		}
+	}, $.fancybox.defaults);
+
+	var FancyThumbs = function( instance ) {
+		this.init( instance );
+	};
+
+	$.extend( FancyThumbs.prototype, {
+
+		$button		: null,
+		$grid		: null,
+		$list		: null,
+		isVisible	: false,
+		isActive	: false,
+
+		init : function( instance ) {
+			var self = this;
+
+			self.instance = instance;
+
+			instance.Thumbs = self;
+
+			// Enable thumbs if at least two group items have thumbnails
+			var first  = instance.group[0],
+				second = instance.group[1];
+
+			self.opts = instance.group[ instance.currIndex ].opts.thumbs;
+
+			self.$button = instance.$refs.toolbar.find( '[data-fancybox-thumbs]' );
+
+			if ( self.opts && first && second && (
+		    		( first.type == 'image'  || first.opts.thumb  || first.opts.$thumb ) &&
+		    		( second.type == 'image' || second.opts.thumb || second.opts.$thumb )
+			)) {
+
+				self.$button.show().on('click', function() {
+					self.toggle();
+				});
+
+				self.isActive = true;
+
+			} else {
+				self.$button.hide();
+			}
+		},
+
+		create : function() {
+			var self = this,
+				instance = self.instance,
+				parentEl = self.opts.parentEl,
+				list,
+				src;
+
+			self.$grid = $('<div class="fancybox-thumbs fancybox-thumbs-' + self.opts.axis + '"></div>').appendTo( instance.$refs.container.find( parentEl ).addBack().filter( parentEl ) );
+
+			// Build list HTML
+			list = '<ul>';
+
+			$.each(instance.group, function( i, item ) {
+				src = item.opts.thumb || ( item.opts.$thumb ? item.opts.$thumb.attr( 'src' ) : null );
+
+				if ( !src && item.type === 'image' ) {
+					src = item.src;
+				}
+
+				if ( src && src.length ) {
+					list += '<li data-index="' + i + '"  tabindex="0" class="fancybox-thumbs-loading"><img data-src="' + src + '" /></li>';
+				}
+			});
+
+			list += '</ul>';
+
+			self.$list = $( list ).appendTo( self.$grid ).on('click', 'li', function() {
+				instance.jumpTo( $(this).data('index') );
+			});
+
+			self.$list.find( 'img' ).hide().one('load', function() {
+				var $parent		= $(this).parent().removeClass( 'fancybox-thumbs-loading' ),
+					thumbWidth	= $parent.outerWidth(),
+					thumbHeight	= $parent.outerHeight(),
+					width,
+					height,
+					widthRatio,
+					heightRatio;
+
+				width  = this.naturalWidth	|| this.width;
+				height = this.naturalHeight	|| this.height;
+
+				// Calculate thumbnail dimensions; center vertically and horizontally
+				widthRatio  = width  / thumbWidth;
+				heightRatio = height / thumbHeight;
+
+				if (widthRatio >= 1 && heightRatio >= 1) {
+					if (widthRatio > heightRatio) {
+						width  = width / heightRatio;
+						height = thumbHeight;
+
+					} else {
+						width  = thumbWidth;
+						height = height / widthRatio;
+					}
+				}
+
+				$(this).css({
+					width         : Math.floor(width),
+					height        : Math.floor(height),
+					'margin-top'  : height > thumbHeight ? ( Math.floor(thumbHeight * 0.3 - height * 0.3 ) ) : Math.floor(thumbHeight * 0.5 - height * 0.5 ),
+					'margin-left' : Math.floor(thumbWidth * 0.5 - width * 0.5 )
+				}).show();
+
+			})
+			.each(function() {
+				this.src = $( this ).data( 'src' );
+			});
+
+			if ( self.opts.axis === 'x' ) {
+				self.$list.width( parseInt( self.$grid.css("padding-right") ) + ( instance.group.length * self.$list.children().eq(0).outerWidth(true) ) + 'px' );
+			}
+		},
+
+		focus : function( duration ) {
+			var self = this,
+				$list = self.$list,
+				thumb,
+				thumbPos;
+
+			if ( self.instance.current ) {
+				thumb = $list.children()
+					.removeClass( 'fancybox-thumbs-active' )
+					.filter('[data-index="' + self.instance.current.index  + '"]')
+					.addClass('fancybox-thumbs-active');
+
+				thumbPos = thumb.position();
+
+				// Check if need to scroll to make current thumb visible
+				if ( self.opts.axis === 'y' && ( thumbPos.top < 0 || thumbPos.top > ( $list.height() - thumb.outerHeight() ) ) ) {
+					$list.stop().animate({ 'scrollTop' : $list.scrollTop() + thumbPos.top }, duration);
+
+				} else if ( self.opts.axis === 'x' && (
+						thumbPos.left < $list.parent().scrollLeft() ||
+						thumbPos.left > ( $list.parent().scrollLeft() + ( $list.parent().width() - thumb.outerWidth() ) )
+					)
+				) {
+					$list.parent().stop().animate({ 'scrollLeft' : thumbPos.left }, duration);
+				}
+			}
+		},
+
+		update : function() {
+			this.instance.$refs.container.toggleClass( 'fancybox-show-thumbs', this.isVisible );
+
+			if ( this.isVisible ) {
+				if ( !this.$grid ) {
+					this.create();
+				}
+
+				this.instance.trigger( 'onThumbsShow' );
+
+				this.focus( 0 );
+
+			} else if ( this.$grid ) {
+				this.instance.trigger( 'onThumbsHide' );
+			}
+
+			// Update content position
+			this.instance.update();
+		},
+
+		hide : function() {
+			this.isVisible = false;
+			this.update();
+		},
+
+		show : function() {
+			this.isVisible = true;
+			this.update();
+		},
+
+		toggle : function() {
+			this.isVisible = !this.isVisible;
+			this.update();
+		}
+	});
+
+	$(document).on({
+
+		'onInit.fb' : function(e, instance) {
+			var Thumbs;
+
+			if ( instance && !instance.Thumbs ) {
+				Thumbs = new FancyThumbs( instance );
+
+				if ( Thumbs.isActive && Thumbs.opts.autoStart === true ) {
+					Thumbs.show();
+				}
+			}
+		},
+
+		'beforeShow.fb' : function(e, instance, item, firstRun) {
+			var Thumbs = instance && instance.Thumbs;
+
+			if ( Thumbs && Thumbs.isVisible ) {
+				Thumbs.focus( firstRun ? 0 : 250 );
+			}
+		},
+
+		'afterKeydown.fb' : function(e, instance, current, keypress, keycode) {
+			var Thumbs = instance && instance.Thumbs;
+
+			// "G"
+			if ( Thumbs && Thumbs.isActive && keycode === 71 ) {
+				keypress.preventDefault();
+
+				Thumbs.toggle();
+			}
+		},
+
+		'beforeClose.fb' : function( e, instance ) {
+			var Thumbs = instance && instance.Thumbs;
+
+			if ( Thumbs && Thumbs.isVisible && Thumbs.opts.hideOnClose !== false ) {
+				Thumbs.$grid.hide();
+			}
+		}
+
+	});
+
+}(document, window.jQuery));
+
+//// ==========================================================================
+//
+// Share
+// Displays simple form for sharing current url
+//
+// ==========================================================================
+;(function (document, $) {
+	'use strict';
+
+	$.extend(true, $.fancybox.defaults, {
+		btnTpl : {
+			share :
+				'<button data-fancybox-share class="fancybox-button fancybox-button--share" title="{{SHARE}}">' +
+					'<svg viewBox="0 0 40 40">' +
+						'<path d="M6,30 C8,18 19,16 23,16 L23,16 L23,10 L33,20 L23,29 L23,24 C19,24 8,27 6,30 Z">' +
+					'</svg>' +
+				'</button>'
+		},
+		share : {
+			tpl :
+				'<div class="fancybox-share">' +
+					'<h1>{{SHARE}}</h1>' +
+					'<p>' +
+						'<a href="https://www.facebook.com/sharer/sharer.php?u={{src}}" target="_blank" class="fancybox-share_button">' +
+							'<svg version="1.1" viewBox="0 0 32 32" fill="#3b5998"><path d="M27.6 3h-23.2c-.8 0-1.4.6-1.4 1.4v23.1c0 .9.6 1.5 1.4 1.5h12.5v-10.1h-3.4v-3.9h3.4v-2.9c0-3.4 2.1-5.2 5-5.2 1.4 0 2.7.1 3 .2v3.5h-2.1c-1.6 0-1.9.8-1.9 1.9v2.5h3.9l-.5 3.9h-3.4v10.1h6.6c.8 0 1.4-.6 1.4-1.4v-23.2c.1-.8-.5-1.4-1.3-1.4z"></path></svg>' +
+							'<span>Facebook</span>' +
+						'</a>' +
+						'<a href="https://www.pinterest.com/pin/create/button/?url={{src}}&amp;description={{descr}}" target="_blank" class="fancybox-share_button">' +
+							'<svg version="1.1" viewBox="0 0 32 32" fill="#c92228"><path d="M16 3c-7.2 0-13 5.8-13 13 0 5.5 3.4 10.2 8.3 12.1-.1-1-.2-2.6 0-3.7.2-1 1.5-6.5 1.5-6.5s-.4-.8-.4-1.9c0-1.8 1-3.2 2.4-3.2 1.1 0 1.6.8 1.6 1.8 0 1.1-.7 2.8-1.1 4.3-.3 1.3.6 2.3 1.9 2.3 2.3 0 4.1-2.4 4.1-6 0-3.1-2.2-5.3-5.4-5.3-3.7 0-5.9 2.8-5.9 5.6 0 1.1.4 2.3 1 3 .1.1.1.2.1.4-.1.4-.3 1.3-.4 1.5-.1.2-.2.3-.4.2-1.6-.8-2.6-3.1-2.6-5 0-4.1 3-7.9 8.6-7.9 4.5 0 8 3.2 8 7.5 0 4.5-2.8 8.1-6.7 8.1-1.3 0-2.6-.7-3-1.5 0 0-.7 2.5-.8 3.1-.3 1.1-1.1 2.5-1.6 3.4 1.2.4 2.5.6 3.8.6 7.2 0 13-5.8 13-13 0-7.1-5.8-12.9-13-12.9z"></path></svg>' +
+							'<span>Pinterest</span>' +
+						'</a>' +
+						'<a href="https://twitter.com/intent/tweet?url={{src}}&amp;text={{descr}}" target="_blank" class="fancybox-share_button">' +
+							'<svg version="1.1" viewBox="0 0 32 32" fill="#1da1f2"><path d="M30 7.3c-1 .5-2.1.8-3.3.9 1.2-.7 2.1-1.8 2.5-3.2-1.1.7-2.3 1.1-3.6 1.4-1-1.1-2.5-1.8-4.2-1.8-3.2 0-5.7 2.6-5.7 5.7 0 .5.1.9.1 1.3-4.8-.2-9-2.5-11.8-6-.5.9-.8 1.9-.8 3 0 2 1 3.8 2.6 4.8-.9 0-1.8-.3-2.6-.7v.1c0 2.8 2 5.1 4.6 5.6-.5.1-1 .2-1.5.2-.4 0-.7 0-1.1-.1.7 2.3 2.9 3.9 5.4 4-2 1.5-4.4 2.5-7.1 2.5-.5 0-.9 0-1.4-.1 2.5 1.6 5.6 2.6 8.8 2.6 10.6 0 16.3-8.8 16.3-16.3v-.7c1.1-1 2-2 2.8-3.2z"></path></svg>' +
+							'<span>Twitter</span>' +
+						'</a>' +
+					'</p>' +
+					'<p><input type="text" value="{{src_raw}}" onfocus="this.select()" /></p>' +
+				'</div>'
+		}
+	});
+
+	function escapeHtml(string) {
+		var entityMap = {
+		  '&': '&amp;',
+		  '<': '&lt;',
+		  '>': '&gt;',
+		  '"': '&quot;',
+		  "'": '&#39;',
+		  '/': '&#x2F;',
+		  '`': '&#x60;',
+		  '=': '&#x3D;'
+		};
+
+		return String(string).replace(/[&<>"'`=\/]/g, function (s) {
+			return entityMap[s];
+		});
+	}
+
+	$(document).on('click', '[data-fancybox-share]', function() {
+		var f = $.fancybox.getInstance(),
+			url,
+			tpl;
+
+		if ( f ) {
+			url = f.current.opts.hash === false ? f.current.src : window.location;
+			tpl = f.current.opts.share.tpl
+					.replace( /\{\{src\}\}/g, encodeURIComponent( url ) )
+					.replace( /\{\{src_raw\}\}/g, escapeHtml( url ) )
+					.replace( /\{\{descr\}\}/g, f.$caption ? encodeURIComponent( f.$caption.text() ) : '' );
+
+			$.fancybox.open({
+				src  : f.translate( f, tpl ),
+				type : 'html',
+				opts : {
+					animationEffect   : "fade",
+					animationDuration : 250
+				}
+			});
+		}
+
+	});
+
+}( document, window.jQuery || jQuery ));
+
+// ==========================================================================
+//
+// Hash
+// Enables linking to each modal
+//
+// ==========================================================================
+;(function (document, window, $) {
+	'use strict';
+
+	// Simple $.escapeSelector polyfill (for jQuery prior v3)
+	if ( !$.escapeSelector ) {
+		$.escapeSelector = function( sel ) {
+			var rcssescape = /([\0-\x1f\x7f]|^-?\d)|^-$|[^\x80-\uFFFF\w-]/g;
+			var fcssescape = function( ch, asCodePoint ) {
+				if ( asCodePoint ) {
+					// U+0000 NULL becomes U+FFFD REPLACEMENT CHARACTER
+					if ( ch === "\0" ) {
+						return "\uFFFD";
+					}
+
+					// Control characters and (dependent upon position) numbers get escaped as code points
+					return ch.slice( 0, -1 ) + "\\" + ch.charCodeAt( ch.length - 1 ).toString( 16 ) + " ";
+				}
+
+				// Other potentially-special ASCII characters get backslash-escaped
+				return "\\" + ch;
+			};
+
+			return ( sel + "" ).replace( rcssescape, fcssescape );
+		};
+	}
+
+	// Create new history entry only once
+	var shouldCreateHistory = true;
+
+	// Variable containing last hash value set by fancyBox
+	// It will be used to determine if fancyBox needs to close after hash change is detected
+    var currentHash = null;
+
+	// Throttling the history change
+	var timerID = null;
+
+	// Get info about gallery name and current index from url
+    function parseUrl() {
+        var hash    = window.location.hash.substr( 1 );
+        var rez     = hash.split( '-' );
+        var index   = rez.length > 1 && /^\+?\d+$/.test( rez[ rez.length - 1 ] ) ? parseInt( rez.pop( -1 ), 10 ) || 1 : 1;
+        var gallery = rez.join( '-' );
+
+		// Index is starting from 1
+		if ( index < 1 ) {
+			index = 1;
+		}
+
+        return {
+            hash    : hash,
+            index   : index,
+            gallery : gallery
+        };
+    }
+
+	// Trigger click evnt on links to open new fancyBox instance
+	function triggerFromUrl( url ) {
+		var $el;
+
+        if ( url.gallery !== '' ) {
+
+			// If we can find element matching 'data-fancybox' atribute, then trigger click event for that ..
+			$el = $( "[data-fancybox='" + $.escapeSelector( url.gallery ) + "']" ).eq( url.index - 1 );
+
+            if ( !$el.length ) {
+				// .. if not, try finding element by ID
+				$el = $( "#" + $.escapeSelector( url.gallery ) + "" );
+			}
+
+			if ( $el.length ) {
+				shouldCreateHistory = false;
+
+				$el.trigger( 'click' );
+			}
+
+        }
+	}
+
+	// Get gallery name from current instance
+	function getGalleryID( instance ) {
+		var opts;
+
+		if ( !instance ) {
+			return false;
+		}
+
+		opts = instance.current ? instance.current.opts : instance.opts;
+
+		return opts.hash || ( opts.$orig ? opts.$orig.data( 'fancybox' ) : ''  );
+	}
+
+	// Start when DOM becomes ready
+    $(function() {
+
+		// Check if user has disabled this module
+		if ( $.fancybox.defaults.hash === false ) {
+			return;
+		}
+
+		// Update hash when opening/closing fancyBox
+	    $(document).on({
+			'onInit.fb' : function( e, instance ) {
+				var url, gallery;
+
+				if ( instance.group[ instance.currIndex ].opts.hash === false ) {
+					return;
+				}
+
+				url     = parseUrl();
+				gallery = getGalleryID( instance );
+
+				// Make sure gallery start index matches index from hash
+				if ( gallery && url.gallery && gallery == url.gallery ) {
+					instance.currIndex = url.index - 1;
+				}
+			},
+
+			'beforeShow.fb' : function( e, instance, current ) {
+				var gallery;
+
+				if ( !current || current.opts.hash === false ) {
+					return;
+				}
+
+	            gallery = getGalleryID( instance );
+
+	            // Update window hash
+	            if ( gallery && gallery !== '' ) {
+
+					if ( window.location.hash.indexOf( gallery ) < 0 ) {
+		                instance.opts.origHash = window.location.hash;
+		            }
+
+					currentHash = gallery + ( instance.group.length > 1 ? '-' + ( current.index + 1 ) : '' );
+
+					if ( 'replaceState' in window.history ) {
+						if ( timerID ) {
+							clearTimeout( timerID );
+						}
+
+						timerID = setTimeout(function() {
+							window.history[ shouldCreateHistory ? 'pushState' : 'replaceState' ]( {} , document.title, window.location.pathname + window.location.search + '#' +  currentHash );
+
+							timerID = null;
+
+							shouldCreateHistory = false;
+
+						}, 300);
+
+					} else {
+						window.location.hash = currentHash;
+					}
+
+	            }
+
+	        },
+
+			'beforeClose.fb' : function( e, instance, current ) {
+				var gallery, origHash;
+
+				if ( timerID ) {
+					clearTimeout( timerID );
+				}
+
+				if ( current.opts.hash === false ) {
+					return;
+				}
+
+				gallery  = getGalleryID( instance );
+				origHash = instance && instance.opts.origHash ? instance.opts.origHash : '';
+
+	            // Remove hash from location bar
+	            if ( gallery && gallery !== '' ) {
+
+	                if ( 'replaceState' in history ) {
+						window.history.replaceState( {} , document.title, window.location.pathname + window.location.search + origHash );
+
+	                } else {
+						window.location.hash = origHash;
+
+						// Keep original scroll position
+						$( window ).scrollTop( instance.scrollTop ).scrollLeft( instance.scrollLeft );
+	                }
+	            }
+
+				currentHash = null;
+	        }
+	    });
+
+		// Check if need to close after url has changed
+		$(window).on('hashchange.fb', function() {
+			var url = parseUrl();
+
+			if ( $.fancybox.getInstance() ) {
+				if ( currentHash && currentHash !== url.gallery + '-' + url.index && !( url.index === 1 && currentHash == url.gallery ) ) {
+					currentHash = null;
+
+					$.fancybox.close();
+				}
+
+			} else if ( url.gallery !== '' ) {
+				triggerFromUrl( url );
+			}
+		});
+
+		// Check current hash and trigger click event on matching element to start fancyBox, if needed
+		setTimeout(function() {
+			triggerFromUrl( parseUrl() );
+		}, 50);
+    });
+
+}( document, window, window.jQuery || jQuery ));
 
 (function(r){"object"===typeof exports&&"undefined"!==typeof module?module.exports=r():"function"===typeof define&&define.amd?define([],r):("undefined"!==typeof window?window:"undefined"!==typeof global?global:"undefined"!==typeof self?self:this).SmartBanner=r()})(function(){return function b(g,f,e){function c(d,n){if(!f[d]){if(!g[d]){var k="function"==typeof require&&require;if(!n&&k)return k(d,!0);if(a)return a(d,!0);k=Error("Cannot find module '"+d+"'");throw k.code="MODULE_NOT_FOUND",k;}k=f[d]=
 {exports:{}};g[d][0].call(k.exports,function(a){var e=g[d][1][a];return c(e?e:a)},k,k.exports,b,g,f,e)}return f[d].exports}for(var a="function"==typeof require&&require,d=0;d<e.length;d++)c(e[d]);return c}({1:[function(b,g,f){var e=b("xtend/mutable"),c=b("component-query"),a=b("get-doc"),d=a&&a.documentElement,p=b("cookie-cutter"),n=b("ua-parser-js"),k=(navigator.language||navigator.userLanguage||navigator.browserLanguage).slice(-2)||"us",l={ios:{appMeta:"apple-itunes-app",iconRels:["apple-touch-icon-precomposed",
@@ -36715,7 +39849,7 @@ angular.module('ngSanitize').filter('linky', ['$sanitize', function($sanitize) {
 })(window, window.angular);
 
 /*
- AngularJS v1.6.5
+ AngularJS v1.6.6
  (c) 2010-2017 Google, Inc. http://angularjs.org
  License: MIT
 */
@@ -36727,7 +39861,7 @@ e=!a[c]||a[c+"-remove"]):-1===b&&(d="removeClass",e=a[c]||a[c+"-add"]);e&&(f[d].
 b){a.style[b[0]]=b[1]}function ca(a,b){return a?b?a+" "+b:a:b}function Ja(a,b,c){var d=Object.create(null),e=a.getComputedStyle(b)||{};t(c,function(a,b){var c=e[a];if(c){var l=c.charAt(0);if("-"===l||"+"===l||0<=l)c=Va(c);0===c&&(c=null);d[b]=c}});return d}function Va(a){var b=0;a=a.split(/\s*,\s*/);t(a,function(a){"s"===a.charAt(a.length-1)&&(a=a.substring(0,a.length-1));a=parseFloat(a)||0;b=b?Math.max(a,b):a});return b}function xa(a){return 0===a||null!=a}function Ka(a,b){var c=Q,d=a+"s";b?c+="Duration":
 d+=" linear all";return[c,d]}function La(){var a=Object.create(null);return{flush:function(){a=Object.create(null)},count:function(b){return(b=a[b])?b.total:0},get:function(b){return(b=a[b])&&b.value},put:function(b,c){a[b]?a[b].total++:a[b]={total:1,value:c}}}}function Ma(a,b,c){t(c,function(c){a[c]=ya(a[c])?a[c]:b.style.getPropertyValue(c)})}var Q,za,Y,Aa;void 0===S.ontransitionend&&void 0!==S.onwebkittransitionend?(Q="WebkitTransition",za="webkitTransitionEnd transitionend"):(Q="transition",za=
 "transitionend");void 0===S.onanimationend&&void 0!==S.onwebkitanimationend?(Y="WebkitAnimation",Aa="webkitAnimationEnd animationend"):(Y="animation",Aa="animationend");var qa=Y+"Delay",Ba=Y+"Duration",la=Q+"Delay",Na=Q+"Duration",Pa=q.$$minErr("ng"),Wa={transitionDuration:Na,transitionDelay:la,transitionProperty:Q+"Property",animationDuration:Ba,animationDelay:qa,animationIterationCount:Y+"IterationCount"},Xa={transitionDuration:Na,transitionDelay:la,animationDuration:Ba,animationDelay:qa},Ca,va,
-t,V,ya,Z,Da,ra,C,P,A,O;q.module("ngAnimate",[],function(){O=q.noop;Ca=q.copy;va=q.extend;A=q.element;t=q.forEach;V=q.isArray;C=q.isString;ra=q.isObject;P=q.isUndefined;ya=q.isDefined;Da=q.isFunction;Z=q.isElement}).info({angularVersion:"1.6.5"}).directive("ngAnimateSwap",["$animate","$rootScope",function(a,b){return{restrict:"A",transclude:"element",terminal:!0,priority:600,link:function(b,d,e,f,n){var G,l;b.$watchCollection(e.ngAnimateSwap||e["for"],function(e){G&&a.leave(G);l&&(l.$destroy(),l=null);
+t,V,ya,Z,Da,ra,C,P,A,O;q.module("ngAnimate",[],function(){O=q.noop;Ca=q.copy;va=q.extend;A=q.element;t=q.forEach;V=q.isArray;C=q.isString;ra=q.isObject;P=q.isUndefined;ya=q.isDefined;Da=q.isFunction;Z=q.isElement}).info({angularVersion:"1.6.6"}).directive("ngAnimateSwap",["$animate","$rootScope",function(a,b){return{restrict:"A",transclude:"element",terminal:!0,priority:600,link:function(b,d,e,f,n){var G,l;b.$watchCollection(e.ngAnimateSwap||e["for"],function(e){G&&a.leave(G);l&&(l.$destroy(),l=null);
 if(e||0===e)l=b.$new(),n(l,function(b){G=b;a.enter(b,null,d)})})}}}]).directive("ngAnimateChildren",["$interpolate",function(a){return{link:function(b,c,d){function e(a){c.data("$$ngAnimateChildren","on"===a||"true"===a)}var f=d.ngAnimateChildren;C(f)&&0===f.length?c.data("$$ngAnimateChildren",!0):(e(a(f)(b)),d.$observe("ngAnimateChildren",e))}}}]).factory("$$rAFScheduler",["$$rAF",function(a){function b(a){d=d.concat(a);c()}function c(){if(d.length){for(var b=d.shift(),n=0;n<b.length;n++)b[n]();
 e||a(function(){e||c()})}}var d,e;d=b.queue=[];b.waitUntilQuiet=function(b){e&&e();e=a(function(){e=null;b();c()})};return b}]).provider("$$animateQueue",["$animateProvider",function(a){function b(a){if(!a)return null;a=a.split(" ");var b=Object.create(null);t(a,function(a){b[a]=!0});return b}function c(a,c){if(a&&c){var d=b(c);return a.split(" ").some(function(a){return d[a]})}}function d(a,b,c){return f[a].some(function(a){return a(b,c)})}function e(a,b){var c=0<(a.addClass||"").length,d=0<(a.removeClass||
 "").length;return b?c&&d:c||d}var f=this.rules={skip:[],cancel:[],join:[]};f.join.push(function(a,b){return!a.structural&&e(a)});f.skip.push(function(a,b){return!a.structural&&!e(a)});f.skip.push(function(a,b){return"leave"===b.event&&a.structural});f.skip.push(function(a,b){return b.structural&&2===b.state&&!a.structural});f.cancel.push(function(a,b){return b.structural&&a.structural});f.cancel.push(function(a,b){return 2===b.state&&a.structural});f.cancel.push(function(a,b){if(b.structural)return!1;
@@ -65744,7 +68878,8 @@ var myApp = angular.module('myApp', [
     'ngIdle',
     'app.directives',
     'voiceRss',
-    'jlareau.bowser'
+    'jlareau.bowser',
+    // 'angular-intro'
 ]);
 //angular.module('manage', ['ngResource']);
 // Define all the routes below
@@ -65768,7 +68903,27 @@ myApp.config(function ($stateProvider, $urlRouterProvider, $httpProvider, $locat
         .state('dashboard', {
             url: "/dashboard",
             templateUrl: tempateURL,
-            controller: 'DashboardCtrl'
+            controller: 'Dashboard5Ctrl'
+        })
+        .state('dashboard2', {
+            url: "/dashboard2",
+            templateUrl: tempateURL,
+            controller: 'Dashboard2Ctrl'
+        })
+        .state('dashboard3', {
+            url: "/dashboard3",
+            templateUrl: tempateURL,
+            controller: 'Dashboard3Ctrl'
+        })
+        .state('dashboard4', {
+            url: "/dashboard4",
+            templateUrl: tempateURL,
+            controller: 'Dashboard4Ctrl'
+        })
+        .state('dashboard5', {
+            url: "/dashboard5",
+            templateUrl: tempateURL,
+            controller: 'Dashboard5Ctrl'
         })
         .state('agentdashboard', {
             url: "/agentdashboard",
@@ -65809,7 +68964,7 @@ myApp.run(['$http', 'CSRF_TOKEN', function($http, CSRF_TOKEN) {
 }]);*/
 
 
-myApp.run(['$http','$cookies','beforeUnload','$document','$rootScope','Idle','bowser','Menuservice', function run(  $http, $cookies,beforeUnload,$document,$rootScope,Idle,bowser,Menuservice ){
+myApp.run(['$http','$cookies','beforeUnload','$document','$rootScope','Idle','bowser','Menuservice','$timeout', function run(  $http, $cookies,beforeUnload,$document,$rootScope,Idle,bowser,Menuservice,$timeout ){
     // For CSRF token compatibility with Django
     
     //$http.defaults.xsrfCookieName = 'csrftoken';
@@ -65840,15 +68995,17 @@ myApp.run(['$http','$cookies','beforeUnload','$document','$rootScope','Idle','bo
     
     $rootScope.transcript="";
     $rootScope.tabvalue={};
-    //$rotated = false;
-
+    $rootScope.rotated = false;
+    
+    
     $(document).on('click', '.chat-body .changedthbg', function(){ 
         var stage = $(this).attr("data-bgstage");
         $(".stage"+stage).css('background-color','#eee');
         $(".stage"+stage).css('color','#1e90ff');
-        
-        $(this).css('background-color', '#003874');
+        $(".stage"+stage+' .lefticon').hide();
+        $(this).css('background-color', '#003366');
         $(this).css('color', '#fff');
+        $(this).find(".lefticon").show();
     });     
     $(document).on('click', '.toggler', function(){ 
         $(this).parent().children('ul.tree').toggle(300);
@@ -65886,6 +69043,18 @@ myApp.run(['$http','$cookies','beforeUnload','$document','$rootScope','Idle','bo
     //     //$('.mini-submenu').hide();
     // });
     angular.element(document).ready(function () {
+        // $timeout(function(){
+        //     // $('.c-hamburger span').css("transform", "rotate(90deg)");				
+        //     // $('.c-hamburger span').css("transition", "transform 1.2s ease");
+        //     // $(".c-hamburger").animate({'background-color': '#FF0000'}, 'fast');
+        //     $('.list-group').toggle('slide');
+        //     $rootScope.rotated = true;
+        //     $('.expandable').removeClass('col-lg-9').addClass('col-lg-12');
+        //     $('.expandable2').removeClass('col-lg-5').addClass('col-lg-8');
+            
+        // },1000);
+        
+
         $(document).on('click', '#address_change', function(){ 
             $rootScope.openContentModal('Address_Change');
         });
@@ -65898,6 +69067,9 @@ myApp.run(['$http','$cookies','beforeUnload','$document','$rootScope','Idle','bo
         $(document).on('click', '.name_mismatch_table', function(){ 
             $rootScope.openContentModal('name_mismatch_table');
         });
+        
+
+        
         
     });   
     $(document).on('click', '.faqques a', function(){ 
@@ -65926,33 +69098,105 @@ myApp.run(['$http','$cookies','beforeUnload','$document','$rootScope','Idle','bo
         // $("#topiclist li").show();
         $(".searchTerm").val("");
     };
-    $(document).on('click', '.c-hamburger', function(){ 
+    //$(document).on('click', '.c-hamburger', function(){
+    $(document).on('click', '.c-hamburger', function(){
     //$('.c-hamburger').click(function(){
         //console.log("menu click");
-        if($rotated == false) 
-        {
-            $('.c-hamburger span').css("transform", "rotate(90deg)");				
-            $('.c-hamburger span').css("transition", "transform 1.2s ease");
-            $(this).animate({'background-color': '#ed1c24'}, 'fast');
-            //$('.list-group').show("slide", { direction: "left" }, 1000);
-            $('.list-group').toggle('slide');
-            $rotated = true;
-            $('.expandable').removeClass('col-lg-9').addClass('col-lg-12');
-            $('.expandable2').removeClass('col-lg-5').addClass('col-lg-8');
-        }
-        else
+        // if($rootScope.rotated == false) 
+        // {
+        //     $('.c-hamburger span').css("transform", "rotate(90deg)");				
+        //     $('.c-hamburger span').css("transition", "transform 1.2s ease");
+        //     $(this).animate({'background-color': '#FF0000'}, 'fast');
+        //     //$('.list-group').show("slide", { direction: "left" }, 1000);
+        //     $('.list-group').toggle('slide');
+        //     $rootScope.rotated = true;
+        //     $('.expandable').removeClass('col-lg-9').addClass('col-lg-12');
+        //     $('.expandable2').removeClass('col-lg-5').addClass('col-lg-8');
+        // }
+        // else
         {	
-            $('.expandable').removeClass('col-lg-12').addClass('col-lg-9');
-            $('.expandable2').removeClass('col-lg-8').addClass('col-lg-5');
-            $('.c-hamburger span').css("transform", "rotate(0deg)");				
-            $('.c-hamburger span').css("transition", "transform 1.2s ease");
-            $(this).animate({'background-color': '#003874'}, 'fast');
-            //$('.list-group').hide("slide", { direction: "left" }, 1000);
-            $('.list-group').toggle('slide');
-            $rotated = false;
+            $rootScope.rotateoutmenu();
         }
-        console.log($rotated);
+        
     });
+    $rootScope.rotateoutmenu = function() {
+        // if($rootScope.rotated)
+        // {
+        //     $timeout(function(){
+        //         $('.expandable').removeClass('col-lg-12').addClass('col-lg-9');
+        //         $('.expandable2').removeClass('col-lg-8').addClass('col-lg-5');
+        //         $('.c-hamburger span').css("transform", "rotate(0deg)");				
+        //         $('.c-hamburger span').css("transition", "transform 1.2s ease");
+        //         $(".c-hamburger").animate({'background-color': '#003366'}, 'fast');
+        //         //$('.list-group').hide("slide", { direction: "left" }, 1000);
+        //         $('.list-group').toggle('slide');
+        //         $rootScope.rotated = false;
+        //     });
+        // }
+        // $('#nav-icon1,#nav-icon2,#nav-icon3,#nav-icon4').click(function(){
+            $("#nav-icon1").toggleClass('open');
+        // });
+        if($(".template.content").find('.expandable2').length == 1)
+        {
+           
+            if($(".expandable2").hasClass('col-lg-8'))
+            {
+                $timeout(function(){
+                    $('.expandable').removeClass('col-lg-12').addClass('col-lg-9');
+                    $('.expandable2').removeClass('col-lg-8').addClass('col-lg-5');
+                    // $('.c-hamburger span').css("transform", "rotate(0deg)");				
+                    // $('.c-hamburger span').css("transition", "transform 1.2s ease");
+                    //$(".c-hamburger").animate({'background-color': '#003366'}, 'fast');
+                    $('.list-group').toggle('slide');
+                    
+                    $rootScope.rotated = true;
+                });
+            }
+            else {
+                $timeout(function(){
+                    $('.expandable').removeClass('col-lg-9').addClass('col-lg-12');
+                    $('.expandable2').removeClass('col-lg-5').addClass('col-lg-8');
+
+                    // $('.c-hamburger span').css("transform", "rotate(90deg)");				
+                    // $('.c-hamburger span').css("transition", "transform 1.2s ease");
+                    //$(".c-hamburger").animate({'background-color': '#FF0000'}, 'fast');
+
+                    $('.list-group').toggle('slide');
+                    $rootScope.rotated = false;    
+                });
+                
+                
+            }
+        }
+        else if($(".template.content").find('.expandable').length == 1)
+        {
+            if($(".expandable").hasClass('col-lg-12'))
+            {
+                $timeout(function(){
+                    $('.expandable').removeClass('col-lg-12').addClass('col-lg-9');
+                    // $('.c-hamburger span').css("transform", "rotate(0deg)");				
+                    // $('.c-hamburger span').css("transition", "transform 1.2s ease");
+                    // $(".c-hamburger").animate({'background-color': '#003366'}, 'fast');
+                    $('.list-group').toggle('slide');
+                    $rootScope.rotated = false;
+                });
+            }
+            else {
+                $timeout(function(){
+                    $('.expandable').removeClass('col-lg-9').addClass('col-lg-12');
+                    
+                    // $('.c-hamburger span').css("transform", "rotate(90deg)");				
+                    // $('.c-hamburger span').css("transition", "transform 1.2s ease");
+                    // $(".c-hamburger").animate({'background-color': '#FF0000'}, 'fast');
+
+                    $('.list-group').toggle('slide');
+                    $rootScope.rotated = false;    
+                });
+                
+                
+            }
+        }
+    };
          Idle.watch();
         $document.on("keydown", function(e) {
             if(e.ctrlKey && (e.key == "p" || e.charCode == 16 || e.charCode == 112 || e.keyCode == 80) ){
@@ -66050,9 +69294,13 @@ myApp.run(['$http','$cookies','beforeUnload','$document','$rootScope','Idle','bo
         //console.clear();
         //document.querySelector('#devtool-status').innerHTML = checkStatus;
     }, 1000);
-    // io.sails.url = 'http://localhost:1337';
-    // //io.sails.autoConnect = false;
-    // io.sails.useCORSRouteToGetCookie = false;
+    io.sails.url = 'http://exponentiadata.co.in:9161';
+    //io.sails = {url: "http://exponentiadata.co.in:9161",};
+    //io(io.sails.url);
+    //io.sails.connect(io.sails.url);
+    //io.sails.set('origins', 'http://exponentiadata.co.in:9161');
+    io.sails.autoConnect = true;
+    io.sails.useCORSRouteToGetCookie = true;
     angular.element(document).ready(function() {
         new WOW().init();
     });
@@ -66160,7 +69408,12 @@ myApp.directive('img', function ($compile, $parse) {
                     closeBtn: true,
                     padding: 0,
                     helpers: {
-                        media: {}
+                        media: {},
+                        title: {
+                            type: 'inside',
+                            position: 'bottom'
+                        },
+                        //buttons   : {}
                     }
                 });
             }
@@ -66244,7 +69497,25 @@ myApp.directive('img', function ($compile, $parse) {
             }
         }
     })
-   
+    .directive('parseUrl', function () {
+        //var urlPattern = /(http|ftp|https):\/\/[\w-]+(\.[\w-]+)+([\w.,@?^=%&amp;:\/~+#-]*[\w@?^=%&amp;\/~+#-])?/gi;
+        var urlPattern ="/^[a-zA-Z0-9]*$/";
+        return {
+            restrict: 'A',
+            require: 'ngModel',
+            replace: true,
+            scope: {
+                props: '=parseUrl',
+                ngModel: '=ngModel'
+            },
+            link: function compile(scope, element, attrs, controller) {
+                scope.$watch('ngModel', function (value) {
+                    var html = value.replace(urlPattern, '<a target="' + scope.props.target + '" href="$&">$&</a>') + " | " + scope.props.otherProp;
+                    element.html(html);
+                });
+            }
+        };
+    })
     myApp.directive('ngRightClick', function($parse) {
         return function(scope, element, attrs) {
             var fn = $parse(attrs.ngRightClick);
@@ -67733,9 +71004,9 @@ myApp.factory('NavigationService', function ($http) {
 });
 myApp.factory('apiService', function ($http, $q, $timeout,CsrfTokenService,$httpParamSerializer) {
     //adminurl = "http://wohlig.co.in/chatbotapi/index.php/json/";
-    adminurl = "http://104.46.103.162:8097/";
+    adminurl = "http://exponentiadata.co.in:8097/";
     var adminUrl2 = "http://wohlig.io/api/";
-    var adminUrl3 = "http://104.46.103.162:8001/api/"
+    var adminUrl3 = "http://exponentiadata.co.in:8001/api/"
     //var adminUrl3 = "http://localhost/api/";
     //return
     return {
@@ -67762,6 +71033,42 @@ myApp.factory('apiService', function ($http, $q, $timeout,CsrfTokenService,$http
                 method: 'POST',
                 data: formData
             })
+        },
+        saveagentchat:function(formData, callback) {
+            
+            return $http({
+                url:adminUrl3+ "Agentchat/savechat",
+                method: 'POST',
+                data: formData,
+            });
+           
+        },
+        setdisconnectsocket:function(formData, callback) {
+            
+            return $http({
+                url:adminUrl3+ "Agentchat/setdisconnectsocket",
+                method: 'POST',
+                data: formData,
+            });
+           
+        },
+		getguidelinedata:function(formData, callback) {
+            
+            return $http({
+                url:adminUrl3+ "Guidelines/getdetail",
+                method: 'POST',
+                data: formData,
+            });
+           
+        },
+        disconnectuser:function(formData, callback) {
+            
+            return $http({
+                url:adminUrl3+ "Agentchat/disconnectuser",
+                method: 'POST',
+                data: formData,
+            });
+           
         },
         login:function(formData, callback) {
             
@@ -67859,7 +71166,7 @@ myApp.factory('apiService', function ($http, $q, $timeout,CsrfTokenService,$http
         ratecardsubmit : function(formData,callback){
             console.log(formData);
             return    $http({
-                url:adminurl+'outRateCard/'+formData.user_id+"/",
+                url:adminurl+'outratecard/'+formData.user_id+"/",
                 //url: adminUrl3 + 'Chatbotautolist/getSysMsg',
                 method: 'POST',
                 data:$.param(formData),
@@ -67881,11 +71188,25 @@ myApp.factory('apiService', function ($http, $q, $timeout,CsrfTokenService,$http
         },
         getDthlinkRes:function(formData,callback){
             //console.log(formData);
+            
             return    $http({
                 url:adminurl+'outDTL/'+formData.user_id+"/",
                 //url: adminUrl3 + 'Chatbotautolist/getDthlink',
                 method: 'POST',
-                data:$.param(formData),
+                data:$httpParamSerializer(formData),
+                headers: {'Content-Type': 'application/x-www-form-urlencoded;charset=utf-8','X-CSRFToken':formData.csrfmiddlewaretoken },
+            });
+            
+            
+        },
+        outprocess:function(formData,callback){
+            //console.log(formData);
+            
+            return    $http({
+                url:adminurl+'outprocess/'+formData.user_id+"/",
+                //url: adminUrl3 + 'Chatbotautolist/getDthlink',
+                method: 'POST',
+                data:$httpParamSerializer(formData),
                 headers: {'Content-Type': 'application/x-www-form-urlencoded;charset=utf-8','X-CSRFToken':formData.csrfmiddlewaretoken },
             });
             
@@ -68034,12 +71355,12 @@ myApp.factory('Menuservice', function($rootScope,$http, $q, $timeout,apiService,
 var globalLocale = moment.locale('hi');
 var localLocale = moment();
 
-myApp.controller('HomeCtrl', function ($scope,$rootScope, TemplateService, NavigationService,CsrfTokenService,Menuservice, $timeout,$http,apiService,$state,$cookies) {
+myApp.controller('HomeCtrl', function ($scope,$rootScope, TemplateService, NavigationService,CsrfTokenService,Menuservice, $timeout,$http,apiService,$state,$cookies,$location) {
         $scope.template = TemplateService.getHTML("content/home.html");
         TemplateService.title = "Home"; //This is the Title of the Website
         $scope.navigation = NavigationService.getNavigation();
 
-        $scope.uipage = "home";
+        $rootScope.uipage = "home";
         $scope.mySlides = [
             'http://flexslider.woothemes.com/images/kitchen_adventurer_cheesecake_brownie.jpg',
             'http://flexslider.woothemes.com/images/kitchen_adventurer_lemon.jpg',
@@ -68048,12 +71369,38 @@ myApp.controller('HomeCtrl', function ($scope,$rootScope, TemplateService, Navig
         ];
         angular.element(document).ready(function() {
             new WOW().init();
+            if(!$rootScope.rotated)
+            {
+                $timeout(function(){
+                    $rootScope.rotateoutmenu();
+                },500);   
+            }
+                //$( ".c-hamburger" ).trigger( "click" ); 
+                
         });
-        angular.element(document).ready(function () {
+        $rootScope.newuser = function() {
             apiService.get_session({}).then( function (response) {
                 $cookies.put("csrftoken",response.data.csrf_token);
                 $cookies.put("session_id",response.data.session_id);
                 $.jStorage.set("csrftoken",response.data.csrf_token);
+                $rootScope.session_id =response.data.session_id;
+                $rootScope.chatlist = [];
+                //console.log(response.data);
+            });
+        };
+        angular.element(document).ready(function () {
+            $scope.setdisconnectsocket = function(){
+                var formData= {from_id:$.jStorage.get("id")};
+                apiService.setdisconnectsocket(formData).then(function (data){
+
+                });
+            };
+            $scope.setdisconnectsocket();
+            apiService.get_session({}).then( function (response) {
+                $cookies.put("csrftoken",response.data.csrf_token);
+                $cookies.put("session_id",response.data.session_id);
+                $.jStorage.set("csrftoken",response.data.csrf_token);
+                $rootScope.session_id =response.data.session_id;
                 //console.log(response.data);
             });
             var mydiv = "Hello How are you <blargh src='image.jpg' /> see you tomorrow";
@@ -68073,7 +71420,189 @@ myApp.controller('HomeCtrl', function ($scope,$rootScope, TemplateService, Navig
             // var imgs = $("<div>" +str +"</div>").find("img"); 
             // console.log(imgs);
             // console.log(str);
+            if($rootScope.uipage =='login'  && !angular.isUndefined($rootScope.uipage))
+            $rootScope.showChatwindow();
         });
+        
+        var tour = {
+            id: "header",
+            showPrevButton: true,
+            showNextButton: true,
+            steps: [
+                {
+                    title: "News",
+                    content: "News",
+                    target: 'marquee',
+                    placement: "bottom"
+                },
+                {
+                    title: "Chat",
+                    content: "This is the header of my page.",
+                    target:"div#chatImage",
+                    placement: "left",
+                    fixedElement:true,
+                    delay:1000,
+                    onNext:function(){
+                        $rootScope.showChatwindow();
+                    }
+                    // yOffset: 30,
+                    // xOffset: '50',
+                    // arrowOffset: 'center'
+                },
+                {
+                    title: "Start chatting",
+                    content: "Begin conversation",
+                    target: 'input#userMsg',
+                    placement: "top",
+                    delay:1000,
+                    onPrev:function(){
+                        $rootScope.minimizeChatwindow();
+                    }
+                },
+                
+            ]
+        };
+
+        // Start the tour!
+        
+        // $scope.IntroOptions = {
+        //     steps:[
+        //     {
+        //         element: document.querySelector('#stepclick1'),
+        //         intro: "Click here to begin.",
+        //         position: 'top',
+        //         onchange: function(){
+        //             //do something interesting here...
+        //             overlay = document.getElementsByClassName("introjs-tooltip");
+        //             for(i=0; i<overlay.length; i++) {
+        //                 overlay[i].style.bottom = '10px';
+        //                 overlay[i].style.right = '10px';
+        //                 overlay[i].style.position = 'fixed';
+        //                 //Set css properties like this.
+        //                 console.log(targetElement);
+        //             }
+        //             $rootScope.showChatwindow();
+        //         },
+                
+        //     },
+        //     {
+        //         element: document.querySelectorAll('#chat_window_1')[0],
+        //         intro: "<strong>You</strong> can also <em>include</em> HTML",
+        //         position: 'right'
+        //     },
+        //     // {
+        //     //     element: document.querySelectorAll('#step2')[0],
+        //     //     intro: "<strong>You</strong> can also <em>include</em> HTML",
+        //     //     position: 'right'
+        //     // },
+        //     // {
+        //     //     element: '#step3',
+        //     //     intro: 'More features, more fun.',
+        //     //     position: 'left'
+        //     // },
+        //     // {
+        //     //     element: '#step4',
+        //     //     intro: "Another step.",
+        //     //     position: 'bottom'
+        //     // },
+        //     // {
+        //     //     element: '#step5',
+        //     //     intro: 'Get it, use it.'
+        //     // }
+        //     ],
+        //     showStepNumbers: false,
+        //     showBullets: false,
+        //     exitOnOverlayClick: true,
+        //     exitOnEsc:true,
+        //     nextLabel: 'next',
+        //     prevLabel: '<span style="color:green">Previous</span>',
+        //     skipLabel: 'Exit',
+        //     doneLabel: 'Thanks'
+        // };
+        
+        // $scope.CompletedEvent = function(){
+        //     console.log('[directive] completed Event');
+        // };
+        // $scope.ExitEvent= function(){
+        //     console.log('[directive] exit Event');
+        // };
+        // $scope.ChangeEvent = function(){
+        //     console.log('[directive] change Event');
+        // };
+        // $scope.BeforeChangeEvent= function(){
+        //     console.log('[directive] beforeChange Event');
+        // };
+        // $scope.AfterChangeEvent= function(){
+            
+        //     console.log('[directive] after change Event');
+        // };
+        // $scope.clearAndStartNewIntro = function(){
+        //     $scope.IntroOptions = {
+        //         steps:[
+        //             {
+        //                 element: document.querySelector('#stepclick1'),
+        //                 intro: "Click here to begin.",
+        //                 position: 'top',
+                        
+        //                 onchange: function(){
+        //                     //do something interesting here...
+        //                     $rootScope.showChatwindow();
+                            
+        //                 },
+        //             },
+        //         // {
+        //         //     element: document.querySelector('#step1'),
+        //         //     intro: "After being cleared, step 1"
+        //         // },
+        //         // {
+        //         //     element: '#step2',
+        //         //     intro: 'Setup and details :)',
+        //         //     position: 'right'
+        //         // },
+        //         // {
+        //         //     element: '.jumbotron',
+        //         //     intro: 'We added a small feature, adding <pre>ng-intro-disable-button</pre> your buttons will be disabled when introJs is open :) <br><p style="color:red">if you\'re using anchor tags, you should prevent ng-click manually. </p> <p> <a target="_blank" href="https://github.com/mendhak/angular-intro.js/wiki/How-to-prevent-a-ng-click-event-when-a-tag--a--is-disabled%3F">click here for more details.</a></p>'
+        //         // }
+        //         ],
+        //         showStepNumbers: true,
+        //         showBullets: true,
+        //         exitOnOverlayClick: false,
+        //         exitOnEsc:false,
+        //         nextLabel: '<strong style="color:green">Next!</strong>',
+        //         prevLabel: '<span style="color:red">Previous</span>',
+        //         skipLabel: 'Skip',
+        //         doneLabel: 'Done'
+        //     };
+        
+            
+        //     ngIntroService.clear();
+        //     ngIntroService.setOptions($scope.IntroOptions);
+            
+        //     ngIntroService.onComplete(function(){
+        //         console.log('update some cookie or localstorage.')
+        //     });
+            
+        //     ngIntroService.onExit(function(){
+        //         console.log("[service] exit");
+        //     });
+            
+        //     ngIntroService.onBeforeChange(function(){
+        //         console.log("[service] before change");
+        //     });
+            
+        //     ngIntroService.onChange(()=>{
+        //         console.log("[service] on change");
+        //     });
+            
+        //     ngIntroService.onAfterChange(()=>{
+                
+        //         console.log("[service] after Change");
+        //     });
+            
+        //     ngIntroService.start();
+        // };
+
+
         $rootScope.checkDevice = function (){
             //window.mobileAndTabletcheck = function() {
                 var check = false;
@@ -68083,9 +71612,37 @@ myApp.controller('HomeCtrl', function ($scope,$rootScope, TemplateService, Navig
         };
         $rootScope.access_role = $.jStorage.get("access_role");
         angular.element(document).ready(function () {
+            option ={};
+            //hopscotch.startTour(tour);
+            // ngIntroService.setOptions($scope.IntroOptions);
+            // ngIntroService.onAfterChange(function(targetElement) {
+            //     if(targetElement == 'stepclick1'){
+            //         overlay = document.getElementsByClassName("introjs-tooltip");
+            //         for(i=0; i<overlay.length; i++) {
+            //             overlay[i].style.bottom = '10px';
+            //             overlay[i].style.right = '10px';
+            //             overlay[i].style.position = 'fixed';
+            //             //Set css properties like this.
+            //             console.log(targetElement);
+            //         }
+            //     }
+            // });
+            // var introindex=ngIntroService.start();
+
+
+
             
+            // introindex.start().onbeforechange(function () {
+
+            //     if (introindex._currentStep == "2") {
+            //         alert("This is step 2")
+            //     } 
+            // });
+            // ngIntroService.onChange(function(targetElement) {  
+            // console.log(targetElement); 
+            // });
         });
-       $rootScope.checkCollapsed = function()
+        $rootScope.checkCollapsed = function()
         {
             if($rootScope.checkDevice() && $(".navbar-toggle").hasClass("collapsed"))
             {   
@@ -68094,12 +71651,417 @@ myApp.controller('HomeCtrl', function ($scope,$rootScope, TemplateService, Navig
             }
         };
         
+        //window.me = {};
+        /* Chat start*/
+
+        // Privatemsg
+        // Start a private conversation with another user
+        function startPrivateConversation() {
+
+        // Get the user list
+        var select = $('#users-list');
+
+        // Make sure a user is selected in the list
+        if (select.val() === null) {
+            return alert('Please select a user to send a private message to.');
+        }
+
+        // Get the recipient's name from the text of the option in the <select>
+        var recipientName = $('option:selected', select).text();
+        var recipientId = select.val();
+
+        // Prompt for a message to send
+        var message = prompt("Enter a message to send to "+recipientName);
+
+        // Create the UI for the room if it doesn't exist
+        createPrivateConversationRoom({name:recipientName, id:recipientId});
+
+        // Add the message to the room
+        addMessageToConversation(window.me.id, recipientId, message);
+
+        // Send the private message
+        io.socket.post('/chat/private', {to:recipientId, msg: message});
+
+        }
+
+        // Create the HTML to hold a private conversation between two users
+        function createPrivateConversationRoom(penPal) {
+
+        // Get the ID of the HTML element for this private convo, if there is one
+        var roomName = 'private-room-'+penPal.id;
+
+        // If HTML for the room already exists, return.
+        if ($('#'+roomName).length) {
+            return;
+        }
+
+        var penPalName = penPal.name == "unknown" ? ("User #"+penPal.id) : penPal.name;
+
+        // Create a new div to contain the room
+        var roomDiv = $('<div id="'+roomName+'"></div>');
+
+        // Create the HTML for the room
+        var roomHTML = '<h2>Private conversation with <span id="private-username-'+penPal.id+'">'+penPalName+'</span></h2>\n' +
+                        '<div id="private-messages-'+penPal.id+'" style="width: 50%; height: 150px; overflow: auto; border: solid 1px #666; padding: 5px; margin: 5px"></div>'+
+                        '<input id="private-message-'+penPal.id+'"/> <button id="private-button-'+penPal.id+'">Send message</button">';
+
+        roomDiv.html(roomHTML);
+
+        // Add the room to the private conversation area
+        $('#convos').append(roomDiv);
+
+        // Hook up the "send message" button
+        $('#private-button-'+penPal.id).click(onClickSendPrivateMessage);
+
+        }
+
+        // Callback for when the user clicks the "Send message" button in a private conversation
+        function onClickSendPrivateMessage(e) {
+
+        // Get the button that was pressed
+        var button = e.currentTarget;
+
+        // Get the ID of the user we want to send to
+        var recipientId = button.id.split('-')[2];
+
+        // Get the message to send
+        var message = $('#private-message-'+recipientId).val();
+        $('#private-message-'+recipientId).val("");
+
+        // Add this message to the room
+        addMessageToConversation(window.me.id, recipientId, message);
+
+        // Send the message
+        io.socket.post('/chat/private', {to: recipientId, msg: message});
+
+        }
+
+        // Add HTML for a new message in a private conversation
+        function addMessageToConversation(senderId, recipientId, message) {
+            
+            var fromMe = senderId == window.me.id;
+            var roomName = 'private-messages-' + (fromMe ? recipientId : senderId);
+            $.jStorage.set('lastroom',roomName);
+            $.jStorage.set('lastroomid', (fromMe ? recipientId : senderId));
+            var senderName = fromMe ? "Me" : $('#private-username-'+senderId).html();
+            var justify = fromMe ? 'right' : 'left';
+
+            var div = $('<div style="text-align:'+justify+'"></div>');
+            div.html('<strong>'+senderName+'</strong>: '+message);
+            $('#'+roomName).append(div);
+
+        }
+
+        // Handle an incoming private message from the server.
+        function receivePrivateMessage(data) {
+
+            var sender = data.from;
+
+            // Create a room for this message if one doesn't exist
+             createPrivateConversationRoom(sender);
+
+            // Add a message to the room
+            //addMessageToConversation(sender.id, window.me.id, data.msg);
+            //$(".chat").append("<li class='left clearfix'><span class='chat-img pull-left'><img ng-src='img/Tenali.png' alt='BOT' class='img-circle  doneLoading' src='img/Tenali.png'></span><div class='chat-body'><p>"+data.msg+" </p></div></li>");
+            console.log(data,"recvdmsg");
+            mymsg = {Text:data.msg,type:"SYS_FIRST"};
+            //$rootScope.chatlist.push({id:"id",msg:mymsg,position:"left",curTime: $rootScope.getDatetime()});
+            $rootScope.pushSystemMsg(0,mymsg);  
+        }
+
+        
+        console.log($.jStorage.get("notloggedin"));
+        angular.element(document).ready(function () {
+            if(!$.jStorage.get('firstreload'))
+            {
+                $.jStorage.set('firstreload',true);
+                location.reload();
+            }
+            if(!$.jStorage.get("notloggedin"))
+            {
+                //Chatapp
+                    /**
+                 * app.js
+                 *
+                 * Front-end code and event handling for sailsChat
+                 *
+                 */
+                //io.connect('http://exponentiadata.co.in:9161');
+                // if($.jStorage.get("socketId"))
+                //     io.socket.connected[$.jStorage.get("socketId")].disconnect();
+                    //io.socket.get("/user/disconnect",{query:$.jStorage.get("sid")}, function(data){});
+                // Attach a listener which fires when a connection is established:
+                //options: [SocketIOClientOption.ConnectParams(["__sails_io_sdk_version":"0.11.0"])]);
+                //var sk = io.sails.connect();
+                //io('http://localhost:8080');
+                // var CONNECTION_METADATA_PARAMS = {
+                //     version: '__sails_io_sdk_version',
+                //     platform: '__sails_io_sdk_platform',
+                //     language: '__sails_io_sdk_language'
+                // };
+
+                // var SDK_INFO = {
+                //     version: '0.11.0',
+                //     platform: 'browser',
+                //     language: 'javascript'
+                // };
+
+                // SDK_INFO.versionString =
+                //     CONNECTION_METADATA_PARAMS.version + '=' + SDK_INFO.version + '&' +
+                //     CONNECTION_METADATA_PARAMS.platform + '=' + SDK_INFO.platform + '&' +
+                //     CONNECTION_METADATA_PARAMS.language + '=' + SDK_INFO.language;
+
+                // var socket = io.connect({
+                //     query: SDK_INFO.versionString
+                // });
+            
+            //io.sails.connect('http://localhost:80');
+                io.socket.on('connect', function socketConnected() {
+
+                    // Show the main UI
+                    $('#disconnect').hide();
+                    $('#main').show();
+
+                    // Announce that a new user is online--in this somewhat contrived example,
+                    // this also causes the CREATION of the user, so each window/tab is a new user.
+                    userdata = {sid:$.jStorage.get("id"),name:$.jStorage.get("fname")+' '+$.jStorage.get("lname"),access_role:$.jStorage.get("access_role")};
+                    io.socket.get("/user/announce",{query:userdata}, function(data){
+                        //console.log(data);
+                        
+                        userdata.socketId = data.socketId;
+                        userdata.id = data.id;
+                        $.jStorage.set("socketId",userdata.socketId);
+                        $.jStorage.set("sid",userdata.sid);
+                        window.me = data;
+                        console.log(data,"sails userdata");
+                        updateMyName(data);
+
+                        // Get the current list of users online.  This will also subscribe us to
+                        // update and destroy events for the individual users.
+                        io.socket.get('/user', updateUserList);
+
+                        // Get the current list of chat rooms. This will also subscribe us to
+                        // update and destroy events for the individual rooms.
+                        io.socket.get('/room', updateRoomList);
+
+                    });
+                    
+                    // Listen for the "room" event, which will be broadcast when something
+                    // happens to a room we're subscribed to.  See the "autosubscribe" attribute
+                    // of the Room model to see which messages will be broadcast by default
+                    // to subscribed sockets.
+                    io.socket.on('room', function messageReceived(message) {
+
+                        switch (message.verb) {
+
+                            // Handle room creation
+                            case 'created':
+                            addRoom(message.data);
+                            break;
+
+                            // Handle a user joining a room
+                            case 'addedTo':
+                            // Post a message in the room
+                            postStatusMessage('room-messages-'+message.id, $('#user-'+message.addedId).text()+' has joined');
+                            // Update the room user count
+                            increaseRoomCount(message.id);
+                            break;
+
+                            // Handle a user leaving a room
+                            case 'removedFrom':
+                            // Post a message in the room
+                            postStatusMessage('room-messages-'+message.id, $('#user-'+message.removedId).text()+' has left');
+                            // Update the room user count
+                            decreaseRoomCount(message.id);
+                            break;
+
+                            // Handle a room being destroyed
+                            case 'destroyed':
+                            removeRoom(message.id);
+                            break;
+
+                            // Handle a public message in a room.  Only sockets subscribed to the "message" context of a
+                            // Room instance will get this message--see the "join" and "leave" methods of RoomController.js
+                            // to see where a socket gets subscribed to a Room instance's "message" context.
+                            case 'messaged':
+                            receiveRoomMessage(message.data);
+                            break;
+
+                            default:
+                            break;
+
+                        }
+
+                    });
+
+                    // Listen for the "user" event, which will be broadcast when something
+                    // happens to a user we're subscribed to.  See the "autosubscribe" attribute
+                    // of the User model to see which messages will be broadcast by default
+                    // to subscribed sockets.
+                    io.socket.on('user', function messageReceived(message) {
+                        console.log(message);
+                        switch (message.verb) {
+                            
+                            // Handle user creation
+                            case 'created':
+                            addUser(message.data);
+                            break;
+
+                            // Handle a user changing their name
+                            case 'updated':
+
+                            // Get the user's old name by finding the <option> in the list with their ID
+                            // and getting its text.
+                            var oldName = $('#user-'+message.id).text();
+
+                            // Update the name in the user select list
+                            $('#user-'+message.id).text(message.data.name);
+
+                            // If we have a private convo with them, update the name there and post a status message in the chat.
+                            if ($('#private-username-'+message.id).length) {
+                                $('#private-username-'+message.id).html(message.data.name);
+                                postStatusMessage('private-messages-'+message.id,oldName+' has changed their name to '+message.data.name);
+                            }
+
+                            break;
+
+                            // Handle user destruction
+                            case 'destroyed':
+                            {
+                                if($rootScope.lastagent == message.previous.sid)
+                                    $rootScope.endConversation(2);
+                                removeUser(message.id);
+                            }
+                            break;
+
+                            // Handle private messages.  Only sockets subscribed to the "message" context of a
+                            // User instance will get this message--see the onConnect logic in config/sockets.js
+                            // to see where a new user gets subscribed to their own "message" context
+                            case 'messaged':
+                            receivePrivateMessage(message.data);
+                            break;
+
+                            default:
+                            break;
+                        }
+
+                    });
+
+                    // Add a click handler for the "Update name" button, allowing the user to update their name.
+                    // updateName() is defined in user.js.
+                    $('#update-name').click(updateName);
+
+                    // Add a click handler for the "Send private message" button
+                    // startPrivateConversation() is defined in private_message.js.
+                    $('#private-msg-button').click(startPrivateConversation);
+
+                    // Add a click handler for the "Join room" button
+                    // joinRoom() is defined in public_message.js.
+                    $('#join-room').click(joinRoom);
+
+                    // Add a click handler for the "New room" button
+                    // newRoom() is defined in room.js.
+                    $('#new-room').click(newRoom);
+
+                    console.log('Socket is now connected!');
+
+                    // When the socket disconnects, hide the UI until we reconnect.
+                    io.socket.on('disconnect', function() {
+                    // Hide the main UI
+                        $('#main').hide();
+                        $('#disconnect').show();
+                    });
+                    
+                });
+            }
+        });
+        $rootScope.disconnect = function() {
+            // userdata = {sid:$.jStorage.get("id"),name:$.jStorage.get("fname")+' '+$.jStorage.get("lname"),access_role:$.jStorage.get("access_role"),id:window.me.id};
+            //     io.socket.post("/user/disconnect",{query:userdata}, function(data){
+            //         console.log(data);
+            //     });
+            //io.socket.reconnects = true;
+            // end of workaround
+            //io.sails.connect();
+
+
+            //io.socket.disconnect(false);
+            //io.socket.reconnect();
+            // io.sails.url = 'http://exponentiadata.co.in:9161';
+            // io.sails.connect(io.sails.url,{forceNew: true});
+            // io.connect(io.sails.url,{forceNew: true});
+            // io.socket.put(io.sails.url, {}, function (resData, jwres){
+            //     console.log(resData);
+            //     console.log(jwres);
+            // });
+            // //io.sails.connect("http://exponentiadata.co.in:9161");
+            // io.connect("http://exponentiadata.co.in:9161", {'forceNew': true});
+            //console.log(window.me.id);
+            // io.socket.delete('/users/'+window.me.id, function (resData) {
+            // resData; // => {id:9, name: 'Timmy Mendez', occupation: 'psychic'}
+            // console.log(resData);
+            // });
+        };
     })
     myApp.controller('DashboardCtrl', function ($scope,$rootScope, TemplateService, NavigationService,CsrfTokenService,Menuservice, $timeout,$http,apiService,$state) {
         $scope.template = TemplateService.getHTML("content/dashboard.html");
         TemplateService.title = "Dashboard"; //This is the Title of the Website
         $scope.navigation = NavigationService.getNavigation();
         $rootScope.uipage="dashboard";
+        angular.element(document).ready(function () {
+            $.jStorage.set('firstreload',false);
+        });
+        $timeout(function(){
+            $rootScope.rotateoutmenu();
+        },500);
+    })
+    myApp.controller('Dashboard2Ctrl', function ($scope,$rootScope, TemplateService, NavigationService,CsrfTokenService,Menuservice, $timeout,$http,apiService,$state) {
+        $scope.template = TemplateService.getHTML("content/dashboard2.html");
+        TemplateService.title = "Dashboard"; //This is the Title of the Website
+        $scope.navigation = NavigationService.getNavigation();
+        $rootScope.uipage="dashboard";
+        angular.element(document).ready(function () {
+            $.jStorage.set('firstreload',false);
+        });
+        $timeout(function(){
+            $rootScope.rotateoutmenu();
+        },500);
+    })
+    myApp.controller('Dashboard4Ctrl', function ($scope,$rootScope, TemplateService, NavigationService,CsrfTokenService,Menuservice, $timeout,$http,apiService,$state) {
+        $scope.template = TemplateService.getHTML("content/dashboard4.html");
+        TemplateService.title = "Dashboard"; //This is the Title of the Website
+        $scope.navigation = NavigationService.getNavigation();
+        $rootScope.uipage="dashboard";
+        angular.element(document).ready(function () {
+            $.jStorage.set('firstreload',false);
+        });
+        $timeout(function(){
+            $rootScope.rotateoutmenu();
+        },500);
+    })
+    myApp.controller('Dashboard5Ctrl', function ($scope,$rootScope, TemplateService, NavigationService,CsrfTokenService,Menuservice, $timeout,$http,apiService,$state) {
+        $scope.template = TemplateService.getHTML("content/dashboard5.html");
+        TemplateService.title = "Dashboard"; //This is the Title of the Website
+        $scope.navigation = NavigationService.getNavigation();
+        $rootScope.uipage="dashboard";
+        angular.element(document).ready(function () {
+            $.jStorage.set('firstreload',false);
+        });
+        $timeout(function(){
+            $rootScope.rotateoutmenu();
+        },500);
+    })
+    myApp.controller('Dashboard3Ctrl', function ($scope,$rootScope, TemplateService, NavigationService,CsrfTokenService,Menuservice, $timeout,$http,apiService,$state) {
+        $scope.template = TemplateService.getHTML("content/dashboard3.html");
+        TemplateService.title = "Dashboard"; //This is the Title of the Website
+        $scope.navigation = NavigationService.getNavigation();
+        $rootScope.uipage="dashboard";
+        angular.element(document).ready(function () {
+            $.jStorage.set('firstreload',false);
+        });
+        $timeout(function(){
+            $rootScope.rotateoutmenu();
+        },500);
     })
     .controller('LoginCtrl', function ($scope, TemplateService, NavigationService,CsrfTokenService, $timeout, toastr, $http,$state,apiService,$uibModal,$filter,Idle,$rootScope) {
         $scope.template = TemplateService.getHTML("login.html");
@@ -68110,15 +72072,18 @@ myApp.controller('HomeCtrl', function ($scope,$rootScope, TemplateService, Navig
 
         $scope.loginbg = 1;
         $scope.iframeHeight = window.innerHeight;
-        $scope.uipage="login";
+        $rootScope.uipage="login";
+        
         $scope.formSubmitted = false;
         $scope.loginerror=0;
         //$rootScope.notLoggedin = false;
         //console.log($.jStorage.get("notloggedin"));
         if($.jStorage.get("notloggedin"))
             $rootScope.notLoggedin = true;
+        else if($.jStorage.get('access_role')==4)
+            $state.go("agentdashboard");
         else 
-            $state.go("home");
+            $state.go("dashboard");
         $scope.login = function(username,password)
         {
             CsrfTokenService.getCookie("csrftoken").then(function(token) {
@@ -68144,7 +72109,7 @@ myApp.controller('HomeCtrl', function ($scope,$rootScope, TemplateService, Navig
                         $.jStorage.set("branch", callback.data.data.branch);
                         $.jStorage.set("access_role", callback.data.data.accessrole);
                         $.jStorage.set("sessionid", callback.data.data.sessionid);
-
+                        
                         $scope.sessiondata = {
                             id_string : callback.data.data._id,
                             //data : {},
@@ -68231,13 +72196,19 @@ myApp.controller('HomeCtrl', function ($scope,$rootScope, TemplateService, Navig
             })
         };
     })
-    .controller('AgentdashboardCtrl', function ($scope, $rootScope,$resource,TemplateService, NavigationService,CsrfTokenService, $timeout,$http,apiService,$state,$uibModal,Menuservice,tts,$cookies,$sce,$location) {
+    .controller('AgentdashboardCtrl', function ($scope, $rootScope,$resource,TemplateService, NavigationService,CsrfTokenService, $timeout,$http,apiService,$state,$uibModal,Menuservice,tts,$cookies,$sce,$location,$document) {
         $scope.template = TemplateService.getHTML("content/agentdashboard.html");
         TemplateService.title = "Home"; //This is the Title of the Website
         $scope.navigation = NavigationService.getNavigation();
         $scope.uipage = "agentdashboard";
         $rootScope.access_role = $.jStorage.get("access_role");
         $scope.firstreload = false;
+        $scope.scrollagentChatWindow = function(id) {
+            $timeout(function(){
+                var chatHeight = $("#collapseExampleprivate-room-"+id+" .private_conv").height();
+                $("#collapseExampleprivate-room-"+id+" .private_conv").animate({scrollTop: chatHeight});
+            });
+        };
         if($.jStorage.get("firstreload"))
             $scope.firstreload = true;
         else
@@ -68245,270 +72216,323 @@ myApp.controller('HomeCtrl', function ($scope,$rootScope, TemplateService, Navig
             $.jStorage.set("firstreload",true);
             location.reload();
         }
-        // io.sails.url = 'http://localhost:1337';
         
-        // function startPrivateConversation() {
+        $timeout(function(){
+            $scope.agentpanelheight = $(window).height()-55;
+        },3000);
+        io.sails.url = 'http://exponentiadata.co.in:9161';
+        function startPrivateConversation() {
 
-        // // Get the user list
-        // var select = $('#users-list');
+        // Get the user list
+        var select = $('#users-list');
 
-        // // Make sure a user is selected in the list
-        // if (select.val() === null) {
-        //     return alert('Please select a user to send a private message to.');
-        // }
+        // Make sure a user is selected in the list
+        if (select.val() === null) {
+            return alert('Please select a user to send a private message to.');
+        }
 
-        // // Get the recipient's name from the text of the option in the <select>
-        // var recipientName = $('option:selected', select).text();
-        // var recipientId = select.val();
+        // Get the recipient's name from the text of the option in the <select>
+        var recipientName = $('option:selected', select).text();
+        var recipientId = select.val();
 
-        // // Prompt for a message to send
-        // var message = prompt("Enter a message to send to "+recipientName);
+        // Prompt for a message to send
+        var message = prompt("Enter a message to send to "+recipientName);
 
-        // // Create the UI for the room if it doesn't exist
-        // createPrivateConversationRoom({name:recipientName, id:recipientId});
+        // Create the UI for the room if it doesn't exist
+        createPrivateConversationRoom({name:recipientName, id:recipientId});
 
-        // // Add the message to the room
-        // addMessageToConversation(window.me.id, recipientId, message);
+        // Add the message to the room
+        addMessageToConversation(window.me.id, recipientId, message);
 
-        // // Send the private message
-        // io.socket.post('/chat/private', {to:recipientId, msg: message});
+        // Send the private message
+        io.socket.post('/chat/private', {to:recipientId, msg: message});
 
-        // }
+        }
 
-        // // Create the HTML to hold a private conversation between two users
-        // function createPrivateConversationRoom(penPal) {
+        // Create the HTML to hold a private conversation between two users
+        function createPrivateConversationRoom(penPal) {
+        
+        // Get the ID of the HTML element for this private convo, if there is one
+        var roomName = 'private-room-'+penPal.id;
 
-        // // Get the ID of the HTML element for this private convo, if there is one
-        // var roomName = 'private-room-'+penPal.id;
+        // If HTML for the room already exists, return.
+        if ($('#'+roomName).length) {
+            $('#private-message-'+penPal.id).show();
+            $('#private-button-'+penPal.id).show();
+            return;
+        }
 
-        // // If HTML for the room already exists, return.
-        // if ($('#'+roomName).length) {
-        //     return;
-        // }
+        var penPalName = penPal.sname == "unknown" ? ("User #"+penPal.id) : penPal.sname;
 
-        // var penPalName = penPal.name == "unknown" ? ("User #"+penPal.id) : penPal.name;
+        // Create a new div to contain the room
+        var roomDiv = $('<div id="'+roomName+'"></div>');
 
-        // // Create a new div to contain the room
-        // var roomDiv = $('<div id="'+roomName+'"></div>');
+        // Create the HTML for the room
+        var roomHTML = '<div class="userlist"><button type="button" class="btn useronline" data-toggle="collapse" data-target="#collapseExample'+roomName+'" aria-expanded="false" aria-controls="collapseExample'+roomName+'"> <span id="private-username-'+penPal.id+'"><span class="userimg"><img src="img/logo7.png" class="img-fluid"></span>'+penPalName+'</span><span class="pull-right onlinesymbol"><i class="fa fa-circle" aria-hidden="true"></i></span></button></div>';
+        var chatconv = '<div class="collapse in" id="collapseExample'+roomName+'"><div id="private-messages-'+penPal.id+'" class="private_conv"></div>'+
+                        '<div class="row"><div class="col-md-9"><input id="private-message-'+penPal.id+'" placeholder="Enter Message"  class="form-control pvtmsg"/></div><div class="col-md-3"> <button class="btn btn-primary" id="private-button-'+penPal.id+'" data-sname="'+penPal.sname+'" data_id="'+penPal.sid+'" data-socketid="'+penPal.socketId+'"><i class="fa fa-paper-plane" aria-hidden="true"></i></button"></div></div></div>';
+        roomDiv.html(roomHTML);
 
-        // // Create the HTML for the room
-        // var roomHTML = '<h2>Private conversation with <span id="private-username-'+penPal.id+'">'+penPalName+'</span></h2>\n' +
-        //                 '<div id="private-messages-'+penPal.id+'" style="width: 50%; height: 150px; overflow: auto; border: solid 1px #666; padding: 5px; margin: 5px"></div>'+
-        //                 '<input id="private-message-'+penPal.id+'"/> <button id="private-button-'+penPal.id+'">Send message</button">';
+        // Add the room to the private conversation area
+        $('#convos .agentusersidebar').append(roomDiv);
+        $("#convos_chat").append(chatconv);
+        // Hook up the "send message" button
+        $('#private-button-'+penPal.id).click(onClickSendPrivateMessage);
+        
+        }
 
-        // roomDiv.html(roomHTML);
+        // Callback for when the user clicks the "Send message" button in a private conversation
+        function onClickSendPrivateMessage(e) {
 
-        // // Add the room to the private conversation area
-        // $('#convos').append(roomDiv);
+        // Get the button that was pressed
+        var button = e.currentTarget;
 
-        // // Hook up the "send message" button
-        // $('#private-button-'+penPal.id).click(onClickSendPrivateMessage);
+        // Get the ID of the user we want to send to
+        var recipientId = button.id.split('-')[2];
+        var from_socketid=$(this).attr("data-socketid");
+        var from_id=$(this).attr("data_id");
+        var from_sname=$(this).attr("data-sname");
+        // Get the message to send
+        var message = $('#private-message-'+recipientId).val();
+        $('#private-message-'+recipientId).val("");
 
-        // }
+        // Add this message to the room
+        addMessageToConversation(window.me.id, recipientId, message);
 
-        // // Callback for when the user clicks the "Send message" button in a private conversation
-        // function onClickSendPrivateMessage(e) {
+        // Send the message
+        io.socket.post('/chat/private', {to: recipientId, msg: message});
+            var formData= {msg:message,from_id:$.jStorage.get("id"),fromid:window.me.id,fromname:($.jStorage.get("fname")+' '+$.jStorage.get("lname")),from_socketid:$.jStorage.get("socketId"),toid:recipientId,toname:from_sname,to_id:from_id,to_socketid:from_socketid};
+            apiService.saveagentchat(formData).then(function (data){
 
-        // // Get the button that was pressed
-        // var button = e.currentTarget;
+            });
+            $scope.scrollagentChatWindow(recipientId);
+        }
 
-        // // Get the ID of the user we want to send to
-        // var recipientId = button.id.split('-')[2];
+        // Add HTML for a new message in a private conversation
+        function addMessageToConversation(senderId, recipientId, message,sender) {
+            console.log(sender);
+            var fromMe = senderId == window.me.id;
+            var roomName = 'private-messages-' + (fromMe ? recipientId : senderId);
+            var senderName = fromMe ? "Me" : $('#private-username-'+senderId).html();
+            var justify = fromMe ? 'right' : 'left';
 
-        // // Get the message to send
-        // var message = $('#private-message-'+recipientId).val();
-        // $('#private-message-'+recipientId).val("");
+            var div = $('<div style="text-align:'+justify+'"></div>');
+            div.html('<strong>'+senderName+'</strong>: '+message);
+            $('#'+roomName).append(div);
+            $scope.scrollagentChatWindow(senderId);
+        }
 
-        // // Add this message to the room
-        // addMessageToConversation(window.me.id, recipientId, message);
+        // Handle an incoming private message from the server.
+        function receivePrivateMessage(data) {
 
-        // // Send the message
-        // io.socket.post('/chat/private', {to: recipientId, msg: message});
+            var sender = data.from;
 
-        // }
+            // Create a room for this message if one doesn't exist
+             createPrivateConversationRoom(sender);
 
-        // // Add HTML for a new message in a private conversation
-        // function addMessageToConversation(senderId, recipientId, message) {
+            // Add a message to the room
+            addMessageToConversation(sender.id, window.me.id, data.msg,sender);
+            //$(".chat").append("<li class='left clearfix'><span class='chat-img pull-left'><img ng-src='img/Tenali.png' alt='BOT' class='img-circle  doneLoading' src='img/Tenali.png'></span><div class='chat-body'><p>"+data.msg+" </p></div></li>");
+            console.log(data,"recvdmsg");
+            mymsg = {Text:data.msg,type:"SYS_FIRST"};
+            //$rootScope.chatlist.push({id:"id",msg:mymsg,position:"left",curTime: $rootScope.getDatetime()});
+            //$rootScope.pushSystemMsg(0,mymsg);  
+        }
+        angular.element(document).ready(function () {
+            //$('.pvtmsg').keypress(function (e) {
+            // $('.pvtmsg').keyup(function(){
+            //     console.log("entering");
+            //     if (e.which == 13) {
+            //         console.log("entering");
+            //         var id=$(this).attr('id');
+            //         var intid =parseInt(id.split('private-button-'));
+            //         $('#private-button-'+intid).click(onClickSendPrivateMessage);
+            //         return false;    //<---- Add this line
+            //     }
+            // });
+            $(document).on("keyup",".pvtmsg", function(e) {
+                if (e.which == 13) {
+                    console.log("entering");
+                    var id=$(this).attr('id');
+                    var intid =id.split('private-message-');
+                    var myid = intid[1];
+                    console.log(myid);
+                    $('#private-button-'+myid).trigger("click");
+                    //$('#private-button-'+myid).click(onClickSendPrivateMessage);
+                    //return false;    //<---- Add this line
+                }
+            });
+            // function pvtkeyup(e){
+            //     console.log("entering");
+            //     if (e.which == 13) {
+            //         console.log("entering");
+            //         var id=$(this).attr('id');
+            //         var intid =parseInt(id.split('private-button-'));
+            //         $('#private-button-'+intid).click(onClickSendPrivateMessage);
+            //         return false;    //<---- Add this line
+            //     }
+            // }
+        });
+        window.me={};
+        io.socket.on('connect', function socketConnected() {
 
-        //     var fromMe = senderId == window.me.id;
-        //     var roomName = 'private-messages-' + (fromMe ? recipientId : senderId);
-        //     var senderName = fromMe ? "Me" : $('#private-username-'+senderId).html();
-        //     var justify = fromMe ? 'right' : 'left';
+            // Show the main UI
+            $('#disconnect').hide();
+            $('#main').show();
 
-        //     var div = $('<div style="text-align:'+justify+'"></div>');
-        //     div.html('<strong>'+senderName+'</strong>: '+message);
-        //     $('#'+roomName).append(div);
+            // Announce that a new user is online--in this somewhat contrived example,
+            // this also causes the CREATION of the user, so each window/tab is a new user.
+            userdata = {sid:$.jStorage.get("id"),name:$.jStorage.get("fname")+' '+$.jStorage.get("lname"),access_role:$.jStorage.get("access_role")};
+            io.socket.get("/user/announce",{query:userdata}, function(data){
+                //console.log(data);
+                userdata.socketId = data.socketId;
+                userdata.id = data.id;
+                $.jStorage.set("socketId",userdata.socketId);
+                $.jStorage.set("sid",userdata.sid);
+                window.me = data;
+                updateMyName(data);
 
-        // }
+                // Get the current list of users online.  This will also subscribe us to
+                // update and destroy events for the individual users.
+                io.socket.get('/user', updateUserList);
 
-        // // Handle an incoming private message from the server.
-        // function receivePrivateMessage(data) {
+                // Get the current list of chat rooms. This will also subscribe us to
+                // update and destroy events for the individual rooms.
+                io.socket.get('/room', updateRoomList);
 
-        //     var sender = data.from;
-
-        //     // Create a room for this message if one doesn't exist
-        //      createPrivateConversationRoom(sender);
-
-        //     // Add a message to the room
-        //     //addMessageToConversation(sender.id, window.me.id, data.msg);
-        //     //$(".chat").append("<li class='left clearfix'><span class='chat-img pull-left'><img ng-src='img/Tenali.png' alt='BOT' class='img-circle  doneLoading' src='img/Tenali.png'></span><div class='chat-body'><p>"+data.msg+" </p></div></li>");
-        //     console.log(data,"recvdmsg");
-        //     mymsg = {Text:data.msg,type:"SYS_FIRST"};
-        //     //$rootScope.chatlist.push({id:"id",msg:mymsg,position:"left",curTime: $rootScope.getDatetime()});
-        //     $rootScope.pushSystemMsg(0,mymsg);  
-        // }
-        // window.me={};
-        // io.socket.on('connect', function socketConnected() {
-
-        //     // Show the main UI
-        //     $('#disconnect').hide();
-        //     $('#main').show();
-
-        //     // Announce that a new user is online--in this somewhat contrived example,
-        //     // this also causes the CREATION of the user, so each window/tab is a new user.
-        //     userdata = {sid:$.jStorage.get("id"),name:$.jStorage.get("fname")+' '+$.jStorage.get("lname"),access_role:$.jStorage.get("access_role")};
-        //     io.socket.get("/user/announce",{query:userdata}, function(data){
-        //         //console.log(data);
-        //         userdata.socketId = data.socketId;
-        //         userdata.id = data.id;
-        //         $.jStorage.set("socketId",userdata.socketId);
-        //         $.jStorage.set("sid",userdata.sid);
-        //         window.me = userdata;
-        //         updateMyName(userdata);
-
-        //         // Get the current list of users online.  This will also subscribe us to
-        //         // update and destroy events for the individual users.
-        //         io.socket.get('/user', updateUserList);
-
-        //         // Get the current list of chat rooms. This will also subscribe us to
-        //         // update and destroy events for the individual rooms.
-        //         io.socket.get('/room', updateRoomList);
-
-        //     });
+            });
             
-        //     // Listen for the "room" event, which will be broadcast when something
-        //     // happens to a room we're subscribed to.  See the "autosubscribe" attribute
-        //     // of the Room model to see which messages will be broadcast by default
-        //     // to subscribed sockets.
-        //     io.socket.on('room', function messageReceived(message) {
+            // Listen for the "room" event, which will be broadcast when something
+            // happens to a room we're subscribed to.  See the "autosubscribe" attribute
+            // of the Room model to see which messages will be broadcast by default
+            // to subscribed sockets.
+            io.socket.on('room', function messageReceived(message) {
+                console.log(message);
+                switch (message.verb) {
 
-        //         switch (message.verb) {
+                    // Handle room creation
+                    case 'created':
+                    addRoom(message.data);
+                    break;
 
-        //             // Handle room creation
-        //             case 'created':
-        //             addRoom(message.data);
-        //             break;
+                    // Handle a user joining a room
+                    case 'addedTo':
+                    // Post a message in the room
+                    postStatusMessage('room-messages-'+message.id, $('#user-'+message.addedId).text()+' has joined');
+                    // Update the room user count
+                    increaseRoomCount(message.id);
+                    break;
 
-        //             // Handle a user joining a room
-        //             case 'addedTo':
-        //             // Post a message in the room
-        //             postStatusMessage('room-messages-'+message.id, $('#user-'+message.addedId).text()+' has joined');
-        //             // Update the room user count
-        //             increaseRoomCount(message.id);
-        //             break;
+                    // Handle a user leaving a room
+                    case 'removedFrom':
+                    // Post a message in the room
+                    postStatusMessage('room-messages-'+message.id, $('#user-'+message.removedId).text()+' has left');
+                    // Update the room user count
+                    decreaseRoomCount(message.id);
+                    break;
 
-        //             // Handle a user leaving a room
-        //             case 'removedFrom':
-        //             // Post a message in the room
-        //             postStatusMessage('room-messages-'+message.id, $('#user-'+message.removedId).text()+' has left');
-        //             // Update the room user count
-        //             decreaseRoomCount(message.id);
-        //             break;
+                    // Handle a room being destroyed
+                    case 'destroyed':
+                    removeRoom(message.id);
+                    break;
 
-        //             // Handle a room being destroyed
-        //             case 'destroyed':
-        //             removeRoom(message.id);
-        //             break;
+                    // Handle a public message in a room.  Only sockets subscribed to the "message" context of a
+                    // Room instance will get this message--see the "join" and "leave" methods of RoomController.js
+                    // to see where a socket gets subscribed to a Room instance's "message" context.
+                    case 'messaged': 
+                    receiveRoomMessage(message.data);
+                    break;
 
-        //             // Handle a public message in a room.  Only sockets subscribed to the "message" context of a
-        //             // Room instance will get this message--see the "join" and "leave" methods of RoomController.js
-        //             // to see where a socket gets subscribed to a Room instance's "message" context.
-        //             case 'messaged':
-        //             receiveRoomMessage(message.data);
-        //             break;
+                    default:
+                    break;
 
-        //             default:
-        //             break;
+                }
 
-        //         }
+            });
 
-        //     });
+            // Listen for the "user" event, which will be broadcast when something
+            // happens to a user we're subscribed to.  See the "autosubscribe" attribute
+            // of the User model to see which messages will be broadcast by default
+            // to subscribed sockets.
+            io.socket.on('user', function messageReceived(message) {
+                console.log(message);
+                switch (message.verb) {
 
-        //     // Listen for the "user" event, which will be broadcast when something
-        //     // happens to a user we're subscribed to.  See the "autosubscribe" attribute
-        //     // of the User model to see which messages will be broadcast by default
-        //     // to subscribed sockets.
-        //     io.socket.on('user', function messageReceived(message) {
+                    // Handle user creation
+                    case 'created':
+                    addUser(message.data);
+                    break;
 
-        //         switch (message.verb) {
+                    // Handle a user changing their name
+                    case 'updated':
 
-        //             // Handle user creation
-        //             case 'created':
-        //             addUser(message.data);
-        //             break;
+                    // Get the user's old name by finding the <option> in the list with their ID
+                    // and getting its text.
+                    var oldName = $('#user-'+message.id).text();
 
-        //             // Handle a user changing their name
-        //             case 'updated':
+                    // Update the name in the user select list
+                    $('#user-'+message.id).text(message.data.name);
 
-        //             // Get the user's old name by finding the <option> in the list with their ID
-        //             // and getting its text.
-        //             var oldName = $('#user-'+message.id).text();
+                    // If we have a private convo with them, update the name there and post a status message in the chat.
+                    if ($('#private-username-'+message.id).length) {
+                        $('#private-username-'+message.id).html(message.data.name);
+                        postStatusMessage('private-messages-'+message.id,oldName+' has changed their name to '+message.data.name);
+                    }
 
-        //             // Update the name in the user select list
-        //             $('#user-'+message.id).text(message.data.name);
+                    break;
 
-        //             // If we have a private convo with them, update the name there and post a status message in the chat.
-        //             if ($('#private-username-'+message.id).length) {
-        //                 $('#private-username-'+message.id).html(message.data.name);
-        //                 postStatusMessage('private-messages-'+message.id,oldName+' has changed their name to '+message.data.name);
-        //             }
+                    // Handle user destruction
+                    case 'destroyed':
+                    removeUser(message.id);
+                    break;
 
-        //             break;
+                    // Handle private messages.  Only sockets subscribed to the "message" context of a
+                    // User instance will get this message--see the onConnect logic in config/sockets.js
+                    // to see where a new user gets subscribed to their own "message" context
+                    case 'messaged':
+                    {
+                        
+                        if(message.data.messagetype && message.data.messagetype == 'disconnect' )
+                        {
+                            removeUser(message.data.from.id);
+                        }
+                        else
+                            receivePrivateMessage(message.data);
+                    }
+                    break;
 
-        //             // Handle user destruction
-        //             case 'destroyed':
-        //             removeUser(message.id);
-        //             break;
+                    default:
+                    break;
+                }
 
-        //             // Handle private messages.  Only sockets subscribed to the "message" context of a
-        //             // User instance will get this message--see the onConnect logic in config/sockets.js
-        //             // to see where a new user gets subscribed to their own "message" context
-        //             case 'messaged':
-        //             receivePrivateMessage(message.data);
-        //             break;
+            });
 
-        //             default:
-        //             break;
-        //         }
+            // Add a click handler for the "Update name" button, allowing the user to update their name.
+            // updateName() is defined in user.js.
+            $('#update-name').click(updateName);
 
-        //     });
+            // Add a click handler for the "Send private message" button
+            // startPrivateConversation() is defined in private_message.js.
+            $('#private-msg-button').click(startPrivateConversation);
 
-        //     // Add a click handler for the "Update name" button, allowing the user to update their name.
-        //     // updateName() is defined in user.js.
-        //     $('#update-name').click(updateName);
+            // Add a click handler for the "Join room" button
+            // joinRoom() is defined in public_message.js.
+            $('#join-room').click(joinRoom);
 
-        //     // Add a click handler for the "Send private message" button
-        //     // startPrivateConversation() is defined in private_message.js.
-        //     $('#private-msg-button').click(startPrivateConversation);
+            // Add a click handler for the "New room" button
+            // newRoom() is defined in room.js.
+            $('#new-room').click(newRoom);
 
-        //     // Add a click handler for the "Join room" button
-        //     // joinRoom() is defined in public_message.js.
-        //     $('#join-room').click(joinRoom);
+            console.log('Socket is now connected!');
 
-        //     // Add a click handler for the "New room" button
-        //     // newRoom() is defined in room.js.
-        //     $('#new-room').click(newRoom);
+            // When the socket disconnects, hide the UI until we reconnect.
+            io.socket.on('disconnect', function() {
+            // Hide the main UI
+                $('#main').hide();
+                $('#disconnect').show();
+            });
 
-        //     console.log('Socket is now connected!');
-
-        //     // When the socket disconnects, hide the UI until we reconnect.
-        //     io.socket.on('disconnect', function() {
-        //     // Hide the main UI
-        //         $('#main').hide();
-        //         $('#disconnect').show();
-        //     });
-
-        // });
+        });
 
 
 
@@ -68840,297 +72864,13 @@ myApp.controller('HomeCtrl', function ($scope,$rootScope, TemplateService, Navig
         $rootScope.showCTD = false;
         $rootScope.agentconnected = false;
         $rootScope.lastagent ="";
+        $rootScope.agentlist = [];
         if($.jStorage.get("lastagent"))
             $rootScope.lastagent = $.jStorage.get("lastagent");
+        if($.jStorage.get("agentlist"))
+            $rootScope.agentlist = $.jStorage.get("agentlist");
         
         
-        
-        
-        
-        
-        // //Privatemsg
-        // // Start a private conversation with another user
-        // function startPrivateConversation() {
-
-        // // Get the user list
-        // var select = $('#users-list');
-
-        // // Make sure a user is selected in the list
-        // if (select.val() === null) {
-        //     return alert('Please select a user to send a private message to.');
-        // }
-
-        // // Get the recipient's name from the text of the option in the <select>
-        // var recipientName = $('option:selected', select).text();
-        // var recipientId = select.val();
-
-        // // Prompt for a message to send
-        // var message = prompt("Enter a message to send to "+recipientName);
-
-        // // Create the UI for the room if it doesn't exist
-        // createPrivateConversationRoom({name:recipientName, id:recipientId});
-
-        // // Add the message to the room
-        // addMessageToConversation(window.me.id, recipientId, message);
-
-        // // Send the private message
-        // io.socket.post('/chat/private', {to:recipientId, msg: message});
-
-        // }
-
-        // // Create the HTML to hold a private conversation between two users
-        // function createPrivateConversationRoom(penPal) {
-
-        // // Get the ID of the HTML element for this private convo, if there is one
-        // var roomName = 'private-room-'+penPal.id;
-
-        // // If HTML for the room already exists, return.
-        // if ($('#'+roomName).length) {
-        //     return;
-        // }
-
-        // var penPalName = penPal.name == "unknown" ? ("User #"+penPal.id) : penPal.name;
-
-        // // Create a new div to contain the room
-        // var roomDiv = $('<div id="'+roomName+'"></div>');
-
-        // // Create the HTML for the room
-        // var roomHTML = '<h2>Private conversation with <span id="private-username-'+penPal.id+'">'+penPalName+'</span></h2>\n' +
-        //                 '<div id="private-messages-'+penPal.id+'" style="width: 50%; height: 150px; overflow: auto; border: solid 1px #666; padding: 5px; margin: 5px"></div>'+
-        //                 '<input id="private-message-'+penPal.id+'"/> <button id="private-button-'+penPal.id+'">Send message</button">';
-
-        // roomDiv.html(roomHTML);
-
-        // // Add the room to the private conversation area
-        // $('#convos').append(roomDiv);
-
-        // // Hook up the "send message" button
-        // $('#private-button-'+penPal.id).click(onClickSendPrivateMessage);
-
-        // }
-
-        // // Callback for when the user clicks the "Send message" button in a private conversation
-        // function onClickSendPrivateMessage(e) {
-
-        // // Get the button that was pressed
-        // var button = e.currentTarget;
-
-        // // Get the ID of the user we want to send to
-        // var recipientId = button.id.split('-')[2];
-
-        // // Get the message to send
-        // var message = $('#private-message-'+recipientId).val();
-        // $('#private-message-'+recipientId).val("");
-
-        // // Add this message to the room
-        // addMessageToConversation(window.me.id, recipientId, message);
-
-        // // Send the message
-        // io.socket.post('/chat/private', {to: recipientId, msg: message});
-
-        // }
-
-        // // Add HTML for a new message in a private conversation
-        // function addMessageToConversation(senderId, recipientId, message) {
-
-        //     var fromMe = senderId == window.me.id;
-        //     var roomName = 'private-messages-' + (fromMe ? recipientId : senderId);
-        //     var senderName = fromMe ? "Me" : $('#private-username-'+senderId).html();
-        //     var justify = fromMe ? 'right' : 'left';
-
-        //     var div = $('<div style="text-align:'+justify+'"></div>');
-        //     div.html('<strong>'+senderName+'</strong>: '+message);
-        //     $('#'+roomName).append(div);
-
-        // }
-
-        // // Handle an incoming private message from the server.
-        // function receivePrivateMessage(data) {
-
-        //     var sender = data.from;
-
-        //     // Create a room for this message if one doesn't exist
-        //      createPrivateConversationRoom(sender);
-
-        //     // Add a message to the room
-        //     //addMessageToConversation(sender.id, window.me.id, data.msg);
-        //     //$(".chat").append("<li class='left clearfix'><span class='chat-img pull-left'><img ng-src='img/Tenali.png' alt='BOT' class='img-circle  doneLoading' src='img/Tenali.png'></span><div class='chat-body'><p>"+data.msg+" </p></div></li>");
-        //     console.log(data,"recvdmsg");
-        //     mymsg = {Text:data.msg,type:"SYS_FIRST"};
-        //     //$rootScope.chatlist.push({id:"id",msg:mymsg,position:"left",curTime: $rootScope.getDatetime()});
-        //     $rootScope.pushSystemMsg(0,mymsg);  
-        // }
-
-        // window.me = {};
-        // console.log($.jStorage.get("notloggedin"));
-        // if(!$.jStorage.get("notloggedin"))
-        // {
-        //     //Chatapp
-        //         /**
-        //      * app.js
-        //      *
-        //      * Front-end code and event handling for sailsChat
-        //      *
-        //      */
-
-            
-        //     // Attach a listener which fires when a connection is established:
-        //     io.socket.on('connect', function socketConnected() {
-
-        //         // Show the main UI
-        //         $('#disconnect').hide();
-        //         $('#main').show();
-
-        //         // Announce that a new user is online--in this somewhat contrived example,
-        //         // this also causes the CREATION of the user, so each window/tab is a new user.
-        //         userdata = {sid:$.jStorage.get("id"),name:$.jStorage.get("fname")+' '+$.jStorage.get("lname"),access_role:$.jStorage.get("access_role")};
-        //         io.socket.get("/user/announce",{query:userdata}, function(data){
-        //             //console.log(data);
-        //             userdata.socketId = data.socketId;
-        //             userdata.id = data.id;
-        //             $.jStorage.set("socketId",userdata.socketId);
-        //             $.jStorage.set("sid",userdata.sid);
-        //             window.me = userdata;
-        //             updateMyName(userdata);
-
-        //             // Get the current list of users online.  This will also subscribe us to
-        //             // update and destroy events for the individual users.
-        //             io.socket.get('/user', updateUserList);
-
-        //             // Get the current list of chat rooms. This will also subscribe us to
-        //             // update and destroy events for the individual rooms.
-        //             io.socket.get('/room', updateRoomList);
-
-        //         });
-                
-        //         // Listen for the "room" event, which will be broadcast when something
-        //         // happens to a room we're subscribed to.  See the "autosubscribe" attribute
-        //         // of the Room model to see which messages will be broadcast by default
-        //         // to subscribed sockets.
-        //         io.socket.on('room', function messageReceived(message) {
-
-        //             switch (message.verb) {
-
-        //                 // Handle room creation
-        //                 case 'created':
-        //                 addRoom(message.data);
-        //                 break;
-
-        //                 // Handle a user joining a room
-        //                 case 'addedTo':
-        //                 // Post a message in the room
-        //                 postStatusMessage('room-messages-'+message.id, $('#user-'+message.addedId).text()+' has joined');
-        //                 // Update the room user count
-        //                 increaseRoomCount(message.id);
-        //                 break;
-
-        //                 // Handle a user leaving a room
-        //                 case 'removedFrom':
-        //                 // Post a message in the room
-        //                 postStatusMessage('room-messages-'+message.id, $('#user-'+message.removedId).text()+' has left');
-        //                 // Update the room user count
-        //                 decreaseRoomCount(message.id);
-        //                 break;
-
-        //                 // Handle a room being destroyed
-        //                 case 'destroyed':
-        //                 removeRoom(message.id);
-        //                 break;
-
-        //                 // Handle a public message in a room.  Only sockets subscribed to the "message" context of a
-        //                 // Room instance will get this message--see the "join" and "leave" methods of RoomController.js
-        //                 // to see where a socket gets subscribed to a Room instance's "message" context.
-        //                 case 'messaged':
-        //                 receiveRoomMessage(message.data);
-        //                 break;
-
-        //                 default:
-        //                 break;
-
-        //             }
-
-        //         });
-
-        //         // Listen for the "user" event, which will be broadcast when something
-        //         // happens to a user we're subscribed to.  See the "autosubscribe" attribute
-        //         // of the User model to see which messages will be broadcast by default
-        //         // to subscribed sockets.
-        //         io.socket.on('user', function messageReceived(message) {
-
-        //             switch (message.verb) {
-
-        //                 // Handle user creation
-        //                 case 'created':
-        //                 addUser(message.data);
-        //                 break;
-
-        //                 // Handle a user changing their name
-        //                 case 'updated':
-
-        //                 // Get the user's old name by finding the <option> in the list with their ID
-        //                 // and getting its text.
-        //                 var oldName = $('#user-'+message.id).text();
-
-        //                 // Update the name in the user select list
-        //                 $('#user-'+message.id).text(message.data.name);
-
-        //                 // If we have a private convo with them, update the name there and post a status message in the chat.
-        //                 if ($('#private-username-'+message.id).length) {
-        //                     $('#private-username-'+message.id).html(message.data.name);
-        //                     postStatusMessage('private-messages-'+message.id,oldName+' has changed their name to '+message.data.name);
-        //                 }
-
-        //                 break;
-
-        //                 // Handle user destruction
-        //                 case 'destroyed':
-        //                 removeUser(message.id);
-        //                 break;
-
-        //                 // Handle private messages.  Only sockets subscribed to the "message" context of a
-        //                 // User instance will get this message--see the onConnect logic in config/sockets.js
-        //                 // to see where a new user gets subscribed to their own "message" context
-        //                 case 'messaged':
-        //                 receivePrivateMessage(message.data);
-        //                 break;
-
-        //                 default:
-        //                 break;
-        //             }
-
-        //         });
-
-        //         // Add a click handler for the "Update name" button, allowing the user to update their name.
-        //         // updateName() is defined in user.js.
-        //         $('#update-name').click(updateName);
-
-        //         // Add a click handler for the "Send private message" button
-        //         // startPrivateConversation() is defined in private_message.js.
-        //         $('#private-msg-button').click(startPrivateConversation);
-
-        //         // Add a click handler for the "Join room" button
-        //         // joinRoom() is defined in public_message.js.
-        //         $('#join-room').click(joinRoom);
-
-        //         // Add a click handler for the "New room" button
-        //         // newRoom() is defined in room.js.
-        //         $('#new-room').click(newRoom);
-
-        //         console.log('Socket is now connected!');
-
-        //         // When the socket disconnects, hide the UI until we reconnect.
-        //         io.socket.on('disconnect', function() {
-        //         // Hide the main UI
-        //             $('#main').hide();
-        //             $('#disconnect').show();
-        //         });
-
-        //     });
-        // }
-
-
-
-
         // var mylist = $.jStorage.get("chatlist");
         // if(!mylist || mylist == null)
         //     $rootScope.chatlist = [];
@@ -69258,7 +72998,6 @@ myApp.controller('HomeCtrl', function ($scope,$rootScope, TemplateService, Navig
         };
         
         $rootScope.getAutocomplete = function(chatText) {
-            console.log($rootScope.answers);
             if( $rootScope.answers == "")
             {
                 $rootScope.showTimeoutmsg = false;
@@ -69274,7 +73013,7 @@ myApp.controller('HomeCtrl', function ($scope,$rootScope, TemplateService, Navig
                 $rootScope.chatText = chatText;
                 if($(".chatinput").val() == "" || $(".chatinput").val() == null) {
                     $rootScope.autocompletelist = [];
-                    console.log("null");
+                    
                 }
                 else {
                     var str2 = $rootScope.chatText;
@@ -69306,6 +73045,21 @@ myApp.controller('HomeCtrl', function ($scope,$rootScope, TemplateService, Navig
                 $rootScope.scrollChatWindow();
             });
             
+        };
+        $scope.$modalInstanceds = {};
+        $rootScope.openMydashboard = function() {
+            $scope.$modalInstanceds = $uibModal.open({
+                scope: $scope,
+                animation: true,
+                size: 'lg',
+                templateUrl: 'views/modal/profile.html',
+                //controller: 'CommonCtrl'
+            });
+        };
+        $scope.Mydashboardcancel = function() {
+            //console.log("dismissing");
+            $scope.$modalInstanceds.dismiss('cancel');
+            //$scope.$modalInstance.close();
         };
         $rootScope.showChatwindow = function () {
             newlist = $.jStorage.get("chatlist");
@@ -69425,6 +73179,7 @@ myApp.controller('HomeCtrl', function ($scope,$rootScope, TemplateService, Navig
                 $rootScope.autocompletelist = [];
                 $rootScope.chatlist.push({id:"id",msg:value,position:"right",curTime: $rootScope.getDatetime()});
                 $rootScope.sendMsgtoagent(value);
+                $rootScope.scrollChatWindow(); 
             }
             else {
 
@@ -69475,18 +73230,19 @@ myApp.controller('HomeCtrl', function ($scope,$rootScope, TemplateService, Navig
                 }
             }
         };
-        
-        if($.jStorage.get("showchat"))
-        {
-            if($rootScope.uipage != 'dashboard')
-                 $rootScope.showChatwindow();
-        }
-        else
-            $rootScope.minimizeChatwindow();
+        console.log($rootScope.uipage);
+        if($rootScope.uipage =='home'  && !angular.isUndefined($rootScope.uipage))
+            $rootScope.showChatwindow();
+        // if($.jStorage.get("showchat"))
+        // {
+        //     if($rootScope.uipage != 'dashboard')
+        //          $rootScope.showChatwindow();
+        // }
+        // else
+        //     $rootScope.minimizeChatwindow();
 
-        $rootScope.ratecardSubmit = function(coldata,rowdata) {
-            console.log(coldata,rowdata);
-            $scope.formData = {csrfmiddlewaretoken:$rootScope.getCookie("csrftoken"),user_id:$cookies.get("session_id"),user_input:coldata+","+rowdata,auto_id:"",auto_value:"",coldata:coldata,rowdata:rowdata,type:"rate card"};
+        $rootScope.ratecardSubmit = function(coldata,rowdata,response_type,journey_name) {
+            $scope.formData = {csrfmiddlewaretoken:$rootScope.getCookie("csrftoken"),user_id:$cookies.get("session_id"),user_input:coldata+"|"+rowdata,auto_id:"",auto_value:"",coldata:coldata,rowdata:rowdata,type:"rate card",journey_name:journey_name,response_type:response_type};
             apiService.ratecardsubmit($scope.formData).then(function (data){
 				//console.log(data);
 				angular.forEach(data.data.tiledlist, function(value, key) {
@@ -69515,51 +73271,270 @@ myApp.controller('HomeCtrl', function ($scope,$rootScope, TemplateService, Navig
             });
 
         };
-        $rootScope.getDthlinkRes = function(stage,dthlink,index) {
+        $scope.faqdtc=0;
+        //angular.element(document).ready(function () {
+            //$("a.dtfaq").click( function() {
+            // $('.dtfaq').click(function(e){
+            //     e.preventDefault();
+            //     tiledlist = [];
+            //     var stage = $(this).attr("data-stage");
+            //     var journey = $(this).attr("data-journey");
+            //     var dthlink = $(this).text();
+            //     tiledlist[0] ={Journey_Name:journey,Stage:stage} ;
+            //     //tiledlist[0]['Stage'] = stage;
+            //     $rootScope.getDthlinkRes(stage,dthlink,tiledlist);
+            // }).click();
+
+            
+            $(document).on('click', '.dtfaq', function(e){
+            //$(document).unbind("click").on('click', '.dtfaq', function(){
+                
+                console.log($rootScope.chatlist);
+                if($scope.faqdtc == 0)
+                {
+                    console.log("clickedddd");
+                    tiledlist = [];
+                    var stage = $(this).attr("data-stage");
+                    var journey = $(this).attr("data-journey");
+                    var dthlink = $(this).text();
+                    tiledlist[0] ={Journey_Name:journey,Stage:stage} ;
+                    //tiledlist[0]['Stage'] = stage;
+                    $rootScope.getDthlinkRes(stage,dthlink,tiledlist);
+                    $scope.faqdtc = $scope.faqdtc+1;
+                    //e.preventDefault();
+                }
+            });
+        //});
+        angular.element(document).ready(function () {
+            //$(document).unbind("click").on('click', 'a.ratecard', function(e){
+            $(document).on('click', 'a.ratecard', function(){
+                
+                var dthlink = $(this).text();
+                formData = {csrfmiddlewaretoken:$rootScope.getCookie("csrftoken"),user_id:$cookies.get("session_id"),user_input:dthlink,auto_id:'',auto_value:''};
+                apiService.outprocess(formData).then(function (data){
+                        //console.log(data);
+                    
+                        if(data.data.tiledlist[0].topic)
+                             $("#topic").text(data.data.tiledlist[0].topic);
+                    angular.forEach(data.data.tiledlist, function(value, key) {
+                        //console.log(value);
+                        if(value.type=="text")
+                        {
+							//console.log(data.data.tiledlist[0].text);
+                        	$rootScope.pushSystemMsg(0,data.data);
+                            $rootScope.showMsgLoader = false;
+                            $timeout(function(){
+                                var textspeech = data.data.tiledlist[0].Text;
+                                
+                                
+                                //$.jStorage.set("texttospeak",textspeech);
+
+                                $('#mybtn_trigger').trigger('click');
+                                
+                            },200);
+                            
+                            return false;
+                        }
+                        if(value.type=="rate card")
+                        {
+                            $rootScope.pushSystemMsg(0,data.data);
+                            $rootScope.showMsgLoader = false;
+                            
+                            // $(".r_c_col").val($(".r_c_col option:first").val());
+                            // $(".r_c_row").val($(".r_c_row option:first").val());
+
+                            // var firstOption = $('.r_c_col option:first');
+                            // firstOption.attr('selected', true);
+                            // $('.r_c_col').attr('selectedIndex', 0);
+                            $timeout(function(){
+                                $('select.r_c_col:last option:nth-child(2)').attr("selected", "selected");
+                                $('select.r_c_row:last option:nth-child(2)').attr("selected", "selected");
+                                $("select.r_c_col:last").trigger('change');
+                                $("select.r_c_row:last").trigger('change');
+                            },1000);
+                            
+                            return false;
+                        }
+                        else if(value.type=="DTHyperlink")
+                        {
+                           $rootScope.DthResponse(0,data.data);  
+                           $timeout(function(){
+                                var textspeech = data.data.tiledlist[0].Text;
+                                _.each(data.data.tiledlist[0].DTHyperlink,function(v,k){
+                                    textspeech += v;
+                                });
+                                $.jStorage.set("texttospeak",textspeech);
+
+                                $('#mybtn_trigger').trigger('click');
+                                
+                            },200);
+                        }
+                        else if(value.type=="Instruction")
+                        {
+							
+                           $rootScope.InstructionResponse(0,data.data);  
+                           
+                        }
+                        if(value.type=="product listing")
+                        {
+                            $rootScope.pushSystemMsg(0,data.data);
+                            $rootScope.showMsgLoader = false;
+                            $timeout(function(){
+                            $('.carousel').carousel({
+                                interval: false,
+                                wrap: false
+                            });
+                            $('.carousel').find('.item').first().addClass('active');
+                            },2000);
+                            
+                            return false;
+                        }
+                    });
+                });
+            });
+        });
+        angular.element(document).ready(function () {
+            //$(document).unbind("click").on('click', 'a.productlisting', function(e){
+            $(document).on('click', 'a.productlisting', function(){
+                
+                var dthlink = $(this).text();
+                formData = {csrfmiddlewaretoken:$rootScope.getCookie("csrftoken"),user_id:$cookies.get("session_id"),user_input:dthlink,auto_id:'',auto_value:''};
+                apiService.outprocess(formData).then(function (data){
+                        //console.log(data);
+                    
+                        if(data.data.tiledlist[0].topic)
+                             $("#topic").text(data.data.tiledlist[0].topic);
+                    angular.forEach(data.data.tiledlist, function(value, key) {
+                        //console.log(value);
+                        if(value.type=="text")
+                        {
+							//console.log(data.data.tiledlist[0].text);
+                        	$rootScope.pushSystemMsg(0,data.data);
+                            $rootScope.showMsgLoader = false;
+                            $timeout(function(){
+                                var textspeech = data.data.tiledlist[0].Text;
+                                
+                                
+                                //$.jStorage.set("texttospeak",textspeech);
+
+                                $('#mybtn_trigger').trigger('click');
+                                
+                            },200);
+                            
+                            return false;
+                        }
+                        if(value.type=="rate card")
+                        {
+                            $rootScope.pushSystemMsg(0,data.data);
+                            $rootScope.showMsgLoader = false;
+                            
+                            // $(".r_c_col").val($(".r_c_col option:first").val());
+                            // $(".r_c_row").val($(".r_c_row option:first").val());
+
+                            // var firstOption = $('.r_c_col option:first');
+                            // firstOption.attr('selected', true);
+                            // $('.r_c_col').attr('selectedIndex', 0);
+                            $timeout(function(){
+                                $('select.r_c_col:last option:nth-child(2)').attr("selected", "selected");
+                                $('select.r_c_row:last option:nth-child(2)').attr("selected", "selected");
+                                $("select.r_c_col:last").trigger('change');
+                                $("select.r_c_row:last").trigger('change');
+                            },1000);
+                            
+                            return false;
+                        }
+                        else if(value.type=="DTHyperlink")
+                        {
+                           $rootScope.DthResponse(0,data.data);  
+                           $timeout(function(){
+                                var textspeech = data.data.tiledlist[0].Text;
+                                _.each(data.data.tiledlist[0].DTHyperlink,function(v,k){
+                                    textspeech += v;
+                                });
+                                $.jStorage.set("texttospeak",textspeech);
+
+                                $('#mybtn_trigger').trigger('click');
+                                
+                            },200);
+                        }
+                        else if(value.type=="Instruction")
+                        {
+							
+                           $rootScope.InstructionResponse(0,data.data);  
+                           
+                        }
+                        if(value.type=="product listing")
+                        {
+                            $rootScope.pushSystemMsg(0,data.data);
+                            $rootScope.showMsgLoader = false;
+                            $timeout(function(){
+                            $('.carousel').carousel({
+                                interval: false,
+                                wrap: false
+                            });
+                            $('.carousel').find('.item').first().addClass('active');
+                            },2000);
+                            
+                            return false;
+                        }
+                    });
+                });
+            });
+        });
+        $rootScope.to_trusted = function(html_code) {
+            return $sce.trustAsHtml(html_code);
+        };
+        $rootScope.getDthlinkRes = function(stage,dthlink,tiledlist) {
             //console.log(colno,lineno,dthlink);
             //mysession = $.jStorage.get("sessiondata");
-            var mysession = {};
-            
-            console.log(stage+"-"+dthlink);
-            mysession.DTHlink=dthlink;
-            //mysession.DTHline=lineno;
-            //mysession.DTHcol=colno;
-            mysession.DTHstage=stage;
-            // formData = {};
-            // formData.DTHcol = colno;
-            // formData.DTHline = lineno;
-            // formData.DTHlink = dthlink;
-            formData = mysession;
-            formData.csrfmiddlewaretoken=$rootScope.getCookie("csrftoken");
-            formData.user_id=$cookies.get("session_id");
-            //console.log(formData);
-            apiService.getDthlinkRes(formData).then(function (data){
-                angular.forEach(data.data.tiledlist, function(value, key) {
-                    if(value.type=="DTHyperlink")
-                    {
-                        $rootScope.DthResponse(0,data.data);
-                        if(data.data.tiledlist[0].sub_topic_list || data.data.tiledlist[0].sub_topic_list != null)
+            if($scope.faqdtc<1)
+            {
+                var mysession = {};
+                
+                
+                mysession.DTHlink=dthlink;
+                //mysession.DTHline=lineno;
+                //mysession.DTHcol=colno;
+                mysession.DTHstage=stage;
+                mysession.tiledlist = tiledlist;
+                // formData = {};
+                // formData.DTHcol = colno;
+                // formData.DTHline = lineno;
+                // formData.DTHlink = dthlink;
+                formData = mysession;
+                formData.csrfmiddlewaretoken=$rootScope.getCookie("csrftoken");
+                formData.user_id=$cookies.get("session_id");
+                //console.log(formData);
+                apiService.getDthlinkRes(formData).then(function (data){
+                    angular.forEach(data.data.tiledlist, function(value, key) {
+                        if(value.type=="DTHyperlink")
                         {
-                            $rootScope.openMenu(data.data.tiledlist[0].sub_topic_list);
+                            $rootScope.DthResponse(0,data.data);
+                            if(data.data.tiledlist[0].sub_topic_list || data.data.tiledlist[0].sub_topic_list != null)
+                            {
+                                $rootScope.openMenu(data.data.tiledlist[0].sub_topic_list);
+                            }
+                            if(data.data.tiledlist[0].Script || data.data.tiledlist[0].Script != null)
+                            {
+                                // if(data.data.tiledlist[0].Script.length== 0)
+                                //     $rootScope.tabHeight = window.innerHeight-53;
+                                // else
+                                //     $rootScope.tabHeight = 300;
+                                
+                            }
+                            if(data.data.session_obj_data || data.data.session_obj_data != null)
+                                $.jStorage.set("sessiondata",data.data.session_obj_data);
+                            if(data.data.tiledlist[0].topic)
+                                $("#topic").text(data.data.tiledlist[0].topic);
+                            //$.jStorage.set("sessiondata",data.data.session_obj_data);
+                            $rootScope.rotateoutmenu();
                         }
-                        if(data.data.tiledlist[0].Script || data.data.tiledlist[0].Script != null)
-                        {
-                            // if(data.data.tiledlist[0].Script.length== 0)
-                            //     $rootScope.tabHeight = window.innerHeight-53;
-                            // else
-                            //     $rootScope.tabHeight = 300;
-                            
-                        }
-                        if(data.data.session_obj_data || data.data.session_obj_data != null)
-                            $.jStorage.set("sessiondata",data.data.session_obj_data);
-                        if(data.data.tiledlist[0].topic)
-                            $("#topic").text(data.data.tiledlist[0].topic);
-                        //$.jStorage.set("sessiondata",data.data.session_obj_data);
-                    }
+                    });
+                    $scope.faqdtc=0;
+                }).catch(function(reason){
+                    console.log(reason);
                 });
-            }).catch(function(reason){
-                console.log(reason);
-            });
+            }
         };
         $rootScope.getDthlinkRes2 = function(stage,dthlink,index) {
             //console.log(colno,lineno,dthlink);
@@ -69650,50 +73625,52 @@ myApp.controller('HomeCtrl', function ($scope,$rootScope, TemplateService, Navig
             $scope.$viewmodalInstance1.dismiss('cancel');
         };
         $rootScope.DthResponse = function(id,data) {
-            if(data.tiledlist[0].DT.length > 0 || data.tiledlist[0].Text != "")
-            {
-				//if()
+			if(data.tiledlist[0].DT )
+			{
+				if( data.tiledlist[0].DT.length > 0  || data.tiledlist[0].Text != "")
 				{
-					
-					// var images = Array();
-					// var process = Array();
-                    // process = data.tiledlist[0].Process;
-                    // var dtstage = data.tiledlist[0].Stage;
-                    // var dtstage = dtstage.replace(".", "");
-                    // data.tiledlist[0].bgstage = dtstage;
-					// /*_.each(data.tiledlist[0].Process,function(v,k){
-					// 	if (v.indexOf(".png") >= 0) 
-					// });*/
-					//  images = _.remove(process, function(n) {
-					//   return n.indexOf(".png") >= 0;
-					// });
-					// //console.log(images);
-					// data.tiledlist[0].Process =process;
-					// data.tiledlist[0].images =images; //|| images.length > 0
-					if((data.tiledlist[0].Stage == '0') && data.tiledlist[0].DT.length > 0 || ( data.tiledlist[0].Text != "" && data.tiledlist[0].Text)  )
-                        $rootScope.pushSystemMsg(id,data);
-                    if(data.tiledlist[0].Stage != '0')
-                    {
-                        if(!data.tiledlist[0].Script || data.tiledlist[0].Script.length== 0 )
-                            $rootScope.tabHeight = window.innerHeight-53;
-                        else
-                            $rootScope.tabHeight = 300;
-                    }
-					// if(images.length > 0)
-					// {
-					// 	$timeout(function(){
-					// 		$('#myCarousel2').carousel({
-					// 			interval: false,
-					// 			wrap: false
-					// 		});
-					// 		$('#myCarousel2').find('.item').first().addClass('active');
-					// 	},2000);
+					//if()
+					{
 						
-					// }
+						// var images = Array();
+						// var process = Array();
+						// process = data.tiledlist[0].Process;
+						// var dtstage = data.tiledlist[0].Stage;
+						// var dtstage = dtstage.replace(".", "");
+						// data.tiledlist[0].bgstage = dtstage;
+						// /*_.each(data.tiledlist[0].Process,function(v,k){
+						// 	if (v.indexOf(".png") >= 0) 
+						// });*/
+						//  images = _.remove(process, function(n) {
+						//   return n.indexOf(".png") >= 0;
+						// });
+						// //console.log(images);
+						// data.tiledlist[0].Process =process;
+						// data.tiledlist[0].images =images; //|| images.length > 0
+						if(data.tiledlist[0].DT.length > 0 || ( data.tiledlist[0].Text != "" && data.tiledlist[0].Text)  )
+							$rootScope.pushSystemMsg(id,data);
+						if(data.tiledlist[0].Stage != '0')
+						{
+							if(!data.tiledlist[0].Script || data.tiledlist[0].Script.length== 0 )
+								$rootScope.tabHeight = window.innerHeight-53;
+							else
+								$rootScope.tabHeight = 300;
+						}
+						// if(images.length > 0)
+						// {
+						// 	$timeout(function(){
+						// 		$('#myCarousel2').carousel({
+						// 			interval: false,
+						// 			wrap: false
+						// 		});
+						// 		$('#myCarousel2').find('.item').first().addClass('active');
+						// 	},2000);
+							
+						// }
+					}
 				}
-            }
-           
-            
+			}   
+			
             $rootScope.collapse_arr = new Array();
             var process = data.tiledlist[0].Process;
             // _.each(process,function(v,k){
@@ -69709,9 +73686,8 @@ myApp.controller('HomeCtrl', function ($scope,$rootScope, TemplateService, Navig
             //     }
             // });
             data.tiledlist[0].Process = process;
-            var ele = ele = new Array("Process");
+            var ele = new Array("Process");
             var ele_val = new Array(data.tiledlist[0]);
-            console.log(data.tiledlist[0].Process);
             $rootScope.showMsgLoader = false; 
             
             $rootScope.contentobj = [];
@@ -69759,15 +73735,27 @@ myApp.controller('HomeCtrl', function ($scope,$rootScope, TemplateService, Navig
                 // ele_val.push(data.tiledlist[0]);
                 $rootScope.tabHeight = window.innerHeight-120-53;
             }
-            $rootScope.tabvalue.elements = [];
-            $rootScope.tabvalue.element_values=[];
-            $rootScope.tabvalue.elements = ele;
-            $rootScope.tabvalue.element_values=ele_val;
-            $rootScope.selectTabIndex = 0;
-			$timeout(function(){
-				$("#tab_data .nav-tabs li").first().addClass("active");
-				$("#tab_data .tab-content .tab-pane").first().addClass("active");
-			},4000);
+			if(data.tiledlist[0].Journey_Name && data.tiledlist[0].Journey_Name != '')
+			{
+				formData1 = {Journey_Name:data.tiledlist[0].Journey_Name};
+				apiService.getguidelinedata(formData1).then(function (guidedata){
+					if(guidedata.data.data.length > 0)
+					{
+						ele.push('Guidelines');
+						ele_val.push(guidedata.data.data);
+					}
+					$rootScope.tabvalue.elements = [];
+					$rootScope.tabvalue.element_values=[];
+					$rootScope.tabvalue.elements = ele;
+					$rootScope.tabvalue.element_values=ele_val;
+					$rootScope.selectTabIndex = 0;
+					$timeout(function(){
+						$("#tab_data .nav-tabs li").first().addClass("active");
+						$("#tab_data .tab-content .tab-pane").first().addClass("active");
+					},4000);
+				});
+			}
+            
             
             
             
@@ -70127,47 +74115,174 @@ myApp.controller('HomeCtrl', function ($scope,$rootScope, TemplateService, Navig
                     }
                     if(data.data.session_obj_data || data.data.session_obj_data != null)
                         $.jStorage.set("sessiondata",data.data.session_obj_data);
+                    $rootScope.rotateoutmenu();
                 }).catch(function (reason) {
                     console.log(reason);
-                    var msg = {Text:"Sorry I could not understand",type:"SYS_EMPTY_RES"};
-                    $rootScope.pushSystemMsg(0,msg); 
+                    // var msg = {Text:"Sorry I could not understand",type:"SYS_EMPTY_RES"};
+                    // $rootScope.pushSystemMsg(0,msg); 
                     $rootScope.showMsgLoader=false;
-                    // $rootScope.agentconnected = true;
-                    // if($rootScope.agentconnected)
-                    // {
-                    //     $rootScope.sendMsgtoagent(sess2.Text);
-                    // }
-                    
+                    io.socket.get('/user', function (users){
+                        var newuser = _.remove(users, function(n) {
+                            return n.access_role  == 4;
+                        });
+                        if(newuser.length > 0)
+                        {
+                            $rootScope.agentconnected = true;
+                            if($rootScope.agentconnected)
+                            {
+                                $rootScope.sendMsgtoagent(sess2.Text);
+                            }
+
+                        }
+                        else
+                        {
+                            $rootScope.agentconnected = false;
+                            var msg3 = {Text:"Sorry I could not understand",type:"SYS_EMPTY_RES"};
+                            $rootScope.pushSystemMsg(0,msg3); 
+                        }
+                    });
                 });
             //});
             $rootScope.autocompletelist = [];
         };
+        function addMessageToConversation(senderId, recipientId, message) {
+
+            var fromMe = senderId == window.me.id;
+            var roomName = 'private-messages-' + (fromMe ? recipientId : senderId);
+            $.jStorage.set('lastroom',roomName);
+            $.jStorage.set('lastroomid', (fromMe ? recipientId : senderId));
+            var senderName = fromMe ? "Me" : $('#private-username-'+senderId).html();
+            var justify = fromMe ? 'right' : 'left';
+
+            var div = $('<div style="text-align:'+justify+'"></div>');
+            div.html('<strong>'+senderName+'</strong>: '+message);
+            $('#'+roomName).append(div);
+
+        }
+        $scope.lastagentid = "";
+        $rootScope.lastagentmsg = false;
         $rootScope.sendMsgtoagent = function(msg) {
 
-            io.sails.url = 'http://localhost:1337';
+            io.sails.url = 'http://exponentiadata.co.in:9161';
             
-            //io.sails.connect([io.sails.url]);
-            //sess2.Text
-            // var sockets = io.sails.sockets.clients();
-            // console.log(sockets);
-            
-            // io.socket.get('/chat/addconv',{}, function (resData, jwres){
-            // // ...
-            // });
-            //createPrivateConversationRoom({name:"User #10", id:10});
-            //$rootScope.lastagent
             io.socket.get('/user', function (users){
-                console.log(users,"users");
-                users.forEach(function(user) {
-                    //console.log(user);
-                    //if (user.id == me.id) {return;}
-                    //addUser(user);
+                var newuser = _.remove(users, function(n) {
+                    return n.access_role  == 4;
                 });
-            });
-            addMessageToConversation(window.me.id, "5a0a81e8179172360420c966", msg);
+                if(newuser.length > 0)
+                {
+                    if(!$rootScope.lastagent || newuser.length==1) {
+                        $rootScope.lastagent = newuser[0].sid;
+                        newuser.forEach(function(user) {
+                            if(_.find($rootScope.agentlist, function(o) { return o == user.sid; }))
+                            {
+                                
+                            }
+                            else 
+                            {
+                                $rootScope.agentlist.push(newuser[0].sid);
+                                $.jStorage.set("agentlist",$rootScope.agentlist);
+                            }
+                        });
+                        
+                    }
+                    else 
+                    {
+                        var allconnected = true;
+                        newuser.forEach(function(user) {
+                            if(_.find($rootScope.agentlist, function(o) { return o == user.sid; }))
+                            {
+                                
+                            }
+                            else 
+                            {
+                                allconnected = false;
+                                $rootScope.lastagent = user.sid;
+                                $rootScope.agentlist.push(user.sid);
+                                $.jStorage.set("agentlist",$rootScope.agentlist);
+                            }
+                        });
+                        if(allconnected)
+                        {
+                            $rootScope.lastagent = newuser[0].sid;
+                        }
+                    }
+                    console.log(newuser,"users");
+                    console.log($rootScope.lastagent,"last agent");
+                    
 
-            // Send the message
-            io.socket.post('/chat/private', {to: "5a0a81e8179172360420c966", msg: msg});
+                    var arr_ind=_.findIndex(newuser, function(o) { return o.sid == $rootScope.lastagent; });
+                    console.log(newuser[arr_ind].sname,"Agent");
+                    if(!$rootScope.lastagentmsg)
+                    {
+                        var msg1 = {Text:"I am a Bot,I am still learning. <br>We’re finding the best person to connect with you.Please stay online.",type:"SYS_EMPTY_RES"};
+                    // one of our agents will attend to you right away.
+                        $rootScope.pushSystemMsg(0,msg1); 
+                        var msg2 = {Text:"You are now connected to our agent "+newuser[arr_ind].sname,type:"SYS_CONV_START"};
+                        $rootScope.pushSystemMsg(0,msg2); 
+                        $rootScope.lastagentmsg = true;
+                    }
+                    $scope.lastagentid = newuser[arr_ind].id;
+                    addMessageToConversation(window.me.id, newuser[arr_ind].id, msg);
+                    io.socket.post('/chat/private', {to: newuser[arr_ind].id, msg: msg});
+                    var formData= {msg:msg,from_id:$.jStorage.get("id"),fromid:window.me.id,fromname:($.jStorage.get("fname")+' '+$.jStorage.get("lname")),from_socketid:$.jStorage.get("socketId"),toid:newuser[arr_ind].id,toname:newuser[arr_ind].sname,to_id:newuser[arr_ind].sid,to_socketid:newuser[arr_ind].socketId};
+                    apiService.saveagentchat(formData).then(function (data){
+
+                    });
+                }
+                else {
+                    $rootScope.agentconnected = false;
+                    var msg3 = {Text:"Sorry I could not understand",type:"SYS_EMPTY_RES"};
+                    $rootScope.pushSystemMsg(0,msg3); 
+                }
+            });
+            // addMessageToConversation(window.me.id, "5a0a81e8179172360420c966", msg);
+
+            // // Send the message
+            // io.socket.post('/chat/private', {to: "5a0a81e8179172360420c966", msg: msg});
+        };
+        $rootScope.endConversation = function(byrole) {
+            //byrole-1->user,2-> chat agent
+            var disconnectby = "";
+            var endmsg="";
+            if(byrole == 2)
+            {
+                disconnectby=$scope.lastagentid;
+                endmsg = "Chat terminated by agent.";
+            }
+            else
+            {
+                disconnectby=$.jStorage.get("id");
+                endmsg = "Your Chat has ended.";
+            }
+            var msg = {Text:endmsg,type:"SYS_CONV_END"};
+            $rootScope.pushSystemMsg(0,msg); 
+            //io.sails.sockets.leave($.jStorage.get("socketId"), $.jStorage.get("lastroom"));
+            //removeUser(window.menubar.id);
+            // roomdata = {roomId:$.jStorage.get("lastroomid"),roomName : $.jStorage.get("lastroom"),socketId:$.jStorage.get("socketId"),sid:$.jStorage.get("sid")};
+            // console.log(roomdata);
+            //io.socket.post('/room/leave',{query:roomdata}, function(data){
+            // io.socket.delete('/room/:'+roomdata.roomId+'/users',{id:roomdata.roomId,query:roomdata}, function(data){
+            //     console.log(data);
+                
+            // });
+            
+            //io.connect("http://exponentiadata.co.in:9161", {'forceNew': true});
+            //io.disconnect;
+            //io.socket("disconnect");
+            // io.connect("http://exponentiadata.co.in:9161", {'forceNew': true});
+            // userdata = {sid:$.jStorage.get("id"),name:$.jStorage.get("fname")+' '+$.jStorage.get("lname"),access_role:$.jStorage.get("access_role")};
+            //     io.socket.get("/user/disconnect",{query:userdata}, function(data){
+            //     });
+            //$rootScope.disconnect();
+            
+            io.socket.post('/chat/private', {to:$scope.lastagentid, msg: '',messagetype:"disconnect"});
+            $rootScope.agentconnected = false;
+            $rootScope.lastagentmsg = false;
+            var formData= {disconnectby:disconnectby,from_id:$.jStorage.get("id"),to_id:$rootScope.lastagent,socketid:$.jStorage.get("socketId")};
+            apiService.disconnectuser(formData).then(function (data){
+
+            });
         };
         $rootScope.Speaktext = function() {
             //console.log(text);
@@ -70480,5 +74595,1286 @@ myApp.controller('languageCtrl', function ($scope, TemplateService, $translate, 
         //  $rootScope.$apply();
     };
 });
+// socket.io-1.2.1
+// (from http://socket.io/download/)
+!function(e){if("object"==typeof exports&&"undefined"!=typeof module)module.exports=e();else if("function"==typeof define&&define.amd)define([],e);else{var f;"undefined"!=typeof window?f=window:"undefined"!=typeof global?f=global:"undefined"!=typeof self&&(f=self),f.io=e()}}(function(){var define,module,exports;return function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeof require=="function"&&require;if(!u&&a)return a(o,!0);if(i)return i(o,!0);throw new Error("Cannot find module '"+o+"'")}var f=n[o]={exports:{}};t[o][0].call(f.exports,function(e){var n=t[o][1][e];return s(n?n:e)},f,f.exports,e,t,n,r)}return n[o].exports}var i=typeof require=="function"&&require;for(var o=0;o<r.length;o++)s(r[o]);return s}({1:[function(_dereq_,module,exports){module.exports=_dereq_("./lib/")},{"./lib/":2}],2:[function(_dereq_,module,exports){var url=_dereq_("./url");var parser=_dereq_("socket.io-parser");var Manager=_dereq_("./manager");var debug=_dereq_("debug")("socket.io-client");module.exports=exports=lookup;var cache=exports.managers={};function lookup(uri,opts){if(typeof uri=="object"){opts=uri;uri=undefined}opts=opts||{};var parsed=url(uri);var source=parsed.source;var id=parsed.id;var io;if(opts.forceNew||opts["force new connection"]||false===opts.multiplex){debug("ignoring socket cache for %s",source);io=Manager(source,opts)}else{if(!cache[id]){debug("new io instance for %s",source);cache[id]=Manager(source,opts)}io=cache[id]}return io.socket(parsed.path)}exports.protocol=parser.protocol;exports.connect=lookup;exports.Manager=_dereq_("./manager");exports.Socket=_dereq_("./socket")},{"./manager":3,"./socket":5,"./url":6,debug:9,"socket.io-parser":43}],3:[function(_dereq_,module,exports){var url=_dereq_("./url");var eio=_dereq_("engine.io-client");var Socket=_dereq_("./socket");var Emitter=_dereq_("component-emitter");var parser=_dereq_("socket.io-parser");var on=_dereq_("./on");var bind=_dereq_("component-bind");var object=_dereq_("object-component");var debug=_dereq_("debug")("socket.io-client:manager");var indexOf=_dereq_("indexof");module.exports=Manager;function Manager(uri,opts){if(!(this instanceof Manager))return new Manager(uri,opts);if(uri&&"object"==typeof uri){opts=uri;uri=undefined}opts=opts||{};opts.path=opts.path||"/socket.io";this.nsps={};this.subs=[];this.opts=opts;this.reconnection(opts.reconnection!==false);this.reconnectionAttempts(opts.reconnectionAttempts||Infinity);this.reconnectionDelay(opts.reconnectionDelay||1e3);this.reconnectionDelayMax(opts.reconnectionDelayMax||5e3);this.timeout(null==opts.timeout?2e4:opts.timeout);this.readyState="closed";this.uri=uri;this.connected=[];this.attempts=0;this.encoding=false;this.packetBuffer=[];this.encoder=new parser.Encoder;this.decoder=new parser.Decoder;this.autoConnect=opts.autoConnect!==false;if(this.autoConnect)this.open()}Manager.prototype.emitAll=function(){this.emit.apply(this,arguments);for(var nsp in this.nsps){this.nsps[nsp].emit.apply(this.nsps[nsp],arguments)}};Emitter(Manager.prototype);Manager.prototype.reconnection=function(v){if(!arguments.length)return this._reconnection;this._reconnection=!!v;return this};Manager.prototype.reconnectionAttempts=function(v){if(!arguments.length)return this._reconnectionAttempts;this._reconnectionAttempts=v;return this};Manager.prototype.reconnectionDelay=function(v){if(!arguments.length)return this._reconnectionDelay;this._reconnectionDelay=v;return this};Manager.prototype.reconnectionDelayMax=function(v){if(!arguments.length)return this._reconnectionDelayMax;this._reconnectionDelayMax=v;return this};Manager.prototype.timeout=function(v){if(!arguments.length)return this._timeout;this._timeout=v;return this};Manager.prototype.maybeReconnectOnOpen=function(){if(!this.openReconnect&&!this.reconnecting&&this._reconnection&&this.attempts===0){this.openReconnect=true;this.reconnect()}};Manager.prototype.open=Manager.prototype.connect=function(fn){debug("readyState %s",this.readyState);if(~this.readyState.indexOf("open"))return this;debug("opening %s",this.uri);this.engine=eio(this.uri,this.opts);var socket=this.engine;var self=this;this.readyState="opening";this.skipReconnect=false;var openSub=on(socket,"open",function(){self.onopen();fn&&fn()});var errorSub=on(socket,"error",function(data){debug("connect_error");self.cleanup();self.readyState="closed";self.emitAll("connect_error",data);if(fn){var err=new Error("Connection error");err.data=data;fn(err)}self.maybeReconnectOnOpen()});if(false!==this._timeout){var timeout=this._timeout;debug("connect attempt will timeout after %d",timeout);var timer=setTimeout(function(){debug("connect attempt timed out after %d",timeout);openSub.destroy();socket.close();socket.emit("error","timeout");self.emitAll("connect_timeout",timeout)},timeout);this.subs.push({destroy:function(){clearTimeout(timer)}})}this.subs.push(openSub);this.subs.push(errorSub);return this};Manager.prototype.onopen=function(){debug("open");this.cleanup();this.readyState="open";this.emit("open");var socket=this.engine;this.subs.push(on(socket,"data",bind(this,"ondata")));this.subs.push(on(this.decoder,"decoded",bind(this,"ondecoded")));this.subs.push(on(socket,"error",bind(this,"onerror")));this.subs.push(on(socket,"close",bind(this,"onclose")))};Manager.prototype.ondata=function(data){this.decoder.add(data)};Manager.prototype.ondecoded=function(packet){this.emit("packet",packet)};Manager.prototype.onerror=function(err){debug("error",err);this.emitAll("error",err)};Manager.prototype.socket=function(nsp){var socket=this.nsps[nsp];if(!socket){socket=new Socket(this,nsp);this.nsps[nsp]=socket;var self=this;socket.on("connect",function(){if(!~indexOf(self.connected,socket)){self.connected.push(socket)}})}return socket};Manager.prototype.destroy=function(socket){var index=indexOf(this.connected,socket);if(~index)this.connected.splice(index,1);if(this.connected.length)return;this.close()};Manager.prototype.packet=function(packet){debug("writing packet %j",packet);var self=this;if(!self.encoding){self.encoding=true;this.encoder.encode(packet,function(encodedPackets){for(var i=0;i<encodedPackets.length;i++){self.engine.write(encodedPackets[i])}self.encoding=false;self.processPacketQueue()})}else{self.packetBuffer.push(packet)}};Manager.prototype.processPacketQueue=function(){if(this.packetBuffer.length>0&&!this.encoding){var pack=this.packetBuffer.shift();this.packet(pack)}};Manager.prototype.cleanup=function(){var sub;while(sub=this.subs.shift())sub.destroy();this.packetBuffer=[];this.encoding=false;this.decoder.destroy()};Manager.prototype.close=Manager.prototype.disconnect=function(){this.skipReconnect=true;this.readyState="closed";this.engine&&this.engine.close()};Manager.prototype.onclose=function(reason){debug("close");this.cleanup();this.readyState="closed";this.emit("close",reason);if(this._reconnection&&!this.skipReconnect){this.reconnect()}};Manager.prototype.reconnect=function(){if(this.reconnecting||this.skipReconnect)return this;var self=this;this.attempts++;if(this.attempts>this._reconnectionAttempts){debug("reconnect failed");this.emitAll("reconnect_failed");this.reconnecting=false}else{var delay=this.attempts*this.reconnectionDelay();delay=Math.min(delay,this.reconnectionDelayMax());debug("will wait %dms before reconnect attempt",delay);this.reconnecting=true;var timer=setTimeout(function(){if(self.skipReconnect)return;debug("attempting reconnect");self.emitAll("reconnect_attempt",self.attempts);self.emitAll("reconnecting",self.attempts);if(self.skipReconnect)return;self.open(function(err){if(err){debug("reconnect attempt error");self.reconnecting=false;self.reconnect();self.emitAll("reconnect_error",err.data)}else{debug("reconnect success");self.onreconnect()}})},delay);this.subs.push({destroy:function(){clearTimeout(timer)}})}};Manager.prototype.onreconnect=function(){var attempt=this.attempts;this.attempts=0;this.reconnecting=false;this.emitAll("reconnect",attempt)}},{"./on":4,"./socket":5,"./url":6,"component-bind":7,"component-emitter":8,debug:9,"engine.io-client":10,indexof:39,"object-component":40,"socket.io-parser":43}],4:[function(_dereq_,module,exports){module.exports=on;function on(obj,ev,fn){obj.on(ev,fn);return{destroy:function(){obj.removeListener(ev,fn)}}}},{}],5:[function(_dereq_,module,exports){var parser=_dereq_("socket.io-parser");var Emitter=_dereq_("component-emitter");var toArray=_dereq_("to-array");var on=_dereq_("./on");var bind=_dereq_("component-bind");var debug=_dereq_("debug")("socket.io-client:socket");var hasBin=_dereq_("has-binary");module.exports=exports=Socket;var events={connect:1,connect_error:1,connect_timeout:1,disconnect:1,error:1,reconnect:1,reconnect_attempt:1,reconnect_failed:1,reconnect_error:1,reconnecting:1};var emit=Emitter.prototype.emit;function Socket(io,nsp){this.io=io;this.nsp=nsp;this.json=this;this.ids=0;this.acks={};if(this.io.autoConnect)this.open();this.receiveBuffer=[];this.sendBuffer=[];this.connected=false;this.disconnected=true}Emitter(Socket.prototype);Socket.prototype.subEvents=function(){if(this.subs)return;var io=this.io;this.subs=[on(io,"open",bind(this,"onopen")),on(io,"packet",bind(this,"onpacket")),on(io,"close",bind(this,"onclose"))]};Socket.prototype.open=Socket.prototype.connect=function(){if(this.connected)return this;this.subEvents();this.io.open();if("open"==this.io.readyState)this.onopen();return this};Socket.prototype.send=function(){var args=toArray(arguments);args.unshift("message");this.emit.apply(this,args);return this};Socket.prototype.emit=function(ev){if(events.hasOwnProperty(ev)){emit.apply(this,arguments);return this}var args=toArray(arguments);var parserType=parser.EVENT;if(hasBin(args)){parserType=parser.BINARY_EVENT}var packet={type:parserType,data:args};if("function"==typeof args[args.length-1]){debug("emitting packet with ack id %d",this.ids);this.acks[this.ids]=args.pop();packet.id=this.ids++}if(this.connected){this.packet(packet)}else{this.sendBuffer.push(packet)}return this};Socket.prototype.packet=function(packet){packet.nsp=this.nsp;this.io.packet(packet)};Socket.prototype.onopen=function(){debug("transport is open - connecting");if("/"!=this.nsp){this.packet({type:parser.CONNECT})}};Socket.prototype.onclose=function(reason){debug("close (%s)",reason);this.connected=false;this.disconnected=true;this.emit("disconnect",reason)};Socket.prototype.onpacket=function(packet){if(packet.nsp!=this.nsp)return;switch(packet.type){case parser.CONNECT:this.onconnect();break;case parser.EVENT:this.onevent(packet);break;case parser.BINARY_EVENT:this.onevent(packet);break;case parser.ACK:this.onack(packet);break;case parser.BINARY_ACK:this.onack(packet);break;case parser.DISCONNECT:this.ondisconnect();break;case parser.ERROR:this.emit("error",packet.data);break}};Socket.prototype.onevent=function(packet){var args=packet.data||[];debug("emitting event %j",args);if(null!=packet.id){debug("attaching ack callback to event");args.push(this.ack(packet.id))}if(this.connected){emit.apply(this,args)}else{this.receiveBuffer.push(args)}};Socket.prototype.ack=function(id){var self=this;var sent=false;return function(){if(sent)return;sent=true;var args=toArray(arguments);debug("sending ack %j",args);var type=hasBin(args)?parser.BINARY_ACK:parser.ACK;self.packet({type:type,id:id,data:args})}};Socket.prototype.onack=function(packet){debug("calling ack %s with %j",packet.id,packet.data);var fn=this.acks[packet.id];fn.apply(this,packet.data);delete this.acks[packet.id]};Socket.prototype.onconnect=function(){this.connected=true;this.disconnected=false;this.emit("connect");this.emitBuffered()};Socket.prototype.emitBuffered=function(){var i;for(i=0;i<this.receiveBuffer.length;i++){emit.apply(this,this.receiveBuffer[i])}this.receiveBuffer=[];for(i=0;i<this.sendBuffer.length;i++){this.packet(this.sendBuffer[i])}this.sendBuffer=[]};Socket.prototype.ondisconnect=function(){debug("server disconnect (%s)",this.nsp);this.destroy();this.onclose("io server disconnect")};Socket.prototype.destroy=function(){if(this.subs){for(var i=0;i<this.subs.length;i++){this.subs[i].destroy()}this.subs=null}this.io.destroy(this)};Socket.prototype.close=Socket.prototype.disconnect=function(){if(this.connected){debug("performing disconnect (%s)",this.nsp);this.packet({type:parser.DISCONNECT})}this.destroy();if(this.connected){this.onclose("io client disconnect")}return this}},{"./on":4,"component-bind":7,"component-emitter":8,debug:9,"has-binary":35,"socket.io-parser":43,"to-array":47}],6:[function(_dereq_,module,exports){(function(global){var parseuri=_dereq_("parseuri");var debug=_dereq_("debug")("socket.io-client:url");module.exports=url;function url(uri,loc){var obj=uri;var loc=loc||global.location;if(null==uri)uri=loc.protocol+"//"+loc.hostname;if("string"==typeof uri){if("/"==uri.charAt(0)){if("/"==uri.charAt(1)){uri=loc.protocol+uri}else{uri=loc.hostname+uri}}if(!/^(https?|wss?):\/\//.test(uri)){debug("protocol-less url %s",uri);if("undefined"!=typeof loc){uri=loc.protocol+"//"+uri}else{uri="https://"+uri}}debug("parse %s",uri);obj=parseuri(uri)}if(!obj.port){if(/^(http|ws)$/.test(obj.protocol)){obj.port="80"}else if(/^(http|ws)s$/.test(obj.protocol)){obj.port="443"}}obj.path=obj.path||"/";obj.id=obj.protocol+"://"+obj.host+":"+obj.port;obj.href=obj.protocol+"://"+obj.host+(loc&&loc.port==obj.port?"":":"+obj.port);return obj}}).call(this,typeof self!=="undefined"?self:typeof window!=="undefined"?window:{})},{debug:9,parseuri:41}],7:[function(_dereq_,module,exports){var slice=[].slice;module.exports=function(obj,fn){if("string"==typeof fn)fn=obj[fn];if("function"!=typeof fn)throw new Error("bind() requires a function");var args=slice.call(arguments,2);return function(){return fn.apply(obj,args.concat(slice.call(arguments)))}}},{}],8:[function(_dereq_,module,exports){module.exports=Emitter;function Emitter(obj){if(obj)return mixin(obj)}function mixin(obj){for(var key in Emitter.prototype){obj[key]=Emitter.prototype[key]}return obj}Emitter.prototype.on=Emitter.prototype.addEventListener=function(event,fn){this._callbacks=this._callbacks||{};(this._callbacks[event]=this._callbacks[event]||[]).push(fn);return this};Emitter.prototype.once=function(event,fn){var self=this;this._callbacks=this._callbacks||{};function on(){self.off(event,on);fn.apply(this,arguments)}on.fn=fn;this.on(event,on);return this};Emitter.prototype.off=Emitter.prototype.removeListener=Emitter.prototype.removeAllListeners=Emitter.prototype.removeEventListener=function(event,fn){this._callbacks=this._callbacks||{};if(0==arguments.length){this._callbacks={};return this}var callbacks=this._callbacks[event];if(!callbacks)return this;if(1==arguments.length){delete this._callbacks[event];return this}var cb;for(var i=0;i<callbacks.length;i++){cb=callbacks[i];if(cb===fn||cb.fn===fn){callbacks.splice(i,1);break}}return this};Emitter.prototype.emit=function(event){this._callbacks=this._callbacks||{};var args=[].slice.call(arguments,1),callbacks=this._callbacks[event];if(callbacks){callbacks=callbacks.slice(0);for(var i=0,len=callbacks.length;i<len;++i){callbacks[i].apply(this,args)}}return this};Emitter.prototype.listeners=function(event){this._callbacks=this._callbacks||{};return this._callbacks[event]||[]};Emitter.prototype.hasListeners=function(event){return!!this.listeners(event).length}},{}],9:[function(_dereq_,module,exports){module.exports=debug;function debug(name){if(!debug.enabled(name))return function(){};return function(fmt){fmt=coerce(fmt);var curr=new Date;var ms=curr-(debug[name]||curr);debug[name]=curr;fmt=name+" "+fmt+" +"+debug.humanize(ms);window.console&&console.log&&Function.prototype.apply.call(console.log,console,arguments)}}debug.names=[];debug.skips=[];debug.enable=function(name){try{localStorage.debug=name}catch(e){}var split=(name||"").split(/[\s,]+/),len=split.length;for(var i=0;i<len;i++){name=split[i].replace("*",".*?");if(name[0]==="-"){debug.skips.push(new RegExp("^"+name.substr(1)+"$"))}else{debug.names.push(new RegExp("^"+name+"$"))}}};debug.disable=function(){debug.enable("")};debug.humanize=function(ms){var sec=1e3,min=60*1e3,hour=60*min;if(ms>=hour)return(ms/hour).toFixed(1)+"h";if(ms>=min)return(ms/min).toFixed(1)+"m";if(ms>=sec)return(ms/sec|0)+"s";return ms+"ms"};debug.enabled=function(name){for(var i=0,len=debug.skips.length;i<len;i++){if(debug.skips[i].test(name)){return false}}for(var i=0,len=debug.names.length;i<len;i++){if(debug.names[i].test(name)){return true}}return false};function coerce(val){if(val instanceof Error)return val.stack||val.message;return val}try{if(window.localStorage)debug.enable(localStorage.debug)}catch(e){}},{}],10:[function(_dereq_,module,exports){module.exports=_dereq_("./lib/")},{"./lib/":11}],11:[function(_dereq_,module,exports){module.exports=_dereq_("./socket");module.exports.parser=_dereq_("engine.io-parser")},{"./socket":12,"engine.io-parser":24}],12:[function(_dereq_,module,exports){(function(global){var transports=_dereq_("./transports");var Emitter=_dereq_("component-emitter");var debug=_dereq_("debug")("engine.io-client:socket");var index=_dereq_("indexof");var parser=_dereq_("engine.io-parser");var parseuri=_dereq_("parseuri");var parsejson=_dereq_("parsejson");var parseqs=_dereq_("parseqs");module.exports=Socket;function noop(){}function Socket(uri,opts){if(!(this instanceof Socket))return new Socket(uri,opts);opts=opts||{};if(uri&&"object"==typeof uri){opts=uri;uri=null}if(uri){uri=parseuri(uri);opts.host=uri.host;opts.secure=uri.protocol=="https"||uri.protocol=="wss";opts.port=uri.port;if(uri.query)opts.query=uri.query}this.secure=null!=opts.secure?opts.secure:global.location&&"https:"==location.protocol;if(opts.host){var pieces=opts.host.split(":");opts.hostname=pieces.shift();if(pieces.length)opts.port=pieces.pop()}this.agent=opts.agent||false;this.hostname=opts.hostname||(global.location?location.hostname:"localhost");this.port=opts.port||(global.location&&location.port?location.port:this.secure?443:80);this.query=opts.query||{};if("string"==typeof this.query)this.query=parseqs.decode(this.query);this.upgrade=false!==opts.upgrade;this.path=(opts.path||"/engine.io").replace(/\/$/,"")+"/";this.forceJSONP=!!opts.forceJSONP;this.jsonp=false!==opts.jsonp;this.forceBase64=!!opts.forceBase64;this.enablesXDR=!!opts.enablesXDR;this.timestampParam=opts.timestampParam||"t";this.timestampRequests=opts.timestampRequests;this.transports=opts.transports||["polling","websocket"];this.readyState="";this.writeBuffer=[];this.callbackBuffer=[];this.policyPort=opts.policyPort||843;this.rememberUpgrade=opts.rememberUpgrade||false;this.open();this.binaryType=null;this.onlyBinaryUpgrades=opts.onlyBinaryUpgrades}Socket.priorWebsocketSuccess=false;Emitter(Socket.prototype);Socket.protocol=parser.protocol;Socket.Socket=Socket;Socket.Transport=_dereq_("./transport");Socket.transports=_dereq_("./transports");Socket.parser=_dereq_("engine.io-parser");Socket.prototype.createTransport=function(name){debug('creating transport "%s"',name);var query=clone(this.query);query.EIO=parser.protocol;query.transport=name;if(this.id)query.sid=this.id;var transport=new transports[name]({agent:this.agent,hostname:this.hostname,port:this.port,secure:this.secure,path:this.path,query:query,forceJSONP:this.forceJSONP,jsonp:this.jsonp,forceBase64:this.forceBase64,enablesXDR:this.enablesXDR,timestampRequests:this.timestampRequests,timestampParam:this.timestampParam,policyPort:this.policyPort,socket:this});return transport};function clone(obj){var o={};for(var i in obj){if(obj.hasOwnProperty(i)){o[i]=obj[i]}}return o}Socket.prototype.open=function(){var transport;if(this.rememberUpgrade&&Socket.priorWebsocketSuccess&&this.transports.indexOf("websocket")!=-1){transport="websocket"}else if(0==this.transports.length){var self=this;setTimeout(function(){self.emit("error","No transports available")},0);return}else{transport=this.transports[0]}this.readyState="opening";var transport;try{transport=this.createTransport(transport)}catch(e){this.transports.shift();this.open();return}transport.open();this.setTransport(transport)};Socket.prototype.setTransport=function(transport){debug("setting transport %s",transport.name);var self=this;if(this.transport){debug("clearing existing transport %s",this.transport.name);this.transport.removeAllListeners()}this.transport=transport;transport.on("drain",function(){self.onDrain()}).on("packet",function(packet){self.onPacket(packet)}).on("error",function(e){self.onError(e)}).on("close",function(){self.onClose("transport close")})};Socket.prototype.probe=function(name){debug('probing transport "%s"',name);var transport=this.createTransport(name,{probe:1}),failed=false,self=this;Socket.priorWebsocketSuccess=false;function onTransportOpen(){if(self.onlyBinaryUpgrades){var upgradeLosesBinary=!this.supportsBinary&&self.transport.supportsBinary;failed=failed||upgradeLosesBinary}if(failed)return;debug('probe transport "%s" opened',name);transport.send([{type:"ping",data:"probe"}]);transport.once("packet",function(msg){if(failed)return;if("pong"==msg.type&&"probe"==msg.data){debug('probe transport "%s" pong',name);self.upgrading=true;self.emit("upgrading",transport);if(!transport)return;Socket.priorWebsocketSuccess="websocket"==transport.name;debug('pausing current transport "%s"',self.transport.name);self.transport.pause(function(){if(failed)return;if("closed"==self.readyState)return;debug("changing transport and sending upgrade packet");cleanup();self.setTransport(transport);transport.send([{type:"upgrade"}]);self.emit("upgrade",transport);transport=null;self.upgrading=false;self.flush()})}else{debug('probe transport "%s" failed',name);var err=new Error("probe error");err.transport=transport.name;self.emit("upgradeError",err)}})}function freezeTransport(){if(failed)return;failed=true;cleanup();transport.close();transport=null}function onerror(err){var error=new Error("probe error: "+err);error.transport=transport.name;freezeTransport();debug('probe transport "%s" failed because of error: %s',name,err);self.emit("upgradeError",error)}function onTransportClose(){onerror("transport closed")}function onclose(){onerror("socket closed")}function onupgrade(to){if(transport&&to.name!=transport.name){debug('"%s" works - aborting "%s"',to.name,transport.name);freezeTransport()}}function cleanup(){transport.removeListener("open",onTransportOpen);transport.removeListener("error",onerror);transport.removeListener("close",onTransportClose);self.removeListener("close",onclose);self.removeListener("upgrading",onupgrade)}transport.once("open",onTransportOpen);transport.once("error",onerror);transport.once("close",onTransportClose);this.once("close",onclose);this.once("upgrading",onupgrade);transport.open()};Socket.prototype.onOpen=function(){debug("socket open");this.readyState="open";Socket.priorWebsocketSuccess="websocket"==this.transport.name;this.emit("open");this.flush();if("open"==this.readyState&&this.upgrade&&this.transport.pause){debug("starting upgrade probes");for(var i=0,l=this.upgrades.length;i<l;i++){this.probe(this.upgrades[i])}}};Socket.prototype.onPacket=function(packet){if("opening"==this.readyState||"open"==this.readyState){debug('socket receive: type "%s", data "%s"',packet.type,packet.data);this.emit("packet",packet);this.emit("heartbeat");switch(packet.type){case"open":this.onHandshake(parsejson(packet.data));break;case"pong":this.setPing();break;case"error":var err=new Error("server error");err.code=packet.data;this.emit("error",err);break;case"message":this.emit("data",packet.data);this.emit("message",packet.data);break}}else{debug('packet received with socket readyState "%s"',this.readyState)}};Socket.prototype.onHandshake=function(data){this.emit("handshake",data);this.id=data.sid;this.transport.query.sid=data.sid;this.upgrades=this.filterUpgrades(data.upgrades);this.pingInterval=data.pingInterval;this.pingTimeout=data.pingTimeout;this.onOpen();if("closed"==this.readyState)return;this.setPing();this.removeListener("heartbeat",this.onHeartbeat);this.on("heartbeat",this.onHeartbeat)};Socket.prototype.onHeartbeat=function(timeout){clearTimeout(this.pingTimeoutTimer);var self=this;self.pingTimeoutTimer=setTimeout(function(){if("closed"==self.readyState)return;self.onClose("ping timeout")},timeout||self.pingInterval+self.pingTimeout)};Socket.prototype.setPing=function(){var self=this;clearTimeout(self.pingIntervalTimer);self.pingIntervalTimer=setTimeout(function(){debug("writing ping packet - expecting pong within %sms",self.pingTimeout);self.ping();self.onHeartbeat(self.pingTimeout)},self.pingInterval)};Socket.prototype.ping=function(){this.sendPacket("ping")};Socket.prototype.onDrain=function(){for(var i=0;i<this.prevBufferLen;i++){if(this.callbackBuffer[i]){this.callbackBuffer[i]()}}this.writeBuffer.splice(0,this.prevBufferLen);this.callbackBuffer.splice(0,this.prevBufferLen);this.prevBufferLen=0;if(this.writeBuffer.length==0){this.emit("drain")}else{this.flush()}};Socket.prototype.flush=function(){if("closed"!=this.readyState&&this.transport.writable&&!this.upgrading&&this.writeBuffer.length){debug("flushing %d packets in socket",this.writeBuffer.length);this.transport.send(this.writeBuffer);this.prevBufferLen=this.writeBuffer.length;this.emit("flush")}};Socket.prototype.write=Socket.prototype.send=function(msg,fn){this.sendPacket("message",msg,fn);return this};Socket.prototype.sendPacket=function(type,data,fn){if("closing"==this.readyState||"closed"==this.readyState){return}var packet={type:type,data:data};this.emit("packetCreate",packet);this.writeBuffer.push(packet);this.callbackBuffer.push(fn);this.flush()};Socket.prototype.close=function(){if("opening"==this.readyState||"open"==this.readyState){this.readyState="closing";var self=this;function close(){self.onClose("forced close");debug("socket closing - telling transport to close");self.transport.close()}function cleanupAndClose(){self.removeListener("upgrade",cleanupAndClose);self.removeListener("upgradeError",cleanupAndClose);close()}function waitForUpgrade(){self.once("upgrade",cleanupAndClose);self.once("upgradeError",cleanupAndClose)}if(this.writeBuffer.length){this.once("drain",function(){if(this.upgrading){waitForUpgrade()}else{close()}})}else if(this.upgrading){waitForUpgrade()}else{close()}}return this};Socket.prototype.onError=function(err){debug("socket error %j",err);Socket.priorWebsocketSuccess=false;this.emit("error",err);this.onClose("transport error",err)};Socket.prototype.onClose=function(reason,desc){if("opening"==this.readyState||"open"==this.readyState||"closing"==this.readyState){debug('socket close with reason: "%s"',reason);var self=this;clearTimeout(this.pingIntervalTimer);clearTimeout(this.pingTimeoutTimer);setTimeout(function(){self.writeBuffer=[];self.callbackBuffer=[];self.prevBufferLen=0},0);this.transport.removeAllListeners("close");this.transport.close();this.transport.removeAllListeners();this.readyState="closed";this.id=null;this.emit("close",reason,desc)}};Socket.prototype.filterUpgrades=function(upgrades){var filteredUpgrades=[];for(var i=0,j=upgrades.length;i<j;i++){if(~index(this.transports,upgrades[i]))filteredUpgrades.push(upgrades[i])}return filteredUpgrades}}).call(this,typeof self!=="undefined"?self:typeof window!=="undefined"?window:{})},{"./transport":13,"./transports":14,"component-emitter":8,debug:21,"engine.io-parser":24,indexof:39,parsejson:31,parseqs:32,parseuri:33}],13:[function(_dereq_,module,exports){var parser=_dereq_("engine.io-parser");var Emitter=_dereq_("component-emitter");module.exports=Transport;function Transport(opts){this.path=opts.path;this.hostname=opts.hostname;this.port=opts.port;this.secure=opts.secure;this.query=opts.query;this.timestampParam=opts.timestampParam;this.timestampRequests=opts.timestampRequests;this.readyState="";this.agent=opts.agent||false;this.socket=opts.socket;this.enablesXDR=opts.enablesXDR}Emitter(Transport.prototype);Transport.timestamps=0;Transport.prototype.onError=function(msg,desc){var err=new Error(msg);err.type="TransportError";err.description=desc;this.emit("error",err);return this};Transport.prototype.open=function(){if("closed"==this.readyState||""==this.readyState){this.readyState="opening";this.doOpen()}return this};Transport.prototype.close=function(){if("opening"==this.readyState||"open"==this.readyState){this.doClose();this.onClose()}return this};Transport.prototype.send=function(packets){if("open"==this.readyState){this.write(packets)}else{throw new Error("Transport not open")}};Transport.prototype.onOpen=function(){this.readyState="open";this.writable=true;this.emit("open")};Transport.prototype.onData=function(data){var packet=parser.decodePacket(data,this.socket.binaryType);this.onPacket(packet)};Transport.prototype.onPacket=function(packet){this.emit("packet",packet)};Transport.prototype.onClose=function(){this.readyState="closed";this.emit("close")}},{"component-emitter":8,"engine.io-parser":24}],14:[function(_dereq_,module,exports){(function(global){var XMLHttpRequest=_dereq_("xmlhttprequest");var XHR=_dereq_("./polling-xhr");var JSONP=_dereq_("./polling-jsonp");var websocket=_dereq_("./websocket");exports.polling=polling;exports.websocket=websocket;function polling(opts){var xhr;var xd=false;var xs=false;var jsonp=false!==opts.jsonp;if(global.location){var isSSL="https:"==location.protocol;var port=location.port;if(!port){port=isSSL?443:80}xd=opts.hostname!=location.hostname||port!=opts.port;xs=opts.secure!=isSSL}opts.xdomain=xd;opts.xscheme=xs;xhr=new XMLHttpRequest(opts);if("open"in xhr&&!opts.forceJSONP){return new XHR(opts)}else{if(!jsonp)throw new Error("JSONP disabled");return new JSONP(opts)}}}).call(this,typeof self!=="undefined"?self:typeof window!=="undefined"?window:{})},{"./polling-jsonp":15,"./polling-xhr":16,"./websocket":18,xmlhttprequest:19}],15:[function(_dereq_,module,exports){(function(global){var Polling=_dereq_("./polling");var inherit=_dereq_("component-inherit");module.exports=JSONPPolling;var rNewline=/\n/g;var rEscapedNewline=/\\n/g;var callbacks;var index=0;function empty(){}function JSONPPolling(opts){Polling.call(this,opts);this.query=this.query||{};if(!callbacks){if(!global.___eio)global.___eio=[];callbacks=global.___eio}this.index=callbacks.length;var self=this;callbacks.push(function(msg){self.onData(msg)});this.query.j=this.index;if(global.document&&global.addEventListener){global.addEventListener("beforeunload",function(){if(self.script)self.script.onerror=empty},false)}}inherit(JSONPPolling,Polling);JSONPPolling.prototype.supportsBinary=false;JSONPPolling.prototype.doClose=function(){if(this.script){this.script.parentNode.removeChild(this.script);this.script=null}if(this.form){this.form.parentNode.removeChild(this.form);this.form=null;this.iframe=null}Polling.prototype.doClose.call(this)};JSONPPolling.prototype.doPoll=function(){var self=this;var script=document.createElement("script");if(this.script){this.script.parentNode.removeChild(this.script);this.script=null}script.async=true;script.src=this.uri();script.onerror=function(e){self.onError("jsonp poll error",e)};var insertAt=document.getElementsByTagName("script")[0];insertAt.parentNode.insertBefore(script,insertAt);this.script=script;var isUAgecko="undefined"!=typeof navigator&&/gecko/i.test(navigator.userAgent);if(isUAgecko){setTimeout(function(){var iframe=document.createElement("iframe");document.body.appendChild(iframe);document.body.removeChild(iframe)},100)}};JSONPPolling.prototype.doWrite=function(data,fn){var self=this;if(!this.form){var form=document.createElement("form");var area=document.createElement("textarea");var id=this.iframeId="eio_iframe_"+this.index;var iframe;form.className="socketio";form.style.position="absolute";form.style.top="-1000px";form.style.left="-1000px";form.target=id;form.method="POST";form.setAttribute("accept-charset","utf-8");area.name="d";form.appendChild(area);document.body.appendChild(form);this.form=form;this.area=area}this.form.action=this.uri();function complete(){initIframe();fn()}function initIframe(){if(self.iframe){try{self.form.removeChild(self.iframe)
+}catch(e){self.onError("jsonp polling iframe removal error",e)}}try{var html='<iframe src="javascript:0" name="'+self.iframeId+'">';iframe=document.createElement(html)}catch(e){iframe=document.createElement("iframe");iframe.name=self.iframeId;iframe.src="javascript:0"}iframe.id=self.iframeId;self.form.appendChild(iframe);self.iframe=iframe}initIframe();data=data.replace(rEscapedNewline,"\\\n");this.area.value=data.replace(rNewline,"\\n");try{this.form.submit()}catch(e){}if(this.iframe.attachEvent){this.iframe.onreadystatechange=function(){if(self.iframe.readyState=="complete"){complete()}}}else{this.iframe.onload=complete}}}).call(this,typeof self!=="undefined"?self:typeof window!=="undefined"?window:{})},{"./polling":17,"component-inherit":20}],16:[function(_dereq_,module,exports){(function(global){var XMLHttpRequest=_dereq_("xmlhttprequest");var Polling=_dereq_("./polling");var Emitter=_dereq_("component-emitter");var inherit=_dereq_("component-inherit");var debug=_dereq_("debug")("engine.io-client:polling-xhr");module.exports=XHR;module.exports.Request=Request;function empty(){}function XHR(opts){Polling.call(this,opts);if(global.location){var isSSL="https:"==location.protocol;var port=location.port;if(!port){port=isSSL?443:80}this.xd=opts.hostname!=global.location.hostname||port!=opts.port;this.xs=opts.secure!=isSSL}}inherit(XHR,Polling);XHR.prototype.supportsBinary=true;XHR.prototype.request=function(opts){opts=opts||{};opts.uri=this.uri();opts.xd=this.xd;opts.xs=this.xs;opts.agent=this.agent||false;opts.supportsBinary=this.supportsBinary;opts.enablesXDR=this.enablesXDR;return new Request(opts)};XHR.prototype.doWrite=function(data,fn){var isBinary=typeof data!=="string"&&data!==undefined;var req=this.request({method:"POST",data:data,isBinary:isBinary});var self=this;req.on("success",fn);req.on("error",function(err){self.onError("xhr post error",err)});this.sendXhr=req};XHR.prototype.doPoll=function(){debug("xhr poll");var req=this.request();var self=this;req.on("data",function(data){self.onData(data)});req.on("error",function(err){self.onError("xhr poll error",err)});this.pollXhr=req};function Request(opts){this.method=opts.method||"GET";this.uri=opts.uri;this.xd=!!opts.xd;this.xs=!!opts.xs;this.async=false!==opts.async;this.data=undefined!=opts.data?opts.data:null;this.agent=opts.agent;this.isBinary=opts.isBinary;this.supportsBinary=opts.supportsBinary;this.enablesXDR=opts.enablesXDR;this.create()}Emitter(Request.prototype);Request.prototype.create=function(){var xhr=this.xhr=new XMLHttpRequest({agent:this.agent,xdomain:this.xd,xscheme:this.xs,enablesXDR:this.enablesXDR});var self=this;try{debug("xhr open %s: %s",this.method,this.uri);xhr.open(this.method,this.uri,this.async);if(this.supportsBinary){xhr.responseType="arraybuffer"}if("POST"==this.method){try{if(this.isBinary){xhr.setRequestHeader("Content-type","application/octet-stream")}else{xhr.setRequestHeader("Content-type","text/plain;charset=UTF-8")}}catch(e){}}if("withCredentials"in xhr){xhr.withCredentials=true}if(this.hasXDR()){xhr.onload=function(){self.onLoad()};xhr.onerror=function(){self.onError(xhr.responseText)}}else{xhr.onreadystatechange=function(){if(4!=xhr.readyState)return;if(200==xhr.status||1223==xhr.status){self.onLoad()}else{setTimeout(function(){self.onError(xhr.status)},0)}}}debug("xhr data %s",this.data);xhr.send(this.data)}catch(e){setTimeout(function(){self.onError(e)},0);return}if(global.document){this.index=Request.requestsCount++;Request.requests[this.index]=this}};Request.prototype.onSuccess=function(){this.emit("success");this.cleanup()};Request.prototype.onData=function(data){this.emit("data",data);this.onSuccess()};Request.prototype.onError=function(err){this.emit("error",err);this.cleanup()};Request.prototype.cleanup=function(){if("undefined"==typeof this.xhr||null===this.xhr){return}if(this.hasXDR()){this.xhr.onload=this.xhr.onerror=empty}else{this.xhr.onreadystatechange=empty}try{this.xhr.abort()}catch(e){}if(global.document){delete Request.requests[this.index]}this.xhr=null};Request.prototype.onLoad=function(){var data;try{var contentType;try{contentType=this.xhr.getResponseHeader("Content-Type").split(";")[0]}catch(e){}if(contentType==="application/octet-stream"){data=this.xhr.response}else{if(!this.supportsBinary){data=this.xhr.responseText}else{data="ok"}}}catch(e){this.onError(e)}if(null!=data){this.onData(data)}};Request.prototype.hasXDR=function(){return"undefined"!==typeof global.XDomainRequest&&!this.xs&&this.enablesXDR};Request.prototype.abort=function(){this.cleanup()};if(global.document){Request.requestsCount=0;Request.requests={};if(global.attachEvent){global.attachEvent("onunload",unloadHandler)}else if(global.addEventListener){global.addEventListener("beforeunload",unloadHandler,false)}}function unloadHandler(){for(var i in Request.requests){if(Request.requests.hasOwnProperty(i)){Request.requests[i].abort()}}}}).call(this,typeof self!=="undefined"?self:typeof window!=="undefined"?window:{})},{"./polling":17,"component-emitter":8,"component-inherit":20,debug:21,xmlhttprequest:19}],17:[function(_dereq_,module,exports){var Transport=_dereq_("../transport");var parseqs=_dereq_("parseqs");var parser=_dereq_("engine.io-parser");var inherit=_dereq_("component-inherit");var debug=_dereq_("debug")("engine.io-client:polling");module.exports=Polling;var hasXHR2=function(){var XMLHttpRequest=_dereq_("xmlhttprequest");var xhr=new XMLHttpRequest({xdomain:false});return null!=xhr.responseType}();function Polling(opts){var forceBase64=opts&&opts.forceBase64;if(!hasXHR2||forceBase64){this.supportsBinary=false}Transport.call(this,opts)}inherit(Polling,Transport);Polling.prototype.name="polling";Polling.prototype.doOpen=function(){this.poll()};Polling.prototype.pause=function(onPause){var pending=0;var self=this;this.readyState="pausing";function pause(){debug("paused");self.readyState="paused";onPause()}if(this.polling||!this.writable){var total=0;if(this.polling){debug("we are currently polling - waiting to pause");total++;this.once("pollComplete",function(){debug("pre-pause polling complete");--total||pause()})}if(!this.writable){debug("we are currently writing - waiting to pause");total++;this.once("drain",function(){debug("pre-pause writing complete");--total||pause()})}}else{pause()}};Polling.prototype.poll=function(){debug("polling");this.polling=true;this.doPoll();this.emit("poll")};Polling.prototype.onData=function(data){var self=this;debug("polling got data %s",data);var callback=function(packet,index,total){if("opening"==self.readyState){self.onOpen()}if("close"==packet.type){self.onClose();return false}self.onPacket(packet)};parser.decodePayload(data,this.socket.binaryType,callback);if("closed"!=this.readyState){this.polling=false;this.emit("pollComplete");if("open"==this.readyState){this.poll()}else{debug('ignoring poll - transport state "%s"',this.readyState)}}};Polling.prototype.doClose=function(){var self=this;function close(){debug("writing close packet");self.write([{type:"close"}])}if("open"==this.readyState){debug("transport open - closing");close()}else{debug("transport not open - deferring close");this.once("open",close)}};Polling.prototype.write=function(packets){var self=this;this.writable=false;var callbackfn=function(){self.writable=true;self.emit("drain")};var self=this;parser.encodePayload(packets,this.supportsBinary,function(data){self.doWrite(data,callbackfn)})};Polling.prototype.uri=function(){var query=this.query||{};var schema=this.secure?"https":"http";var port="";if(false!==this.timestampRequests){query[this.timestampParam]=+new Date+"-"+Transport.timestamps++}if(!this.supportsBinary&&!query.sid){query.b64=1}query=parseqs.encode(query);if(this.port&&("https"==schema&&this.port!=443||"http"==schema&&this.port!=80)){port=":"+this.port}if(query.length){query="?"+query}return schema+"://"+this.hostname+port+this.path+query}},{"../transport":13,"component-inherit":20,debug:21,"engine.io-parser":24,parseqs:32,xmlhttprequest:19}],18:[function(_dereq_,module,exports){var Transport=_dereq_("../transport");var parser=_dereq_("engine.io-parser");var parseqs=_dereq_("parseqs");var inherit=_dereq_("component-inherit");var debug=_dereq_("debug")("engine.io-client:websocket");var WebSocket=_dereq_("ws");module.exports=WS;function WS(opts){var forceBase64=opts&&opts.forceBase64;if(forceBase64){this.supportsBinary=false}Transport.call(this,opts)}inherit(WS,Transport);WS.prototype.name="websocket";WS.prototype.supportsBinary=true;WS.prototype.doOpen=function(){if(!this.check()){return}var self=this;var uri=this.uri();var protocols=void 0;var opts={agent:this.agent};this.ws=new WebSocket(uri,protocols,opts);if(this.ws.binaryType===undefined){this.supportsBinary=false}this.ws.binaryType="arraybuffer";this.addEventListeners()};WS.prototype.addEventListeners=function(){var self=this;this.ws.onopen=function(){self.onOpen()};this.ws.onclose=function(){self.onClose()};this.ws.onmessage=function(ev){self.onData(ev.data)};this.ws.onerror=function(e){self.onError("websocket error",e)}};if("undefined"!=typeof navigator&&/iPad|iPhone|iPod/i.test(navigator.userAgent)){WS.prototype.onData=function(data){var self=this;setTimeout(function(){Transport.prototype.onData.call(self,data)},0)}}WS.prototype.write=function(packets){var self=this;this.writable=false;for(var i=0,l=packets.length;i<l;i++){parser.encodePacket(packets[i],this.supportsBinary,function(data){try{self.ws.send(data)}catch(e){debug("websocket closed before onclose event")}})}function ondrain(){self.writable=true;self.emit("drain")}setTimeout(ondrain,0)};WS.prototype.onClose=function(){Transport.prototype.onClose.call(this)};WS.prototype.doClose=function(){if(typeof this.ws!=="undefined"){this.ws.close()}};WS.prototype.uri=function(){var query=this.query||{};var schema=this.secure?"wss":"ws";var port="";if(this.port&&("wss"==schema&&this.port!=443||"ws"==schema&&this.port!=80)){port=":"+this.port}if(this.timestampRequests){query[this.timestampParam]=+new Date}if(!this.supportsBinary){query.b64=1}query=parseqs.encode(query);if(query.length){query="?"+query}return schema+"://"+this.hostname+port+this.path+query};WS.prototype.check=function(){return!!WebSocket&&!("__initialize"in WebSocket&&this.name===WS.prototype.name)}},{"../transport":13,"component-inherit":20,debug:21,"engine.io-parser":24,parseqs:32,ws:34}],19:[function(_dereq_,module,exports){var hasCORS=_dereq_("has-cors");module.exports=function(opts){var xdomain=opts.xdomain;var xscheme=opts.xscheme;var enablesXDR=opts.enablesXDR;try{if("undefined"!=typeof XMLHttpRequest&&(!xdomain||hasCORS)){return new XMLHttpRequest}}catch(e){}try{if("undefined"!=typeof XDomainRequest&&!xscheme&&enablesXDR){return new XDomainRequest}}catch(e){}if(!xdomain){try{return new ActiveXObject("Microsoft.XMLHTTP")}catch(e){}}}},{"has-cors":37}],20:[function(_dereq_,module,exports){module.exports=function(a,b){var fn=function(){};fn.prototype=b.prototype;a.prototype=new fn;a.prototype.constructor=a}},{}],21:[function(_dereq_,module,exports){exports=module.exports=_dereq_("./debug");exports.log=log;exports.formatArgs=formatArgs;exports.save=save;exports.load=load;exports.useColors=useColors;exports.colors=["lightseagreen","forestgreen","goldenrod","dodgerblue","darkorchid","crimson"];function useColors(){return"WebkitAppearance"in document.documentElement.style||window.console&&(console.firebug||console.exception&&console.table)||navigator.userAgent.toLowerCase().match(/firefox\/(\d+)/)&&parseInt(RegExp.$1,10)>=31}exports.formatters.j=function(v){return JSON.stringify(v)};function formatArgs(){var args=arguments;var useColors=this.useColors;args[0]=(useColors?"%c":"")+this.namespace+(useColors?" %c":" ")+args[0]+(useColors?"%c ":" ")+"+"+exports.humanize(this.diff);if(!useColors)return args;var c="color: "+this.color;args=[args[0],c,"color: inherit"].concat(Array.prototype.slice.call(args,1));var index=0;var lastC=0;args[0].replace(/%[a-z%]/g,function(match){if("%"===match)return;index++;if("%c"===match){lastC=index}});args.splice(lastC,0,c);return args}function log(){return"object"==typeof console&&"function"==typeof console.log&&Function.prototype.apply.call(console.log,console,arguments)}function save(namespaces){try{if(null==namespaces){localStorage.removeItem("debug")}else{localStorage.debug=namespaces}}catch(e){}}function load(){var r;try{r=localStorage.debug}catch(e){}return r}exports.enable(load())},{"./debug":22}],22:[function(_dereq_,module,exports){exports=module.exports=debug;exports.coerce=coerce;exports.disable=disable;exports.enable=enable;exports.enabled=enabled;exports.humanize=_dereq_("ms");exports.names=[];exports.skips=[];exports.formatters={};var prevColor=0;var prevTime;function selectColor(){return exports.colors[prevColor++%exports.colors.length]}function debug(namespace){function disabled(){}disabled.enabled=false;function enabled(){var self=enabled;var curr=+new Date;var ms=curr-(prevTime||curr);self.diff=ms;self.prev=prevTime;self.curr=curr;prevTime=curr;if(null==self.useColors)self.useColors=exports.useColors();if(null==self.color&&self.useColors)self.color=selectColor();var args=Array.prototype.slice.call(arguments);args[0]=exports.coerce(args[0]);if("string"!==typeof args[0]){args=["%o"].concat(args)}var index=0;args[0]=args[0].replace(/%([a-z%])/g,function(match,format){if(match==="%")return match;index++;var formatter=exports.formatters[format];if("function"===typeof formatter){var val=args[index];match=formatter.call(self,val);args.splice(index,1);index--}return match});if("function"===typeof exports.formatArgs){args=exports.formatArgs.apply(self,args)}var logFn=enabled.log||exports.log||console.log.bind(console);logFn.apply(self,args)}enabled.enabled=true;var fn=exports.enabled(namespace)?enabled:disabled;fn.namespace=namespace;return fn}function enable(namespaces){exports.save(namespaces);var split=(namespaces||"").split(/[\s,]+/);var len=split.length;for(var i=0;i<len;i++){if(!split[i])continue;namespaces=split[i].replace(/\*/g,".*?");if(namespaces[0]==="-"){exports.skips.push(new RegExp("^"+namespaces.substr(1)+"$"))}else{exports.names.push(new RegExp("^"+namespaces+"$"))}}}function disable(){exports.enable("")}function enabled(name){var i,len;for(i=0,len=exports.skips.length;i<len;i++){if(exports.skips[i].test(name)){return false}}for(i=0,len=exports.names.length;i<len;i++){if(exports.names[i].test(name)){return true}}return false}function coerce(val){if(val instanceof Error)return val.stack||val.message;return val}},{ms:23}],23:[function(_dereq_,module,exports){var s=1e3;var m=s*60;var h=m*60;var d=h*24;var y=d*365.25;module.exports=function(val,options){options=options||{};if("string"==typeof val)return parse(val);return options.long?long(val):short(val)};function parse(str){var match=/^((?:\d+)?\.?\d+) *(ms|seconds?|s|minutes?|m|hours?|h|days?|d|years?|y)?$/i.exec(str);if(!match)return;var n=parseFloat(match[1]);var type=(match[2]||"ms").toLowerCase();switch(type){case"years":case"year":case"y":return n*y;case"days":case"day":case"d":return n*d;case"hours":case"hour":case"h":return n*h;case"minutes":case"minute":case"m":return n*m;case"seconds":case"second":case"s":return n*s;case"ms":return n}}function short(ms){if(ms>=d)return Math.round(ms/d)+"d";if(ms>=h)return Math.round(ms/h)+"h";if(ms>=m)return Math.round(ms/m)+"m";if(ms>=s)return Math.round(ms/s)+"s";return ms+"ms"}function long(ms){return plural(ms,d,"day")||plural(ms,h,"hour")||plural(ms,m,"minute")||plural(ms,s,"second")||ms+" ms"}function plural(ms,n,name){if(ms<n)return;if(ms<n*1.5)return Math.floor(ms/n)+" "+name;return Math.ceil(ms/n)+" "+name+"s"}},{}],24:[function(_dereq_,module,exports){(function(global){var keys=_dereq_("./keys");var sliceBuffer=_dereq_("arraybuffer.slice");var base64encoder=_dereq_("base64-arraybuffer");var after=_dereq_("after");var utf8=_dereq_("utf8");var isAndroid=navigator.userAgent.match(/Android/i);exports.protocol=3;var packets=exports.packets={open:0,close:1,ping:2,pong:3,message:4,upgrade:5,noop:6};var packetslist=keys(packets);var err={type:"error",data:"parser error"};var Blob=_dereq_("blob");exports.encodePacket=function(packet,supportsBinary,utf8encode,callback){if("function"==typeof supportsBinary){callback=supportsBinary;supportsBinary=false}if("function"==typeof utf8encode){callback=utf8encode;utf8encode=null}var data=packet.data===undefined?undefined:packet.data.buffer||packet.data;if(global.ArrayBuffer&&data instanceof ArrayBuffer){return encodeArrayBuffer(packet,supportsBinary,callback)}else if(Blob&&data instanceof global.Blob){return encodeBlob(packet,supportsBinary,callback)}var encoded=packets[packet.type];if(undefined!==packet.data){encoded+=utf8encode?utf8.encode(String(packet.data)):String(packet.data)}return callback(""+encoded)};function encodeArrayBuffer(packet,supportsBinary,callback){if(!supportsBinary){return exports.encodeBase64Packet(packet,callback)}var data=packet.data;var contentArray=new Uint8Array(data);var resultBuffer=new Uint8Array(1+data.byteLength);resultBuffer[0]=packets[packet.type];for(var i=0;i<contentArray.length;i++){resultBuffer[i+1]=contentArray[i]}return callback(resultBuffer.buffer)}function encodeBlobAsArrayBuffer(packet,supportsBinary,callback){if(!supportsBinary){return exports.encodeBase64Packet(packet,callback)}var fr=new FileReader;fr.onload=function(){packet.data=fr.result;exports.encodePacket(packet,supportsBinary,true,callback)};return fr.readAsArrayBuffer(packet.data)}function encodeBlob(packet,supportsBinary,callback){if(!supportsBinary){return exports.encodeBase64Packet(packet,callback)}if(isAndroid){return encodeBlobAsArrayBuffer(packet,supportsBinary,callback)}var length=new Uint8Array(1);length[0]=packets[packet.type];var blob=new Blob([length.buffer,packet.data]);return callback(blob)}exports.encodeBase64Packet=function(packet,callback){var message="b"+exports.packets[packet.type];if(Blob&&packet.data instanceof Blob){var fr=new FileReader;fr.onload=function(){var b64=fr.result.split(",")[1];callback(message+b64)};return fr.readAsDataURL(packet.data)}var b64data;try{b64data=String.fromCharCode.apply(null,new Uint8Array(packet.data))}catch(e){var typed=new Uint8Array(packet.data);var basic=new Array(typed.length);for(var i=0;i<typed.length;i++){basic[i]=typed[i]}b64data=String.fromCharCode.apply(null,basic)}message+=global.btoa(b64data);return callback(message)};exports.decodePacket=function(data,binaryType,utf8decode){if(typeof data=="string"||data===undefined){if(data.charAt(0)=="b"){return exports.decodeBase64Packet(data.substr(1),binaryType)}if(utf8decode){try{data=utf8.decode(data)}catch(e){return err}}var type=data.charAt(0);if(Number(type)!=type||!packetslist[type]){return err}if(data.length>1){return{type:packetslist[type],data:data.substring(1)}}else{return{type:packetslist[type]}}}var asArray=new Uint8Array(data);var type=asArray[0];var rest=sliceBuffer(data,1);if(Blob&&binaryType==="blob"){rest=new Blob([rest])}return{type:packetslist[type],data:rest}};exports.decodeBase64Packet=function(msg,binaryType){var type=packetslist[msg.charAt(0)];if(!global.ArrayBuffer){return{type:type,data:{base64:true,data:msg.substr(1)}}}var data=base64encoder.decode(msg.substr(1));if(binaryType==="blob"&&Blob){data=new Blob([data])}return{type:type,data:data}};exports.encodePayload=function(packets,supportsBinary,callback){if(typeof supportsBinary=="function"){callback=supportsBinary;supportsBinary=null}if(supportsBinary){if(Blob&&!isAndroid){return exports.encodePayloadAsBlob(packets,callback)}return exports.encodePayloadAsArrayBuffer(packets,callback)}if(!packets.length){return callback("0:")}function setLengthHeader(message){return message.length+":"+message}function encodeOne(packet,doneCallback){exports.encodePacket(packet,supportsBinary,true,function(message){doneCallback(null,setLengthHeader(message))})}map(packets,encodeOne,function(err,results){return callback(results.join(""))})};function map(ary,each,done){var result=new Array(ary.length);var next=after(ary.length,done);var eachWithIndex=function(i,el,cb){each(el,function(error,msg){result[i]=msg;cb(error,result)})};for(var i=0;i<ary.length;i++){eachWithIndex(i,ary[i],next)}}exports.decodePayload=function(data,binaryType,callback){if(typeof data!="string"){return exports.decodePayloadAsBinary(data,binaryType,callback)}if(typeof binaryType==="function"){callback=binaryType;binaryType=null}var packet;if(data==""){return callback(err,0,1)}var length="",n,msg;for(var i=0,l=data.length;i<l;i++){var chr=data.charAt(i);if(":"!=chr){length+=chr}else{if(""==length||length!=(n=Number(length))){return callback(err,0,1)}msg=data.substr(i+1,n);if(length!=msg.length){return callback(err,0,1)}if(msg.length){packet=exports.decodePacket(msg,binaryType,true);if(err.type==packet.type&&err.data==packet.data){return callback(err,0,1)}var ret=callback(packet,i+n,l);if(false===ret)return}i+=n;length=""}}if(length!=""){return callback(err,0,1)}};exports.encodePayloadAsArrayBuffer=function(packets,callback){if(!packets.length){return callback(new ArrayBuffer(0))}function encodeOne(packet,doneCallback){exports.encodePacket(packet,true,true,function(data){return doneCallback(null,data)})}map(packets,encodeOne,function(err,encodedPackets){var totalLength=encodedPackets.reduce(function(acc,p){var len;if(typeof p==="string"){len=p.length}else{len=p.byteLength}return acc+len.toString().length+len+2},0);var resultArray=new Uint8Array(totalLength);var bufferIndex=0;encodedPackets.forEach(function(p){var isString=typeof p==="string";var ab=p;if(isString){var view=new Uint8Array(p.length);for(var i=0;i<p.length;i++){view[i]=p.charCodeAt(i)}ab=view.buffer}if(isString){resultArray[bufferIndex++]=0}else{resultArray[bufferIndex++]=1}var lenStr=ab.byteLength.toString();for(var i=0;i<lenStr.length;i++){resultArray[bufferIndex++]=parseInt(lenStr[i])}resultArray[bufferIndex++]=255;var view=new Uint8Array(ab);for(var i=0;i<view.length;i++){resultArray[bufferIndex++]=view[i]}});return callback(resultArray.buffer)})};exports.encodePayloadAsBlob=function(packets,callback){function encodeOne(packet,doneCallback){exports.encodePacket(packet,true,true,function(encoded){var binaryIdentifier=new Uint8Array(1);binaryIdentifier[0]=1;if(typeof encoded==="string"){var view=new Uint8Array(encoded.length);for(var i=0;i<encoded.length;i++){view[i]=encoded.charCodeAt(i)}encoded=view.buffer;binaryIdentifier[0]=0}var len=encoded instanceof ArrayBuffer?encoded.byteLength:encoded.size;var lenStr=len.toString();var lengthAry=new Uint8Array(lenStr.length+1);for(var i=0;i<lenStr.length;i++){lengthAry[i]=parseInt(lenStr[i])}lengthAry[lenStr.length]=255;if(Blob){var blob=new Blob([binaryIdentifier.buffer,lengthAry.buffer,encoded]);doneCallback(null,blob)}})}map(packets,encodeOne,function(err,results){return callback(new Blob(results))})};exports.decodePayloadAsBinary=function(data,binaryType,callback){if(typeof binaryType==="function"){callback=binaryType;binaryType=null}var bufferTail=data;var buffers=[];var numberTooLong=false;while(bufferTail.byteLength>0){var tailArray=new Uint8Array(bufferTail);var isString=tailArray[0]===0;var msgLength="";for(var i=1;;i++){if(tailArray[i]==255)break;if(msgLength.length>310){numberTooLong=true;break}msgLength+=tailArray[i]}if(numberTooLong)return callback(err,0,1);bufferTail=sliceBuffer(bufferTail,2+msgLength.length);msgLength=parseInt(msgLength);var msg=sliceBuffer(bufferTail,0,msgLength);if(isString){try{msg=String.fromCharCode.apply(null,new Uint8Array(msg))}catch(e){var typed=new Uint8Array(msg);msg="";for(var i=0;i<typed.length;i++){msg+=String.fromCharCode(typed[i])}}}buffers.push(msg);bufferTail=sliceBuffer(bufferTail,msgLength)}var total=buffers.length;buffers.forEach(function(buffer,i){callback(exports.decodePacket(buffer,binaryType,true),i,total)})}}).call(this,typeof self!=="undefined"?self:typeof window!=="undefined"?window:{})},{"./keys":25,after:26,"arraybuffer.slice":27,"base64-arraybuffer":28,blob:29,utf8:30}],25:[function(_dereq_,module,exports){module.exports=Object.keys||function keys(obj){var arr=[];var has=Object.prototype.hasOwnProperty;for(var i in obj){if(has.call(obj,i)){arr.push(i)}}return arr}},{}],26:[function(_dereq_,module,exports){module.exports=after;function after(count,callback,err_cb){var bail=false;err_cb=err_cb||noop;proxy.count=count;return count===0?callback():proxy;function proxy(err,result){if(proxy.count<=0){throw new Error("after called too many times")}--proxy.count;if(err){bail=true;callback(err);callback=err_cb}else if(proxy.count===0&&!bail){callback(null,result)}}}function noop(){}},{}],27:[function(_dereq_,module,exports){module.exports=function(arraybuffer,start,end){var bytes=arraybuffer.byteLength;start=start||0;end=end||bytes;if(arraybuffer.slice){return arraybuffer.slice(start,end)}if(start<0){start+=bytes}if(end<0){end+=bytes}if(end>bytes){end=bytes}if(start>=bytes||start>=end||bytes===0){return new ArrayBuffer(0)}var abv=new Uint8Array(arraybuffer);var result=new Uint8Array(end-start);for(var i=start,ii=0;i<end;i++,ii++){result[ii]=abv[i]}return result.buffer}},{}],28:[function(_dereq_,module,exports){(function(chars){"use strict";exports.encode=function(arraybuffer){var bytes=new Uint8Array(arraybuffer),i,len=bytes.length,base64="";for(i=0;i<len;i+=3){base64+=chars[bytes[i]>>2];base64+=chars[(bytes[i]&3)<<4|bytes[i+1]>>4];base64+=chars[(bytes[i+1]&15)<<2|bytes[i+2]>>6];base64+=chars[bytes[i+2]&63]}if(len%3===2){base64=base64.substring(0,base64.length-1)+"="}else if(len%3===1){base64=base64.substring(0,base64.length-2)+"=="}return base64};exports.decode=function(base64){var bufferLength=base64.length*.75,len=base64.length,i,p=0,encoded1,encoded2,encoded3,encoded4;if(base64[base64.length-1]==="="){bufferLength--;if(base64[base64.length-2]==="="){bufferLength--}}var arraybuffer=new ArrayBuffer(bufferLength),bytes=new Uint8Array(arraybuffer);for(i=0;i<len;i+=4){encoded1=chars.indexOf(base64[i]);encoded2=chars.indexOf(base64[i+1]);encoded3=chars.indexOf(base64[i+2]);encoded4=chars.indexOf(base64[i+3]);bytes[p++]=encoded1<<2|encoded2>>4;bytes[p++]=(encoded2&15)<<4|encoded3>>2;bytes[p++]=(encoded3&3)<<6|encoded4&63}return arraybuffer}})("ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/")},{}],29:[function(_dereq_,module,exports){(function(global){var BlobBuilder=global.BlobBuilder||global.WebKitBlobBuilder||global.MSBlobBuilder||global.MozBlobBuilder;var blobSupported=function(){try{var b=new Blob(["hi"]);return b.size==2}catch(e){return false}}();var blobBuilderSupported=BlobBuilder&&BlobBuilder.prototype.append&&BlobBuilder.prototype.getBlob;function BlobBuilderConstructor(ary,options){options=options||{};var bb=new BlobBuilder;for(var i=0;i<ary.length;i++){bb.append(ary[i])}return options.type?bb.getBlob(options.type):bb.getBlob()}module.exports=function(){if(blobSupported){return global.Blob}else if(blobBuilderSupported){return BlobBuilderConstructor}else{return undefined}}()}).call(this,typeof self!=="undefined"?self:typeof window!=="undefined"?window:{})},{}],30:[function(_dereq_,module,exports){(function(global){(function(root){var freeExports=typeof exports=="object"&&exports;var freeModule=typeof module=="object"&&module&&module.exports==freeExports&&module;var freeGlobal=typeof global=="object"&&global;if(freeGlobal.global===freeGlobal||freeGlobal.window===freeGlobal){root=freeGlobal}var stringFromCharCode=String.fromCharCode;function ucs2decode(string){var output=[];var counter=0;var length=string.length;var value;var extra;while(counter<length){value=string.charCodeAt(counter++);if(value>=55296&&value<=56319&&counter<length){extra=string.charCodeAt(counter++);if((extra&64512)==56320){output.push(((value&1023)<<10)+(extra&1023)+65536)}else{output.push(value);counter--}}else{output.push(value)}}return output}function ucs2encode(array){var length=array.length;var index=-1;var value;var output="";while(++index<length){value=array[index];if(value>65535){value-=65536;output+=stringFromCharCode(value>>>10&1023|55296);value=56320|value&1023}output+=stringFromCharCode(value)}return output}function createByte(codePoint,shift){return stringFromCharCode(codePoint>>shift&63|128)}function encodeCodePoint(codePoint){if((codePoint&4294967168)==0){return stringFromCharCode(codePoint)}var symbol="";if((codePoint&4294965248)==0){symbol=stringFromCharCode(codePoint>>6&31|192)}else if((codePoint&4294901760)==0){symbol=stringFromCharCode(codePoint>>12&15|224);symbol+=createByte(codePoint,6)}else if((codePoint&4292870144)==0){symbol=stringFromCharCode(codePoint>>18&7|240);symbol+=createByte(codePoint,12);symbol+=createByte(codePoint,6)}symbol+=stringFromCharCode(codePoint&63|128);return symbol}function utf8encode(string){var codePoints=ucs2decode(string);var length=codePoints.length;var index=-1;var codePoint;var byteString="";while(++index<length){codePoint=codePoints[index];byteString+=encodeCodePoint(codePoint)}return byteString}function readContinuationByte(){if(byteIndex>=byteCount){throw Error("Invalid byte index")}var continuationByte=byteArray[byteIndex]&255;byteIndex++;if((continuationByte&192)==128){return continuationByte&63}throw Error("Invalid continuation byte")}function decodeSymbol(){var byte1;var byte2;var byte3;var byte4;var codePoint;if(byteIndex>byteCount){throw Error("Invalid byte index")}if(byteIndex==byteCount){return false}byte1=byteArray[byteIndex]&255;byteIndex++;if((byte1&128)==0){return byte1}if((byte1&224)==192){var byte2=readContinuationByte();codePoint=(byte1&31)<<6|byte2;if(codePoint>=128){return codePoint}else{throw Error("Invalid continuation byte")}}if((byte1&240)==224){byte2=readContinuationByte();byte3=readContinuationByte();codePoint=(byte1&15)<<12|byte2<<6|byte3;if(codePoint>=2048){return codePoint}else{throw Error("Invalid continuation byte")}}if((byte1&248)==240){byte2=readContinuationByte();byte3=readContinuationByte();byte4=readContinuationByte();codePoint=(byte1&15)<<18|byte2<<12|byte3<<6|byte4;if(codePoint>=65536&&codePoint<=1114111){return codePoint}}throw Error("Invalid UTF-8 detected")}var byteArray;var byteCount;var byteIndex;function utf8decode(byteString){byteArray=ucs2decode(byteString);byteCount=byteArray.length;byteIndex=0;var codePoints=[];var tmp;while((tmp=decodeSymbol())!==false){codePoints.push(tmp)}return ucs2encode(codePoints)}var utf8={version:"2.0.0",encode:utf8encode,decode:utf8decode};if(typeof define=="function"&&typeof define.amd=="object"&&define.amd){define(function(){return utf8})}else if(freeExports&&!freeExports.nodeType){if(freeModule){freeModule.exports=utf8}else{var object={};var hasOwnProperty=object.hasOwnProperty;for(var key in utf8){hasOwnProperty.call(utf8,key)&&(freeExports[key]=utf8[key])}}}else{root.utf8=utf8}})(this)}).call(this,typeof self!=="undefined"?self:typeof window!=="undefined"?window:{})},{}],31:[function(_dereq_,module,exports){(function(global){var rvalidchars=/^[\],:{}\s]*$/;var rvalidescape=/\\(?:["\\\/bfnrt]|u[0-9a-fA-F]{4})/g;var rvalidtokens=/"[^"\\\n\r]*"|true|false|null|-?\d+(?:\.\d*)?(?:[eE][+\-]?\d+)?/g;var rvalidbraces=/(?:^|:|,)(?:\s*\[)+/g;var rtrimLeft=/^\s+/;var rtrimRight=/\s+$/;module.exports=function parsejson(data){if("string"!=typeof data||!data){return null}data=data.replace(rtrimLeft,"").replace(rtrimRight,"");if(global.JSON&&JSON.parse){return JSON.parse(data)}if(rvalidchars.test(data.replace(rvalidescape,"@").replace(rvalidtokens,"]").replace(rvalidbraces,""))){return new Function("return "+data)()}}}).call(this,typeof self!=="undefined"?self:typeof window!=="undefined"?window:{})},{}],32:[function(_dereq_,module,exports){exports.encode=function(obj){var str="";for(var i in obj){if(obj.hasOwnProperty(i)){if(str.length)str+="&";str+=encodeURIComponent(i)+"="+encodeURIComponent(obj[i])}}return str};exports.decode=function(qs){var qry={};var pairs=qs.split("&");for(var i=0,l=pairs.length;i<l;i++){var pair=pairs[i].split("=");qry[decodeURIComponent(pair[0])]=decodeURIComponent(pair[1])}return qry}},{}],33:[function(_dereq_,module,exports){var re=/^(?:(?![^:@]+:[^:@\/]*@)(http|https|ws|wss):\/\/)?((?:(([^:@]*)(?::([^:@]*))?)?@)?((?:[a-f0-9]{0,4}:){2,7}[a-f0-9]{0,4}|[^:\/?#]*)(?::(\d*))?)(((\/(?:[^?#](?![^?#\/]*\.[^?#\/.]+(?:[?#]|$)))*\/?)?([^?#\/]*))(?:\?([^#]*))?(?:#(.*))?)/;
+var parts=["source","protocol","authority","userInfo","user","password","host","port","relative","path","directory","file","query","anchor"];module.exports=function parseuri(str){var src=str,b=str.indexOf("["),e=str.indexOf("]");if(b!=-1&&e!=-1){str=str.substring(0,b)+str.substring(b,e).replace(/:/g,";")+str.substring(e,str.length)}var m=re.exec(str||""),uri={},i=14;while(i--){uri[parts[i]]=m[i]||""}if(b!=-1&&e!=-1){uri.source=src;uri.host=uri.host.substring(1,uri.host.length-1).replace(/;/g,":");uri.authority=uri.authority.replace("[","").replace("]","").replace(/;/g,":");uri.ipv6uri=true}return uri}},{}],34:[function(_dereq_,module,exports){var global=function(){return this}();var WebSocket=global.WebSocket||global.MozWebSocket;module.exports=WebSocket?ws:null;function ws(uri,protocols,opts){var instance;if(protocols){instance=new WebSocket(uri,protocols)}else{instance=new WebSocket(uri)}return instance}if(WebSocket)ws.prototype=WebSocket.prototype},{}],35:[function(_dereq_,module,exports){(function(global){var isArray=_dereq_("isarray");module.exports=hasBinary;function hasBinary(data){function _hasBinary(obj){if(!obj)return false;if(global.Buffer&&global.Buffer.isBuffer(obj)||global.ArrayBuffer&&obj instanceof ArrayBuffer||global.Blob&&obj instanceof Blob||global.File&&obj instanceof File){return true}if(isArray(obj)){for(var i=0;i<obj.length;i++){if(_hasBinary(obj[i])){return true}}}else if(obj&&"object"==typeof obj){if(obj.toJSON){obj=obj.toJSON()}for(var key in obj){if(obj.hasOwnProperty(key)&&_hasBinary(obj[key])){return true}}}return false}return _hasBinary(data)}}).call(this,typeof self!=="undefined"?self:typeof window!=="undefined"?window:{})},{isarray:36}],36:[function(_dereq_,module,exports){module.exports=Array.isArray||function(arr){return Object.prototype.toString.call(arr)=="[object Array]"}},{}],37:[function(_dereq_,module,exports){var global=_dereq_("global");try{module.exports="XMLHttpRequest"in global&&"withCredentials"in new global.XMLHttpRequest}catch(err){module.exports=false}},{global:38}],38:[function(_dereq_,module,exports){module.exports=function(){return this}()},{}],39:[function(_dereq_,module,exports){var indexOf=[].indexOf;module.exports=function(arr,obj){if(indexOf)return arr.indexOf(obj);for(var i=0;i<arr.length;++i){if(arr[i]===obj)return i}return-1}},{}],40:[function(_dereq_,module,exports){var has=Object.prototype.hasOwnProperty;exports.keys=Object.keys||function(obj){var keys=[];for(var key in obj){if(has.call(obj,key)){keys.push(key)}}return keys};exports.values=function(obj){var vals=[];for(var key in obj){if(has.call(obj,key)){vals.push(obj[key])}}return vals};exports.merge=function(a,b){for(var key in b){if(has.call(b,key)){a[key]=b[key]}}return a};exports.length=function(obj){return exports.keys(obj).length};exports.isEmpty=function(obj){return 0==exports.length(obj)}},{}],41:[function(_dereq_,module,exports){var re=/^(?:(?![^:@]+:[^:@\/]*@)(http|https|ws|wss):\/\/)?((?:(([^:@]*)(?::([^:@]*))?)?@)?((?:[a-f0-9]{0,4}:){2,7}[a-f0-9]{0,4}|[^:\/?#]*)(?::(\d*))?)(((\/(?:[^?#](?![^?#\/]*\.[^?#\/.]+(?:[?#]|$)))*\/?)?([^?#\/]*))(?:\?([^#]*))?(?:#(.*))?)/;var parts=["source","protocol","authority","userInfo","user","password","host","port","relative","path","directory","file","query","anchor"];module.exports=function parseuri(str){var m=re.exec(str||""),uri={},i=14;while(i--){uri[parts[i]]=m[i]||""}return uri}},{}],42:[function(_dereq_,module,exports){(function(global){var isArray=_dereq_("isarray");var isBuf=_dereq_("./is-buffer");exports.deconstructPacket=function(packet){var buffers=[];var packetData=packet.data;function _deconstructPacket(data){if(!data)return data;if(isBuf(data)){var placeholder={_placeholder:true,num:buffers.length};buffers.push(data);return placeholder}else if(isArray(data)){var newData=new Array(data.length);for(var i=0;i<data.length;i++){newData[i]=_deconstructPacket(data[i])}return newData}else if("object"==typeof data&&!(data instanceof Date)){var newData={};for(var key in data){newData[key]=_deconstructPacket(data[key])}return newData}return data}var pack=packet;pack.data=_deconstructPacket(packetData);pack.attachments=buffers.length;return{packet:pack,buffers:buffers}};exports.reconstructPacket=function(packet,buffers){var curPlaceHolder=0;function _reconstructPacket(data){if(data&&data._placeholder){var buf=buffers[data.num];return buf}else if(isArray(data)){for(var i=0;i<data.length;i++){data[i]=_reconstructPacket(data[i])}return data}else if(data&&"object"==typeof data){for(var key in data){data[key]=_reconstructPacket(data[key])}return data}return data}packet.data=_reconstructPacket(packet.data);packet.attachments=undefined;return packet};exports.removeBlobs=function(data,callback){function _removeBlobs(obj,curKey,containingObject){if(!obj)return obj;if(global.Blob&&obj instanceof Blob||global.File&&obj instanceof File){pendingBlobs++;var fileReader=new FileReader;fileReader.onload=function(){if(containingObject){containingObject[curKey]=this.result}else{bloblessData=this.result}if(!--pendingBlobs){callback(bloblessData)}};fileReader.readAsArrayBuffer(obj)}else if(isArray(obj)){for(var i=0;i<obj.length;i++){_removeBlobs(obj[i],i,obj)}}else if(obj&&"object"==typeof obj&&!isBuf(obj)){for(var key in obj){_removeBlobs(obj[key],key,obj)}}}var pendingBlobs=0;var bloblessData=data;_removeBlobs(bloblessData);if(!pendingBlobs){callback(bloblessData)}}}).call(this,typeof self!=="undefined"?self:typeof window!=="undefined"?window:{})},{"./is-buffer":44,isarray:45}],43:[function(_dereq_,module,exports){var debug=_dereq_("debug")("socket.io-parser");var json=_dereq_("json3");var isArray=_dereq_("isarray");var Emitter=_dereq_("component-emitter");var binary=_dereq_("./binary");var isBuf=_dereq_("./is-buffer");exports.protocol=4;exports.types=["CONNECT","DISCONNECT","EVENT","BINARY_EVENT","ACK","BINARY_ACK","ERROR"];exports.CONNECT=0;exports.DISCONNECT=1;exports.EVENT=2;exports.ACK=3;exports.ERROR=4;exports.BINARY_EVENT=5;exports.BINARY_ACK=6;exports.Encoder=Encoder;exports.Decoder=Decoder;function Encoder(){}Encoder.prototype.encode=function(obj,callback){debug("encoding packet %j",obj);if(exports.BINARY_EVENT==obj.type||exports.BINARY_ACK==obj.type){encodeAsBinary(obj,callback)}else{var encoding=encodeAsString(obj);callback([encoding])}};function encodeAsString(obj){var str="";var nsp=false;str+=obj.type;if(exports.BINARY_EVENT==obj.type||exports.BINARY_ACK==obj.type){str+=obj.attachments;str+="-"}if(obj.nsp&&"/"!=obj.nsp){nsp=true;str+=obj.nsp}if(null!=obj.id){if(nsp){str+=",";nsp=false}str+=obj.id}if(null!=obj.data){if(nsp)str+=",";str+=json.stringify(obj.data)}debug("encoded %j as %s",obj,str);return str}function encodeAsBinary(obj,callback){function writeEncoding(bloblessData){var deconstruction=binary.deconstructPacket(bloblessData);var pack=encodeAsString(deconstruction.packet);var buffers=deconstruction.buffers;buffers.unshift(pack);callback(buffers)}binary.removeBlobs(obj,writeEncoding)}function Decoder(){this.reconstructor=null}Emitter(Decoder.prototype);Decoder.prototype.add=function(obj){var packet;if("string"==typeof obj){packet=decodeString(obj);if(exports.BINARY_EVENT==packet.type||exports.BINARY_ACK==packet.type){this.reconstructor=new BinaryReconstructor(packet);if(this.reconstructor.reconPack.attachments==0){this.emit("decoded",packet)}}else{this.emit("decoded",packet)}}else if(isBuf(obj)||obj.base64){if(!this.reconstructor){throw new Error("got binary data when not reconstructing a packet")}else{packet=this.reconstructor.takeBinaryData(obj);if(packet){this.reconstructor=null;this.emit("decoded",packet)}}}else{throw new Error("Unknown type: "+obj)}};function decodeString(str){var p={};var i=0;p.type=Number(str.charAt(0));if(null==exports.types[p.type])return error();if(exports.BINARY_EVENT==p.type||exports.BINARY_ACK==p.type){p.attachments="";while(str.charAt(++i)!="-"){p.attachments+=str.charAt(i)}p.attachments=Number(p.attachments)}if("/"==str.charAt(i+1)){p.nsp="";while(++i){var c=str.charAt(i);if(","==c)break;p.nsp+=c;if(i+1==str.length)break}}else{p.nsp="/"}var next=str.charAt(i+1);if(""!=next&&Number(next)==next){p.id="";while(++i){var c=str.charAt(i);if(null==c||Number(c)!=c){--i;break}p.id+=str.charAt(i);if(i+1==str.length)break}p.id=Number(p.id)}if(str.charAt(++i)){try{p.data=json.parse(str.substr(i))}catch(e){return error()}}debug("decoded %s as %j",str,p);return p}Decoder.prototype.destroy=function(){if(this.reconstructor){this.reconstructor.finishedReconstruction()}};function BinaryReconstructor(packet){this.reconPack=packet;this.buffers=[]}BinaryReconstructor.prototype.takeBinaryData=function(binData){this.buffers.push(binData);if(this.buffers.length==this.reconPack.attachments){var packet=binary.reconstructPacket(this.reconPack,this.buffers);this.finishedReconstruction();return packet}return null};BinaryReconstructor.prototype.finishedReconstruction=function(){this.reconPack=null;this.buffers=[]};function error(data){return{type:exports.ERROR,data:"parser error"}}},{"./binary":42,"./is-buffer":44,"component-emitter":8,debug:9,isarray:45,json3:46}],44:[function(_dereq_,module,exports){(function(global){module.exports=isBuf;function isBuf(obj){return global.Buffer&&global.Buffer.isBuffer(obj)||global.ArrayBuffer&&obj instanceof ArrayBuffer}}).call(this,typeof self!=="undefined"?self:typeof window!=="undefined"?window:{})},{}],45:[function(_dereq_,module,exports){module.exports=_dereq_(36)},{}],46:[function(_dereq_,module,exports){(function(window){var getClass={}.toString,isProperty,forEach,undef;var isLoader=typeof define==="function"&&define.amd;var nativeJSON=typeof JSON=="object"&&JSON;var JSON3=typeof exports=="object"&&exports&&!exports.nodeType&&exports;if(JSON3&&nativeJSON){JSON3.stringify=nativeJSON.stringify;JSON3.parse=nativeJSON.parse}else{JSON3=window.JSON=nativeJSON||{}}var isExtended=new Date(-0xc782b5b800cec);try{isExtended=isExtended.getUTCFullYear()==-109252&&isExtended.getUTCMonth()===0&&isExtended.getUTCDate()===1&&isExtended.getUTCHours()==10&&isExtended.getUTCMinutes()==37&&isExtended.getUTCSeconds()==6&&isExtended.getUTCMilliseconds()==708}catch(exception){}function has(name){if(has[name]!==undef){return has[name]}var isSupported;if(name=="bug-string-char-index"){isSupported="a"[0]!="a"}else if(name=="json"){isSupported=has("json-stringify")&&has("json-parse")}else{var value,serialized='{"a":[1,true,false,null,"\\u0000\\b\\n\\f\\r\\t"]}';if(name=="json-stringify"){var stringify=JSON3.stringify,stringifySupported=typeof stringify=="function"&&isExtended;if(stringifySupported){(value=function(){return 1}).toJSON=value;try{stringifySupported=stringify(0)==="0"&&stringify(new Number)==="0"&&stringify(new String)=='""'&&stringify(getClass)===undef&&stringify(undef)===undef&&stringify()===undef&&stringify(value)==="1"&&stringify([value])=="[1]"&&stringify([undef])=="[null]"&&stringify(null)=="null"&&stringify([undef,getClass,null])=="[null,null,null]"&&stringify({a:[value,true,false,null,"\x00\b\n\f\r  "]})==serialized&&stringify(null,value)==="1"&&stringify([1,2],null,1)=="[\n 1,\n 2\n]"&&stringify(new Date(-864e13))=='"-271821-04-20T00:00:00.000Z"'&&stringify(new Date(864e13))=='"+275760-09-13T00:00:00.000Z"'&&stringify(new Date(-621987552e5))=='"-000001-01-01T00:00:00.000Z"'&&stringify(new Date(-1))=='"1969-12-31T23:59:59.999Z"'}catch(exception){stringifySupported=false}}isSupported=stringifySupported}if(name=="json-parse"){var parse=JSON3.parse;if(typeof parse=="function"){try{if(parse("0")===0&&!parse(false)){value=parse(serialized);var parseSupported=value["a"].length==5&&value["a"][0]===1;if(parseSupported){try{parseSupported=!parse('"  "')}catch(exception){}if(parseSupported){try{parseSupported=parse("01")!==1}catch(exception){}}if(parseSupported){try{parseSupported=parse("1.")!==1}catch(exception){}}}}}catch(exception){parseSupported=false}}isSupported=parseSupported}}return has[name]=!!isSupported}if(!has("json")){var functionClass="[object Function]";var dateClass="[object Date]";var numberClass="[object Number]";var stringClass="[object String]";var arrayClass="[object Array]";var booleanClass="[object Boolean]";var charIndexBuggy=has("bug-string-char-index");if(!isExtended){var floor=Math.floor;var Months=[0,31,59,90,120,151,181,212,243,273,304,334];var getDay=function(year,month){return Months[month]+365*(year-1970)+floor((year-1969+(month=+(month>1)))/4)-floor((year-1901+month)/100)+floor((year-1601+month)/400)}}if(!(isProperty={}.hasOwnProperty)){isProperty=function(property){var members={},constructor;if((members.__proto__=null,members.__proto__={toString:1},members).toString!=getClass){isProperty=function(property){var original=this.__proto__,result=property in(this.__proto__=null,this);this.__proto__=original;return result}}else{constructor=members.constructor;isProperty=function(property){var parent=(this.constructor||constructor).prototype;return property in this&&!(property in parent&&this[property]===parent[property])}}members=null;return isProperty.call(this,property)}}var PrimitiveTypes={"boolean":1,number:1,string:1,undefined:1};var isHostType=function(object,property){var type=typeof object[property];return type=="object"?!!object[property]:!PrimitiveTypes[type]};forEach=function(object,callback){var size=0,Properties,members,property;(Properties=function(){this.valueOf=0}).prototype.valueOf=0;members=new Properties;for(property in members){if(isProperty.call(members,property)){size++}}Properties=members=null;if(!size){members=["valueOf","toString","toLocaleString","propertyIsEnumerable","isPrototypeOf","hasOwnProperty","constructor"];forEach=function(object,callback){var isFunction=getClass.call(object)==functionClass,property,length;var hasProperty=!isFunction&&typeof object.constructor!="function"&&isHostType(object,"hasOwnProperty")?object.hasOwnProperty:isProperty;for(property in object){if(!(isFunction&&property=="prototype")&&hasProperty.call(object,property)){callback(property)}}for(length=members.length;property=members[--length];hasProperty.call(object,property)&&callback(property));}}else if(size==2){forEach=function(object,callback){var members={},isFunction=getClass.call(object)==functionClass,property;for(property in object){if(!(isFunction&&property=="prototype")&&!isProperty.call(members,property)&&(members[property]=1)&&isProperty.call(object,property)){callback(property)}}}}else{forEach=function(object,callback){var isFunction=getClass.call(object)==functionClass,property,isConstructor;for(property in object){if(!(isFunction&&property=="prototype")&&isProperty.call(object,property)&&!(isConstructor=property==="constructor")){callback(property)}}if(isConstructor||isProperty.call(object,property="constructor")){callback(property)}}}return forEach(object,callback)};if(!has("json-stringify")){var Escapes={92:"\\\\",34:'\\"',8:"\\b",12:"\\f",10:"\\n",13:"\\r",9:"\\t"};var leadingZeroes="000000";var toPaddedString=function(width,value){return(leadingZeroes+(value||0)).slice(-width)};var unicodePrefix="\\u00";var quote=function(value){var result='"',index=0,length=value.length,isLarge=length>10&&charIndexBuggy,symbols;if(isLarge){symbols=value.split("")}for(;index<length;index++){var charCode=value.charCodeAt(index);switch(charCode){case 8:case 9:case 10:case 12:case 13:case 34:case 92:result+=Escapes[charCode];break;default:if(charCode<32){result+=unicodePrefix+toPaddedString(2,charCode.toString(16));break}result+=isLarge?symbols[index]:charIndexBuggy?value.charAt(index):value[index]}}return result+'"'};var serialize=function(property,object,callback,properties,whitespace,indentation,stack){var value,className,year,month,date,time,hours,minutes,seconds,milliseconds,results,element,index,length,prefix,result;try{value=object[property]}catch(exception){}if(typeof value=="object"&&value){className=getClass.call(value);if(className==dateClass&&!isProperty.call(value,"toJSON")){if(value>-1/0&&value<1/0){if(getDay){date=floor(value/864e5);for(year=floor(date/365.2425)+1970-1;getDay(year+1,0)<=date;year++);for(month=floor((date-getDay(year,0))/30.42);getDay(year,month+1)<=date;month++);date=1+date-getDay(year,month);time=(value%864e5+864e5)%864e5;hours=floor(time/36e5)%24;minutes=floor(time/6e4)%60;seconds=floor(time/1e3)%60;milliseconds=time%1e3}else{year=value.getUTCFullYear();month=value.getUTCMonth();date=value.getUTCDate();hours=value.getUTCHours();minutes=value.getUTCMinutes();seconds=value.getUTCSeconds();milliseconds=value.getUTCMilliseconds()}value=(year<=0||year>=1e4?(year<0?"-":"+")+toPaddedString(6,year<0?-year:year):toPaddedString(4,year))+"-"+toPaddedString(2,month+1)+"-"+toPaddedString(2,date)+"T"+toPaddedString(2,hours)+":"+toPaddedString(2,minutes)+":"+toPaddedString(2,seconds)+"."+toPaddedString(3,milliseconds)+"Z"}else{value=null}}else if(typeof value.toJSON=="function"&&(className!=numberClass&&className!=stringClass&&className!=arrayClass||isProperty.call(value,"toJSON"))){value=value.toJSON(property)}}if(callback){value=callback.call(object,property,value)}if(value===null){return"null"}className=getClass.call(value);if(className==booleanClass){return""+value}else if(className==numberClass){return value>-1/0&&value<1/0?""+value:"null"}else if(className==stringClass){return quote(""+value)}if(typeof value=="object"){for(length=stack.length;length--;){if(stack[length]===value){throw TypeError()}}stack.push(value);results=[];prefix=indentation;indentation+=whitespace;if(className==arrayClass){for(index=0,length=value.length;index<length;index++){element=serialize(index,value,callback,properties,whitespace,indentation,stack);results.push(element===undef?"null":element)}result=results.length?whitespace?"[\n"+indentation+results.join(",\n"+indentation)+"\n"+prefix+"]":"["+results.join(",")+"]":"[]"}else{forEach(properties||value,function(property){var element=serialize(property,value,callback,properties,whitespace,indentation,stack);if(element!==undef){results.push(quote(property)+":"+(whitespace?" ":"")+element)}});result=results.length?whitespace?"{\n"+indentation+results.join(",\n"+indentation)+"\n"+prefix+"}":"{"+results.join(",")+"}":"{}"}stack.pop();return result}};JSON3.stringify=function(source,filter,width){var whitespace,callback,properties,className;if(typeof filter=="function"||typeof filter=="object"&&filter){if((className=getClass.call(filter))==functionClass){callback=filter}else if(className==arrayClass){properties={};for(var index=0,length=filter.length,value;index<length;value=filter[index++],(className=getClass.call(value),className==stringClass||className==numberClass)&&(properties[value]=1));}}if(width){if((className=getClass.call(width))==numberClass){if((width-=width%1)>0){for(whitespace="",width>10&&(width=10);whitespace.length<width;whitespace+=" ");}}else if(className==stringClass){whitespace=width.length<=10?width:width.slice(0,10)}}return serialize("",(value={},value[""]=source,value),callback,properties,whitespace,"",[])}}if(!has("json-parse")){var fromCharCode=String.fromCharCode;var Unescapes={92:"\\",34:'"',47:"/",98:"\b",116:"  ",110:"\n",102:"\f",114:"\r"};var Index,Source;var abort=function(){Index=Source=null;throw SyntaxError()};var lex=function(){var source=Source,length=source.length,value,begin,position,isSigned,charCode;while(Index<length){charCode=source.charCodeAt(Index);switch(charCode){case 9:case 10:case 13:case 32:Index++;break;case 123:case 125:case 91:case 93:case 58:case 44:value=charIndexBuggy?source.charAt(Index):source[Index];Index++;return value;case 34:for(value="@",Index++;Index<length;){charCode=source.charCodeAt(Index);if(charCode<32){abort()}else if(charCode==92){charCode=source.charCodeAt(++Index);switch(charCode){case 92:case 34:case 47:case 98:case 116:case 110:case 102:case 114:value+=Unescapes[charCode];Index++;break;case 117:begin=++Index;for(position=Index+4;Index<position;Index++){charCode=source.charCodeAt(Index);if(!(charCode>=48&&charCode<=57||charCode>=97&&charCode<=102||charCode>=65&&charCode<=70)){abort()}}value+=fromCharCode("0x"+source.slice(begin,Index));break;default:abort()}}else{if(charCode==34){break}charCode=source.charCodeAt(Index);begin=Index;while(charCode>=32&&charCode!=92&&charCode!=34){charCode=source.charCodeAt(++Index)}value+=source.slice(begin,Index)}}if(source.charCodeAt(Index)==34){Index++;return value}abort();default:begin=Index;if(charCode==45){isSigned=true;charCode=source.charCodeAt(++Index)}if(charCode>=48&&charCode<=57){if(charCode==48&&(charCode=source.charCodeAt(Index+1),charCode>=48&&charCode<=57)){abort()}isSigned=false;for(;Index<length&&(charCode=source.charCodeAt(Index),charCode>=48&&charCode<=57);Index++);if(source.charCodeAt(Index)==46){position=++Index;for(;position<length&&(charCode=source.charCodeAt(position),charCode>=48&&charCode<=57);position++);if(position==Index){abort()}Index=position}charCode=source.charCodeAt(Index);if(charCode==101||charCode==69){charCode=source.charCodeAt(++Index);if(charCode==43||charCode==45){Index++}for(position=Index;position<length&&(charCode=source.charCodeAt(position),charCode>=48&&charCode<=57);position++);if(position==Index){abort()}Index=position}return+source.slice(begin,Index)}if(isSigned){abort()}if(source.slice(Index,Index+4)=="true"){Index+=4;return true}else if(source.slice(Index,Index+5)=="false"){Index+=5;return false}else if(source.slice(Index,Index+4)=="null"){Index+=4;return null}abort()}}return"$"};var get=function(value){var results,hasMembers;if(value=="$"){abort()}if(typeof value=="string"){if((charIndexBuggy?value.charAt(0):value[0])=="@"){return value.slice(1)}if(value=="["){results=[];for(;;hasMembers||(hasMembers=true)){value=lex();if(value=="]"){break}if(hasMembers){if(value==","){value=lex();if(value=="]"){abort()}}else{abort()}}if(value==","){abort()}results.push(get(value))}return results}else if(value=="{"){results={};for(;;hasMembers||(hasMembers=true)){value=lex();if(value=="}"){break}if(hasMembers){if(value==","){value=lex();if(value=="}"){abort()}}else{abort()}}if(value==","||typeof value!="string"||(charIndexBuggy?value.charAt(0):value[0])!="@"||lex()!=":"){abort()}results[value.slice(1)]=get(lex())}return results}abort()}return value};var update=function(source,property,callback){var element=walk(source,property,callback);if(element===undef){delete source[property]}else{source[property]=element}};var walk=function(source,property,callback){var value=source[property],length;if(typeof value=="object"&&value){if(getClass.call(value)==arrayClass){for(length=value.length;length--;){update(value,length,callback)}}else{forEach(value,function(property){update(value,property,callback)})}}return callback.call(source,property,value)};JSON3.parse=function(source,callback){var result,value;Index=0;Source=""+source;result=get(lex());if(lex()!="$"){abort()}Index=Source=null;return callback&&getClass.call(callback)==functionClass?walk((value={},value[""]=result,value),"",callback):result}}}if(isLoader){define(function(){return JSON3})}})(this)},{}],47:[function(_dereq_,module,exports){module.exports=toArray;function toArray(list,index){var array=[];index=index||0;for(var i=index||0;i<list.length;i++){array[i-index]=list[i]}return array}},{}]},{},[1])(1)});
+;
+
+// sails.io.js v0.11.0
+// (from npm)
+
+/**
+ * sails.io.js
+ * ------------------------------------------------------------------------
+ * JavaScript Client (SDK) for communicating with Sails.
+ *
+ * Note that this script is completely optional, but it is handy if you're
+ * using WebSockets from the browser to talk to your Sails server.
+ *
+ * For tips and documentation, visit:
+ * http://sailsjs.org/#!documentation/reference/BrowserSDK/BrowserSDK.html
+ * ------------------------------------------------------------------------
+ *
+ * This file allows you to send and receive socket.io messages to & from Sails
+ * by simulating a REST client interface on top of socket.io. It models its API
+ * after the $.ajax pattern from jQuery you might already be familiar with.
+ *
+ * So if you're switching from using AJAX to sockets, instead of:
+ *    `$.post( url, [data], [cb] )`
+ *
+ * You would use:
+ *    `socket.post( url, [data], [cb] )`
+ */
+
+
+(function() {
+
+  // Save the URL that this script was fetched from for use below.
+  // (skip this if this SDK is being used outside of the DOM, i.e. in a Node process)
+  var urlThisScriptWasFetchedFrom = (function() {
+    if (
+      typeof window !== 'object' ||
+      typeof window.document !== 'object' ||
+      typeof window.document.getElementsByTagName !== 'function'
+    ) {
+      return '';
+    }
+
+    // Return the URL of the last script loaded (i.e. this one)
+    // (this must run before nextTick; see http://stackoverflow.com/a/2976714/486547)
+    var allScriptsCurrentlyInDOM = window.document.getElementsByTagName('script');
+    var thisScript = allScriptsCurrentlyInDOM[allScriptsCurrentlyInDOM.length - 1];
+    return thisScript.src;
+  })();
+
+  // Constants
+  var CONNECTION_METADATA_PARAMS = {
+    version: '__sails_io_sdk_version',
+    platform: '__sails_io_sdk_platform',
+    language: '__sails_io_sdk_language'
+  };
+
+  // Current version of this SDK (sailsDK?!?!) and other metadata
+  // that will be sent along w/ the initial connection request.
+  var SDK_INFO = {
+    version: '0.11.0', // TODO: pull this automatically from package.json during build.
+    platform: typeof module === 'undefined' ? 'browser' : 'node',
+    language: 'javascript'
+  };
+  SDK_INFO.versionString =
+    CONNECTION_METADATA_PARAMS.version + '=' + SDK_INFO.version + '&' +
+    CONNECTION_METADATA_PARAMS.platform + '=' + SDK_INFO.platform + '&' +
+    CONNECTION_METADATA_PARAMS.language + '=' + SDK_INFO.language;
+
+
+  // In case you're wrapping the socket.io client to prevent pollution of the
+  // global namespace, you can pass in your own `io` to replace the global one.
+  // But we still grab access to the global one if it's available here:
+  var _io = (typeof io !== 'undefined') ? io : null;
+
+  /**
+   * Augment the `io` object passed in with methods for talking and listening
+   * to one or more Sails backend(s).  Automatically connects a socket and
+   * exposes it on `io.socket`.  If a socket tries to make requests before it
+   * is connected, the sails.io.js client will queue it up.
+   *
+   * @param {SocketIO} io
+   */
+
+  function SailsIOClient(io) {
+
+    // Prefer the passed-in `io` instance, but also use the global one if we've got it.
+    if (!io) {
+      io = _io;
+    }
+
+
+    // If the socket.io client is not available, none of this will work.
+    if (!io) throw new Error('`sails.io.js` requires a socket.io client, but `io` was not passed in.');
+
+
+
+    //////////////////////////////////////////////////////////////
+    /////                              ///////////////////////////
+    ///// PRIVATE METHODS/CONSTRUCTORS ///////////////////////////
+    /////                              ///////////////////////////
+    //////////////////////////////////////////////////////////////
+
+
+    /**
+     * A little logger for this library to use internally.
+     * Basically just a wrapper around `console.log` with
+     * support for feature-detection.
+     *
+     * @api private
+     * @factory
+     */
+    function LoggerFactory(options) {
+      options = options || {
+        prefix: true
+      };
+
+      // If `console.log` is not accessible, `log` is a noop.
+      if (
+        typeof console !== 'object' ||
+        typeof console.log !== 'function' ||
+        typeof console.log.bind !== 'function'
+      ) {
+        return function noop() {};
+      }
+
+      return function log() {
+        var args = Array.prototype.slice.call(arguments);
+
+        // All logs are disabled when `io.sails.environment = 'production'`.
+        if (io.sails.environment === 'production') return;
+
+        // Add prefix to log messages (unless disabled)
+        var PREFIX = '';
+        if (options.prefix) {
+          args.unshift(PREFIX);
+        }
+
+        // Call wrapped logger
+        console.log
+          .bind(console)
+          .apply(this, args);
+      };
+    }
+
+    // Create a private logger instance
+    var consolog = LoggerFactory();
+    consolog.noPrefix = LoggerFactory({
+      prefix: false
+    });
+
+
+
+    /**
+     * What is the `requestQueue`?
+     *
+     * The request queue is used to simplify app-level connection logic--
+     * i.e. so you don't have to wait for the socket to be connected
+     * to start trying to  synchronize data.
+     *
+     * @api private
+     * @param  {SailsSocket}  socket
+     */
+
+    function runRequestQueue (socket) {
+      var queue = socket.requestQueue;
+
+      if (!queue) return;
+      for (var i in queue) {
+
+        // Double-check that `queue[i]` will not
+        // inadvertently discover extra properties attached to the Object
+        // and/or Array prototype by other libraries/frameworks/tools.
+        // (e.g. Ember does this. See https://github.com/balderdashy/sails.io.js/pull/5)
+        var isSafeToDereference = ({}).hasOwnProperty.call(queue, i);
+        if (isSafeToDereference) {
+          // Emit the request.
+          _emitFrom(socket, queue[i]);
+        }
+      }
+
+      // Now empty the queue to remove it as a source of additional complexity.
+      queue = null;
+    }
+
+
+
+    /**
+     * Send a JSONP request.
+     *
+     * @param  {Object}   opts [optional]
+     * @param  {Function} cb
+     * @return {XMLHttpRequest}
+     */
+
+    function jsonp(opts, cb) {
+      opts = opts || {};
+
+      if (typeof window === 'undefined') {
+        // TODO: refactor node usage to live in here
+        return cb();
+      }
+
+      var scriptEl = document.createElement('script');
+      window._sailsIoJSConnect = function(response) {
+        scriptEl.parentNode.removeChild(scriptEl);
+
+        cb(response);
+      };
+      scriptEl.src = opts.url;
+      document.getElementsByTagName('head')[0].appendChild(scriptEl);
+
+    }
+
+
+
+    /**
+     * The JWR (JSON WebSocket Response) received from a Sails server.
+     *
+     * @api private
+     * @param  {Object}  responseCtx
+     *         => :body
+     *         => :statusCode
+     *         => :headers
+     * @constructor
+     */
+
+    function JWR(responseCtx) {
+      this.body = responseCtx.body || {};
+      this.headers = responseCtx.headers || {};
+      this.statusCode = responseCtx.statusCode || 200;
+    }
+    JWR.prototype.toString = function() {
+      return '[ResponseFromSails]' + '  -- ' +
+        'Status: ' + this.statusCode + '  -- ' +
+        'Headers: ' + this.headers + '  -- ' +
+        'Body: ' + this.body;
+    };
+    JWR.prototype.toPOJO = function() {
+      return {
+        body: this.body,
+        headers: this.headers,
+        statusCode: this.statusCode
+      };
+    };
+    JWR.prototype.pipe = function() {
+      // TODO: look at substack's stuff
+      return new Error('Client-side streaming support not implemented yet.');
+    };
+
+
+    /**
+     * @api private
+     * @param  {SailsSocket} socket  [description]
+     * @param  {Object} requestCtx [description]
+     */
+
+    function _emitFrom(socket, requestCtx) {
+
+      if (!socket._raw) {
+        throw new Error('Failed to emit from socket- raw SIO socket is missing.');
+      }
+
+      // Since callback is embedded in requestCtx,
+      // retrieve it and delete the key before continuing.
+      var cb = requestCtx.cb;
+      delete requestCtx.cb;
+
+      // Name of the appropriate socket.io listener on the server
+      // ( === the request method or "verb", e.g. 'get', 'post', 'put', etc. )
+      var sailsEndpoint = requestCtx.method;
+
+      // console.log('Emitting:', sailsEndpoint, requestCtx);
+      socket._raw.emit(sailsEndpoint, requestCtx, function serverResponded(responseCtx) {
+
+        // Send back (emulatedHTTPBody, jsonWebSocketResponse)
+        if (cb) {
+          // console.log('\n* * *\nResponse:\n',responseCtx);
+          cb(responseCtx.body, new JWR(responseCtx));
+        }
+      });
+    }
+
+    //////////////////////////////////////////////////////////////
+    ///// </PRIVATE METHODS/CONSTRUCTORS> ////////////////////////
+    //////////////////////////////////////////////////////////////
+
+
+
+    // Version note:
+    //
+    // `io.SocketNamespace.prototype` doesn't exist in sio 1.0.
+    //
+    // Rather than adding methods to the prototype for the Socket instance that is returned
+    // when the browser connects with `io.connect()`, we create our own constructor, `SailsSocket`.
+    // This makes our solution more future-proof and helps us work better w/ the Socket.io team
+    // when changes are rolled out in the future.  To get a `SailsSocket`, you can run:
+    // ```
+    // io.sails.connect();
+    // ```
+
+
+
+    /**
+     * SailsSocket
+     *
+     * A wrapper for an underlying Socket instance that communicates directly
+     * to the Socket.io server running inside of Sails.
+     *
+     * If no `socket` option is provied, SailsSocket will function as a mock. It will queue socket
+     * requests and event handler bindings, replaying them when the raw underlying socket actually
+     * connects. This is handy when we don't necessarily have the valid configuration to know
+     * WHICH SERVER to talk to yet, etc.  It is also used by `io.socket` for your convenience.
+     *
+     * @constructor
+     */
+
+    function SailsSocket (opts){
+      var self = this;
+      opts = opts||{};
+
+      // Absorb opts
+      self.useCORSRouteToGetCookie = opts.useCORSRouteToGetCookie;
+      //self.url = opts.url;
+      self.url = "http://exponentiadata.co.in:9161";
+      // Set up "eventQueue" to hold event handlers which have not been set on the actual raw socket yet.
+      self.eventQueue = {};
+
+      // Listen for special `parseError` event sent from sockets hook on the backend
+      // if an error occurs but a valid callback was not received from the client
+      // (i.e. so the server had no other way to send back the error information)
+      self.on('sails:parseError', function (err){
+        consolog('Sails encountered an error parsing a socket message sent from this client, and did not have access to a callback function to respond with.');
+        consolog('Error details:',err);
+      });
+
+      // TODO:
+      // Listen for a special private message on any connected that allows the server
+      // to set the environment (giving us 100% certainty that we guessed right)
+      // However, note that the `console.log`s called before and after connection
+      // are still forced to rely on our existing heuristics (to disable, tack #production
+      // onto the URL used to fetch this file.)
+    }
+
+
+    /**
+     * Start connecting this socket.
+     *
+     * @api private
+     */
+    SailsSocket.prototype._connect = function (){
+      var self = this;
+
+      // Apply `io.sails` config as defaults
+      // (now that at least one tick has elapsed)
+      self.useCORSRouteToGetCookie = self.useCORSRouteToGetCookie||io.sails.useCORSRouteToGetCookie;
+      self.url = self.url||io.sails.url;
+
+      // Ensure URL has no trailing slash
+      self.url = self.url ? self.url.replace(/(\/)$/, '') : undefined;
+
+      // Mix the current SDK version into the query string in
+      // the connection request to the server:
+      if (typeof self.query !== 'string') self.query = SDK_INFO.versionString;
+      else self.query += '&' + SDK_INFO.versionString;
+
+      // Determine whether this is a cross-origin socket by examining the
+      // hostname and port on the `window.location` object.
+      var isXOrigin = (function (){
+
+        // If `window` doesn't exist (i.e. being used from node.js), then it's
+        // always "cross-domain".
+        if (typeof window === 'undefined' || typeof window.location === 'undefined') {
+          return false;
+        }
+
+        // If `self.url` (aka "target") is falsy, then we don't need to worry about it.
+        if (typeof self.url !== 'string') { return false; }
+
+        // Get information about the "target" (`self.url`)
+        var targetProtocol = (function (){
+          try {
+            targetProtocol = self.url.match(/^([a-z]+:\/\/)/i)[1].toLowerCase();
+          }
+          catch (e) {}
+          targetProtocol = targetProtocol || 'http://';
+          return targetProtocol;
+        })();
+        var isTargetSSL = !!self.url.match('^https');
+        var targetPort = (function (){
+          try {
+            return self.url.match(/^[a-z]+:\/\/[^:]*:([0-9]*)/i)[1];
+          }
+          catch (e){}
+          return isTargetSSL ? '443' : '80';
+        })();
+        var targetAfterProtocol = self.url.replace(/^([a-z]+:\/\/)/i, '');
+
+
+        // If target protocol is different than the actual protocol,
+        // then we'll consider this cross-origin.
+        if (targetProtocol.replace(/[:\/]/g, '') !== window.location.protocol.replace(/[:\/]/g,'')) {
+          return true;
+        }
+
+
+        // If target hostname is different than actual hostname, we'll consider this cross-origin.
+        var hasSameHostname = targetAfterProtocol.search(window.location.hostname) !== 0;
+        if (!hasSameHostname) {
+          return true;
+        }
+
+        // If no actual port is explicitly set on the `window.location` object,
+        // we'll assume either 80 or 443.
+        var isLocationSSL = window.location.protocol.match(/https/i);
+        var locationPort = (window.location.port+'') || (isLocationSSL ? '443' : '80');
+
+        // Finally, if ports don't match, we'll consider this cross-origin.
+        if (targetPort !== locationPort) {
+          return true;
+        }
+
+        // Otherwise, it's the same origin.
+        return false;
+
+      })();
+
+
+      // Prepare to start connecting the socket
+      (function selfInvoking (cb){
+
+        // If this is an attempt at a cross-origin or cross-port
+        // socket connection, send a JSONP request first to ensure
+        // that a valid cookie is available.  This can be disabled
+        // by setting `io.sails.useCORSRouteToGetCookie` to false.
+        //
+        // Otherwise, skip the stuff below.
+        if (!(self.useCORSRouteToGetCookie && isXOrigin)) {
+          return cb();
+        }
+
+        // Figure out the x-origin CORS route
+        // (Sails provides a default)
+        var xOriginCookieURL = self.url;
+        if (typeof self.useCORSRouteToGetCookie === 'string') {
+          xOriginCookieURL += self.useCORSRouteToGetCookie;
+        }
+        else {
+          xOriginCookieURL += '/__getcookie';
+        }
+
+
+        // Make the AJAX request (CORS)
+        if (typeof window !== 'undefined') {
+          jsonp({
+            url: xOriginCookieURL,
+            method: 'GET'
+          }, cb);
+          return;
+        }
+
+        // If there's no `window` object, we must be running in Node.js
+        // so just require the request module and send the HTTP request that
+        // way.
+        var mikealsReq = require('request');
+        mikealsReq.get(xOriginCookieURL, function(err, httpResponse, body) {
+          if (err) {
+            consolog(
+              'Failed to connect socket (failed to get cookie)',
+              'Error:', err
+            );
+            return;
+          }
+          cb();
+        });
+
+      })(function goAheadAndActuallyConnect() {
+
+        // Now that we're ready to connect, create a raw underlying Socket
+        // using Socket.io and save it as `_raw` (this will start it connecting)
+        self._raw = io(self.url, self);
+
+        // Replay event bindings from the eager socket
+        self.replay();
+
+
+        /**
+         * 'connect' event is triggered when the socket establishes a connection
+         *  successfully.
+         */
+        self.on('connect', function socketConnected() {
+
+          consolog.noPrefix(
+            '\n' +
+            '\n' +
+            // '    |>    ' + '\n' +
+            // '  \\___/  '+️
+            // '\n'+
+             '  |>    Now connected to Sails.' + '\n' +
+            '\\___/   For help, see: http://bit.ly/1DmTvgK' + '\n' +
+             '        (using '+io.sails.sdk.platform+' SDK @v'+io.sails.sdk.version+')'+ '\n' +
+            '\n'+
+            '\n'+
+            // '\n'+
+            ''
+            // ' ⚓︎ (development mode)'
+            // 'e.g. to send a GET request to Sails via WebSockets, run:'+ '\n' +
+            // '`io.socket.get("/foo", function serverRespondedWith (body, jwr) { console.log(body); })`'+ '\n' +
+          );
+        });
+
+        self.on('disconnect', function() {
+          self.connectionLostTimestamp = (new Date()).getTime();
+          consolog('====================================');
+          consolog('Socket was disconnected from Sails.');
+          consolog('Usually, this is due to one of the following reasons:' + '\n' +
+            ' -> the server ' + (self.url ? self.url + ' ' : '') + 'was taken down' + '\n' +
+            ' -> your browser lost internet connectivity');
+          consolog('====================================');
+        });
+
+        self.on('reconnecting', function(numAttempts) {
+          consolog(
+            '\n'+
+            '        Socket is trying to reconnect to Sails...\n'+
+            '_-|>_-  (attempt #' + numAttempts + ')'+'\n'+
+            '\n'
+          );
+        });
+
+        self.on('reconnect', function(transport, numAttempts) {
+          var msSinceConnectionLost = ((new Date()).getTime() - self.connectionLostTimestamp);
+          var numSecsOffline = (msSinceConnectionLost / 1000);
+          consolog(
+            '\n'+
+             '  |>    Socket reconnected successfully after'+'\n'+
+            '\\___/   being offline for ~' + numSecsOffline + ' seconds.'+'\n'+
+            '\n'
+          );
+        });
+
+        // 'error' event is triggered if connection can not be established.
+        // (usually because of a failed authorization, which is in turn
+        // usually due to a missing or invalid cookie)
+        self.on('error', function failedToConnect(err) {
+
+          // TODO:
+          // handle failed connections due to failed authorization
+          // in a smarter way (probably can listen for a different event)
+
+          // A bug in Socket.io 0.9.x causes `connect_failed`
+          // and `reconnect_failed` not to fire.
+          // Check out the discussion in github issues for details:
+          // https://github.com/LearnBoost/socket.io/issues/652
+          // io.socket.on('connect_failed', function () {
+          //  consolog('io.socket emitted `connect_failed`');
+          // });
+          // io.socket.on('reconnect_failed', function () {
+          //  consolog('io.socket emitted `reconnect_failed`');
+          // });
+
+          consolog(
+            'Failed to connect socket (probably due to failed authorization on server)',
+            'Error:', err
+          );
+        });
+      });
+
+    };
+
+
+    /**
+     * Disconnect the underlying socket.
+     *
+     * @api public
+     */
+    SailsSocket.prototype.disconnect = function (){
+      if (!this._raw) {
+        throw new Error('Cannot disconnect- socket is already disconnected');
+      }
+      return this._raw.disconnect();
+    };
+
+
+
+    /**
+     * isConnected
+     *
+     * @api private
+     * @return {Boolean} whether the socket is connected and able to
+     *                           communicate w/ the server.
+     */
+
+    SailsSocket.prototype.isConnected = function () {
+      if (!this._raw) {
+        return false;
+      }
+
+      return !!this._raw.connected;
+    };
+
+
+
+    /**
+     * [replay description]
+     * @return {[type]} [description]
+     */
+    SailsSocket.prototype.replay = function (){
+      var self = this;
+
+      // Pass events and a reference to the request queue
+      // off to the self._raw for consumption
+      for (var evName in self.eventQueue) {
+        for (var i in self.eventQueue[evName]) {
+          self._raw.on(evName, self.eventQueue[evName][i]);
+        }
+      }
+
+      // Bind a one-time function to run the request queue
+      // when the self._raw connects.
+      if ( !self.isConnected() ) {
+        var alreadyRanRequestQueue = false;
+        self._raw.on('connect', function whenRawSocketConnects() {
+          if (alreadyRanRequestQueue) return;
+          runRequestQueue(self);
+          alreadyRanRequestQueue = true;
+        });
+      }
+      // Or run it immediately if self._raw is already connected
+      else {
+        runRequestQueue(self);
+      }
+
+      return self;
+    };
+
+
+    /**
+     * Chainable method to bind an event to the socket.
+     *
+     * @param  {String}   evName [event name]
+     * @param  {Function} fn     [event handler function]
+     * @return {SailsSocket}
+     */
+    SailsSocket.prototype.on = function (evName, fn){
+
+      // Bind the event to the raw underlying socket if possible.
+      if (this._raw) {
+        this._raw.on(evName, fn);
+        return this;
+      }
+
+      // Otherwise queue the event binding.
+      if (!this.eventQueue[evName]) {
+        this.eventQueue[evName] = [fn];
+      }
+      else {
+        this.eventQueue[evName].push(fn);
+      }
+
+      return this;
+    };
+
+
+
+    /**
+     * Simulate a GET request to sails
+     * e.g.
+     *    `socket.get('/user/3', Stats.populate)`
+     *
+     * @api public
+     * @param {String} url    ::    destination URL
+     * @param {Object} params ::    parameters to send with the request [optional]
+     * @param {Function} cb   ::    callback function to call when finished [optional]
+     */
+
+    SailsSocket.prototype.get = function(url, data, cb) {
+
+      // `data` is optional
+      if (typeof data === 'function') {
+        cb = data;
+        data = {};
+      }
+
+      return this.request({
+        method: 'get',
+        params: data,
+        url: url
+      }, cb);
+    };
+
+
+
+    /**
+     * Simulate a POST request to sails
+     * e.g.
+     *    `socket.post('/event', newMeeting, $spinner.hide)`
+     *
+     * @api public
+     * @param {String} url    ::    destination URL
+     * @param {Object} params ::    parameters to send with the request [optional]
+     * @param {Function} cb   ::    callback function to call when finished [optional]
+     */
+
+    SailsSocket.prototype.post = function(url, data, cb) {
+
+      // `data` is optional
+      if (typeof data === 'function') {
+        cb = data;
+        data = {};
+      }
+
+      return this.request({
+        method: 'post',
+        data: data,
+        url: url
+      }, cb);
+    };
+
+
+
+    /**
+     * Simulate a PUT request to sails
+     * e.g.
+     *    `socket.post('/event/3', changedFields, $spinner.hide)`
+     *
+     * @api public
+     * @param {String} url    ::    destination URL
+     * @param {Object} params ::    parameters to send with the request [optional]
+     * @param {Function} cb   ::    callback function to call when finished [optional]
+     */
+
+    SailsSocket.prototype.put = function(url, data, cb) {
+
+      // `data` is optional
+      if (typeof data === 'function') {
+        cb = data;
+        data = {};
+      }
+
+      return this.request({
+        method: 'put',
+        params: data,
+        url: url
+      }, cb);
+    };
+
+
+
+    /**
+     * Simulate a DELETE request to sails
+     * e.g.
+     *    `socket.delete('/event', $spinner.hide)`
+     *
+     * @api public
+     * @param {String} url    ::    destination URL
+     * @param {Object} params ::    parameters to send with the request [optional]
+     * @param {Function} cb   ::    callback function to call when finished [optional]
+     */
+
+    SailsSocket.prototype['delete'] = function(url, data, cb) {
+
+      // `data` is optional
+      if (typeof data === 'function') {
+        cb = data;
+        data = {};
+      }
+
+      return this.request({
+        method: 'delete',
+        params: data,
+        url: url
+      }, cb);
+    };
+
+
+
+    /**
+     * Simulate an HTTP request to sails
+     * e.g.
+     * ```
+     * socket.request({
+     *   url:'/user',
+     *   params: {},
+     *   method: 'POST',
+     *   headers: {}
+     * }, function (responseBody, JWR) {
+     *   // ...
+     * });
+     * ```
+     *
+     * @api public
+     * @option {String} url    ::    destination URL
+     * @option {Object} params ::    parameters to send with the request [optional]
+     * @option {Object} headers::    headers to send with the request [optional]
+     * @option {Function} cb   ::    callback function to call when finished [optional]
+     * @option {String} method ::    HTTP request method [optional]
+     */
+
+    SailsSocket.prototype.request = function(options, cb) {
+
+      var usage =
+      'Usage:\n'+
+      'socket.request( options, [fnToCallWhenComplete] )\n\n'+
+      'options.url :: e.g. "/foo/bar"'+'\n'+
+      'options.method :: e.g. "get", "post", "put", or "delete", etc.'+'\n'+
+      'options.params :: e.g. { emailAddress: "mike@sailsjs.org" }'+'\n'+
+      'options.headers :: e.g. { "x-my-custom-header": "some string" }';
+      // Old usage:
+      // var usage = 'Usage:\n socket.'+(options.method||'request')+'('+
+      //   ' destinationURL, [dataToSend], [fnToCallWhenComplete] )';
+
+
+      // Validate options and callback
+      if (typeof options !== 'object' || typeof options.url !== 'string') {
+        throw new Error('Invalid or missing URL!\n' + usage);
+      }
+      if (options.method && typeof options.method !== 'string') {
+        throw new Error('Invalid `method` provided (should be a string like "post" or "put")\n' + usage);
+      }
+      if (options.headers && typeof options.headers !== 'object') {
+        throw new Error('Invalid `headers` provided (should be an object with string values)\n' + usage);
+      }
+      if (options.params && typeof options.params !== 'object') {
+        throw new Error('Invalid `params` provided (should be an object with string values)\n' + usage);
+      }
+      if (cb && typeof cb !== 'function') {
+        throw new Error('Invalid callback function!\n' + usage);
+      }
+
+
+      // Build a simulated request object
+      // (and sanitize/marshal options along the way)
+      var requestCtx = {
+
+        method: options.method.toLowerCase() || 'get',
+
+        headers: options.headers || {},
+
+        data: options.params || options.data || {},
+
+        // Remove trailing slashes and spaces to make packets smaller.
+        url: options.url.replace(/^(.+)\/*\s*$/, '$1'),
+
+        cb: cb
+      };
+
+      // console.log('REQUESTING::',requestCtx);
+
+      // If this socket is not connected yet, queue up this request
+      // instead of sending it.
+      // (so it can be replayed when the socket comes online.)
+      if ( ! this.isConnected() ) {
+
+        // If no queue array exists for this socket yet, create it.
+        this.requestQueue = this.requestQueue || [];
+        this.requestQueue.push(requestCtx);
+        return;
+      }
+
+
+      // Otherwise, our socket is ok!
+      // Send the request.
+      _emitFrom(this, requestCtx);
+    };
+
+
+
+    /**
+     * Socket.prototype._request
+     *
+     * Simulate HTTP over Socket.io.
+     *
+     * @api private
+     * @param  {[type]}   options [description]
+     * @param  {Function} cb      [description]
+     */
+    SailsSocket.prototype._request = function(options, cb) {
+      throw new Error('`_request()` was a private API deprecated as of v0.11 of the sails.io.js client. Use `.request()` instead.');
+    };
+
+
+
+    // Set a `sails` object that may be used for configuration before the
+    // first socket connects (i.e. to prevent auto-connect)
+    io.sails = {
+
+      // Whether to automatically connect a socket and save it as `io.socket`.
+      autoConnect: true,
+
+      // The route (path) to hit to get a x-origin (CORS) cookie
+      // (or true to use the default: '/__getcookie')
+      useCORSRouteToGetCookie: true,
+
+      // The environment we're running in.
+      // (logs are not displayed when this is set to 'production')
+      //
+      // Defaults to development unless this script was fetched from a URL
+      // that ends in `*.min.js` or '#production' (may also be manually overridden.)
+      //
+      environment: urlThisScriptWasFetchedFrom.match(/(\#production|\.min\.js)/g) ? 'production' : 'development',
+
+      // The version of this sails.io.js client SDK
+      sdk: SDK_INFO
+    };
+
+
+
+    /**
+     * Add `io.sails.connect` function as a wrapper for the built-in `io()` aka `io.connect()`
+     * method, returning a SailsSocket. This special function respects the configured io.sails
+     * connection URL, as well as sending other identifying information (most importantly, the
+     * current version of this SDK).
+     *
+     * @param  {String} url  [optional]
+     * @param  {Object} opts [optional]
+     * @return {Socket}
+     */
+    io.sails.connect = function(url, opts) {
+      opts = opts || {};
+
+      // If explicit connection url is specified, save it to options
+      opts.url = url || opts.url || undefined;
+
+      // Instantiate and return a new SailsSocket- and try to connect immediately.
+      var socket = new SailsSocket(opts);
+      socket._connect();
+      return socket;
+    };
+
+
+
+    // io.socket
+    //
+    // The eager instance of Socket which will automatically try to connect
+    // using the host that this js file was served from.
+    //
+    // This can be disabled or configured by setting properties on `io.sails.*` within the
+    // first cycle of the event loop.
+    //
+
+
+    // Build `io.socket` so it exists
+    // (this does not start the connection process)
+    io.socket = new SailsSocket();
+
+    // In the mean time, this eager socket will be queue events bound by the user
+    // before the first cycle of the event loop (using `.on()`), which will later
+    // be rebound on the raw underlying socket.
+
+    // If configured to do so, start auto-connecting after the first cycle of the event loop
+    // has completed (to allow time for this behavior to be configured/disabled
+    // by specifying properties on `io.sails`)
+    setTimeout(function() {
+
+      // If autoConnect is disabled, delete the eager socket (io.socket) and bail out.
+      if (!io.sails.autoConnect) {
+        delete io.socket;
+        return;
+      }
+
+      // consolog('Eagerly auto-connecting socket to Sails... (requests will be queued in the mean-time)');
+      io.socket._connect();
+
+
+    }, 0); // </setTimeout>
+
+
+    // Return the `io` object.
+    return io;
+  }
+
+
+  // Add CommonJS support to allow this client SDK to be used from Node.js.
+  if (typeof module === 'object' && typeof module.exports !== 'undefined') {
+    module.exports = SailsIOClient;
+    return SailsIOClient;
+  }
+
+  // Otherwise, try to instantiate the client:
+  // In case you're wrapping the socket.io client to prevent pollution of the
+  // global namespace, you can replace the global `io` with your own `io` here:
+  return SailsIOClient();
+
+})();
+
+
+// Create the HTML to hold a public, multi-user chat room
+function createPublicRoom(room) {
+
+  // Get the ID of the HTML element for this public room, if there is one
+  var roomName = 'public-room-'+room.id;
+
+  // If HTML for the room already exists, return.
+  if ($('#'+roomName).length) {
+    return;
+  }
+
+  // Create a new div to contain the room
+  var roomDiv = $('<div id="'+roomName+'"></div>');
+
+  // Create the HTML for the room
+  var roomHTML = '<h2>Chat room &ldquo;'+room.name+'&rdquo; <button id="leave-room-button-'+room.id+'">Leave Room</button></h2>\n' +
+                 '<div id="room-messages-'+room.id+'" style="width: 50%; height: 150px; overflow: auto; border: solid 1px #666; padding: 5px; margin: 5px"></div>'+
+                 '<input id="room-message-'+room.id+'"/> <button id="room-button-'+room.id+'">Send message</button">';
+
+  roomDiv.html(roomHTML);
+
+  // Add the room to the private conversation area
+  $('#rooms').append(roomDiv);
+
+  // Hook up the "send message" button
+  $('#room-button-'+room.id).click(onClickSendPublicMessage);
+
+  // Hook up the "leave room" button
+  $('#leave-room-button-'+room.id).click(onClickLeaveRoom);
+
+}
+
+// Callback for when the user clicks the "Send message" button in a public room
+function onClickSendPublicMessage(e) {
+
+  // Get the button that was pressed
+  var button = e.currentTarget;
+
+  // Get the ID of the user we want to send to
+  var roomId = button.id.split('-')[2];
+
+  // Get the message to send
+  var message = $('#room-message-'+roomId).val();
+  $('#room-message-'+roomId).val("");
+
+  // Add this message to the room
+  addMessageToChatRoom(window.me.id, roomId, message);
+
+  // Send the message
+  io.socket.post('/chat/public', {room: roomId, msg: message});
+
+}
+
+// Add HTML for a new message in a public room
+function addMessageToChatRoom(senderId, roomId, message) {
+
+  var roomName = 'room-messages-' + roomId;
+
+  if (senderId === 0) {
+    return postStatusMessage(roomName, message);
+  }
+
+  var fromMe = senderId == window.me.id;
+  var senderName = fromMe ? "Me" : $('#user-'+senderId).text();
+  var justify = fromMe ? 'right' : 'left';
+
+  var div = $('<div style="text-align:'+justify+'"></div>');
+  div.html('<strong>'+senderName+'</strong>: '+message);
+  $('#'+roomName).append(div);
+
+}
+
+// Handle an incoming public message from the server.
+function receiveRoomMessage(data) {
+
+  var sender = data.from;
+  var room = data.room;
+
+  // Create a room for this message if one doesn't exist
+  createPublicRoom(room);
+
+  // Add a message to the room
+  addMessageToChatRoom(sender.id, room.id, data.msg);
+
+}
+
+// Join the room currently selected in the list
+function joinRoom() {
+
+  // Get the room list
+  var select = $('#rooms-list');
+
+  // Make sure a room is selected in the list
+  if (select.val() === null) {
+    return alert('Please select a room to join.');
+  }
+
+  // Get the room's name from the text of the option in the <select>
+  var roomName = $('option:selected', select).attr('data-name');
+  var roomId = select.val();
+
+  // Create the room HTML
+  createPublicRoom({id:roomId, name:roomName});
+
+  // Join the room
+  io.socket.post('/room/'+roomId+'/users', {id: window.me.id});
+
+  // Update the room user count
+  increaseRoomCount(roomId);
+
+}
+
+// Handle the user clicking the "Leave Room" button for a public room
+function onClickLeaveRoom(e) {
+
+  // Get the button that was pressed
+  var button = e.currentTarget;
+
+  // Get the ID of the user we want to send to
+  var roomId = button.id.split('-')[3];
+
+  // Remove the room from the page
+  $('#public-room-'+roomId).remove();
+
+  // Call the server to leave the room
+  io.socket.delete('/room/'+roomId+'/users', {id: window.me.id});
+
+  // Update the room user count
+  decreaseRoomCount(roomId);
+
+}
+// Add a new room to the list
+function newRoom() {
+
+  // Prompt the user for the name of the new room
+  var roomName = prompt('Please enter a name for the new room');
+
+  // As long as a name is entered, create the new room.
+  if (roomName) {
+    io.socket.post('/room', {name: roomName}, function(data) {
+
+      // Add the new room to the rooms list
+      addRoom(data);
+
+      // Select it in the list
+      $('#rooms-list').val(data.id);
+
+      // Create the room HTML
+      createPublicRoom({id:data.id, name:data.name});
+
+      // Join the room
+      io.socket.post('/room/'+data.id+'/users', {id: window.me.id});
+
+      // Set the room user count to 1
+      increaseRoomCount(data.id);
+
+    });
+  }
+
+}
+
+// Add a room to the list of available rooms to join--this can happen
+// via newRoom (if the user created the room themself) or after a notification
+// from the server that another user added a room.
+function addRoom(room) {
+
+  // Get a handle to the room list <select> element
+  var select = $('#rooms-list');
+
+  // Create a new <option> for the <select> with the new room's information
+  var users = room.users || [];
+  var numUsers = users.length;
+  var option = $('<option id="'+"room-"+room.id+'" data-name="'+room.name+'" data-users="'+numUsers+'" value="'+room.id+'">'+room.name+' ('+numUsers+')</option>');
+
+  // Add the new <option> element
+  select.append(option);
+}
+
+// Increase the "number of users in room" indicator label for a room
+function increaseRoomCount(roomId) {
+  var room = $('#room-'+roomId);
+  var numUsers = parseInt(room.attr('data-users'), 10);
+  numUsers++;
+  room.attr('data-users', numUsers);
+  room.html(room.attr('data-name')+' ('+numUsers+')');
+}
+
+// Decrease the "number of users in room" indicator label for a room
+function decreaseRoomCount(roomId) {
+  var room = $('#room-'+roomId);
+  var numUsers = parseInt(room.attr('data-users'), 10);
+  numUsers--;
+  room.attr('data-users', numUsers);
+  room.html(room.attr('data-name')+' ('+numUsers+')');
+}
+
+// Remove a user from the list of available rooms to join, by sending
+// either a room object or a room ID.
+function removeRoom(room) {
+
+  // Get the room's ID
+  var id = room.id || room;
+  $('#room-'+id).remove();
+}
+
+// Add multiple rooms to the rooms list.
+function updateRoomList(rooms) {
+  rooms.forEach(function(room) {
+    addRoom(room);
+  });
+}
+
+userdata = {sid:$.jStorage.get("sid"),name:($.jStorage.get("fname")+' '+$.jStorage.get("fname"))};
+// Update the value in the user name input.
+function updateMyName(me) {
+  console.log(me);
+  
+  //$('#my-name').val(me.name == 'unknown' ? 'User #' + me.id : me.name);
+  $('#my-name').val(me.name == 'unknown' ? 'User #' + me.id : me.name);
+}
+
+// Update the current user's username
+function updateName() {
+  // Use the Sails blueprint action to update the user
+  io.socket.put('/user/'+window.me.id, {name: $('#my-name').val()});
+}
+
+// Add a user to the list of available users to chat with
+function addUser(user) {
+  //console.log(user);
+  // Get a handle to the user list <select> element
+  var select = $('#users-list');
+  // if($.jStorage.get("socketId") == user.socketId)
+  // {
+  //     user.id = userdata.id;
+  //     user.name = userdata.name;
+  // }
+  // else
+  {
+    // Create a new <option> for the <select> with the new user's information
+    var option = $('<option id="'+"user-"+user.id+'" value="'+user.id+'">'+(user.name == "unknown" ? "User #" + user.id : user.name)+'</option>');
+  }
+  // Add the new <option> element
+  select.append(option);
+}
+
+// Remove a user from the list of available users to chat with, by sending
+// either a user object or a user ID.
+function removeUser(user) {
+
+  // Get the user's ID.
+  var id = user.id || user;
+
+  var userName = $('#user-'+id).text();
+
+  // Remove the corresponding element from the users list
+  var userEl = $('#user-'+id).remove();
+
+  // Re-append it to the body as a hidden element, so we can still
+  // get the user's name if we need it for other messages.
+  // A silly hack for a silly app.
+  userEl.css('display', 'none');
+  $('body').append(userEl);
+
+  // Post a user status message if we're in a private convo
+  if ($('#private-room-'+id).length) {
+    //postStatusMessage('private-messages-'+id, userName + ' has disconnected.');
+    postStatusMessage('private-messages-'+id, 'User has disconnected.');
+    $('#private-message-'+id).hide();
+    $('#private-button-'+id).hide();
+  }
+
+}
+
+// Add multiple users to the users list.
+function updateUserList(users) {
+  console.log(users);
+  users.forEach(function(user) {
+    //console.log(user);
+    if (user.id == me.id) {return;}
+    addUser(user);
+  });
+}
+// Post status message to a public or private room
+function postStatusMessage(roomName, message) {
+
+  var div = $('<div style="text-align: center">----- '+message+' -----</div>');
+  $('#'+roomName).append(div);
+
+}
 /*! WOW - v0.1.9 - 2014-05-10
 * Copyright (c) 2014 Matthieu Aussaguel; Licensed MIT */(function(){var a,b,c=function(a,b){return function(){return a.apply(b,arguments)}};a=function(){function a(){}return a.prototype.extend=function(a,b){var c,d;for(c in a)d=a[c],null!=d&&(b[c]=d);return b},a.prototype.isMobile=function(a){return/Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(a)},a}(),b=this.WeakMap||(b=function(){function a(){this.keys=[],this.values=[]}return a.prototype.get=function(a){var b,c,d,e,f;for(f=this.keys,b=d=0,e=f.length;e>d;b=++d)if(c=f[b],c===a)return this.values[b]},a.prototype.set=function(a,b){var c,d,e,f,g;for(g=this.keys,c=e=0,f=g.length;f>e;c=++e)if(d=g[c],d===a)return void(this.values[c]=b);return this.keys.push(a),this.values.push(b)},a}()),this.WOW=function(){function d(a){null==a&&(a={}),this.scrollCallback=c(this.scrollCallback,this),this.scrollHandler=c(this.scrollHandler,this),this.start=c(this.start,this),this.scrolled=!0,this.config=this.util().extend(a,this.defaults),this.animationNameCache=new b}return d.prototype.defaults={boxClass:"wow",animateClass:"animated",offset:0,mobile:!0},d.prototype.init=function(){var a;return this.element=window.document.documentElement,"interactive"===(a=document.readyState)||"complete"===a?this.start():document.addEventListener("DOMContentLoaded",this.start)},d.prototype.start=function(){var a,b,c,d;if(this.boxes=this.element.getElementsByClassName(this.config.boxClass),this.boxes.length){if(this.disabled())return this.resetStyle();for(d=this.boxes,b=0,c=d.length;c>b;b++)a=d[b],this.applyStyle(a,!0);return window.addEventListener("scroll",this.scrollHandler,!1),window.addEventListener("resize",this.scrollHandler,!1),this.interval=setInterval(this.scrollCallback,50)}},d.prototype.stop=function(){return window.removeEventListener("scroll",this.scrollHandler,!1),window.removeEventListener("resize",this.scrollHandler,!1),null!=this.interval?clearInterval(this.interval):void 0},d.prototype.show=function(a){return this.applyStyle(a),a.className=""+a.className+" "+this.config.animateClass},d.prototype.applyStyle=function(a,b){var c,d,e;return d=a.getAttribute("data-wow-duration"),c=a.getAttribute("data-wow-delay"),e=a.getAttribute("data-wow-iteration"),this.animate(function(f){return function(){return f.customStyle(a,b,d,c,e)}}(this))},d.prototype.animate=function(){return"requestAnimationFrame"in window?function(a){return window.requestAnimationFrame(a)}:function(a){return a()}}(),d.prototype.resetStyle=function(){var a,b,c,d,e;for(d=this.boxes,e=[],b=0,c=d.length;c>b;b++)a=d[b],e.push(a.setAttribute("style","visibility: visible;"));return e},d.prototype.customStyle=function(a,b,c,d,e){return b&&this.cacheAnimationName(a),a.style.visibility=b?"hidden":"visible",c&&this.vendorSet(a.style,{animationDuration:c}),d&&this.vendorSet(a.style,{animationDelay:d}),e&&this.vendorSet(a.style,{animationIterationCount:e}),this.vendorSet(a.style,{animationName:b?"none":this.cachedAnimationName(a)}),a},d.prototype.vendors=["moz","webkit"],d.prototype.vendorSet=function(a,b){var c,d,e,f;f=[];for(c in b)d=b[c],a[""+c]=d,f.push(function(){var b,f,g,h;for(g=this.vendors,h=[],b=0,f=g.length;f>b;b++)e=g[b],h.push(a[""+e+c.charAt(0).toUpperCase()+c.substr(1)]=d);return h}.call(this));return f},d.prototype.vendorCSS=function(a,b){var c,d,e,f,g,h;for(d=window.getComputedStyle(a),c=d.getPropertyCSSValue(b),h=this.vendors,f=0,g=h.length;g>f;f++)e=h[f],c=c||d.getPropertyCSSValue("-"+e+"-"+b);return c},d.prototype.animationName=function(a){var b;try{b=this.vendorCSS(a,"animation-name").cssText}catch(c){b=window.getComputedStyle(a).getPropertyValue("animation-name")}return"none"===b?"":b},d.prototype.cacheAnimationName=function(a){return this.animationNameCache.set(a,this.animationName(a))},d.prototype.cachedAnimationName=function(a){return this.animationNameCache.get(a)},d.prototype.scrollHandler=function(){return this.scrolled=!0},d.prototype.scrollCallback=function(){var a;return this.scrolled&&(this.scrolled=!1,this.boxes=function(){var b,c,d,e;for(d=this.boxes,e=[],b=0,c=d.length;c>b;b++)a=d[b],a&&(this.isVisible(a)?this.show(a):e.push(a));return e}.call(this),!this.boxes.length)?this.stop():void 0},d.prototype.offsetTop=function(a){for(var b;void 0===a.offsetTop;)a=a.parentNode;for(b=a.offsetTop;a=a.offsetParent;)b+=a.offsetTop;return b},d.prototype.isVisible=function(a){var b,c,d,e,f;return c=a.getAttribute("data-wow-offset")||this.config.offset,f=window.pageYOffset,e=f+this.element.clientHeight-c,d=this.offsetTop(a),b=d+a.clientHeight,e>=d&&b>=f},d.prototype.util=function(){return this._util||(this._util=new a)},d.prototype.disabled=function(){return!this.config.mobile&&this.util().isMobile(navigator.userAgent)},d}()}).call(this);

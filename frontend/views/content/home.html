@@ -129,7 +129,15 @@
 
                         
                     </div>
-                    <div class ="tab-con"  ng-if="row==='Exception Scenarios'">
+					<div class ="tab-con"  ng-if="row==='Guidelines'">
+						<div class="" ng-repeat="processtext in tabvalue.element_values[$index] track by $index">
+							<h1>{{processtext.Title}}</h1>
+							<ng-bind-html ng-bind-html="trustedHtml(processtext.Text);" ng-if="processtext.Text !== ''">
+								{{processtext.Text}}
+							</ng-bind-html>
+						</div>
+					</div>
+					<div class ="tab-con"  ng-if="row==='Exception Scenarios'">
                         <!-- <form class="form-inline">
                             <div class="form-group">
                                 <label for="exampleInputName2">Notes</label>
@@ -186,7 +194,7 @@
                         </p>
                     </div> -->
                     <div ng-if="!(tabvalue.element_values[1].Quik_Tip && $index == 1)">
-                        <div class ="tab-con"  ng-if="(row !== 'Process' && row !== 'Exception Scenarios')">
+                        <div class ="tab-con"  ng-if="(row !== 'Process' && row !== 'Exception Scenarios' && row !== 'Guidelines')">
                             <p class="" > 
                                 <ng-bind-html ng-bind-html="tabvalue.element_values[$index]">
                                     {{tabvalue.element_values[$index]}}
