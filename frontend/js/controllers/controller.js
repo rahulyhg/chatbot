@@ -2091,7 +2091,6 @@ myApp.controller('HomeCtrl', function ($scope,$rootScope, TemplateService, Navig
             });
         });
         $rootScope.to_trusted = function(html_code) {
-            console.log(html_code);
             return $sce.trustAsHtml(html_code);
         };
         $rootScope.getDthlinkRes = function(stage,dthlink,tiledlist) {
@@ -2099,7 +2098,7 @@ myApp.controller('HomeCtrl', function ($scope,$rootScope, TemplateService, Navig
             //mysession = $.jStorage.get("sessiondata");
             var mysession = {};
             
-            console.log(stage+"-"+dthlink);
+            
             mysession.DTHlink=dthlink;
             //mysession.DTHline=lineno;
             //mysession.DTHcol=colno;
@@ -2231,7 +2230,9 @@ myApp.controller('HomeCtrl', function ($scope,$rootScope, TemplateService, Navig
             $scope.$viewmodalInstance1.dismiss('cancel');
         };
         $rootScope.DthResponse = function(id,data) {
-            if(data.tiledlist[0].DT.length > 0 || data.tiledlist[0].Text != "")
+        if(data.tiledlist[0].DT )
+        {
+            if( data.tiledlist[0].DT.length > 0  || data.tiledlist[0].Text != "")
             {
 				//if()
 				{
@@ -2251,7 +2252,7 @@ myApp.controller('HomeCtrl', function ($scope,$rootScope, TemplateService, Navig
 					// //console.log(images);
 					// data.tiledlist[0].Process =process;
 					// data.tiledlist[0].images =images; //|| images.length > 0
-					if((data.tiledlist[0].Stage == '0') && data.tiledlist[0].DT.length > 0 || ( data.tiledlist[0].Text != "" && data.tiledlist[0].Text)  )
+					if(data.tiledlist[0].DT.length > 0 || ( data.tiledlist[0].Text != "" && data.tiledlist[0].Text)  )
                         $rootScope.pushSystemMsg(id,data);
                     if(data.tiledlist[0].Stage != '0')
                     {
@@ -2273,7 +2274,7 @@ myApp.controller('HomeCtrl', function ($scope,$rootScope, TemplateService, Navig
 					// }
 				}
             }
-           
+        }   
             
             $rootScope.collapse_arr = new Array();
             var process = data.tiledlist[0].Process;
@@ -2292,7 +2293,6 @@ myApp.controller('HomeCtrl', function ($scope,$rootScope, TemplateService, Navig
             data.tiledlist[0].Process = process;
             var ele = ele = new Array("Process");
             var ele_val = new Array(data.tiledlist[0]);
-            console.log(data.tiledlist[0].Process);
             $rootScope.showMsgLoader = false; 
             
             $rootScope.contentobj = [];
