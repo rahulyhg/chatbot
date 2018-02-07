@@ -1884,8 +1884,8 @@ myApp.controller('HomeCtrl', function ($scope,$rootScope, TemplateService, Navig
         // else
         //     $rootScope.minimizeChatwindow();
 
-        $rootScope.ratecardSubmit = function(coldata,rowdata) {
-            $scope.formData = {csrfmiddlewaretoken:$rootScope.getCookie("csrftoken"),user_id:$cookies.get("session_id"),user_input:coldata+","+rowdata,auto_id:"",auto_value:"",coldata:coldata,rowdata:rowdata,type:"rate card"};
+        $rootScope.ratecardSubmit = function(coldata,rowdata,journey_name) {
+            $scope.formData = {csrfmiddlewaretoken:$rootScope.getCookie("csrftoken"),user_id:$cookies.get("session_id"),user_input:coldata+","+rowdata,auto_id:"",auto_value:"",coldata:coldata,rowdata:rowdata,type:"rate card",journey_name:journey_name};
             apiService.ratecardsubmit($scope.formData).then(function (data){
 				//console.log(data);
 				angular.forEach(data.data.tiledlist, function(value, key) {
