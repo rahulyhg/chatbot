@@ -89,15 +89,15 @@
                                                                 <div >
                                                                     <div class="col-xs-12" >
                                                                         <div class="img-box2">
-                                                                            <a ng-href="http://exponentiadata.co.in/kotakdm/uploads/productlisting/{{imagelist.image_name}}"  data-fancybox="imggroup" rel="gallary" fancybox  data-caption="{{imagelist.image_text}}"  >
+                                                                            <a ng-href="http://exponentiadata.co.in/kotakdm/uploads/productlisting/{{imagelist.image_name}}"  data-fancybox="imggroup" rel="gallary" fancybox  data-caption="{{imagelist.details}}"  >
                                                                                 <img ng-src="http://exponentiadata.co.in/kotakdm/uploads/productlisting/{{imagelist.image_name}}" class="img-full">
                                                                             </a>
                                                                         </div>
-                                                                         <div class="text-box" ng-if="imagelist.image_text!=''">
+                                                                         <div class="text-box" ng-if="imagelist.Brand_Name!=''">
                                                                             <div class="imgtitle2">
                                                                                 <b><span>
-                                                                                    <ng-bind-html  ng-bind-html="imagelist.image_text">
-                                                                                        {{imagelist.image_text}}
+                                                                                    <ng-bind-html  ng-bind-html="imagelist.Brand_Name">
+                                                                                        {{imagelist.Brand_Name}}
                                                                                     </ng-bind-html>
                                                                                 </span></b>
                                                                             </div>
