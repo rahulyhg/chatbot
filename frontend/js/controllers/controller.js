@@ -6,7 +6,7 @@ myApp.controller('HomeCtrl', function ($scope,$rootScope, TemplateService, Navig
         TemplateService.title = "Home"; //This is the Title of the Website
         $scope.navigation = NavigationService.getNavigation();
 
-        $scope.uipage = "home";
+        $rootScope.uipage = "home";
         $scope.mySlides = [
             'http://flexslider.woothemes.com/images/kitchen_adventurer_cheesecake_brownie.jpg',
             'http://flexslider.woothemes.com/images/kitchen_adventurer_lemon.jpg',
@@ -66,7 +66,10 @@ myApp.controller('HomeCtrl', function ($scope,$rootScope, TemplateService, Navig
             // var imgs = $("<div>" +str +"</div>").find("img"); 
             // console.log(imgs);
             // console.log(str);
+            if($rootScope.uipage =='login'  && !angular.isUndefined($rootScope.uipage))
+            $rootScope.showChatwindow();
         });
+        
         var tour = {
             id: "header",
             showPrevButton: true,
@@ -716,8 +719,7 @@ myApp.controller('HomeCtrl', function ($scope,$rootScope, TemplateService, Navig
         $scope.loginbg = 1;
         $scope.iframeHeight = window.innerHeight;
         $rootScope.uipage="login";
-        if($rootScope.uipage !='login' && !angular.isUndefined($rootScope.uipage))
-            $rootScope.showChatwindow();
+        
         $scope.formSubmitted = false;
         $scope.loginerror=0;
         //$rootScope.notLoggedin = false;
@@ -1874,7 +1876,8 @@ myApp.controller('HomeCtrl', function ($scope,$rootScope, TemplateService, Navig
                 }
             }
         };
-        if($rootScope.uipage !='login' && !angular.isUndefined($rootScope.uipage))
+        console.log($rootScope.uipage);
+        if($rootScope.uipage =='home'  && !angular.isUndefined($rootScope.uipage))
             $rootScope.showChatwindow();
         // if($.jStorage.get("showchat"))
         // {
