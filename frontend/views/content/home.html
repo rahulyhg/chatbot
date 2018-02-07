@@ -37,7 +37,7 @@
                                 <span id = "tooltip12" class="glyphicon glyphicon-copyright-mark" href="#" tooltip-placement="bottom" ng-if="tabvalue.element_values[0].Checks[$index] !== '' && tabvalue.element_values[0].Checks[$index]" ng-show="!!tabvalue.element_values[0].Checks.length && tabvalue.element_values[0].Checks[$index]" uib-tooltip="{{tabvalue.element_values[0].Checks[$index]}}"></span>
                                 </span>
                             </p> -->
-                            <p ng-if="processtext.key ===''">
+                            <p ng-if="processtext.key ==='' && processtext.value">
                                 <ng-bind-html ng-bind-html="trustedHtml(processtext.value);" ng-if="processtext.key === ''">
                                     {{processtext.value}}
                                 </ng-bind-html>
@@ -46,7 +46,7 @@
                                 <span id = "tooltip12" class="glyphicon glyphicon-blackboard" href="#" tooltip-placement="bottom" ng-if="tabvalue.element_values[0].System[$index] !== '' && tabvalue.element_values[0].System[$index]" ng-show="!!tabvalue.element_values[0].System.length && tabvalue.element_values[0].System[$index]" uib-tooltip="{{tabvalue.element_values[0].System[$index]}}"></span>
                                 <span id = "tooltip12" class="glyphicon glyphicon-copyright-mark" href="#" tooltip-placement="bottom" ng-if="tabvalue.element_values[0].Checks[$index] !== '' && tabvalue.element_values[0].Checks[$index]" ng-show="!!tabvalue.element_values[0].Checks.length && tabvalue.element_values[0].Checks[$index]" uib-tooltip="{{tabvalue.element_values[0].Checks[$index]}}"></span>
                             </p>
-                            <p ng-if="!processtext.key ">
+                            <p ng-if="!processtext.key && !processtext.value">
                                 <ng-bind-html ng-bind-html="trustedHtml(processtext);" ng-if="processtext !== ''">
                                     {{processtext}}
                                 </ng-bind-html>
