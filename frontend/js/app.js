@@ -236,7 +236,8 @@ myApp.run(['$http','$cookies','beforeUnload','$document','$rootScope','Idle','bo
         // $("#topiclist li").show();
         $(".searchTerm").val("");
     };
-    $(document).on('click', '.c-hamburger', function(){ 
+    //$(document).on('click', '.c-hamburger', function(){
+    $(document).on('click', '.c-hamburger', function(){
     //$('.c-hamburger').click(function(){
         //console.log("menu click");
         // if($rootScope.rotated == false) 

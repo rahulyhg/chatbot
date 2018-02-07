@@ -1914,7 +1914,8 @@ myApp.controller('HomeCtrl', function ($scope,$rootScope, TemplateService, Navig
             });
 
         };
-        angular.element(document).ready(function () {
+        $scope.faqdtc=0;
+        //angular.element(document).ready(function () {
             //$("a.dtfaq").click( function() {
             // $('.dtfaq').click(function(e){
             //     e.preventDefault();
@@ -1926,22 +1927,30 @@ myApp.controller('HomeCtrl', function ($scope,$rootScope, TemplateService, Navig
             //     //tiledlist[0]['Stage'] = stage;
             //     $rootScope.getDthlinkRes(stage,dthlink,tiledlist);
             // }).click();
-            $(document).unbind("click").on('click', 'a.dtfaq', function(e){
-             //$(document).unbind("click").click( function(){
-                console.log("clickedddd");
-                tiledlist = [];
-                var stage = $(this).attr("data-stage");
-                var journey = $(this).attr("data-journey");
-                var dthlink = $(this).text();
-                tiledlist[0] ={Journey_Name:journey,Stage:stage} ;
-                //tiledlist[0]['Stage'] = stage;
-                $rootScope.getDthlinkRes(stage,dthlink,tiledlist);
-                //e.preventDefault();
+
+            
+            $(document).on('click', '.dtfaq', function(e){
+            //$(document).unbind("click").on('click', '.dtfaq', function(){
+                
+                console.log($rootScope.chatlist);
+                if($scope.faqdtc == 0)
+                {
+                    console.log("clickedddd");
+                    tiledlist = [];
+                    var stage = $(this).attr("data-stage");
+                    var journey = $(this).attr("data-journey");
+                    var dthlink = $(this).text();
+                    tiledlist[0] ={Journey_Name:journey,Stage:stage} ;
+                    //tiledlist[0]['Stage'] = stage;
+                    $rootScope.getDthlinkRes(stage,dthlink,tiledlist);
+                    $scope.faqdtc = $scope.faqdtc+1;
+                    //e.preventDefault();
+                }
             });
-        });
+        //});
         angular.element(document).ready(function () {
-            $(document).unbind("click").on('click', 'a.ratecard', function(e){
-            //$(document).on('click', 'a.ratecard', function(){
+            //$(document).unbind("click").on('click', 'a.ratecard', function(e){
+            $(document).on('click', 'a.ratecard', function(){
                 
                 var dthlink = $(this).text();
                 formData = {csrfmiddlewaretoken:$rootScope.getCookie("csrftoken"),user_id:$cookies.get("session_id"),user_input:dthlink,auto_id:'',auto_value:''};
@@ -2028,8 +2037,8 @@ myApp.controller('HomeCtrl', function ($scope,$rootScope, TemplateService, Navig
             });
         });
         angular.element(document).ready(function () {
-            $(document).unbind("click").on('click', 'a.productlisting', function(e){
-            //$(document).on('click', 'a.productlisting', function(){
+            //$(document).unbind("click").on('click', 'a.productlisting', function(e){
+            $(document).on('click', 'a.productlisting', function(){
                 
                 var dthlink = $(this).text();
                 formData = {csrfmiddlewaretoken:$rootScope.getCookie("csrftoken"),user_id:$cookies.get("session_id"),user_input:dthlink,auto_id:'',auto_value:''};
@@ -2121,50 +2130,54 @@ myApp.controller('HomeCtrl', function ($scope,$rootScope, TemplateService, Navig
         $rootScope.getDthlinkRes = function(stage,dthlink,tiledlist) {
             //console.log(colno,lineno,dthlink);
             //mysession = $.jStorage.get("sessiondata");
-            var mysession = {};
-            
-            
-            mysession.DTHlink=dthlink;
-            //mysession.DTHline=lineno;
-            //mysession.DTHcol=colno;
-            mysession.DTHstage=stage;
-            mysession.tiledlist = tiledlist;
-            // formData = {};
-            // formData.DTHcol = colno;
-            // formData.DTHline = lineno;
-            // formData.DTHlink = dthlink;
-            formData = mysession;
-            formData.csrfmiddlewaretoken=$rootScope.getCookie("csrftoken");
-            formData.user_id=$cookies.get("session_id");
-            //console.log(formData);
-            apiService.getDthlinkRes(formData).then(function (data){
-                angular.forEach(data.data.tiledlist, function(value, key) {
-                    if(value.type=="DTHyperlink")
-                    {
-                        $rootScope.DthResponse(0,data.data);
-                        if(data.data.tiledlist[0].sub_topic_list || data.data.tiledlist[0].sub_topic_list != null)
+            if($scope.faqdtc<1)
+            {
+                var mysession = {};
+                
+                
+                mysession.DTHlink=dthlink;
+                //mysession.DTHline=lineno;
+                //mysession.DTHcol=colno;
+                mysession.DTHstage=stage;
+                mysession.tiledlist = tiledlist;
+                // formData = {};
+                // formData.DTHcol = colno;
+                // formData.DTHline = lineno;
+                // formData.DTHlink = dthlink;
+                formData = mysession;
+                formData.csrfmiddlewaretoken=$rootScope.getCookie("csrftoken");
+                formData.user_id=$cookies.get("session_id");
+                //console.log(formData);
+                apiService.getDthlinkRes(formData).then(function (data){
+                    angular.forEach(data.data.tiledlist, function(value, key) {
+                        if(value.type=="DTHyperlink")
                         {
-                            $rootScope.openMenu(data.data.tiledlist[0].sub_topic_list);
+                            $rootScope.DthResponse(0,data.data);
+                            if(data.data.tiledlist[0].sub_topic_list || data.data.tiledlist[0].sub_topic_list != null)
+                            {
+                                $rootScope.openMenu(data.data.tiledlist[0].sub_topic_list);
+                            }
+                            if(data.data.tiledlist[0].Script || data.data.tiledlist[0].Script != null)
+                            {
+                                // if(data.data.tiledlist[0].Script.length== 0)
+                                //     $rootScope.tabHeight = window.innerHeight-53;
+                                // else
+                                //     $rootScope.tabHeight = 300;
+                                
+                            }
+                            if(data.data.session_obj_data || data.data.session_obj_data != null)
+                                $.jStorage.set("sessiondata",data.data.session_obj_data);
+                            if(data.data.tiledlist[0].topic)
+                                $("#topic").text(data.data.tiledlist[0].topic);
+                            //$.jStorage.set("sessiondata",data.data.session_obj_data);
+                            $rootScope.rotateoutmenu();
                         }
-                        if(data.data.tiledlist[0].Script || data.data.tiledlist[0].Script != null)
-                        {
-                            // if(data.data.tiledlist[0].Script.length== 0)
-                            //     $rootScope.tabHeight = window.innerHeight-53;
-                            // else
-                            //     $rootScope.tabHeight = 300;
-                            
-                        }
-                        if(data.data.session_obj_data || data.data.session_obj_data != null)
-                            $.jStorage.set("sessiondata",data.data.session_obj_data);
-                        if(data.data.tiledlist[0].topic)
-                            $("#topic").text(data.data.tiledlist[0].topic);
-                        //$.jStorage.set("sessiondata",data.data.session_obj_data);
-                        $rootScope.rotateoutmenu();
-                    }
+                    });
+                    $scope.faqdtc=0;
+                }).catch(function(reason){
+                    console.log(reason);
                 });
-            }).catch(function(reason){
-                console.log(reason);
-            });
+            }
         };
         $rootScope.getDthlinkRes2 = function(stage,dthlink,index) {
             //console.log(colno,lineno,dthlink);
