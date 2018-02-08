@@ -698,7 +698,7 @@ myApp.controller('HomeCtrl', function ($scope,$rootScope, TemplateService, Navig
             $.jStorage.set('firstreload',false);
         });
         $scope.gotohome = function(){
-            $state.go('home');
+            $state.go('home', {}, {reload: false});
         };
         $timeout(function(){
             $rootScope.rotateoutmenu();
@@ -1588,7 +1588,7 @@ myApp.controller('HomeCtrl', function ($scope,$rootScope, TemplateService, Navig
             $timeout(function(){
                 if($rootScope.uipage =='home' )
                     $rootScope.showChatwindow();
-            },500);
+            },1000);
            
 
         })
