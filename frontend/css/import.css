@@ -10137,17 +10137,23 @@ div.processtreefadein.ng-enter-active {
 
 #nav-icon1.open span:nth-child(1) {
   top: 15px;
-  -webkit-transform: rotate(135deg);
-  transform: rotate(135deg); }
+  -webkit-transform: rotate(270eg);
+  transform: rotate(270deg);
+  left: -10px;
+  width: 85%; }
 
 #nav-icon1.open span:nth-child(2) {
-  opacity: 0;
-  left: -60px; }
+  top: 15px;
+  -webkit-transform: rotate(270eg);
+  transform: rotate(270deg);
+  width: 85%; }
 
 #nav-icon1.open span:nth-child(3) {
   top: 15px;
-  -webkit-transform: rotate(-135deg);
-  transform: rotate(-135deg); }
+  -webkit-transform: rotate(270eg);
+  transform: rotate(270deg);
+  left: 10px;
+  width: 85%; }
 
 .mini-submenu {
   display: block;
