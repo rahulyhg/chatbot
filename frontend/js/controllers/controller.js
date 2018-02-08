@@ -1883,7 +1883,7 @@ myApp.controller('HomeCtrl', function ($scope,$rootScope, TemplateService, Navig
             }
         };
         console.log($rootScope.uipage);
-        if($rootScope.uipage =='home'  && !angular.isUndefined($rootScope.uipage))
+        if($rootScope.uipage =='home' )
             $rootScope.showChatwindow();
         // if($.jStorage.get("showchat"))
         // {
