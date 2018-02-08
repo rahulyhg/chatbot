@@ -277,12 +277,12 @@
                                                             <div class="form-group col-md-12 col-xs-12">
                                                                 <label for="mondep" class="control-label">Monthly Deposit (Installment)</label>
                                                                 <br>
-                                                                <input type="text" class="form-control" name="mondep" id="mondep" ng-change="tdcalc(td[$index].mondep,td[$index].rate,td[$index].tenure,$index);" ng-model="td[$index].mondep">
+                                                                <input type="text" class="form-control" name="mondep" id="mondep" no-special-char ng-change="tdcalc(td[$index].mondep,td[$index].rate,td[$index].tenure,$index);" ng-model="td[$index].mondep">
                                                             </div>
                                                             <div class="form-group col-md-12 col-xs-12">
                                                                 <label for="rate" class="control-label">Rate</label>
                                                                 <br>
-                                                                <input type="text" class="form-control" name="rate" id="rate" ng-model="td[$index].rate" ng-init="td[$index].rate='9.25'"  value="9.25" ng-change="tdcalc(td[$index].mondep,td[$index].rate,td[$index].tenure,$index);">
+                                                                <input type="text" class="form-control" name="rate" readonly  id="rate" ng-model="td[$index].rate" ng-init="td[$index].rate='9.25'"  value="9.25" ng-change="tdcalc(td[$index].mondep,td[$index].rate,td[$index].tenure,$index);">
                                                             </div>
                                                             <div class="form-group col-md-12 col-xs-12">
                                                                 <label for="ten" class="control-label">Tenure(months)</label>
@@ -318,25 +318,26 @@
                                                                             <div class="form-group">
                                                                                 <label for="principal" class="col-sm-4 control-label">Principal Amount</label>
                                                                                 <div class="col-sm-8">
-                                                                                    <input type="text" class="form-control" name="principal" id="principal" ng-model="std[$index].principal" ng-change="calcSTD(std[$index].principal,std[$index].rate,std[$index].tenure,$index);">
+                                                                                    <!-- "/^[0-9]+(\.[0-9]{1,2})?$/" -->
+                                                                                    <input type="text" class="form-control" name="principal" id="principal" no-special-char ng-pattern="/^[0-9]*$/"  ng-model="std[$index].principal" ng-change="calcSTD(std[$index].principal,std[$index].rate,std[$index].tenure,$index);">
                                                                                 </div>
                                                                             </div>
                                                                             <div class="form-group">
                                                                                 <label for="rate2" class="col-sm-4 control-label">Rate</label>
                                                                                 <div class="col-sm-8">
-                                                                                    <input type="text" class="form-control" name="rate2" value="9.25" id="rate2" ng-init="std[$index].rate='9.25'" ng-model="std[$index].rate" ng-change="calcSTD(std[$index].principal,std[$index].rate,std[$index].tenure,$index);">
+                                                                                    <input type="text" class="form-control" name="rate2" value="9.25" id="rate2" no-special-char ng-init="std[$index].rate='9.25'" ng-model="std[$index].rate" ng-change="calcSTD(std[$index].principal,std[$index].rate,std[$index].tenure,$index);">
                                                                                 </div>
                                                                             </div>
                                                                             <div class="form-group">
                                                                                 <label for="tenure_days" class="col-sm-4 control-label">Tenure(Days)</label>
                                                                                 <div class="col-sm-8">
-                                                                                    <input type="text" class="form-control" name="tenure_days" id="tenure_days" ng-model="std[$index].tenure" ng-change="calcSTD(std[$index].principal,std[$index].rate,std[$index].tenure,$index);">
+                                                                                    <input type="text" class="form-control" name="tenure_days" ng-pattern="/^[0-9]*$/" no-special-char id="tenure_days" ng-model="std[$index].tenure" ng-change="calcSTD(std[$index].principal,std[$index].rate,std[$index].tenure,$index);">
                                                                                 </div>
                                                                             </div>
                                                                             <div class="form-group">
                                                                                 <label for="tenure_yrs" class="col-sm-4 control-label">Tenure (In Years)</label>
                                                                                 <div class="col-sm-8">
-                                                                                    <input type="text" class="form-control tenure_yrs{{$index}}" name="tenure_yrs" id="tenure_yrs" readonly="" ng-model="std[$index].year">
+                                                                                    <input type="text" class="form-control tenure_yrs{{$index}}" name="tenure_yrs"  id="tenure_yrs" readonly="" ng-model="std[$index].year">
                                                                                 </div>
                                                                             </div>
                                                                             <div class="form-group">
@@ -422,7 +423,7 @@
                                     <div class="loading">Typing</div>
                                 </div>
                                 <div class="input-group chatinputgroup" ng-controller="SpeechRecognitionController as speech">
-                                    <input type="text" class="form-control chatinput"  ng-change="getAutocomplete(chatText);" ng-model="chatText" id="userMsg" placeholder="Type your message here..." autofocus  typeahead="list for list in autocompletelist" ng-keyup="onKeyUp($event)" x-webkit-speech autocomplete="off" />
+                                    <input type="text" class="form-control chatinput"  ng-change="getAutocomplete(chatText);" no-special-char ng-model="chatText" id="userMsg" placeholder="Type your message here..." autofocus  typeahead="list for list in autocompletelist" ng-keyup="onKeyUp($event)" x-webkit-speech autocomplete="off" />
                                     <!-- <div class="input-group-addon" ng-speech-recognition-start="" ng-speech-recognition-end="speech.displayTranscript()">
                                         <span class="speechtotext"  >
                                             <i class="fa fa-microphone fa-3"></i>

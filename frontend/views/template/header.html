@@ -302,7 +302,7 @@
         <div class="col-lg-3 list-group" ng-if="uipage!='agentdashboard'">
         <div class="topic_col hidden-xs" ng-style="{height: iframeHeight + 'px'}">
             <div class="searchbar">
-                <input type="text" class="searchTerm" ng-change="findTopic(topicSearch);" placeholder="What are you looking for?" ng-model="topicSearch">
+                <input type="text" class="searchTerm" no-special-char ng-change="findTopic(topicSearch);" placeholder="What are you looking for?" ng-model="topicSearch">
                 <button type="submit" class="searchButton">
                     <i class="fa fa-search" aria-hidden="true"></i>
                 </button>

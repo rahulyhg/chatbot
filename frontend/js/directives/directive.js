@@ -166,6 +166,24 @@ myApp.directive('img', function ($compile, $parse) {
             }
         };
     })
+    .directive('noSpecialChar', function() {
+        return {
+        require: 'ngModel',
+        restrict: 'A',
+        link: function(scope, element, attrs, modelCtrl) {
+            modelCtrl.$parsers.push(function(inputValue) {
+            if (inputValue == null)
+                return ''
+            cleanInputValue = inputValue.replace(/[^\w\s]/gi, '');
+            if (cleanInputValue != inputValue) {
+                modelCtrl.$setViewValue(cleanInputValue);
+                modelCtrl.$render();
+            }
+            return cleanInputValue;
+            });
+        }
+        }
+    })
     myApp.directive('ngRightClick', function($parse) {
         return function(scope, element, attrs) {
             var fn = $parse(attrs.ngRightClick);
