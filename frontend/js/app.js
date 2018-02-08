@@ -38,6 +38,11 @@ myApp.config(function ($stateProvider, $urlRouterProvider, $httpProvider, $locat
             templateUrl: tempateURL,
             controller: 'HomeCtrl'
         })
+        .state('chat', {
+            url: "/chat",
+            templateUrl: tempateURL,
+            controller: 'HomeCtrl'
+        })
         .state('dashboard', {
             url: "/dashboard",
             templateUrl: tempateURL,
