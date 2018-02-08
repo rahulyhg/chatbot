@@ -69,8 +69,8 @@ myApp.controller('HomeCtrl', function ($scope,$rootScope, TemplateService, Navig
             // var imgs = $("<div>" +str +"</div>").find("img"); 
             // console.log(imgs);
             // console.log(str);
-            if($rootScope.uipage =='login'  && !angular.isUndefined($rootScope.uipage))
-            $rootScope.showChatwindow();
+            // if($rootScope.uipage =='login'  && !angular.isUndefined($rootScope.uipage))
+            // $rootScope.showChatwindow();
         });
         
         var tour = {
