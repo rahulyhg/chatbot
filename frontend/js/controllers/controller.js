@@ -38,8 +38,7 @@ myApp.controller('HomeCtrl', function ($scope,$rootScope, TemplateService, Navig
             });
         };
         angular.element(document).ready(function () {
-            if($rootScope.uipage =='home' )
-                $rootScope.showChatwindow();
+            
             $scope.setdisconnectsocket = function(){
                 var formData= {from_id:$.jStorage.get("id")};
                 apiService.setdisconnectsocket(formData).then(function (data){
@@ -1885,7 +1884,8 @@ myApp.controller('HomeCtrl', function ($scope,$rootScope, TemplateService, Navig
             }
         };
         console.log($rootScope.uipage);
-
+        if($rootScope.uipage =='home' )
+                $rootScope.showChatwindow();
         
         // if($.jStorage.get("showchat"))
         // {
