@@ -695,7 +695,8 @@ myApp.controller('HomeCtrl', function ($scope,$rootScope, TemplateService, Navig
         $scope.navigation = NavigationService.getNavigation();
         $rootScope.uipage="dashboard";
         angular.element(document).ready(function () {
-            $.jStorage.set('firstreload',false);
+            if(!$.jStorage.get('firstreload'))
+                $.jStorage.set('firstreload',false);
         });
         $scope.gotohome = function(){
             $state.go('home', {}, {reload: false});
