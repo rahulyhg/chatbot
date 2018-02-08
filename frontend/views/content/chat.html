@@ -4,8 +4,8 @@
                 <!--<span class="glyphicon glyphicon-comment"></span> Chat-->
                 <ul class="nav nav-tabs" id="chatTabs">
                     <li class="active" data-toggle="tab" ng-click="chat_tab=1"><a href="#chattab">Chat</a></li>
-                    <li ng-show="access_role == 2"><a href="#crntab" data-toggle="tab" ng-click="chat_tab=2">CRN NO.</a></li>
-                    <li ng-show="access_role == 2"><a href="#srtab" data-toggle="tab" ng-click="chat_tab=3">SR NO.</a></li>
+                    <!-- <li ng-show="access_role == 2"><a href="#crntab" data-toggle="tab" ng-click="chat_tab=2">CRN NO.</a></li>
+                    <li ng-show="access_role == 2"><a href="#srtab" data-toggle="tab" ng-click="chat_tab=3">SR NO.</a></li> -->
                 </ul>
                 <div class="btn-group pull-right">
                     <a type="button" class="btn btn-default btn-xs hidden" href="#">
@@ -15,7 +15,7 @@
                     <button type="button" class="btn btn-xs btn-primary newuser"  ng-click="newuser();"><span class="glyphicon glyphicon-user"></span> Next User</button>
                     <button type="button" class="btn btn-xs btn-primary newchat" ng-if="agentconnected" ng-click="endConversation(1);"><span class="glyphicon glyphicon-comment"></span> New Chat</button>
                     <a type="button" class="btn btn-default btn-xs" ng-click="minimizeChatwindow();" href="#">
-                        <span class="glyphicon glyphicon-remove icon_close" data-id="chat_window_1"></span>
+                        <span class="glyphicon glyphicon-minus icon_close" data-id="chat_window_1"></span>
                     </a>
                 </div>
             </div>

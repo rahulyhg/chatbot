@@ -31,6 +31,9 @@ myApp.controller('HomeCtrl', function ($scope,$rootScope, TemplateService, Navig
                 $.jStorage.set("csrftoken",response.data.csrf_token);
                 $rootScope.session_id =response.data.session_id;
                 $rootScope.chatlist = [];
+                $rootScope.firstMsg = true;
+                msg = {Text:"Hi, How may I help you ?",type:"SYS_FIRST"};
+                $rootScope.pushSystemMsg(0,msg);
                 //console.log(response.data);
             });
         };
@@ -693,6 +696,9 @@ myApp.controller('HomeCtrl', function ($scope,$rootScope, TemplateService, Navig
         angular.element(document).ready(function () {
             $.jStorage.set('firstreload',false);
         });
+        $scope.gotohome = function(){
+            $state.go('home');
+        };
         $timeout(function(){
             $rootScope.rotateoutmenu();
         },500);
@@ -2173,7 +2179,8 @@ myApp.controller('HomeCtrl', function ($scope,$rootScope, TemplateService, Navig
                             if(data.data.tiledlist[0].topic)
                                 $("#topic").text(data.data.tiledlist[0].topic);
                             //$.jStorage.set("sessiondata",data.data.session_obj_data);
-                            $rootScope.rotateoutmenu();
+                            if($(".expandable2").hasClass('col-lg-8'))
+                                $rootScope.rotateoutmenu();
                         }
                     });
                     $scope.faqdtc=0;
@@ -2761,7 +2768,8 @@ myApp.controller('HomeCtrl', function ($scope,$rootScope, TemplateService, Navig
                     }
                     if(data.data.session_obj_data || data.data.session_obj_data != null)
                         $.jStorage.set("sessiondata",data.data.session_obj_data);
-                    $rootScope.rotateoutmenu();
+                    if($(".expandable2").hasClass('col-lg-8'))
+                         $rootScope.rotateoutmenu();
                 }).catch(function (reason) {
                     console.log(reason);
                     // var msg = {Text:"Sorry I could not understand",type:"SYS_EMPTY_RES"};
