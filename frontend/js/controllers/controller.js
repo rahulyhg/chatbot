@@ -1583,6 +1583,15 @@ myApp.controller('HomeCtrl', function ($scope,$rootScope, TemplateService, Navig
         //         $scope.$digest();
         //     }
         // }
+        angular.element(document).ready(function(){
+            console.log($rootScope.uipage);
+            $timeout(function(){
+                if($rootScope.uipage =='home' )
+                    $rootScope.showChatwindow();
+            },500);
+           
+
+        })
         $rootScope.trustedHtml = function (plainText) {
             return $sce.trustAsHtml(plainText);
         };
@@ -1883,9 +1892,7 @@ myApp.controller('HomeCtrl', function ($scope,$rootScope, TemplateService, Navig
                 }
             }
         };
-        console.log($rootScope.uipage);
-        if($rootScope.uipage =='home' )
-                $rootScope.showChatwindow();
+        
         
         // if($.jStorage.get("showchat"))
         // {
