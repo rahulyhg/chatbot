@@ -12,7 +12,7 @@
                         <span id="minim_chat_window " class="glyphicon glyphicon-minus icon_minim"></span>
                     </a>
                     
-                    <button type="button" class="btn btn-xs btn-primary newuser"  ng-click="newuser();"><span class="glyphicon glyphicon-user"></span> Next User</button>
+                    <button type="button" class="btn btn-xs btn-primary newuser"  ng-click="newuser();"><span class="glyphicon glyphicon-user"></span> End Chat</button>
                     <button type="button" class="btn btn-xs btn-primary newchat" ng-if="agentconnected" ng-click="endConversation(1);"><span class="glyphicon glyphicon-comment"></span> New Chat</button>
                     <a type="button" class="btn btn-default btn-xs" ng-click="minimizeChatwindow();" href="#">
                         <span class="glyphicon glyphicon-minus icon_close" data-id="chat_window_1"></span>
@@ -88,12 +88,7 @@
                                                             <div class='item carousel_item2' ng-class="{active:!$index}" ng-repeat="imagelist in chatRes.product_list track by $index">
                                                                 <div >
                                                                     <div class="col-xs-12" >
-                                                                        <div class="img-box2">
-                                                                            <a ng-href="http://exponentiadata.co.in/kotakdm/uploads/productlisting/{{imagelist.image_name}}"  data-fancybox="imggroup" rel="gallary" fancybox  data-caption="{{imagelist.details}}"  >
-                                                                                <img ng-src="http://exponentiadata.co.in/kotakdm/uploads/productlisting/{{imagelist.image_name}}" class="img-full">
-                                                                            </a>
-                                                                        </div>
-                                                                         <div class="text-box" ng-if="imagelist.Brand_Name!=''">
+                                                                        <div class="text-box" ng-if="imagelist.Brand_Name!=''">
                                                                             <div class="imgtitle2">
                                                                                 <b><span>
                                                                                     <ng-bind-html  ng-bind-html="imagelist.Brand_Name">
@@ -102,6 +97,12 @@
                                                                                 </span></b>
                                                                             </div>
                                                                         </div> 
+                                                                        <div class="img-box2">
+                                                                            <a ng-href="http://exponentiadata.co.in/kotakdm/uploads/productlisting/{{imagelist.image_name}}"  data-fancybox="imggroup" rel="gallary" fancybox  data-caption="{{imagelist.details}}"  >
+                                                                                <img ng-src="http://exponentiadata.co.in/kotakdm/uploads/productlisting/{{imagelist.image_name}}" class="img-full">
+                                                                            </a>
+                                                                        </div>
+                                                                        
                                                                         <!-- <div class="" >
                                                                             <div class="knowmore">
                                                                                 <a ng-href="http://exponentiadata.co.in/huldm/uploadexcel/uploads/100/productlisting/{{chatRes.product_list[$index].image_name}}"  data-fancybox="linkgroup" rel="gallary" fancybox data-caption="{{chatRes.product_list[$index].details}}" >

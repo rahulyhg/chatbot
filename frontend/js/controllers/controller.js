@@ -15,12 +15,12 @@ myApp.controller('HomeCtrl', function ($scope,$rootScope, TemplateService, Navig
         ];
         angular.element(document).ready(function() {
             new WOW().init();
-            if(!$rootScope.rotated)
-            {
-                $timeout(function(){
-                    $rootScope.rotateoutmenu();
-                },500);   
-            }
+            // if(!$rootScope.rotated)
+            // {
+            //     $timeout(function(){
+            //         $rootScope.rotateoutmenu();
+            //     },500);   
+            // }
                 //$( ".c-hamburger" ).trigger( "click" ); 
                 
         });
@@ -701,9 +701,9 @@ myApp.controller('HomeCtrl', function ($scope,$rootScope, TemplateService, Navig
         $scope.gotohome = function(){
             $state.go('home', {}, {reload: false});
         };
-        $timeout(function(){
-            $rootScope.rotateoutmenu();
-        },500);
+        // $timeout(function(){
+        //     $rootScope.rotateoutmenu();
+        // },500);
     })
     myApp.controller('Dashboard3Ctrl', function ($scope,$rootScope, TemplateService, NavigationService,CsrfTokenService,Menuservice, $timeout,$http,apiService,$state) {
         $scope.template = TemplateService.getHTML("content/dashboard3.html");
@@ -1341,7 +1341,7 @@ myApp.controller('HomeCtrl', function ($scope,$rootScope, TemplateService, Navig
 
 
     .controller('CommonCtrl', function ($scope, TemplateService, NavigationService,CsrfTokenService, $timeout,$uibModal, toastr, $http,$state,apiService,$cookies,$rootScope) {
-        $scope.logout = function() {
+        $rootScope.logout = function() {
 
             CsrfTokenService.getCookie("csrftoken").then(function(token) {
                 $scope.formData = {sessionid:$.jStorage.get("sessionid"),user:$.jStorage.get("id"),csrfmiddlewaretoken:token};
@@ -1587,9 +1587,9 @@ myApp.controller('HomeCtrl', function ($scope,$rootScope, TemplateService, Navig
         angular.element(document).ready(function(){
             console.log($rootScope.uipage);
             $timeout(function(){
-                if($rootScope.uipage =='home' )
+                if($rootScope.uipage =='dashboard' )
                     $rootScope.showChatwindow();
-            },1000);
+            });
            
 
         })
@@ -2189,8 +2189,8 @@ myApp.controller('HomeCtrl', function ($scope,$rootScope, TemplateService, Navig
                             if(data.data.tiledlist[0].topic)
                                 $("#topic").text(data.data.tiledlist[0].topic);
                             //$.jStorage.set("sessiondata",data.data.session_obj_data);
-                            if($(".expandable2").hasClass('col-lg-8'))
-                                $rootScope.rotateoutmenu();
+                            // if($(".expandable2").hasClass('col-lg-8'))
+                            //     $rootScope.rotateoutmenu();
                         }
                     });
                     $scope.faqdtc=0;
@@ -2609,6 +2609,7 @@ myApp.controller('HomeCtrl', function ($scope,$rootScope, TemplateService, Navig
             //CsrfTokenService.getCookie("csrftoken").then(function(token) {
                 //$rootScope.formData = {user_id:1164,user_input:value,auto_id:parseInt(id),auto_value:value,'csrfmiddlewaretoken':token};
             //var mysessiondata = $.jStorage.get("sessiondata");
+            $(".fdashboard").hide();
             var mysessiondata = {};
                 //mysessiondata = mysessiondata.toObject();
                 //mysessiondata.data = {id:parseInt(id),Text:value};
@@ -2778,8 +2779,8 @@ myApp.controller('HomeCtrl', function ($scope,$rootScope, TemplateService, Navig
                     }
                     if(data.data.session_obj_data || data.data.session_obj_data != null)
                         $.jStorage.set("sessiondata",data.data.session_obj_data);
-                    if($(".expandable2").hasClass('col-lg-8'))
-                         $rootScope.rotateoutmenu();
+                    // if($(".expandable2").hasClass('col-lg-8'))
+                    //      $rootScope.rotateoutmenu();
                 }).catch(function (reason) {
                     console.log(reason);
                     // var msg = {Text:"Sorry I could not understand",type:"SYS_EMPTY_RES"};

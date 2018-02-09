@@ -39,7 +39,7 @@
                             <!-- <button id="nav-icon1" class="c-hamburger c-hamburger--rot mini-submenu hidden-xs">
                             <span>toggle menu</span>
                             </button> -->
-                            <button id="nav-icon1" class="c-hamburger c-hamburger--rot mini-submenu hidden-xs open">
+                            <button id="nav-icon1" class="c-hamburger c-hamburger--rot mini-submenu hidden-xs ">
                                 <span></span>
                                 <span></span>
                                 <span></span>
@@ -290,7 +290,7 @@
                     <li><button id="logout" type="submit" class="btn btn-primary headerbtns"  ng-click="openMydashboard();">My Dashboard</button></li>
                     <li class="profileDetail" ng-controller="LoginDetCtrl"><a><small>Name: </small><span >{{fullname}}</span></a></li>
                     <li class="profileDetail" ng-controller="LoginDetCtrl"><a><small>Branch: </small><span >{{branch}} Branch</span></a></li>
-                    <li class="" ng-if="uipage != 'dashboard'"><a class="btn btn-primary btn-sm headerbtns" href="/dashboard"><i class="icon-dashboard"></i> &nbsp; Dashboard</a></li>
+                    <!-- <li class="" ng-if="uipage != 'dashboard'"><a class="btn btn-primary btn-sm headerbtns" href="/dashboard"><i class="icon-dashboard"></i> &nbsp; Dashboard</a></li> -->
                     <li><button id="logout" type="submit" class="btn btn-primary headerbtns" ng-controller="CommonCtrl" ng-click="logout();">Log Out</button></li>
                     <!-- <li><button id="changepwd" type="submit" class="btn btn-primary headerbtns" ng-controller="CommonCtrl" ng-click="openChangePwd();">Change Password</button></li> -->
                     
@@ -299,7 +299,7 @@
             </div><!-- /.container-fluid -->
         </nav>
         <div id="chatImage" ng-if="uipage!=='dashboard' && uipage!='agentdashboard'"  class="step1click"><img class="clickImage chatbotimg" id="clickImage" src="img/k.png" ng-controller="ChatCtrl" id="stepclick1" ng-click="showChatwindow();"></div>
-        <div class="col-lg-3 list-group" ng-if="uipage!='agentdashboard'">
+        <div class="col-lg-3 list-group" ng-if="uipage!='agentdashboard'" style="display:none;">
         <div class="topic_col hidden-xs" ng-style="{height: iframeHeight + 'px'}">
             <div class="searchbar">
                 <input type="text" class="searchTerm" no-special-char ng-change="findTopic(topicSearch);" placeholder="What are you looking for?" ng-model="topicSearch">

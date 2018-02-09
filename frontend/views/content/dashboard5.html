@@ -1,8 +1,8 @@
-<div class="col-lg-9 expandable">
+<div class="col-lg-8 expandable2">
     <div class="content">
         
-        <!-- <marquee direction="left" speed="normal" behavior="loop"  class="news_text yellowbg">Important Notice : Please update your personal details before 1st July 2017</marquee> -->
-        <!-- <div class="" data-wow-iteration="2" data-wow-delay="0.2s">
+        <marquee direction="left" speed="normal" behavior="loop"  class="news_text yellowbg">Important Notice : Please update your personal details before 1st July 2017</marquee> 
+        <div class="" data-wow-iteration="2" data-wow-delay="0.2s">
             <div class="scriptData processviews" ng-if="tabvalue.elements[0] ==='Process'" ng-show="tabvalue.element_values[0].Script.length>0">
                 <uib-accordion close-others="oneAtATime">
                     <div uib-accordion-group class="panel-default" is-open="true" is-disabled="false">
@@ -92,18 +92,90 @@
 
                         
                     </div>
-                    
+                    <div class ="tab-con"  ng-if="row==='Guidelines'">
+						<div class="" ng-repeat="processtext in tabvalue.element_values[$index] track by $index">
+							<h1>{{processtext.Title}}</h1>
+							<ng-bind-html ng-bind-html="trustedHtml(processtext.Text);" ng-if="processtext.Text !== ''">
+								{{processtext.Text}}
+							</ng-bind-html>
+						</div>
+					</div>
+					<div class ="tab-con"  ng-if="row==='Exception Scenarios'">
+                        <!-- <form class="form-inline">
+                            <div class="form-group">
+                                <label for="exampleInputName2">Notes</label>
+                                <select  class="notes" ng-change="getnotedata(s.notes,tabvalue.element_values[1].Table);" ng-model="s.notes">
+                                    <option value="" selected>Please Select</option>
+                                    <option ng-repeat="x in tabvalue.element_values[1].Quik_Tip" value="{{x.col}}" ng-init="s.notes=x.col">{{x.val}}</option>
+                                </select>
+                            </div>
+                        </form>
+                        <div  ng-if="notedata.length > 0">
+                            <p ng-repeat = "notev in notedata">
+                                <ng-bind-html ng-bind-html="notev">
+                                    {{notev}}
+                                </ng-bind-html>
+                            </p>
+                        </div> -->
+                        <br>
+                        <!-- <uib-accordion close-others="true" class="accordiondt">
+                            <div uib-accordion-group class="panel-default"  ng-repeat="x in tabvalue.element_values[1].Quik_Tip"      is-open="status.open">
+                                <uib-accordion-heading >
+                                    <div ng-click="getnotedata(x,tabvalue.element_values[1].Table);">
+                                        {{x.val}} <i class="pull-right glyphicon" ng-class="{'glyphicon-chevron-down': status.open, 'glyphicon-chevron-right': !status.open}"></i>
+                                    </div>
+                                </uib-accordion-heading>
+                                <div >
+                                    <p ng-repeat = "notev in notedata">
+                                        <ng-bind-html ng-bind-html="notev">
+                                            {{notev}}
+                                        </ng-bind-html>
+                                    </p>
+                                </div>
+                            </div>
+                        </uib-accordion> -->
+                        <div >
+                            <p ng-repeat = "notev in notedata">
+                                <ng-bind-html ng-bind-html="notev">
+                                    {{notev}}
+                                </ng-bind-html>
+                            </p>
+                        </div>
+                    </div> 
+                    <!-- <div class ="tab-con"  ng-if="row==='Address Change'">
+                        <p ng-repeat = "add_c in tabvalue.element_values[0].Address_Change">
+                            <ng-bind-html ng-bind-html="add_c">
+                                {{add_c}}
+                            </ng-bind-html>
+                        </p>
+                    </div>
+                    <div class ="tab-con"  ng-if="row==='Dormant Activation'">
+                        <p ng-repeat = "d_a in tabvalue.element_values[0].Dormant_Activation">
+                            <ng-bind-html ng-bind-html="d_a">
+                                {{d_a}}
+                            </ng-bind-html>
+                        </p>
+                    </div> -->
+                    <div ng-if="!(tabvalue.element_values[1].Quik_Tip && $index == 1)">
+                        <div class ="tab-con"  ng-if="(row !== 'Process' && row !== 'Exception Scenarios' && row !== 'Guidelines')">
+                            <p class="" > 
+                                <ng-bind-html ng-bind-html="tabvalue.element_values[$index]">
+                                    {{tabvalue.element_values[$index]}}
+                                </ng-bind-html>
+                            </p>
+                        </div> 
+                    </div>
                 </uib-tab>
             </uib-tabset>
-        </div> -->
+        </div> 
     </div>
     
-<div class="col-lg-12 dashboard dashboard ">
+<div class="col-lg-12 dashboard dashboard fdashboard">
     <div class="row">
         <section class="panel">
             <div class="panel-body">
                 <div class="col-lg-12">
-                    <marquee direction="left" speed="normal" behavior="loop"  class="news_text yellowbg">Important Notice : Please update your personal details before 1st July 2017</marquee>
+                    <!-- <marquee direction="left" speed="normal" behavior="loop"  class="news_text yellowbg">Important Notice : Please update your personal details before 1st July 2017</marquee> -->
                     
                     <div class="row cards">
                         <div class="col-lg-3 ">
@@ -341,5 +413,5 @@
 </div>
 </div>
 <div id="chatImage"   class="step1click">
-    <a href="/chat" ><img class="clickImage chatbotimg" id="clickImage" src="img/k.png"  id="stepclick1" ></a>
+    <img class="clickImage chatbotimg" id="clickImage" src="img/k.png"  id="stepclick1" ng-click="showChatwindow();">
 </div

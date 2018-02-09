@@ -33,10 +33,15 @@ myApp.config(function ($stateProvider, $urlRouterProvider, $httpProvider, $locat
     $qProvider.errorOnUnhandledRejections(false);
     IdleProvider.idle(10*60); // 10 minutes idle
     $stateProvider
+        // .state('home', {
+        //     url: "/",
+        //     templateUrl: tempateURL,
+        //     controller: 'HomeCtrl'
+        // })
         .state('home', {
             url: "/",
             templateUrl: tempateURL,
-            controller: 'HomeCtrl'
+            controller: 'Dashboard5Ctrl'
         })
         .state('chat', {
             url: "/chat",
@@ -398,7 +403,7 @@ myApp.run(['$http','$cookies','beforeUnload','$document','$rootScope','Idle','bo
             e.preventDefault();
         });
         $rootScope.$on('IdleTimeout', function() {
-            var scope = angular.element(document.getElementById('changepwd')).scope();
+            var scope = angular.element(document.getElementById('logout')).scope();
             scope.logout();
             // end their session and redirect to login
         });
