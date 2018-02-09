@@ -1724,6 +1724,14 @@ myApp.controller('HomeCtrl', function ($scope,$rootScope, TemplateService, Navig
             $scope.$modalInstanceds.dismiss('cancel');
             //$scope.$modalInstance.close();
         };
+        $rootScope.expanddbtile = function() {
+            $(".dashboardtiles").removeClass('col-lg-3');
+            $(".dashboardtiles").addClass('col-lg-6');
+        };
+        $rootScope.reducedbtile = function() {
+            $(".dashboardtiles").removeClass('col-lg-6');
+            $(".dashboardtiles").addClass('col-lg-3');
+        };
         $rootScope.showChatwindow = function () {
             newlist = $.jStorage.get("chatlist");
             // if(!newlist || newlist == null)
@@ -1749,6 +1757,18 @@ myApp.controller('HomeCtrl', function ($scope,$rootScope, TemplateService, Navig
             $(".clickImage").hide();
             $rootScope.chatOpen = true;
             $rootScope.scrollChatWindow();
+            if($(".expandable2").hasClass('col-lg-12')) //-- menu closed
+            {
+                $(".expandable2").removeClass('col-lg-12');
+                $(".expandable2").addClass('col-lg-8');
+                $rootScope.reducedbtile();
+            }
+            else if($(".expandable2").hasClass('col-lg-9')) //-- menu opened
+            {
+                $(".expandable2").removeClass('col-lg-9');
+                $(".expandable2").addClass('col-lg-5');
+                $rootScope.expanddbtile();
+            }
         };
         $rootScope.minimizeChatwindow = function() {
             $.jStorage.set("showchat",false);
@@ -1760,6 +1780,22 @@ myApp.controller('HomeCtrl', function ($scope,$rootScope, TemplateService, Navig
             $('.panel-heading span.icon_minim').addClass('panel-collapsed');
             $('.panel-heading span.icon_minim').addClass('glyphicon-plus').removeClass('glyphicon-minus');
             $(".clickImage").show( "fadeIn");
+            if($(".expandable2").hasClass('col-lg-8')) //-- menu is closed
+            {
+                $(".expandable2").removeClass('col-lg-8');
+                $(".expandable2").addClass('col-lg-12');
+                //$rootScope.expanddbtile();
+            }
+            else if($(".expandable2").hasClass('col-lg-5')) //-- menu is opened
+            {
+                $(".expandable2").removeClass('col-lg-5');
+                $(".expandable2").addClass('col-lg-9');
+                if($(".dashboardtiles").hasClass('col-lg-6'))
+                {
+                    $rootScope.reducedbtile();
+                }
+                
+            }
         };
         $rootScope.pushAutoMsg = function(id,value,answer) {
             $rootScope.msgSelected = true;

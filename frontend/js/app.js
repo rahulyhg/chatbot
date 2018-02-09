@@ -286,33 +286,106 @@ myApp.run(['$http','$cookies','beforeUnload','$document','$rootScope','Idle','bo
         // });
         if($(".template.content").find('.expandable2').length == 1)
         {
-           
-            if($(".expandable2").hasClass('col-lg-8'))
+            // if($("#chat_window_1").is(':visible') && $(".expandable2").hasClass('col-lg-8'))
+            if($(".expandable2").hasClass('col-lg-8')) //-- menu closed
             {
-                $timeout(function(){
-                    $('.expandable').removeClass('col-lg-12').addClass('col-lg-9');
-                    $('.expandable2').removeClass('col-lg-8').addClass('col-lg-5');
-                    // $('.c-hamburger span').css("transform", "rotate(0deg)");				
-                    // $('.c-hamburger span').css("transition", "transform 1.2s ease");
-                    //$(".c-hamburger").animate({'background-color': '#003366'}, 'fast');
+                if($("#chat_panel").is(':visible'))
+                {
                     $('.list-group').toggle('slide');
-                    
-                    $rootScope.rotated = true;
-                });
+                    console.log("chat  visible");
+                    $timeout(function(){
+                        
+                        $('.expandable').removeClass('col-lg-12').addClass('col-lg-9');
+                        $('.expandable2').removeClass('col-lg-8').addClass('col-lg-5');
+                        // $('.c-hamburger span').css("transform", "rotate(0deg)");				
+                        // $('.c-hamburger span').css("transition", "transform 1.2s ease");
+                        //$(".c-hamburger").animate({'background-color': '#003366'}, 'fast');
+                        
+                        $rootScope.expanddbtile();
+                        $rootScope.rotated = true;
+                    },1000);
+                }
+                else {
+                    console.log("chat not visible");
+                    $timeout(function(){
+                        $('.list-group').toggle('slide');
+                        $('.expandable').removeClass('col-lg-12').addClass('col-lg-9');
+                        $('.expandable2').removeClass('col-lg-8').addClass('col-lg-9');
+                        // $('.c-hamburger span').css("transform", "rotate(0deg)");				
+                        // $('.c-hamburger span').css("transition", "transform 1.2s ease");
+                        //$(".c-hamburger").animate({'background-color': '#003366'}, 'fast');
+                        $rootScope.reducedbtile();
+                        
+                        $rootScope.rotated = true;
+                    },1000);
+                }
             }
-            else {
-                $timeout(function(){
-                    $('.expandable').removeClass('col-lg-9').addClass('col-lg-12');
-                    $('.expandable2').removeClass('col-lg-5').addClass('col-lg-8');
-
-                    // $('.c-hamburger span').css("transform", "rotate(90deg)");				
-                    // $('.c-hamburger span').css("transition", "transform 1.2s ease");
-                    //$(".c-hamburger").animate({'background-color': '#FF0000'}, 'fast');
-
+            else if($(".expandable2").hasClass('col-lg-12')) //-- menu closed
+            {
+                if($("#chat_panel").is(':visible'))
+                {
+                    console.log("chat  visible");
                     $('.list-group').toggle('slide');
-                    $rootScope.rotated = false;    
-                });
-                
+                    $timeout(function(){
+                        
+                        $('.expandable').removeClass('col-lg-12').addClass('col-lg-9');
+                        $('.expandable2').removeClass('col-lg-12').addClass('col-lg-5');
+                        // $('.c-hamburger span').css("transform", "rotate(0deg)");				
+                        // $('.c-hamburger span').css("transition", "transform 1.2s ease");
+                        //$(".c-hamburger").animate({'background-color': '#003366'}, 'fast');
+                        
+                        $rootScope.expanddbtile();
+                        $rootScope.rotated = true;
+                    },1000);
+                }
+                else {
+                    console.log("chat not visible");
+                    $('.list-group').toggle('slide');
+                    $timeout(function(){
+                        
+                        $('.expandable').removeClass('col-lg-12').addClass('col-lg-9');
+                        $('.expandable2').removeClass('col-lg-12').addClass('col-lg-9');
+                        // $('.c-hamburger span').css("transform", "rotate(0deg)");				
+                        // $('.c-hamburger span').css("transition", "transform 1.2s ease");
+                        //$(".c-hamburger").animate({'background-color': '#003366'}, 'fast');
+                        
+                        $rootScope.reducedbtile();
+                        $rootScope.rotated = true;
+                    },1000);
+                }
+            }
+            else { // menu is open
+                if($("#chat_panel").is(':visible'))
+                {
+                    $('.list-group').toggle('slide');
+                    $timeout(function(){
+                        
+                        $('.expandable').removeClass('col-lg-9').addClass('col-lg-12');
+                        $('.expandable2').removeClass('col-lg-5').addClass('col-lg-8');
+
+                        // $('.c-hamburger span').css("transform", "rotate(90deg)");				
+                        // $('.c-hamburger span').css("transition", "transform 1.2s ease");
+                        //$(".c-hamburger").animate({'background-color': '#FF0000'}, 'fast');
+
+                        $rootScope.reducedbtile();
+                        $rootScope.rotated = false;    
+                    },1000);
+                }
+                else {
+                    $('.list-group').toggle('slide');
+                    $timeout(function(){
+                        
+                        $('.expandable').removeClass('col-lg-9').addClass('col-lg-12');
+                        $('.expandable2').removeClass('col-lg-9').addClass('col-lg-12');
+
+                        // $('.c-hamburger span').css("transform", "rotate(90deg)");				
+                        // $('.c-hamburger span').css("transition", "transform 1.2s ease");
+                        //$(".c-hamburger").animate({'background-color': '#FF0000'}, 'fast');
+
+                        
+                        $rootScope.rotated = false;    
+                    },1000);
+                }
                 
             }
         }
