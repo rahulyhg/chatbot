@@ -11751,6 +11751,9 @@ button.btn.useronline {
 .searchbar {
   padding-top: 5px; }
 
+.dashboardtiles.col-lg-6 {
+  padding-right: 0px; }
+
 a.dthlink.dtfaq {
   text-decoration: underline; }
 
