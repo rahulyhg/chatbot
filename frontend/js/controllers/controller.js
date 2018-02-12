@@ -1960,7 +1960,7 @@ myApp.controller('HomeCtrl', function ($scope,$rootScope, TemplateService, Navig
         //     $rootScope.minimizeChatwindow();
 
         $rootScope.ratecardSubmit = function(coldata,rowdata,response_type,journey_name) {
-            $scope.formData = {csrfmiddlewaretoken:$rootScope.getCookie("csrftoken"),user_id:$cookies.get("session_id"),user_input:coldata+"|"+rowdata,auto_id:"",auto_value:"",coldata:coldata,rowdata:rowdata,type:"rate card",journey_name:journey_name,response_type:response_type};
+            $scope.formData = {csrfmiddlewaretoken:$rootScope.getCookie("csrftoken"),user_id:$rootScope.session_id,user_input:coldata+"|"+rowdata,auto_id:"",auto_value:"",coldata:coldata,rowdata:rowdata,type:"rate card",journey_name:journey_name,response_type:response_type};
             apiService.ratecardsubmit($scope.formData).then(function (data){
 				//console.log(data);
 				angular.forEach(data.data.tiledlist, function(value, key) {
@@ -2028,7 +2028,7 @@ myApp.controller('HomeCtrl', function ($scope,$rootScope, TemplateService, Navig
             $(document).on('click', 'a.ratecard', function(){
                 
                 var dthlink = $(this).text();
-                formData = {csrfmiddlewaretoken:$rootScope.getCookie("csrftoken"),user_id:$cookies.get("session_id"),user_input:dthlink,auto_id:'',auto_value:''};
+                formData = {csrfmiddlewaretoken:$rootScope.getCookie("csrftoken"),user_id:$rootScope.session_id,user_input:dthlink,auto_id:'',auto_value:''};
                 apiService.outprocess(formData).then(function (data){
                         //console.log(data);
                     
@@ -2116,7 +2116,7 @@ myApp.controller('HomeCtrl', function ($scope,$rootScope, TemplateService, Navig
             $(document).on('click', 'a.productlisting', function(){
                 
                 var dthlink = $(this).text();
-                formData = {csrfmiddlewaretoken:$rootScope.getCookie("csrftoken"),user_id:$cookies.get("session_id"),user_input:dthlink,auto_id:'',auto_value:''};
+                formData = {csrfmiddlewaretoken:$rootScope.getCookie("csrftoken"),user_id:$rootScope.session_id,user_input:dthlink,auto_id:'',auto_value:''};
                 apiService.outprocess(formData).then(function (data){
                         //console.log(data);
                     
@@ -2221,7 +2221,7 @@ myApp.controller('HomeCtrl', function ($scope,$rootScope, TemplateService, Navig
                 // formData.DTHlink = dthlink;
                 formData = mysession;
                 formData.csrfmiddlewaretoken=$rootScope.getCookie("csrftoken");
-                formData.user_id=$cookies.get("session_id");
+                formData.user_id=$rootScope.session_id;
                 //console.log(formData);
                 apiService.getDthlinkRes(formData).then(function (data){
                     angular.forEach(data.data.tiledlist, function(value, key) {
@@ -2271,7 +2271,7 @@ myApp.controller('HomeCtrl', function ($scope,$rootScope, TemplateService, Navig
             // formData.DTHlink = dthlink;
             formData = mysession;
             formData.csrfmiddlewaretoken=$rootScope.getCookie("csrftoken");
-            formData.user_id=$cookies.get("session_id");
+            formData.user_id=$rootScope.session_id;
             //console.log(formData);
             apiService.getDthlinkRes(formData).then(function (data){
                 angular.forEach(data.data.tiledlist, function(value, key) {
@@ -2675,8 +2675,8 @@ myApp.controller('HomeCtrl', function ($scope,$rootScope, TemplateService, Navig
                 $rootScope.tabvalue.element_values=[];
                 //console.log(mysessiondata);
                 //$rootScope.formData = mysessiondata;
-                //console.log($cookies.get("session_id"));
-                formData1 = {csrfmiddlewaretoken:$rootScope.getCookie("csrftoken"),user_id:$cookies.get("session_id"),user_input:value,auto_id:id,auto_value:$rootScope.autolistvalue};
+                //console.log($rootScope.session_id);
+                formData1 = {csrfmiddlewaretoken:$rootScope.getCookie("csrftoken"),user_id:$rootScope.session_id,user_input:value,auto_id:id,auto_value:$rootScope.autolistvalue};
                 var new_object = $.extend({}, mysessiondata, formData1);
                 //$.extend(formData1, mysessiondata);
                 $rootScope.formData = new_object;
@@ -3183,7 +3183,7 @@ myApp.controller('HomeCtrl', function ($scope,$rootScope, TemplateService, Navig
         $rootScope.crnSubmit = function(crnno) {
             $scope.userid=$.jStorage.get("id");
             var datatype = 'CRN';
-            $scope.formData = {user_input:crnno, number_type:datatype,csrfmiddlewaretoken:$rootScope.getCookie("csrftoken"),user_id:$cookies.get("session_id")};
+            $scope.formData = {user_input:crnno, number_type:datatype,csrfmiddlewaretoken:$rootScope.getCookie("csrftoken"),user_id:$rootScope.session_id};
             apiService.crnsubmit($scope.formData).then(function (callback){
                 $rootScope.result_crn(callback.data);
             });
@@ -3193,7 +3193,7 @@ myApp.controller('HomeCtrl', function ($scope,$rootScope, TemplateService, Navig
             //console.log(crnno+"crnno,sr"+srno);
             $rootScope.userid=$.jStorage.get("id");
             var datatype = 'SR';
-            $scope.formData = {user_input:srno, number_type:datatype,csrfmiddlewaretoken:$rootScope.getCookie("csrftoken"),user_id:$cookies.get("session_id")};
+            $scope.formData = {user_input:srno, number_type:datatype,csrfmiddlewaretoken:$rootScope.getCookie("csrftoken"),user_id:$rootScope.session_id};
             //console.log($scope.formData);
             apiService.crnsubmit($scope.formData).then(function (callback){
                 console.log(callback,"crn");
