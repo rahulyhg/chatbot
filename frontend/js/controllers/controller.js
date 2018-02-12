@@ -1501,7 +1501,7 @@ myApp.controller('HomeCtrl', function ($scope,$rootScope, TemplateService, Navig
     
 
     })
-    .controller('ChatCtrl', function ($scope, $rootScope,TemplateService, NavigationService,CsrfTokenService, $timeout,$http,apiService,$state,$uibModal,Menuservice,tts,$cookies,$sce) {
+    .controller('ChatCtrl', function ($scope, $rootScope,TemplateService, NavigationService,CsrfTokenService, $timeout,$http,apiService,$state,$uibModal,Menuservice,tts,$cookies,$sce,Excel) {
         $rootScope.contentobj = [];
         $rootScope.autocompletelist = [];
         $rootScope.chatOpen = false;
@@ -1797,6 +1797,19 @@ myApp.controller('HomeCtrl', function ($scope,$rootScope, TemplateService, Navig
                 
             }
         };
+        $rootScope.exportToExcel=function(tableId){ // ex: '#my-table'
+            $scope.exportHref=Excel.tableToExcel(tableId,'sheet name');
+            console.log(tableId);
+            console.log($scope.exportHref);
+            var res=tableId.split("table");
+            $timeout(function() {
+                var link = document.createElement('a');
+                link.download = res[0]+".xlsx";
+                link.href = $scope.exportHref;
+                link.click();
+            }, 100);
+			//$timeout(function(){location.href=$scope.exportHref;},100); // trigger download
+		}
         $rootScope.pushAutoMsg = function(id,value,answer) {
             $rootScope.msgSelected = true;
             $rootScope.chatmsgid = id;

@@ -59,6 +59,7 @@ module.exports = [
   'frontend/js/factories/navigation.js',
   'frontend/js/factories/api.js',
   'frontend/js/factories/menuservice.js',
+  'frontend/js/factories/excel.js',
 
   // Contorllers
   'frontend/js/controllers/controller.js',
