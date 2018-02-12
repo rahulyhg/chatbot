@@ -697,6 +697,13 @@ myApp.controller('HomeCtrl', function ($scope,$rootScope, TemplateService, Navig
         angular.element(document).ready(function () {
             if(!$.jStorage.get('firstreload'))
                 $.jStorage.set('firstreload',false);
+            apiService.get_session({}).then( function (response) {
+                $cookies.put("csrftoken",response.data.csrf_token);
+                $cookies.put("session_id",response.data.session_id);
+                $.jStorage.set("csrftoken",response.data.csrf_token);
+                $rootScope.session_id =response.data.session_id;
+                //console.log(response.data);
+            });
         });
         $scope.gotohome = function(){
             $state.go('home', {}, {reload: false});
