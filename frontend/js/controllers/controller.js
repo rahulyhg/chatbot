@@ -29,6 +29,7 @@ myApp.controller('HomeCtrl', function ($scope,$rootScope, TemplateService, Navig
                 $cookies.put("csrftoken",response.data.csrf_token);
                 $cookies.put("session_id",response.data.session_id);
                 $.jStorage.set("csrftoken",response.data.csrf_token);
+                $.jStorage.set("session_id",response.data.session_id);
                 $rootScope.session_id =response.data.session_id;
                 $rootScope.chatlist = [];
                 $rootScope.firstMsg = true;
@@ -689,21 +690,26 @@ myApp.controller('HomeCtrl', function ($scope,$rootScope, TemplateService, Navig
             $rootScope.rotateoutmenu();
         },500);
     })
-    myApp.controller('Dashboard5Ctrl', function ($scope,$rootScope, TemplateService, NavigationService,CsrfTokenService,Menuservice, $timeout,$http,apiService,$state) {
+    myApp.controller('Dashboard5Ctrl', function ($scope,$rootScope, TemplateService, NavigationService,CsrfTokenService,Menuservice, $timeout,$http,apiService,$state,$cookies) {
         $scope.template = TemplateService.getHTML("content/dashboard5.html");
         TemplateService.title = "Dashboard"; //This is the Title of the Website
         $scope.navigation = NavigationService.getNavigation();
         $rootScope.uipage="dashboard";
-        angular.element(document).ready(function () {
-            if(!$.jStorage.get('firstreload'))
-                $.jStorage.set('firstreload',false);
+        $scope.callsession = function() {
             apiService.get_session({}).then( function (response) {
                 $cookies.put("csrftoken",response.data.csrf_token);
                 $cookies.put("session_id",response.data.session_id);
                 $.jStorage.set("csrftoken",response.data.csrf_token);
+                $.jStorage.set("session_id",response.data.session_id);
                 $rootScope.session_id =response.data.session_id;
-                //console.log(response.data);
+                
+                
             });
+        };
+        angular.element(document).ready(function () {
+            $scope.callsession();  
+            if(!$.jStorage.get('firstreload'))
+                $.jStorage.set('firstreload',false);
         });
         $scope.gotohome = function(){
             $state.go('home', {}, {reload: false});
