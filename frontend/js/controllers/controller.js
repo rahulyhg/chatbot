@@ -2478,12 +2478,241 @@ myApp.controller('HomeCtrl', function ($scope,$rootScope, TemplateService, Navig
 						$("#tab_data .nav-tabs li").first().addClass("active");
 						$("#tab_data .tab-content .tab-pane").first().addClass("active");
 					},4000);
-				});
+                });
+                if(data.tiledlist[0].Journey_Name == 'DD_ISSUANCE')
+                {
+                    ele.push('Diagram');
+					ele_val.push(chart_config);
+                    var chart_config = {
+                        chart: {
+                            container: "#diagram-example",
+
+                            animateOnInit: true,
+                            connectors: {
+                                type: 'step'
+                            },
+                            node: {
+                                collapsable: true,
+                                HTMLclass: 'nodeExample1',
+                            },
+                            animation: {
+                                nodeAnimation: "easeOutBounce",
+                                nodeSpeed: 700,
+                                connectorsAnimation: "bounce",
+                                connectorsSpeed: 700
+                            }
+                        },
+                        nodeStructure: {
+                            text:{
+                                name: "Demand Draft Issuance",
+                                title: "",
+                                "data-parent":0,
+                                "data-checks":"",
+                                "data-information":"DD can be printed only by the employee who holds the DD stock as per Finacle",
+                                "data-system":"",
+                                "data-script":"Sir/Madam , May I please request you to fill up the DD Request Form"
+                                // contact: {val: "we@aregreat.com", href: "mailto:we@aregreat.com"}
+                            },
+                            // pseudo:true,
+                            collapsed: true,
+                            
+                            children: [
+                                {
+                                    text: {
+                                        name:"Demand Draft  Issuance - Customer / Bearer",
+                                        title:""
+                                    },
+                                    collapsed: false,
+                                    children: [
+                                        {
+                                            text: {
+                                                name:"Customer Documentation",
+                                                title:"",
+                                                "data-text":"## Customer Visits in Person:1. DD Request Form   <DD Request Form> <br>2. KMBL Cheque favoring 'Yourself for DD -  <beneficiary name>'<br>3. Cheque mandatory for amount >= Rs. 10,000"
+                                            },
+                                            //collapsed: true,
+                                        },
+                                        {
+                                            text: {
+                                                name:"Reporting Requirement: 1 crore and above",
+                                                title:""
+                                            },
+                                            //collapsed: true,
+                                        },
+                                        {
+                                            text: {
+                                                name:"Exception Handling for DD value  > 4,99,999",
+                                                title:""
+                                            },
+                                            //collapsed: true,
+                                        },
+                                        {
+                                            text: {
+                                                name:"Branch Process",
+                                                title:""
+                                            },
+                                            //collapsed: true,
+                                        },
+                                        {
+                                            text: {
+                                                name:"Handover of DD to Customer/Bearer",
+                                                title:""
+                                            },
+                                            //collapsed: true,
+                                        },
+                                        {
+                                            text: {
+                                                name:"Login to Interact",
+                                                title:""
+                                            },
+                                            //collapsed: true,
+                                        },
+                                    ]
+                                },
+                                {
+                                    text:{
+                                        name: "Demand Draft Issuance - Non Customer",
+                                        title: "",
+                                    },
+                                    //collapsed: true,
+                                },
+                                {
+                                    text:{
+                                        name: "Demand Draft Issuance - Bulk Demand Draft",
+                                        title: "",
+                                    },
+                                    //collapsed: true,
+                                },
+                                {
+                                    text:{
+                                        name: "Demand Draft Issuance - Corporate",
+                                        title: "",
+                                    },
+                                    //collapsed: true,
+                                },
+                                {
+                                    text:{
+                                        name: "Demand Draft Issuance - Disbursal by BBG",
+                                        title: "",
+                                    },
+                                    //collapsed: true,
+                                },
+                                {
+                                    text:{
+                                        name: "Demand Draft Issuance - Exceptions",
+                                        title: "",
+                                    },
+                                    //collapsed: true,
+                                },
+                                {
+                                    text:{
+                                        name: "Demand Draft Issuance - Exceptions",
+                                        title: "",
+                                    },
+                                    //collapsed: true,
+                                }
+                            ]
+                        }
+                    };
+
+                /* Array approach
+                    var config = {
+                        container: "#collapsable-example",
+
+                        animateOnInit: true,
+                        
+                        node: {
+                            collapsable: true
+                        },
+                        animation: {
+                            nodeAnimation: "easeOutBounce",
+                            nodeSpeed: 700,
+                            connectorsAnimation: "bounce",
+                            connectorsSpeed: 700
+                        }
+                    },
+                    malory = {
+                        image: "img/malory.png"
+                    },
+
+                    lana = {
+                        parent: malory,
+                        image: "img/lana.png"
+                    }
+
+                    figgs = {
+                        parent: lana,
+                        image: "img/figgs.png"
+                    }
+
+                    sterling = {
+                        parent: malory,
+                        childrenDropLevel: 1,
+                        image: "img/sterling.png"
+                    },
+
+                    woodhouse = {
+                        parent: sterling,
+                        image: "img/woodhouse.png"
+                    },
+
+                    pseudo = {
+                        parent: malory,
+                        pseudo: true
+                    },
+
+                    cheryl = {
+                        parent: pseudo,
+                        image: "img/cheryl.png"
+                    },
+
+                    pam = {
+                        parent: pseudo,
+                        image: "img/pam.png"
+                    },
+
+                    chart_config = [config, malory, lana, figgs, sterling, woodhouse, pseudo, pam, cheryl];
+
+                */
+                $scope.chart_config = chart_config;
+                    $timeout(function(){
+                        
+                        //tree = new Treant( chart_config );
+                        // $timeout(function(){
+                        //     $(".node.nodeExample1").css('opacity','0');
+                        //     $(".node.nodeExample1[data-parent=0]").css('opacity','1');
+                        // },1000);
+                        $(document).on('click', '.node.nodeExample1', function(){ 
+                            $(".process_data").hide();
+                            var checks = $(this).attr("data-checks");
+                            var information = $(this).attr("data-information");
+                            var system = $(this).attr("data-system");
+                            var script = $(this).attr("data-script");
+                            var text = $(this).attr("data-text");
+                            $(".checks").text("");
+                            $(".informs").text("");
+                            $(".systems").text("");
+                            $(".scripts").text("");
+                            $(".checks").text("");
+                            $(".texts").text("");
+                            $(".informs").text(information);
+                            $(".systems").text(system);
+                            $(".scripts").text(script);
+                            $(".texts").text(text);
+                            $(".process_data").show();
+                        });
+                    },4000);
+                }
 			}
-            
-            
-            
-            
+            $(document).on('click', 'li.Process.uib-tab', function(){
+                $("div.scriptData").show();
+            });
+            $(document).on('click', 'li.Diagram.uib-tab', function(){
+                $("div.scriptData").hide();
+                $timeout(function(){
+                    tree = new Treant( $scope.chart_config );
+                },1000);
+            });
             // if(data.node_data)
             // {
             //     //var node_data = {"node_data": {"elements": ["Guidelines", "Shifting", "Accessibility", "Charges"], "element_values": ["<br>To define general guidelines to be followed by Branches while processing Account Closure. <br><br> Branch should attempt for retention of account before closing the account as opening a new account is expensive. <br><br> Channels through which Account Closure request is received: <br> 1. Customers In Person (CIP) who walk in to the Branch <br>\n2. Representatives/Bearer of customers who walk in to the Branch <br>\n3. Mail / Drop Box <br><br> Check Documentation and Signature Protocol <br><br> Check Mode of Payment for closure Proceeds <br><br> Check for Customer Handling on receipt of request <br><br> Check Process at Branch \u2013Checks during acceptance of closure form <br><br> Check Process at Branch- Post acceptance of Closure form <br><br> ", "<br>Customer is unwilling to give us another chance  <br>\n1) In case of Issues expressed by the customer where he / she is willing to give the Bank another chance. <br><br>\n2) Branch to attempt fix the problem within 48 hours or 7 days on the outside for extreme cases and revert to the customer. This TAT for revert to be communicated to the customer upfront. <br><br>\n3) Customers to be sent a personalised letter thanking them for their time and an acknowledgement, that we value their business and have remedied whatever caused them to want to leave in the first place. A list of all reasons for closure with the action taken, to be stated.  <br><br>\n4) Once the customer has been retained, the customer letter / form duly marked \u201cNOT FOR CLOSURE \u2013 RETAINED\u201d, along with a copy of the resolution letter to be sent to CPC for filing in the customer record.  <br><br>\n5) Siebel to be updated with the same comment and closed.  <br><br>In case the BOM/SM/BM/ RBM / AM or the branch staff are able / Not able  to retain the customer, then protthe SR which has been created needs to be closed with the Closure Description in Siebel as, \u201cCustomer Retained\u201d. This needs to be done diligently and would be subject to audits.\nCustomer will pay the  necessary amount to regularize the account <br>\nCustomer is unwilling to regularize the account after all attempts then branch user to follow the protocol as detailed in chapter \u201cAccount closure requests with debit balance/TBMS lien.\u201d <br><br>\n1) Where the customer is not willing to continue, Branch to ensure that the complete details on Account closure form and all the checks to be made as detailed in the chapter  \u201cGeneral Guidelines to be followed for Account closure\u201d <br><br>\n2) In case of any incomplete request, the customer needs to be apprised of the requirements and Siebel to be updated accordingly. <br><br>\n3) If the a/c closure request is complete in all respects / once the complete request is received from the customer, the same needs to be sent to CPC, post updating the Siebel <br><br>\n4) Branch to journal of the attempts made to retain the customer. <br><br>\nIn case the BOM/SM/BM/ RBM / AM or the branch staff are able / Not able  to retain the customer, then protthe SR which has been created needs to be closed with the Closure Description in Siebel as, \u201cCustomer Retained\u201d. This needs to be done diligently and would be subject to audits.", "<br>If customer is closing his/ her account due to inconvenient accessibility, solutions like Home Banking, Beat Pick up facility, etc. should be re-iterated. <br>\nIn case customer has an account which he/ she is not eligible for an accessibility offering he/ she is interested in, an upgraded account should be offered especially if account balances justify it (ensure that new AMB/AQBs and NMCs are communicated clearly).Customer is unwilling to give us another chance  <br><br>\n1) In case of Issues expressed by the customer where he / she is willing to give the Bank another chance.  <br><br>\n2) Branch to attempt fix the problem within 48 hours or 7 days on the outside for extreme cases and revert to the customer. This TAT for revert to be communicated to the customer upfront. <br><br>\n3) Customers to be sent a personalised letter thanking them for their time and an acknowledgement, that we value their business and have remedied whatever caused them to want to leave in the first place. A list of all reasons for closure with the action taken, to be stated.  <br><br>\n4) Once the customer has been retained, the customer letter / form duly marked \u201cNOT FOR CLOSURE \u2013 RETAINED\u201d, along with a copy of the resolution letter to be sent to CPC for filing in the customer record.  <br><br>\n5) Siebel to be updated with the same comment and closed.  <br><br>\nIn case the BOM/SM/BM/ RBM / AM or the branch staff are able / Not able  to retain the customer, then protthe SR which has been created needs to be closed with the Closure Description in Siebel as, \u201cCustomer Retained\u201d.  <br><br> This needs to be done diligently and would be subject to audits.  <br><br>\nCustomer is unwilling to give another chance: < <br><br>> Customer will pay the  necessary amount to regularize the account  <br><br>\nCustomer is unwilling to regularize the account after all attempts then branch user to follow the protocol as detailed in chapter \u201cAccount closure requests with debit balance/TBMS lien.\u201d  <br><br>\n1) Where the customer is not willing to continue, Branch to ensure that the complete details on Account closure form and all the checks to be made as detailed in the chapter  \u201cGeneral Guidelines to be followed for Account closure\u201d  <br><br>\n2) In case of any incomplete request, the customer needs to be apprised of the requirements and Siebel to be updated accordingly.  <br><br>\n3) If the a/c closure request is complete in all respects / once the complete request is received from the customer, the same needs to be sent to CPC, post updating the Siebel  <br><br> \n4) Branch to journal of the attempts made to retain the customer.  <br><br>\nIn case the BOM/SM/BM/ RBM / AM or the branch staff are able / Not able  to retain the customer, then protthe SR which has been created needs to be closed with the Closure Description in Siebel as, \u201cCustomer Retained\u201d. This needs to be done diligently and would be subject to audits.C2", "<br>1) Customer expresses concerns on high charges, ascertain the nature of charges levied and recommend an upgraded account where required (e.g. if customer finds DD charges high, up-sell to an account with a higher free DD limit or an account offering At Par cheque facility if usage is on our locations). Communicate the AMB/AQB and NMC to customer clearly. <br><br>\n2) The account can be upgraded/downgrade as per customer requirement by retaining the same account Number  <br><br>\n3) Branch can also explain the benefits of Basic/Small Account and offer conversion to the said  account as it will address their inability to maintain the account.  <br><br>\nCustomer is unwilling to give us another chance  <br><br>\n1) In case of Issues expressed by the customer where he / she is willing to give the Bank another chance.  <br><br>\n2) Branch to attempt fix the problem within 48 hours or 7 days on the outside for extreme cases and revert to the customer. This TAT for revert to be communicated to the customer upfront.  <br><br>\n3) Customers to be sent a personalised letter thanking them for their time and an acknowledgement, that we value their business and have remedied whatever caused them to want to leave in the first place. A list of all reasons for closure with the action taken, to be stated.   <br><br>\n4) Once the customer has been retained, the customer letter / form duly marked \u201cNOT FOR CLOSURE \u2013 RETAINED\u201d, along with a copy of the resolution letter to be sent to CPC for filing in the customer record.  <br><br>\n5) Siebel to be updated with the same comment and closed.  <br><br>\nIn case the BOM/SM/BM/ RBM / AM or the branch staff are able / Not able  to retain the customer, then protthe SR which has been created needs to be closed with the Closure Description in Siebel as, \u201cCustomer Retained\u201d. This needs to be done diligently and would be subject to audits.  <br><br>\nCustomer will pay the  necessary amount to regularize the account   <br><br>\nCustomer is unwilling to regularize the account after all attempts then branch user to follow the protocol as detailed in chapter \u201cAccount closure requests with debit balance/TBMS lien.\u201d  <br><br>\n1) Where the customer is not willing to continue, Branch to ensure that the complete details on Account closure form and all the checks to be made as detailed in the chapter  \u201cGeneral Guidelines to be followed for Account closure\u201d  <br><br>\n2) In case of any incomplete request, the customer needs to be apprised of the requirements and Siebel to be updated accordingly.  <br><br>\n3) If the a/c closure request is complete in all respects / once the complete request is received from the customer, the same needs to be sent to CPC, post updating the Siebel  <br><br>\n4) Branch to journal of the attempts made to retain the customer.  <br><br>\nIn case the BOM/SM/BM/ RBM / AM or the branch staff are able / Not able  to retain the customer, then protthe SR which has been created needs to be closed with the Closure Description in Siebel as, \u201cCustomer Retained\u201d. This needs to be done diligently and would be subject to audits.\n"]}};

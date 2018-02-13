@@ -72,4 +72,6 @@ module.exports = [
   'frontend/js/user.js',
   'frontend/js/util.js',
   'frontend/js/wow.min.js',
+  'frontend/js/services/raphael.js',
+  'frontend/js/services/Treant.js',
 ];
