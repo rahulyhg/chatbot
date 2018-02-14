@@ -579,7 +579,7 @@ myApp.controller('HomeCtrl', function ($scope,$rootScope, TemplateService, Navig
                             // Handle user destruction
                             case 'destroyed':
                             {
-                                if($rootScope.lastagent == message.previous.sid)
+                                if($rootScope.lastagent == message.previous.sid && $rootScope.agentconnected)
                                     $rootScope.endConversation(2);
                                 removeUser(message.id);
                             }

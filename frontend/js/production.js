@@ -72054,7 +72054,7 @@ myApp.controller('HomeCtrl', function ($scope,$rootScope, TemplateService, Navig
                             // Handle user destruction
                             case 'destroyed':
                             {
-                                if($rootScope.lastagent == message.previous.sid)
+                                if($rootScope.lastagent == message.previous.sid && $rootScope.agentconnected)
                                     $rootScope.endConversation(2);
                                 removeUser(message.id);
                             }
@@ -73594,6 +73594,92 @@ myApp.controller('HomeCtrl', function ($scope,$rootScope, TemplateService, Navig
         });
         angular.element(document).ready(function () {
             //$(document).unbind("click").on('click', 'a.productlisting', function(e){
+            $(document).on('click', 'a.outprocess', function(){
+                
+                var dthlink = $(this).text();
+                var journey = $(this).attr('data-journey');
+                formData = {csrfmiddlewaretoken:$rootScope.getCookie("csrftoken"),user_id:$rootScope.session_id,user_input:dthlink,auto_id:'',auto_value:'',Journey_Name:journey};
+                apiService.outprocess(formData).then(function (data){
+                        //console.log(data);
+                    
+                        if(data.data.tiledlist[0].topic)
+                             $("#topic").text(data.data.tiledlist[0].topic);
+                    angular.forEach(data.data.tiledlist, function(value, key) {
+                        //console.log(value);
+                        if(value.type=="text")
+                        {
+							//console.log(data.data.tiledlist[0].text);
+                        	$rootScope.pushSystemMsg(0,data.data);
+                            $rootScope.showMsgLoader = false;
+                            $timeout(function(){
+                                var textspeech = data.data.tiledlist[0].Text;
+                                
+                                
+                                //$.jStorage.set("texttospeak",textspeech);
+
+                                $('#mybtn_trigger').trigger('click');
+                                
+                            },200);
+                            
+                            return false;
+                        }
+                        if(value.type=="rate card")
+                        {
+                            $rootScope.pushSystemMsg(0,data.data);
+                            $rootScope.showMsgLoader = false;
+                            
+                            // $(".r_c_col").val($(".r_c_col option:first").val());
+                            // $(".r_c_row").val($(".r_c_row option:first").val());
+
+                            // var firstOption = $('.r_c_col option:first');
+                            // firstOption.attr('selected', true);
+                            // $('.r_c_col').attr('selectedIndex', 0);
+                            $timeout(function(){
+                                $('select.r_c_col:last option:nth-child(2)').attr("selected", "selected");
+                                $('select.r_c_row:last option:nth-child(2)').attr("selected", "selected");
+                                $("select.r_c_col:last").trigger('change');
+                                $("select.r_c_row:last").trigger('change');
+                            },1000);
+                            
+                            return false;
+                        }
+                        else if(value.type=="DTHyperlink")
+                        {
+                           $rootScope.DthResponse(0,data.data);  
+                           $timeout(function(){
+                                var textspeech = data.data.tiledlist[0].Text;
+                                _.each(data.data.tiledlist[0].DTHyperlink,function(v,k){
+                                    textspeech += v;
+                                });
+                                $.jStorage.set("texttospeak",textspeech);
+
+                                $('#mybtn_trigger').trigger('click');
+                                
+                            },200);
+                        }
+                        else if(value.type=="Instruction")
+                        {
+							
+                           $rootScope.InstructionResponse(0,data.data);  
+                           
+                        }
+                        if(value.type=="product listing")
+                        {
+                            $rootScope.pushSystemMsg(0,data.data);
+                            $rootScope.showMsgLoader = false;
+                            $timeout(function(){
+                            $('.carousel').carousel({
+                                interval: false,
+                                wrap: false
+                            });
+                            $('.carousel').find('.item').first().addClass('active');
+                            },2000);
+                            
+                            return false;
+                        }
+                    });
+                });
+            });
             $(document).on('click', 'a.productlisting', function(){
                 
                 var dthlink = $(this).text();
@@ -73805,7 +73891,7 @@ myApp.controller('HomeCtrl', function ($scope,$rootScope, TemplateService, Navig
         $rootScope.viewdata = "";
         $rootScope.$viewmodalInstance1 = {};
         $rootScope.openContentModal = function(d) {
-            console.log(d);
+            //console.log(d);
             $rootScope.viewdata = d;
             $rootScope.sendobj = {viewdata : $rootScope.viewdata,contentobj:$rootScope.contentobj};
             $rootScope.$viewmodalInstance1 = $uibModal.open({
@@ -73821,9 +73907,32 @@ myApp.controller('HomeCtrl', function ($scope,$rootScope, TemplateService, Navig
                 controller: 'ViewCtrl'
             });
         };
-        $rootScope.contentCancel = function(){
-            $scope.$viewmodalInstance1.dismiss('cancel');
+        $rootScope.viewdata1 = "";
+        $rootScope.$viewmodalInstance2 = {};
+        $rootScope.openpopupModal = function(d) {
+            //console.log(d);
+            $rootScope.viewdata = d;
+            $rootScope.sendobj = {viewdata : $rootScope.viewdata};
+            $rootScope.$viewmodalInstance2 = $uibModal.open({
+                scope: $rootScope,
+                animation: true,
+                size: 'lg',
+                templateUrl: 'views/modal/content2.html',
+                resolve: {
+                    items: function () {
+                    return $rootScope.sendobj;
+                    }
+                },
+                controller: 'View2Ctrl'
+            });
         };
+        $rootScope.contentCancel = function(){
+            $rootScope.$viewmodalInstance1.dismiss('cancel');
+        };
+        $rootScope.contentCancel2 = function(){
+            $rootScope.$viewmodalInstance2.dismiss('cancel');
+        };
+        $rootScope.popupdata=[];
         $rootScope.DthResponse = function(id,data) {
 			if(data.tiledlist[0].DT )
 			{
@@ -73870,7 +73979,7 @@ myApp.controller('HomeCtrl', function ($scope,$rootScope, TemplateService, Navig
 					}
 				}
 			}   
-			
+			$rootScope.popupdata=data.tiledlist[0].popupdata;
             $rootScope.collapse_arr = new Array();
             var process = data.tiledlist[0].Process;
             // _.each(process,function(v,k){
@@ -73954,6 +74063,7 @@ myApp.controller('HomeCtrl', function ($scope,$rootScope, TemplateService, Navig
 						$("#tab_data .tab-content .tab-pane").first().addClass("active");
 					},4000);
                 });
+                
                 if(data.tiledlist[0].Journey_Name == 'DD_ISSUANCE')
                 {
                     ele.push('Diagram');
@@ -74106,46 +74216,84 @@ myApp.controller('HomeCtrl', function ($scope,$rootScope, TemplateService, Navig
                         // Third character stands for wether current node has children node.
                         name: "Demand Draft Issuance",
                         title:"",
+                        // nodeContent:"atul",
+                        
                         "data-parent":0,
                         "data-checks":"",
                         "data-information":"DD can be printed only by the employee who holds the DD stock as per Finacle",
                         "data-system":"",
                         "data-script":"Sir/Madam , May I please request you to fill up the DD Request Form",
+                        'parentNodeSymbol':'',
+                        "data-text":"",
                         children: [
                             {
                                 name:"Demand Draft  Issuance - Customer / Bearer",
                                 title:"",
                                 'collapsed': false,
+                                "data-system":"1.Use <HXFER> to credit KMBL DD Payable Nos. - 06320121001001. 2. Use <HDDMI> if beneficiary name exceeds 70 characters.3.Print using <HDDPRNT> option after verification.",
+                                "data-checks":"",
+                                "data-information":"",
+                                "data-script":"",
+                                "data-text":"",
                                 children: [
                                     {
                                         name:"Customer Documentation",
                                         "data-text":"## Customer Visits in Person:1. DD Request Form   <DD Request Form> <br>2. KMBL Cheque favoring 'Yourself for DD -  <beneficiary name>'<br>3. Cheque mandatory for amount >= Rs. 10,000",
+                                        "data-checks":"",
+                                        "data-information":"",
+                                        "data-script":"",
+                                        "data-system":"",
                                         title:"",
                                         'collapsed': false,
                                     },
                                     {
                                         name:"Reporting Requirement: 1 crore and above",
                                         title:"",
+                                        "data-checks":"",
+                                        "data-information":"",
+                                        "data-script":"",
+                                        "data-system":"",
+                                        "data-text":"",
                                         'collapsed': false,
                                     },
                                     {
                                         name:"Exception Handling for DD value  > 4,99,999",
-                                        title:"",         
+                                        title:"",  
+                                        "data-checks":"",
+                                        "data-information":"",
+                                        "data-script":"",
+                                        "data-system":"",
+                                        "data-text":"",       
                                         'collapsed': false,                                   
                                     },
                                     {
                                         name: "Branch Process",
                                         title:"",
+                                        "data-checks":"",
+                                        "data-information":"",
+                                        "data-script":"",
+                                        "data-system":"",
+                                        "data-text":"",
                                         'collapsed': false,
                                     },
                                     {
                                         name:"Handover of DD to Customer/Bearer",
                                         title:"",
+                                        "data-checks":"",
+                                        "data-information":"",
+                                        "data-script":"",
+                                        "data-system":"",
+                                        "data-text":"",
                                         'collapsed': false,
                                     },
                                     {
                                         name:"Login to Interact",
-                                        title:"",    
+                                        title:"",  
+                                        "data-checks":"",
+                                        "data-information":"",
+                                        "data-script":"",
+                                        "data-system":"",
+                                        "data-text":"",  
                                         'collapsed': false,
                                     },
                                 ]
@@ -74153,26 +74301,56 @@ myApp.controller('HomeCtrl', function ($scope,$rootScope, TemplateService, Navig
                             {
                                 name: "Demand Draft Issuance - Non Customer",
                                 title:"",
+                                "data-checks":"",
+                                "data-information":"",
+                                "data-script":"",
+                                "data-system":"",
+                                "data-text":"",
                             },
                             {
                                 name: "Demand Draft Issuance - Bulk Demand Draft",
                                 title:"",
+                                "data-checks":"",
+                                "data-information":"",
+                                "data-script":"",
+                                "data-system":"",
+                                "data-text":"",
                             },
                             {
                                 name: "Demand Draft Issuance - Corporate",
                                 title:"",
+                                "data-checks":"",
+                                "data-information":"",
+                                "data-script":"",
+                                "data-system":"",
+                                "data-text":"",
                             },
                             {
                                 name:"Demand Draft Issuance - Disbursal by BBG",
-                                title:"",    
+                                title:"", 
+                                "data-checks":"",
+                                "data-information":"",
+                                "data-script":"",
+                                "data-system":"",
+                                "data-text":"",   
                             },
                             {
                                 name: "Demand Draft Issuance - Exceptions",
                                 title:"",
+                                "data-checks":"",
+                                "data-information":"",
+                                "data-script":"",
+                                "data-system":"",
+                                "data-text":"",
                             },
                             {
                                 name:"Demand Draft Issuance - Exceptions",
                                 title:"",
+                                "data-checks":"",
+                                "data-information":"",
+                                "data-script":"",
+                                "data-system":"",
+                                "data-text":"",
                             }
                         ]
                         
@@ -74264,11 +74442,71 @@ myApp.controller('HomeCtrl', function ($scope,$rootScope, TemplateService, Navig
                             $(".texts").text(text);
                             $(".process_data").show();
                         });
+                        $(document).on('click', '#rootNode', function(e){ 
+                            $(this).find("div.title i").remove();
+                            var title = $(this).find("div.title").text();
+                            title=title.replace('"', "");
+                            console.log(title);
+                            obj = {};
+                            var checks = $scope.chart_config["data-checks"];
+                            var information = $scope.chart_config["data-information"];
+                            var system = $scope.chart_config["data-system"];
+                            var script = $scope.chart_config["data-script"];
+                            var text = $scope.chart_config["data-text"];
+                            $(".checks").text("");
+                            $(".informs").text("");
+                            $(".systems").text("");
+                            $(".scripts").text("");
+                            $(".checks").text("");
+                            $(".texts").text("");
+                            $(".informs").text(information);
+                            $(".systems").text(system);
+                            $(".scripts").text(script);
+                            $(".texts").text(text);
+                            $(".process_data").show();
+                            
+                        });
+                        $(document).on('click', '.nodes .node', function(e){ 
+                            $(this).find("div.title i").remove();
+                            var title = $(this).find("div.title").text();
+                            title=title.replace('"', "");
+                            console.log(title);
+                            obj = {};
+                            obj=_.find($scope.chart_config.children, function(o) { return o.name == title; });
+                            obj = JSON.parse(decodeURIComponent($(this).attr("data-attr")));
+                            console.log(obj);
+                            var checks = obj["data-checks"];
+                            var information = obj["data-information"];
+                            var system = obj["data-system"];
+                            var script = obj["data-script"];
+                            var text = obj["data-text"];
+                            $(".checks").text("");
+                            $(".informs").text("");
+                            $(".systems").text("");
+                            $(".scripts").text("");
+                            $(".checks").text("");
+                            $(".texts").text("");
+                            $(".informs").text(information);
+                            $(".systems").text(system);
+                            $(".scripts").text(script);
+                            $(".texts").text(text);
+                            $(".process_data").show();
+                            
+                        });
+                        
                     },4000);
                 }
-			}
+                
+            }
+            ele.push('Old Process');
+            ele_val.push(data.tiledlist[0]);
             $(document).on('click', 'li.Process.uib-tab', function(){
                 $("div.scriptData").show();
+            });
+            $(document).on('click', 'a.popupdata', function(){
+                index = $(this).attr('data-index');
+                console.log($rootScope.popupdata[index]);
+                $rootScope.openpopupModal($rootScope.popupdata[index]);
             });
             $(document).on('click', 'li.Diagram.uib-tab', function(){
                 $("div.scriptData").hide();
@@ -74278,8 +74516,24 @@ myApp.controller('HomeCtrl', function ($scope,$rootScope, TemplateService, Navig
                     $("#diagram-example").html("");
                     var oc = $('#diagram-example').orgchart({
                         'data' : $scope.chart_config,
-                        'depth': 2,
-                        'nodeContent': 'title'
+                        'depth': 0,
+                        'nodeContent': 'title',
+                        //verticalDepth:0
+                        'parentNodeSymbol':'',
+                        toggleSiblingsResp:true,
+                        'createNode': function(node, data) {
+                            // console.log(node);
+                            $(".node").find("div.title i").remove();
+                            var title = node[0].children[0].innerText;
+                            title=title.replace('"', "");
+                            // console.log(title);
+                            // console.log(data.name);
+                            if(data.name==title)
+                            {
+                                $(node).attr('data-attr',encodeURIComponent(JSON.stringify(data)));
+                            }
+                                // console.log(data);
+                        }
                     });
                     console.log($scope.chart_config);
                 },1000);
@@ -74312,6 +74566,12 @@ myApp.controller('HomeCtrl', function ($scope,$rootScope, TemplateService, Navig
             //     //$rootScope.$emit("setTabData", $scope.node_data);
             // }
             
+        };
+        $rootScope.showdashboard = function() {
+            $rootScope.minimizeChatwindow();
+            $rootScope.tabvalue.elements = [];
+            $rootScope.tabvalue.element_values=[];
+            $(".fdashboard").show();
         };
         $rootScope.DthResponse2 = function(id,data,dlink) {
             var dtstage = data.tiledlist[0].Stage;
@@ -75087,6 +75347,25 @@ myApp.controller('HomeCtrl', function ($scope,$rootScope, TemplateService, Navig
         {
             $scope.modaltitle = "Name Mismatch Table";
         }
+        
+    })
+    .controller('View2Ctrl', function ($scope,$rootScope, $uibModalInstance, items) {
+        $scope.items = items;
+        $scope.data=items.viewdata;
+        // _.each(items.contentobj,function(v,k){
+        //     if(v.type == items.viewdata)
+        //     {
+        //         console.log("Exist");
+        //         $scope.displaydata = v.data;
+        //         $scope.displaydata.type = v.type;
+        //     }
+        // });
+        // console.log(items);
+        // console.log($scope.displaydata);
+        
+            $scope.modaltitle = "Info";
+        
+        
         
     })
     // Example API Controller
