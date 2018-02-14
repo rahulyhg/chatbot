@@ -2791,7 +2791,10 @@ myApp.controller('HomeCtrl', function ($scope,$rootScope, TemplateService, Navig
                         });
                     },4000);
                 }
-			}
+                
+            }
+            ele.push('Old Process');
+            ele_val.push(data.tiledlist[0]);
             $(document).on('click', 'li.Process.uib-tab', function(){
                 $("div.scriptData").show();
             });
