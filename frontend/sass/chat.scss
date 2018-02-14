@@ -18,13 +18,37 @@
     margin-bottom:10px;
 }
 .accord_heading .panel-heading {
-    background-color: #003874;
+    // background-color: #003874;
+    // color: #fff;
+}
+li.initial {
+    padding-top: 4px;
+}
+.nameinitial {
+    width: 25px;
+    height: 25px;
+    float: left;
+    border: 1px solid #003874;
+    border-radius: 50%;
+    text-align: center;
+    background: #003874;
     color: #fff;
+    margin-right: 4px;
+    padding-top: 2px;
+}
+.pdm {
+    padding-top:0px;
 }
 .uibcollapsemain1 {
     margin-bottom: 25px;
 }
- .content {
+.dropdown-header {
+     background: #f3f6f8 !important;
+    color: #44474a !important;
+    margin-top: 10px;
+
+}
+.content {
     min-height: 0px !important;
 }
 .page-header, .dashboardheader {
@@ -209,6 +233,14 @@ li.ui-menu-item {
 }
 a.accordion-toggle {
     font-size: 14px;
+}
+a#outprocess {
+    font-weight: bold;
+    text-decoration: underline; 
+    // font-style: italic;
+}
+.panel-collapse.in.collapse .panel-body {
+    height: auto !important;
 }
 ul.profilelist .chatlink a { 
     color:#fff !important;

@@ -287,11 +287,45 @@
                             </button>
                         </div>
                     </li> -->
+                    <li role="" class="">
+                        <button id="" type="submit" class="btn btn-primary headerbtns" ng-click="showdashboard();">
+                            <span class="glyphicon glyphicon-home"></span> Home
+                        </button>
+                    </li>
                     <li><button id="logout" type="submit" class="btn btn-primary headerbtns"  ng-click="openMydashboard();">My Dashboard</button></li>
-                    <li class="profileDetail" ng-controller="LoginDetCtrl"><a><small>Name: </small><span >{{fullname}}</span></a></li>
-                    <li class="profileDetail" ng-controller="LoginDetCtrl"><a><small>Branch: </small><span >{{branch}} Branch</span></a></li>
+                    <!-- <li class="profileDetail" ng-controller="LoginDetCtrl"><a><small>Name: </small><span >{{fullname}}</span></a></li>
+                    <li class="profileDetail" ng-controller="LoginDetCtrl"><a><small>Branch: </small><span >{{branch}} Branch</span></a></li> -->
                     <!-- <li class="" ng-if="uipage != 'dashboard'"><a class="btn btn-primary btn-sm headerbtns" href="/dashboard"><i class="icon-dashboard"></i> &nbsp; Dashboard</a></li> -->
-                    <li><button id="logout" type="submit" class="btn btn-primary headerbtns" ng-controller="CommonCtrl" ng-click="logout();">Log Out</button></li>
+                    <button class="btn btn-primary dropdown-toggle headerbtns" type="button" id="dropdownMenu3" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"> Profile <span class="caret"></span> </button>
+                    <ul class="dropdown-menu pdm" aria-labelledby="dropdownMenu3">
+                        <!-- <li class="dropdown-header" ng-controller="LoginDetCtrl">
+                            <strong>Name: </strong><span >{{fullname}}</span><br>
+                            <strong>Branch: </strong><span >{{branch}} Branch</span>
+                        </li> -->
+                        <li class="initial" ng-controller="LoginDetCtrl">
+                            
+                            <a href="#">
+                                <div class="nameinitial">{{fullname|limitTo:1}}</div>
+                                <span >{{fullname}}</span>
+                            </a>
+                        </li>
+                        <!-- <li role="separator" class="divider"></li> -->
+                        <li class="dropdown-header">ACCOUNT</li>
+                        <li class="" ng-controller="LoginDetCtrl">
+                           <a href="#"><span >{{branch}} Branch</span></a>
+                        </li>
+                        <li class="dropdown-header">DEPARTMENT</li>
+                        <li class="" >
+                           <a href="#"><span >CCC</span></a>
+                        </li>
+                        <li role="separator" class="divider"></li>
+                        <li role="" class="">
+                            <a href="#" ng-controller="CommonCtrl" ng-click="logout();">
+                                <span class="glyphicon glyphicon-off"></span> Logout
+                            </a>
+                        </li>
+                    </ul>
+                    <!-- <li><button id="logout" type="submit" class="btn btn-primary headerbtns" ng-controller="CommonCtrl" ng-click="logout();">Log Out</button></li> -->
                     <!-- <li><button id="changepwd" type="submit" class="btn btn-primary headerbtns" ng-controller="CommonCtrl" ng-click="openChangePwd();">Change Password</button></li> -->
                     
                 </ul>
