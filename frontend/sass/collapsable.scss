@@ -41,3 +41,44 @@ abbr,acronym { border:0; }
     width:100%;
     min-height:400px;
 }
+p.node-name {
+    text-align: center;
+    background: #003874;
+    color: #fff;
+    margin-bottom: 0px;
+}
+p.node-title {
+    padding: 8px 0;
+}
+.Treant > .node {
+    padding: 0px;
+    border: 1px solid #003874;
+}
+.orgchart .node .title
+{
+    padding: 0px 6px;
+}
+.orgchart .node .title, .orgchart .lines .downLine {
+    background-color: #003874 !important;
+}
+.orgchart .node .content {
+    border:1px solid #003874 !important; 
+}
+.orgchart .lines .rightLine {
+    border-right: 1px solid #003874 !important;
+}
+.orgchart .lines .leftLine {
+    border-left: 1px solid #003874 !important;
+}
+.orgchart .lines .topLine {
+    border-top:1px solid #003874 !important;
+}
+.orgchart .node {
+    width:auto !important;
+}
+.orgchart {
+    background-image: none !important;
+}
+.orgchart .node .title i {
+    display: none !important;
+}
