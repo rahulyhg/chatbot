@@ -1711,6 +1711,12 @@ myApp.controller('HomeCtrl', function ($scope,$rootScope, TemplateService, Navig
                 }
             }
         };
+        $scope.status = {
+            isCustomHeaderOpen: false,
+            isFirstOpen: true,
+            isFirstDisabled: false,
+            isopen:false,
+        };
         $rootScope.pushSystemMsg = function(id,value) {
             $rootScope.chatmsgid = id;
             $rootScope.chatmsg = value;
@@ -3044,8 +3050,9 @@ myApp.controller('HomeCtrl', function ($scope,$rootScope, TemplateService, Navig
                         'depth': 0,
                         'nodeContent': 'title',
                         //verticalDepth:0
-                        'parentNodeSymbol':'',
-                        toggleSiblingsResp:true,
+                        // 'parentNodeSymbol':'',
+                        // toggleSiblingsResp:true,
+                        'direction': 'l2r',
                         'createNode': function(node, data) {
                             // console.log(node);
                             $(".node").find("div.title i").remove();
@@ -3057,7 +3064,19 @@ myApp.controller('HomeCtrl', function ($scope,$rootScope, TemplateService, Navig
                             {
                                 $(node).attr('data-attr',encodeURIComponent(JSON.stringify(data)));
                             }
-                                // console.log(data);
+                            //console.log(data);
+                             var secondMenuIcon = $('<i>', {
+                            'class': 'fa fa-info-circle second-menu-icon',
+                            click: function() {
+                                $(this).siblings('.second-menu').toggle();
+                            }
+                            });
+                            var secondMenu = '<div class="second-menu"><p class="systemdata"><span class="charttitle">System:</span>'+data["data-system"]+'</p>';
+                            secondMenu+='<p class="checksdata"><span class="charttitle">Checks:</span>'+data["data-checks"]+'</p>';
+                            secondMenu+='<p class="informaiondata"><span class="charttitle">Information:</span>'+data["data-information"]+'</p>';
+                            secondMenu+='<p class="scriptdata"><span class="charttitle">Script:</span>'+data["data-script"]+'</p>';
+                            secondMenu+='</div>';
+                            node.append(secondMenuIcon).append(secondMenu);
                         }
                     });
                     console.log($scope.chart_config);

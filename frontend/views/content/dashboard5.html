@@ -83,19 +83,35 @@
                                                             </div>
                                                         </div>
                                                     </uib-accordion> -->
-                                                    <div class="uibcollapsemain" ng-repeat="nest in processtext.collapse track by $index">
-                                                        <div class="uibcollapseheader" type="button" class="btn btn-default"  ng-click="isCollapsed = !isCollapsed">
+                                                     <div class="uibcollapsemain" ng-repeat="nest in processtext.collapse track by $index">
+                                                        <div class="uibcollapseheader" type="button" class="btn btn-default"   >
                                                             {{nest.key}} <i class="pull-right glyphicon" ng-class="{'glyphicon-chevron-down': !isCollapsed, 'glyphicon-chevron-right': isCollapsed}"></i>
                                                         </div>
-                                                        <!-- <hr> -->
-                                                        <div class="uibcollapsecontent" uib-collapse="isCollapsed">
+                                                        <div class="uibcollapsecontent collapse" style="display:none;">
                                                             <div class="well well-lg">
                                                                 <ng-bind-html ng-bind-html="trustedHtml(nest.value);"> 
                                                                     {{nest.value}}
                                                                 </ng-bind-html> 
                                                             </div>
                                                         </div>
-                                                    </div>
+                                                    </div> 
+                                                    <!-- <div class="uibcollapsemain" ng-repeat="nest in processtext.collapse track by $index"> -->
+                                                    <!-- <uib-accordion close-others="true">
+                                                        <uib-accordion-group class="panel-default"  ng-repeat="nest in processtext.collapse track by $index"   is-open="status.isopen">
+                                                            <uib-accordion-heading >
+                                                                <div >
+                                                                    {{nest.key}} <i class="pull-right glyphicon" ng-class="{'glyphicon-chevron-down': status.open, 'glyphicon-chevron-right': !status.open}"></i>
+                                                                </div>
+                                                            </uib-accordion-heading> 
+                                                                <p class="" >
+                                                                    <ng-bind-html ng-bind-html="trustedHtml(nest.value);"> 
+                                                                        {{nest.value}}
+                                                                    </ng-bind-html> 
+                                                                </p>
+                                                            
+                                                        </uib-accordion-group>
+                                                    </uib-accordion>  -->
+                                                    <!-- </div> -->
                                                 </div>
                                             </p>
                                         </div>
@@ -104,7 +120,7 @@
                                 
                             </div>
                         </div> 
-                        <uib-accordion close-others="true" class="accordiondt">
+                        <!-- <uib-accordion close-others="true" class="accordiondt">
                             <div uib-accordion-group class="panel-default dthyperlink changedthbg stage{{tabvalue.element_values[0].bgstage}}"  ng-repeat="dthlink in tabvalue.element_values[0].DT track by $index" data-id="{{dthlink}}" data-url-id="innerLink" data-stage="{{tabvalue.element_values[0].Stage}}" data-bgstage="{{tabvalue.element_values[0].bgstage}}" ng-if="tabvalue.element_values[0].DT.length > 0 && tabvalue.element_values[0].Stage!='0'" data-index="{{0}}"    is-open="status.open">
                                 <uib-accordion-heading >
                                     <div ng-click="getDthlinkRes2(tabvalue.element_values[0].Stage,dthlink);">
@@ -124,7 +140,7 @@
                                     </p>
                                 </div>
                             </div>
-                        </uib-accordion>
+                        </uib-accordion> -->
                         
 
                         
@@ -140,7 +156,7 @@
                     </div>
                     <div class="tab-con" ng-if="row==='Diagram'">
                         <div class="">
-                            <div class="process_data">
+                            <!-- <div class="process_data">
                                 <p class="Scriptsdata">
                                     Script : <span class="scripts"></span>
                                 </p>
@@ -157,7 +173,7 @@
                                     Text : 
                                     <span   popover-placement="left" uib-popover="" popover-title="" popover-class="dthpopover" class="">View More</span>
                                 </p>
-                            </div>
+                            </div> -->
                         </div>
                         <div id="diagram-example">
 

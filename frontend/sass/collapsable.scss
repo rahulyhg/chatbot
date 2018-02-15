@@ -74,11 +74,72 @@ p.node-title {
     border-top:1px solid #003874 !important;
 }
 .orgchart .node {
-    width:auto !important;
+    // width:auto !important;
 }
 .orgchart {
     background-image: none !important;
 }
 .orgchart .node .title i {
     display: none !important;
+}
+.orgchart .second-menu-icon {
+    transition: opacity .5s;
+    opacity: 0;
+    right: -5px;
+    top: -5px;
+    z-index: 2;
+    color: rgba(68, 157, 68, 0.5);
+    font-size: 18px;
+    position: absolute;
+}
+.orgchart .node .second-menu {
+    display: none;
+    position: absolute;
+    top: -205px;
+    // right: -70px;
+    left:0px;
+    // border-radius: 35px;
+    box-shadow: 0 0 10px 1px #999;
+    background-color: #fff;
+    z-index: 1;
+    height: 200px;
+    overflow-y: auto;
+    width: 200px;
+}
+.orgchart .node:hover .second-menu-icon {
+    opacity: 1;
+}
+.orgchart .second-menu-icon:hover {
+    color: #449d44;
+}
+#diagram-example {
+    position: relative;
+}
+.orgchart.l2r .node .second-menu-icon {
+    transform: rotate(-90deg) translate(0px, 0px) rotateY(180deg);
+}
+.orgchart.l2r .node .second-menu-icon {
+    right: 35px;
+    top: 245px;
+}
+.orgchart.l2r .node, .orgchart.r2l .node {
+    min-height: 260px;
+}
+.orgchart.l2r .node .title {
+    min-width: 250px;
+    -webkit-transform: rotate(-90deg) translate(-105px, -105px) rotateY(180deg) !important;
+    transform: rotate(-90deg) translate(-105px, -105px) rotateY(180deg) !important;
+    -webkit-transform-origin: bottom center;
+}
+.orgchart.l2r .node .content {
+    min-width: 250px;
+    -webkit-transform: rotate(-90deg) translate(-105px, -105px) rotateY(180deg) !important;
+    transform: rotate(-90deg) translate(-105px, -105px) rotateY(180deg) !important;
+}
+.orgchart.l2r .node .second-menu {
+    transform: rotate(-90deg) translate(-10px, -205px) rotateY(180deg) !important;
+    -webkit-transform: rotate(-90deg) translate(-10px, -205px) rotateY(180deg) !important;
+    top: 45px !important;
+    text-align: left;
+    padding: 3px;
 }

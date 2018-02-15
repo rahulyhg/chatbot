@@ -46,7 +46,13 @@ li.initial {
      background: #f3f6f8 !important;
     color: #44474a !important;
     margin-top: 10px;
-
+}
+div#modal-body table td, div#modal-body table th {
+    border: 1px solid #696666;
+    padding: 2px 6px;
+}
+div#modal-body table th {
+    text-align: center;
 }
 .content {
     min-height: 0px !important;

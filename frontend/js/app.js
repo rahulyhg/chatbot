@@ -164,6 +164,28 @@ myApp.run(['$http','$cookies','beforeUnload','$document','$rootScope','Idle','bo
         e.preventDefault();
         $(this).tab('show');
     });
+    $(document).on('click','.uibcollapseheader',function(){
+        console.log("close");
+        //$(this).parent(".uibcollapsemain").find('.uibcollapsecontent.in.collapse').collapse('hide');
+        if($(this).parent(".uibcollapsemain").find('.uibcollapsecontent').is(':visible'))
+            $(this).parent(".uibcollapsemain").find('.uibcollapsecontent').hide();
+        else {
+            $(".uibcollapsecontent").hide();
+            $(this).parent(".uibcollapsemain").find('.uibcollapsecontent').show();
+        }
+        // if($(this).parent(".uibcollapsemain").find('.uibcollapsecontent').hasClass('in'))
+        // {   
+        //     console.log("has");
+        //     $(this).parent(".uibcollapsemain").find('.uibcollapsecontent').hide();
+        //     $('.uibcollapsecontent').removeClass('in');    
+        // }
+        // else {
+        //     console.log("doesnthas");
+        //     $(this).parent(".uibcollapsemain").find('.uibcollapsecontent').addClass('in');
+        //     $(this).parent(".uibcollapsemain").find('.uibcollapsecontent').show();
+        // }
+        
+    });
     $(document).on('click', '.section_last', function(){ 
     //$(".section_last").click(function(){
         var nodevalue=$(this).attr("data-value");
