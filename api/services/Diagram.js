@@ -13,9 +13,9 @@ schema.plugin(deepPopulate, {
 schema.plugin(uniqueValidator);
 schema.plugin(timestamps);
 
-module.exports = mongoose.model('Diagram', schema,'diagram');
+module.exports = mongoose.model('Diagram', schema,'process_tree');
 
-var exports = _.cloneDeep(require("sails-wohlig-service")(schema, "process_tree", "diagram"));
+var exports = _.cloneDeep(require("sails-wohlig-service")(schema, "diagram", "diagram"));
 //new RegExp(searchstring)
 //{ $regex: searchstring, $options: 'i' }
 var model = {
