@@ -2585,11 +2585,13 @@ myApp.controller('HomeCtrl', function ($scope,$rootScope, TemplateService, Navig
 					},4000);
                 });
                 formData1 = {Journey_Name:data.tiledlist[0].Journey_Name};
-				apiService.getdiagram(formData1).then(function (guidedata){
-					if(guidedata.data.data.length > 0)
+				apiService.getdiagram(formData1).then(function (d_data){
+					if(d_data.data.data)
 					{
-
-
+                        Journey_Data = d_data.data.data.Journey_Data;
+                        console.log(Journey_Data);
+                        Journey_Data = JSON.parse(Journey_Data);
+                        console.log(Journey_Data);
                     }
                 });
                 if(data.tiledlist[0].Journey_Name == 'DD_ISSUANCE')
