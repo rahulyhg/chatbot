@@ -33,8 +33,8 @@ var model = {
                     }
                     else {
                         found2 = found;
-                        found2.Journey_Data = JSON.parse(found.Journey_Data);
-                        callback(null, found2);
+                        var Journey_Data = JSON.parse(found.Journey_Data);
+                        callback(null, Journey_Data);
                     }
                     
                 } else {
