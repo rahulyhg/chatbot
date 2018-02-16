@@ -2589,8 +2589,8 @@ myApp.controller('HomeCtrl', function ($scope,$rootScope, TemplateService, Navig
 					if(d_data.data.data)
 					{
                         Journey_Data = d_data.data.data.Journey_Data;
-                        console.log(Journey_Data);
-                        Journey_Data = JSON.parse(Journey_Data);
+                        //console.log(Journey_Data);
+                        //Journey_Data = JSON.parse(Journey_Data);
                         console.log(Journey_Data);
                     }
                 });
