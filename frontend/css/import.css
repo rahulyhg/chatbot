@@ -12690,6 +12690,11 @@ p.node-title {
   text-align: left;
   padding: 3px; }
 
+.orgchart.l2r .node .second-menu {
+  width: 250px;
+  top: 275px !important;
+  left: 183px !important; }
+
 .orgchart {
   box-sizing: border-box;
   display: inline-block;

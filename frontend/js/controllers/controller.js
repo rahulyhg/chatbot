@@ -2588,466 +2588,287 @@ myApp.controller('HomeCtrl', function ($scope,$rootScope, TemplateService, Navig
 				apiService.getdiagram(formData1).then(function (d_data){
 					if(d_data.data.data)
 					{
-                        Journey_Data = d_data.data.data.Journey_Data;
+                        Journey_Data = d_data.data.data;
+                        var str = JSON.stringify(Journey_Data);
+                        str1 = str.replace(/Name/g, 'name');
+                        Journey_Data = JSON.parse(str1);
+                        ele.push('Diagram');
+                        
+                        // var chart_config = {
+                        //     'id': 'rootNode', // It's a optional property which will be used as id attribute of node
+                        //     // // and data-parent attribute, which contains the id of the parent node
+                            
+                        //     'className': 'top-level', // It's a optional property which will be used as className attribute of node.
+                        //     // 'name': 'Lao Lao',
+                        //     // 'nodeContentPro': 'general manager',
+                        //     // 'relationship': relationshipValue, 
+                        //     // Note: when you activate ondemand loading nodes feature,
+                        //     // you should use json datsource (local or remote) and set this property.
+                        //     // This property implies that whether this node has parent node, siblings nodes or children nodes.
+                        //     // relationshipValue is a string composed of three "0/1" identifier.
+                        //     // First character stands for wether current node has parent node;
+                        //     // Scond character stands for wether current node has siblings nodes;
+                        //     // Third character stands for wether current node has children node.
+                        //     name: "Demand Draft Issuance",
+                        //     title:"",
+                        //     // nodeContent:"atul",
+                            
+                        //     "data-parent":0,
+                        //     "data-checks":"",
+                        //     "data-information":"DD can be printed only by the employee who holds the DD stock as per Finacle",
+                        //     "data-system":"",
+                        //     "data-script":"Sir/Madam , May I please request you to fill up the DD Request Form",
+                        //     'parentNodeSymbol':'',
+                        //     "data-text":"",
+                        //     'collapsed': true,
+                        //     children: [
+                        //         {
+                        //             name:"Demand Draft  Issuance - Customer / Bearer",
+                        //             'collapsed': true,
+                        //             title:"",
+                                    
+                        //             "data-system":"1.Use <HXFER> to credit KMBL DD Payable Nos. - 06320121001001. 2. Use <HDDMI> if beneficiary name exceeds 70 characters.3.Print using <HDDPRNT> option after verification.",
+                        //             "data-checks":"",
+                        //             "data-information":"",
+                        //             "data-script":"",
+                        //             "data-text":"",
+                        //             children: [
+                        //                 {
+                        //                     name:"Customer Documentation",
+                        //                     'collapsed': true,
+                        //                     "data-text":"## Customer Visits in Person:1. DD Request Form   <DD Request Form> <br>2. KMBL Cheque favoring 'Yourself for DD -  <beneficiary name>'<br>3. Cheque mandatory for amount >= Rs. 10,000",
+                        //                     "data-checks":"",
+                        //                     "data-information":"",
+                        //                     "data-script":"",
+                        //                     "data-system":"",
+                        //                     title:"",
+                                            
+                        //                 },
+                        //                 {
+                        //                     name:"Reporting Requirement: 1 crore and above",
+                        //                     'collapsed': true,
+                        //                     title:"",
+                        //                     "data-checks":"",
+                        //                     "data-information":"",
+                        //                     "data-script":"",
+                        //                     "data-system":"",
+                        //                     "data-text":"",
+                                            
+                        //                 },
+                        //                 {
+                        //                     name:"Exception Handling for DD value  > 4,99,999",
+                        //                     'collapsed': true,
+                        //                     title:"",  
+                        //                     "data-checks":"",
+                        //                     "data-information":"",
+                        //                     "data-script":"",
+                        //                     "data-system":"",
+                        //                     "data-text":"",       
+                                                                            
+                        //                 },
+                        //                 {
+                        //                     name: "Branch Process",
+                        //                     'collapsed': true,
+                        //                     title:"",
+                        //                     "data-checks":"",
+                        //                     "data-information":"",
+                        //                     "data-script":"",
+                        //                     "data-system":"",
+                        //                     "data-text":"",
+                                            
+                        //                 },
+                        //                 {
+                        //                     name:"Handover of DD to Customer/Bearer",
+                        //                     'collapsed': true,
+                        //                     title:"",
+                        //                     "data-checks":"",
+                        //                     "data-information":"",
+                        //                     "data-script":"",
+                        //                     "data-system":"",
+                        //                     "data-text":"",
+                        //                 },
+                        //                 {
+                        //                     name:"Login to Interact",
+                        //                     'collapsed': true,
+                        //                     title:"",  
+                        //                     "data-checks":"",
+                        //                     "data-information":"",
+                        //                     "data-script":"",
+                        //                     "data-system":"",
+                        //                     "data-text":"",  
+                        //                 },
+                        //             ]
+                        //         },
+                        //         {
+                        //             name: "Demand Draft Issuance - Non Customer",
+                        //             'collapsed': true,
+                        //             title:"",
+                        //             "data-checks":"",
+                        //             "data-information":"",
+                        //             "data-script":"",
+                        //             "data-system":"",
+                        //             "data-text":"",
+                        //         },
+                        //         {
+                        //             name: "Demand Draft Issuance - Bulk Demand Draft",
+                        //             'collapsed': true,
+                        //             title:"",
+                        //             "data-checks":"",
+                        //             "data-information":"",
+                        //             "data-script":"",
+                        //             "data-system":"",
+                        //             "data-text":"",
+                        //         },
+                        //         {
+                        //             name: "Demand Draft Issuance - Corporate",
+                        //             'collapsed': true,
+                        //             title:"",
+                        //             "data-checks":"",
+                        //             "data-information":"",
+                        //             "data-script":"",
+                        //             "data-system":"",
+                        //             "data-text":"",
+                        //         },
+                        //         {
+                        //             name:"Demand Draft Issuance - Disbursal by BBG",
+                        //             'collapsed': true,
+                        //             title:"", 
+                        //             "data-checks":"",
+                        //             "data-information":"",
+                        //             "data-script":"",
+                        //             "data-system":"",
+                        //             "data-text":"",   
+                        //         },
+                        //         {
+                        //             name: "Demand Draft Issuance - Exceptions",
+                        //             'collapsed': true,
+                        //             title:"",
+                        //             "data-checks":"",
+                        //             "data-information":"",
+                        //             "data-script":"",
+                        //             "data-system":"",
+                        //             "data-text":"",
+                        //         },
+                        //         {
+                        //             name:"Demand Draft Issuance - Exceptions",
+                        //             'collapsed': true,
+                        //             title:"",
+                        //             "data-checks":"",
+                        //             "data-information":"",
+                        //             "data-script":"",
+                        //             "data-system":"",
+                        //             "data-text":"",
+                        //         }
+                        //     ]
+                            
+                        // };
+                        
+                        var chart_config = Journey_Data;
+                        $scope.chart_config = chart_config;
+                        ele_val.push(chart_config);
+                        $timeout(function(){
+                            
+                            //tree = new Treant( chart_config );
+                            // $timeout(function(){
+                            //     $(".node.nodeExample1").css('opacity','0');
+                            //     $(".node.nodeExample1[data-parent=0]").css('opacity','1');
+                            // },1000);
+                            $(document).on('click', '.node.nodeExample1', function(){ 
+                                // $(".process_data").hide();
+                                
+                                // var checks = $(this).attr("data-checks");
+                                // var information = $(this).attr("data-information");
+                                // var system = $(this).attr("data-system");
+                                // var script = $(this).attr("data-script");
+                                // var text = $(this).attr("data-text");
+                                // $(".checks").text("");
+                                // $(".informs").text("");
+                                // $(".systems").text("");
+                                // $(".scripts").text("");
+                                // $(".checks").text("");
+                                // $(".texts").text("");
+                                // $(".informs").text(information);
+                                // $(".systems").text(system);
+                                // $(".scripts").text(script);
+                                // $(".texts").text(text);
+                                // $(".process_data").show();
+                                //hideSiblings($(this), direction);
+                                
+                            });
+                            $(document).on('click', '#rootNode', function(e){ 
+                                // $(this).find("div.title i").remove();
+                                // var title = $(this).find("div.title").text();
+                                // title=title.replace('"', "");
+                                // console.log(title);
+                                // obj = {};
+                                // var checks = $scope.chart_config["data-checks"];
+                                // var information = $scope.chart_config["data-information"];
+                                // var system = $scope.chart_config["data-system"];
+                                // var script = $scope.chart_config["data-script"];
+                                // var text = $scope.chart_config["data-text"];
+                                // $(".checks").text("");
+                                // $(".informs").text("");
+                                // $(".systems").text("");
+                                // $(".scripts").text("");
+                                // $(".checks").text("");
+                                // $(".texts").text("");
+                                // $(".informs").text(information);
+                                // $(".systems").text(system);
+                                // $(".scripts").text(script);
+                                // $(".texts").text(text);
+                                // $(".process_data").show();
+                                
+                            });
+                            $(document).on('click', '.nodes .node', function(e){ 
+                                $(this).find("div.title i").remove();
+                                $(this).find("i.edge.horizontalEdge.rightEdge.fa").click();
+                                $(this).find("i.edge.horizontalEdge.leftEdge.fa").click();
+                                var title = $(this).find("div.title").text();
+                                title=title.replace('"', "");
+                                
+                                var $node = $('#selected-node').data('node');
+                                console.log($node);
+                                //e.on('click', function(event) {
+                                    
+                                        //{ 'siblings': nodeVals.map(function(item) { return { 'name': item, 'relationship': '110' }; })
+                                    
+                                //});
+                                obj = {};
+                                obj=_.find($scope.chart_config.children, function(o) { return o.name == title; });
+                                obj = JSON.parse(decodeURIComponent($(this).attr("data-attr")));
+                                console.log(obj);
+                                var ooo=$("#diagram-example");
+                                ooo.orgchart('hideSiblings',$node,'left');
+                                ooo.orgchart('hideParent',$node);
+                                ooo.orgchart('hideSiblings',obj,'left');
+                                ooo.orgchart('hideParent',obj);
+                                // obj2 = {};
+                                // obj2 = JSON.parse(decodeURIComponent($("#selected-node").attr("data-node")));
+                                // ooo.orgchart('hideSiblings',obj2,'left');
+                                // ooo.orgchart('hideParent',obj2);
+                                // var checks = obj["data-checks"];
+                                // var information = obj["data-information"];
+                                // var system = obj["data-system"];
+                                // var script = obj["data-script"];
+                                // var text = obj["data-text"];
+                                // $(".checks").text("");
+                                // $(".informs").text("");
+                                // $(".systems").text("");
+                                // $(".scripts").text("");
+                                // $(".checks").text("");
+                                // $(".texts").text("");
+                                // $(".informs").text(information);
+                                // $(".systems").text(system);
+                                // $(".scripts").text(script);
+                                // $(".texts").text(text);
+                                // $(".process_data").show();
+                                
+                            });
+                            
+                        },4000);
                         //console.log(Journey_Data);
-                        //Journey_Data = JSON.parse(Journey_Data);
-                        console.log(Journey_Data);
                     }
                 });
-                if(data.tiledlist[0].Journey_Name == 'DD_ISSUANCE')
-                {
-                    ele.push('Diagram');
-					
-                    // var chart_config = {
-                    //     chart: {
-                    //         container: "#diagram-example",
-
-                    //         animateOnInit: true,
-                    //         connectors: {
-                    //             type: 'step'
-                    //         },
-                    //         node: {
-                    //             collapsable: true,
-                    //             HTMLclass: 'nodeExample1',
-                    //         },
-                    //         animation: {
-                    //             nodeAnimation: "easeOutBounce",
-                    //             nodeSpeed: 700,
-                    //             connectorsAnimation: "bounce",
-                    //             connectorsSpeed: 700
-                    //         }
-                    //     },
-                    //     nodeStructure: {
-                    //         text:{
-                    //             name: "Demand Draft Issuance",
-                    //             title: "",
-                    //             "data-parent":0,
-                    //             "data-checks":"",
-                    //             "data-information":"DD can be printed only by the employee who holds the DD stock as per Finacle",
-                    //             "data-system":"",
-                    //             "data-script":"Sir/Madam , May I please request you to fill up the DD Request Form"
-                    //             // contact: {val: "we@aregreat.com", href: "mailto:we@aregreat.com"}
-                    //         },
-                    //         // pseudo:true,
-                    //         collapsed: true,
-                            
-                    //         children: [
-                    //             {
-                    //                 text: {
-                    //                     name:"Demand Draft  Issuance - Customer / Bearer",
-                    //                     title:""
-                    //                 },
-                    //                 collapsed: false,
-                    //                 children: [
-                    //                     {
-                    //                         text: {
-                    //                             name:"Customer Documentation",
-                    //                             title:"",
-                    //                             "data-text":"## Customer Visits in Person:1. DD Request Form   <DD Request Form> <br>2. KMBL Cheque favoring 'Yourself for DD -  <beneficiary name>'<br>3. Cheque mandatory for amount >= Rs. 10,000"
-                    //                         },
-                    //                         //collapsed: true,
-                    //                     },
-                    //                     {
-                    //                         text: {
-                    //                             name:"Reporting Requirement: 1 crore and above",
-                    //                             title:""
-                    //                         },
-                    //                         //collapsed: true,
-                    //                     },
-                    //                     {
-                    //                         text: {
-                    //                             name:"Exception Handling for DD value  > 4,99,999",
-                    //                             title:""
-                    //                         },
-                    //                         //collapsed: true,
-                    //                     },
-                    //                     {
-                    //                         text: {
-                    //                             name:"Branch Process",
-                    //                             title:""
-                    //                         },
-                    //                         //collapsed: true,
-                    //                     },
-                    //                     {
-                    //                         text: {
-                    //                             name:"Handover of DD to Customer/Bearer",
-                    //                             title:""
-                    //                         },
-                    //                         //collapsed: true,
-                    //                     },
-                    //                     {
-                    //                         text: {
-                    //                             name:"Login to Interact",
-                    //                             title:""
-                    //                         },
-                    //                         //collapsed: true,
-                    //                     },
-                    //                 ]
-                    //             },
-                    //             {
-                    //                 text:{
-                    //                     name: "Demand Draft Issuance - Non Customer",
-                    //                     title: "",
-                    //                 },
-                    //                 //collapsed: true,
-                    //             },
-                    //             {
-                    //                 text:{
-                    //                     name: "Demand Draft Issuance - Bulk Demand Draft",
-                    //                     title: "",
-                    //                 },
-                    //                 //collapsed: true,
-                    //             },
-                    //             {
-                    //                 text:{
-                    //                     name: "Demand Draft Issuance - Corporate",
-                    //                     title: "",
-                    //                 },
-                    //                 //collapsed: true,
-                    //             },
-                    //             {
-                    //                 text:{
-                    //                     name: "Demand Draft Issuance - Disbursal by BBG",
-                    //                     title: "",
-                    //                 },
-                    //                 //collapsed: true,
-                    //             },
-                    //             {
-                    //                 text:{
-                    //                     name: "Demand Draft Issuance - Exceptions",
-                    //                     title: "",
-                    //                 },
-                    //                 //collapsed: true,
-                    //             },
-                    //             {
-                    //                 text:{
-                    //                     name: "Demand Draft Issuance - Exceptions",
-                    //                     title: "",
-                    //                 },
-                    //                 //collapsed: true,
-                    //             }
-                    //         ]
-                    //     }
-                    // };
-                    var chart_config = {
-                        'id': 'rootNode', // It's a optional property which will be used as id attribute of node
-                        // // and data-parent attribute, which contains the id of the parent node
-                        
-                        'className': 'top-level', // It's a optional property which will be used as className attribute of node.
-                        // 'name': 'Lao Lao',
-                        // 'nodeContentPro': 'general manager',
-                        // 'relationship': relationshipValue, 
-                        // Note: when you activate ondemand loading nodes feature,
-                        // you should use json datsource (local or remote) and set this property.
-                        // This property implies that whether this node has parent node, siblings nodes or children nodes.
-                        // relationshipValue is a string composed of three "0/1" identifier.
-                        // First character stands for wether current node has parent node;
-                        // Scond character stands for wether current node has siblings nodes;
-                        // Third character stands for wether current node has children node.
-                        name: "Demand Draft Issuance",
-                        title:"",
-                        // nodeContent:"atul",
-                        
-                        "data-parent":0,
-                        "data-checks":"",
-                        "data-information":"DD can be printed only by the employee who holds the DD stock as per Finacle",
-                        "data-system":"",
-                        "data-script":"Sir/Madam , May I please request you to fill up the DD Request Form",
-                        'parentNodeSymbol':'',
-                        "data-text":"",
-                        'collapsed': true,
-                        children: [
-                            {
-                                name:"Demand Draft  Issuance - Customer / Bearer",
-                                'collapsed': true,
-                                title:"",
-                                
-                                "data-system":"1.Use <HXFER> to credit KMBL DD Payable Nos. - 06320121001001. 2. Use <HDDMI> if beneficiary name exceeds 70 characters.3.Print using <HDDPRNT> option after verification.",
-                                "data-checks":"",
-                                "data-information":"",
-                                "data-script":"",
-                                "data-text":"",
-                                children: [
-                                    {
-                                        name:"Customer Documentation",
-                                        'collapsed': true,
-                                        "data-text":"## Customer Visits in Person:1. DD Request Form   <DD Request Form> <br>2. KMBL Cheque favoring 'Yourself for DD -  <beneficiary name>'<br>3. Cheque mandatory for amount >= Rs. 10,000",
-                                        "data-checks":"",
-                                        "data-information":"",
-                                        "data-script":"",
-                                        "data-system":"",
-                                        title:"",
-                                        
-                                    },
-                                    {
-                                        name:"Reporting Requirement: 1 crore and above",
-                                        'collapsed': true,
-                                        title:"",
-                                        "data-checks":"",
-                                        "data-information":"",
-                                        "data-script":"",
-                                        "data-system":"",
-                                        "data-text":"",
-                                        
-                                    },
-                                    {
-                                        name:"Exception Handling for DD value  > 4,99,999",
-                                        'collapsed': true,
-                                        title:"",  
-                                        "data-checks":"",
-                                        "data-information":"",
-                                        "data-script":"",
-                                        "data-system":"",
-                                        "data-text":"",       
-                                                                           
-                                    },
-                                    {
-                                        name: "Branch Process",
-                                        'collapsed': true,
-                                        title:"",
-                                        "data-checks":"",
-                                        "data-information":"",
-                                        "data-script":"",
-                                        "data-system":"",
-                                        "data-text":"",
-                                        
-                                    },
-                                    {
-                                        name:"Handover of DD to Customer/Bearer",
-                                        'collapsed': true,
-                                        title:"",
-                                        "data-checks":"",
-                                        "data-information":"",
-                                        "data-script":"",
-                                        "data-system":"",
-                                        "data-text":"",
-                                    },
-                                    {
-                                        name:"Login to Interact",
-                                        'collapsed': true,
-                                        title:"",  
-                                        "data-checks":"",
-                                        "data-information":"",
-                                        "data-script":"",
-                                        "data-system":"",
-                                        "data-text":"",  
-                                    },
-                                ]
-                            },
-                            {
-                                name: "Demand Draft Issuance - Non Customer",
-                                'collapsed': true,
-                                title:"",
-                                "data-checks":"",
-                                "data-information":"",
-                                "data-script":"",
-                                "data-system":"",
-                                "data-text":"",
-                            },
-                            {
-                                name: "Demand Draft Issuance - Bulk Demand Draft",
-                                'collapsed': true,
-                                title:"",
-                                "data-checks":"",
-                                "data-information":"",
-                                "data-script":"",
-                                "data-system":"",
-                                "data-text":"",
-                            },
-                            {
-                                name: "Demand Draft Issuance - Corporate",
-                                'collapsed': true,
-                                title:"",
-                                "data-checks":"",
-                                "data-information":"",
-                                "data-script":"",
-                                "data-system":"",
-                                "data-text":"",
-                            },
-                            {
-                                name:"Demand Draft Issuance - Disbursal by BBG",
-                                'collapsed': true,
-                                title:"", 
-                                "data-checks":"",
-                                "data-information":"",
-                                "data-script":"",
-                                "data-system":"",
-                                "data-text":"",   
-                            },
-                            {
-                                name: "Demand Draft Issuance - Exceptions",
-                                'collapsed': true,
-                                title:"",
-                                "data-checks":"",
-                                "data-information":"",
-                                "data-script":"",
-                                "data-system":"",
-                                "data-text":"",
-                            },
-                            {
-                                name:"Demand Draft Issuance - Exceptions",
-                                'collapsed': true,
-                                title:"",
-                                "data-checks":"",
-                                "data-information":"",
-                                "data-script":"",
-                                "data-system":"",
-                                "data-text":"",
-                            }
-                        ]
-                        
-                    };
-                    ele_val.push(chart_config);
-                /* Array approach
-                    var config = {
-                        container: "#collapsable-example",
-
-                        animateOnInit: true,
-                        
-                        node: {
-                            collapsable: true
-                        },
-                        animation: {
-                            nodeAnimation: "easeOutBounce",
-                            nodeSpeed: 700,
-                            connectorsAnimation: "bounce",
-                            connectorsSpeed: 700
-                        }
-                    },
-                    malory = {
-                        image: "img/malory.png"
-                    },
-
-                    lana = {
-                        parent: malory,
-                        image: "img/lana.png"
-                    }
-
-                    figgs = {
-                        parent: lana,
-                        image: "img/figgs.png"
-                    }
-
-                    sterling = {
-                        parent: malory,
-                        childrenDropLevel: 1,
-                        image: "img/sterling.png"
-                    },
-
-                    woodhouse = {
-                        parent: sterling,
-                        image: "img/woodhouse.png"
-                    },
-
-                    pseudo = {
-                        parent: malory,
-                        pseudo: true
-                    },
-
-                    cheryl = {
-                        parent: pseudo,
-                        image: "img/cheryl.png"
-                    },
-
-                    pam = {
-                        parent: pseudo,
-                        image: "img/pam.png"
-                    },
-
-                    chart_config = [config, malory, lana, figgs, sterling, woodhouse, pseudo, pam, cheryl];
-
-                */
-                $scope.chart_config = chart_config;
-                    $timeout(function(){
-                        
-                        //tree = new Treant( chart_config );
-                        // $timeout(function(){
-                        //     $(".node.nodeExample1").css('opacity','0');
-                        //     $(".node.nodeExample1[data-parent=0]").css('opacity','1');
-                        // },1000);
-                        $(document).on('click', '.node.nodeExample1', function(){ 
-                            $(".process_data").hide();
-                            
-                            var checks = $(this).attr("data-checks");
-                            var information = $(this).attr("data-information");
-                            var system = $(this).attr("data-system");
-                            var script = $(this).attr("data-script");
-                            var text = $(this).attr("data-text");
-                            $(".checks").text("");
-                            $(".informs").text("");
-                            $(".systems").text("");
-                            $(".scripts").text("");
-                            $(".checks").text("");
-                            $(".texts").text("");
-                            $(".informs").text(information);
-                            $(".systems").text(system);
-                            $(".scripts").text(script);
-                            $(".texts").text(text);
-                            $(".process_data").show();
-                            //hideSiblings($(this), direction);
-                            
-                        });
-                        $(document).on('click', '#rootNode', function(e){ 
-                            $(this).find("div.title i").remove();
-                            var title = $(this).find("div.title").text();
-                            title=title.replace('"', "");
-                            console.log(title);
-                            obj = {};
-                            var checks = $scope.chart_config["data-checks"];
-                            var information = $scope.chart_config["data-information"];
-                            var system = $scope.chart_config["data-system"];
-                            var script = $scope.chart_config["data-script"];
-                            var text = $scope.chart_config["data-text"];
-                            $(".checks").text("");
-                            $(".informs").text("");
-                            $(".systems").text("");
-                            $(".scripts").text("");
-                            $(".checks").text("");
-                            $(".texts").text("");
-                            $(".informs").text(information);
-                            $(".systems").text(system);
-                            $(".scripts").text(script);
-                            $(".texts").text(text);
-                            $(".process_data").show();
-                            
-                        });
-                        $(document).on('click', '.nodes .node', function(e){ 
-                            $(this).find("div.title i").remove();
-                            var title = $(this).find("div.title").text();
-                            title=title.replace('"', "");
-                            
-                            var $node = $('#selected-node').data('node');
-                            console.log($node);
-                            //e.on('click', function(event) {
-                                $("#diagram-example").orgchart('hideSiblings',$node,'left');
-                                    //{ 'siblings': nodeVals.map(function(item) { return { 'name': item, 'relationship': '110' }; })
-                                
-                            //});
-                            obj = {};
-                            obj=_.find($scope.chart_config.children, function(o) { return o.name == title; });
-                            obj = JSON.parse(decodeURIComponent($(this).attr("data-attr")));
-                            console.log(obj);
-                            var checks = obj["data-checks"];
-                            var information = obj["data-information"];
-                            var system = obj["data-system"];
-                            var script = obj["data-script"];
-                            var text = obj["data-text"];
-                            $(".checks").text("");
-                            $(".informs").text("");
-                            $(".systems").text("");
-                            $(".scripts").text("");
-                            $(".checks").text("");
-                            $(".texts").text("");
-                            $(".informs").text(information);
-                            $(".systems").text(system);
-                            $(".scripts").text(script);
-                            $(".texts").text(text);
-                            $(".process_data").show();
-                            
-                        });
-                        
-                    },4000);
-                }
                 
             }
             ele.push('Old Process');
@@ -3056,7 +2877,19 @@ myApp.controller('HomeCtrl', function ($scope,$rootScope, TemplateService, Navig
                 $("div.scriptData").show();
             });
             //$('a.popupdata').click(function(){
-            
+            $scope.IsJsonString=function(str) {
+                try {
+                    str = str.replace(/'/g,'"');
+                    str = str.replace('Information Icon','Information_Icon');
+                    var o=JSON.parse(str);
+                    if (o && typeof o === "object") 
+                        return o;
+                    
+                } catch (e) {
+                    return false;
+                }
+                return false;
+            };
             $(document).on('click', 'li.Diagram.uib-tab', function(){
                 $("div.scriptData").hide();
                 $timeout(function(){
@@ -3069,13 +2902,15 @@ myApp.controller('HomeCtrl', function ($scope,$rootScope, TemplateService, Navig
                         'nodeContent': 'title',
                         //verticalDepth:0
                         // 'parentNodeSymbol':'',
-                        // toggleSiblingsResp:true,
+                        'toggleSiblingsResp': true,
                         'direction': 'l2r',
                         'createNode': function(node, data) {
-                            // console.log(node);
+                            //console.log(data);
+                            
                             node.on('click', function(event) {
                                 if (!$(event.target).is('.edge')) {
                                     $('#selected-node').val(data.name).data('node', node);
+                                    $('#selected-node').attr('data-node',node);
                                 }
                             });
                             $(".node").find("div.title i").remove();
@@ -3088,22 +2923,63 @@ myApp.controller('HomeCtrl', function ($scope,$rootScope, TemplateService, Navig
                                 $(node).attr('data-attr',encodeURIComponent(JSON.stringify(data)));
                             }
                             //console.log(data);
-                             var secondMenuIcon = $('<i>', {
-                            'class': 'fa fa-info-circle second-menu-icon',
-                            click: function() {
-                                $(this).siblings('.second-menu').toggle();
-                            }
+                            var secondMenuIcon = $('<i>', {
+                                'class': 'fa fa-info-circle second-menu-icon',
+                                click: function() {
+                                    $(this).siblings('.second-menu').toggle();
+                                }
                             });
-                            var secondMenu = '<div class="second-menu"><p class="systemdata"><span class="charttitle">System:</span>'+data["data-system"]+'</p>';
-                            secondMenu+='<p class="checksdata"><span class="charttitle">Checks:</span>'+data["data-checks"]+'</p>';
-                            secondMenu+='<p class="informaiondata"><span class="charttitle">Information:</span>'+data["data-information"]+'</p>';
-                            secondMenu+='<p class="scriptdata"><span class="charttitle">Script:</span>'+data["data-script"]+'</p>';
+                            otheroptions = [];
+                            // if($scope.IsJsonString(data.optionalone))
+                            //     otheroptions.push(JSON.parse(data.optionalone));
+                            // if($scope.IsJsonString(data.optionaltwo))
+                            //     otheroptions.push(JSON.parse(data.optionaltwo));
+                            // if($scope.IsJsonString(data.optionalthree))
+                            //     otheroptions.push(JSON.parse(data.optionalthree));
+                            // if($scope.IsJsonString(data.optionalfour))
+                            //     otheroptions.push(JSON.parse(data.optionalfour));
+                            // if($scope.IsJsonString(data.optionalfive))
+                            //     otheroptions.push(JSON.parse(data.optionalfive));
+                            // if($scope.IsJsonString(data.optionalsix))
+                            //     otheroptions.push(JSON.parse(data.optionalsix));
+                            // if($scope.IsJsonString(data.optionalseven))
+                            //     otheroptions.push(JSON.parse(data.optionalseven));
+                            // if($scope.IsJsonString(data.optionaleight))
+                            //     otheroptions.push(JSON.parse(data.optionaleight));    
+                            otheroptions.push($scope.IsJsonString(data.optionalone));
+                            otheroptions.push($scope.IsJsonString(data.optionaltwo));
+                            otheroptions.push($scope.IsJsonString(data.optionalthree));
+                            otheroptions.push($scope.IsJsonString(data.optionalfour));
+                            otheroptions.push($scope.IsJsonString(data.optionalfive));
+                            otheroptions.push($scope.IsJsonString(data.optionalsix));
+                            otheroptions.push($scope.IsJsonString(data.optionalseven));
+                            otheroptions.push($scope.IsJsonString(data.optionaleight));
+                            
+                            var sys = "";
+                            var checks="";
+                            var info = "";
+                            var script = "";
+                            angular.forEach(otheroptions, function(ov, ok) {
+                                if( ov.hasOwnProperty("script")) 
+                                    script = ov.script;
+                                if( ov.hasOwnProperty("Information_Icon")) 
+                                    info = ov.Information_Icon;
+                                if( ov.hasOwnProperty("checks")) 
+                                    checks = ov.checks;
+                                if( ov.hasOwnProperty("system")) 
+                                    sys = ov.system;    
+                                
+                            });
+                            var secondMenu = '<div class="second-menu"><p class="systemdata"><span class="charttitle">System:</span>'+sys+'</p>';
+                            secondMenu+='<p class="checksdata"><span class="charttitle">Checks:</span>'+checks+'</p>';
+                            secondMenu+='<p class="informaiondata"><span class="charttitle">Information:</span>'+info+'</p>';
+                            secondMenu+='<p class="scriptdata"><span class="charttitle">Script:</span>'+script+'</p>';
                             secondMenu+='</div>';
                             node.append(secondMenuIcon).append(secondMenu);
                         },
                         
                     });
-                    console.log($scope.chart_config);
+                    
                 },1000);
             });
             $rootScope.isCollapsed = true;
