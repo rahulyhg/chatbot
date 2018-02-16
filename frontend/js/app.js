@@ -147,6 +147,7 @@ myApp.run(['$http','$cookies','beforeUnload','$document','$rootScope','Idle','bo
     
     
     $(document).on('click', '.chat-body .changedthbg', function(){ 
+        console.log("dth click");
         var stage = $(this).attr("data-bgstage");
         $(".stage"+stage).css('background-color','#eee');
         $(".stage"+stage).css('color','#1e90ff');
@@ -156,16 +157,18 @@ myApp.run(['$http','$cookies','beforeUnload','$document','$rootScope','Idle','bo
         $(this).find(".lefticon").show();
     });     
     $(document).on('click', '.toggler', function(){ 
+        console.log("toggle click");
         $(this).parent().children('ul.tree').toggle(300);
         $(this).children().find('.triangle').toggleClass('glyphicon-triangle-bottom').toggleClass('glyphicon-triangle-right');
         //return false;
     });
     $(document).on('click', '#myTabs a', function(){ 
+        console.log("tab click");
         e.preventDefault();
         $(this).tab('show');
     });
     $(document).on('click','.uibcollapseheader',function(){
-        console.log("close");
+        console.log("collapse click");
         //$(this).parent(".uibcollapsemain").find('.uibcollapsecontent.in.collapse').collapse('hide');
         if($(this).parent(".uibcollapsemain").find('.uibcollapsecontent').is(':visible'))
             $(this).parent(".uibcollapsemain").find('.uibcollapsecontent').hide();
@@ -213,6 +216,26 @@ myApp.run(['$http','$cookies','beforeUnload','$document','$rootScope','Idle','bo
     //     //$('.mini-submenu').hide();
     // });
     angular.element(document).ready(function () {
+        $(document).on('click','a.popupdata', function(){
+            index = $(this).attr('data-index');
+            //console.log($rootScope.popupdata[index]);
+            console.log('popup click');
+            $rootScope.openpopupModal($rootScope.popupdata[index]);
+        });
+        $(document).on('click', '.dtfaq', function(e){
+        //$(document).unbind("click").on('click', '.dtfaq', function(){
+            
+            tiledlist = [];
+            var stage = $(this).attr("data-stage");
+            var journey = $(this).attr("data-journey");
+            var dthlink = $(this).text();
+            tiledlist[0] ={Journey_Name:journey,Stage:stage} ;
+            //tiledlist[0]['Stage'] = stage;
+            $rootScope.getDthlinkRes(stage,dthlink,tiledlist);
+            
+                //e.preventDefault();
+            
+        });
         // $timeout(function(){
         //     // $('.c-hamburger span').css("transform", "rotate(90deg)");				
         //     // $('.c-hamburger span').css("transition", "transform 1.2s ease");

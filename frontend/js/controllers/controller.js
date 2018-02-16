@@ -2016,24 +2016,7 @@ myApp.controller('HomeCtrl', function ($scope,$rootScope, TemplateService, Navig
             // }).click();
 
             
-            $(document).on('click', '.dtfaq', function(e){
-            //$(document).unbind("click").on('click', '.dtfaq', function(){
-                
-                console.log($rootScope.chatlist);
-                if($scope.faqdtc == 0)
-                {
-                    console.log("clickedddd");
-                    tiledlist = [];
-                    var stage = $(this).attr("data-stage");
-                    var journey = $(this).attr("data-journey");
-                    var dthlink = $(this).text();
-                    tiledlist[0] ={Journey_Name:journey,Stage:stage} ;
-                    //tiledlist[0]['Stage'] = stage;
-                    $rootScope.getDthlinkRes(stage,dthlink,tiledlist);
-                    $scope.faqdtc = $scope.faqdtc+1;
-                    //e.preventDefault();
-                }
-            });
+            
         //});
         angular.element(document).ready(function () {
             //$(document).unbind("click").on('click', 'a.ratecard', function(e){
@@ -2439,29 +2422,36 @@ myApp.controller('HomeCtrl', function ($scope,$rootScope, TemplateService, Navig
             });
         };
         $rootScope.viewdata1 = "";
-        $rootScope.$viewmodalInstance2 = {};
+        $rootScope.viewmodalInstance2 = {};
         $rootScope.openpopupModal = function(d) {
-            //console.log(d);
+            
             $rootScope.viewdata = d;
             $rootScope.sendobj = {viewdata : $rootScope.viewdata};
-            $rootScope.$viewmodalInstance2 = $uibModal.open({
-                scope: $rootScope,
-                animation: true,
-                size: 'lg',
-                templateUrl: 'views/modal/content2.html',
-                resolve: {
-                    items: function () {
-                    return $rootScope.sendobj;
-                    }
-                },
-                controller: 'View2Ctrl'
-            });
+            //if(angular.equals({}, $rootScope.viewmodalInstance2))
+            console.log($(".modal-dialog").is(':visible'));
+            if(!$(".modal-dialog").is(':visible'))
+            {
+                $rootScope.viewmodalInstance2 = $uibModal.open({
+                    scope: $rootScope,
+                    animation: true,
+                    size: 'lg',
+                    templateUrl: 'views/modal/content2.html',
+                    resolve: {
+                        items: function () {
+                        return $rootScope.sendobj;
+                        }
+                    },
+                    controller: 'View2Ctrl'
+                });
+            }
+            //console.log($rootScope.viewmodalInstance2);
         };
         $rootScope.contentCancel = function(){
             $rootScope.$viewmodalInstance1.dismiss('cancel');
         };
         $rootScope.contentCancel2 = function(){
-            $rootScope.$viewmodalInstance2.dismiss('cancel');
+            $rootScope.viewmodalInstance2.dismiss('cancel');
+            $rootScope.viewmodalInstance2 = {};
         };
         $rootScope.popupdata=[];
         $rootScope.DthResponse = function(id,data) {
@@ -2594,7 +2584,14 @@ myApp.controller('HomeCtrl', function ($scope,$rootScope, TemplateService, Navig
 						$("#tab_data .tab-content .tab-pane").first().addClass("active");
 					},4000);
                 });
-                
+                formData1 = {Journey_Name:data.tiledlist[0].Journey_Name};
+				apiService.getdiagram(formData1).then(function (guidedata){
+					if(guidedata.data.data.length > 0)
+					{
+
+
+                    }
+                });
                 if(data.tiledlist[0].Journey_Name == 'DD_ISSUANCE')
                 {
                     ele.push('Diagram');
@@ -2733,7 +2730,7 @@ myApp.controller('HomeCtrl', function ($scope,$rootScope, TemplateService, Navig
                     var chart_config = {
                         'id': 'rootNode', // It's a optional property which will be used as id attribute of node
                         // // and data-parent attribute, which contains the id of the parent node
-                        'collapsed': false, // By default, the children nodes of current node is hidden.
+                        
                         'className': 'top-level', // It's a optional property which will be used as className attribute of node.
                         // 'name': 'Lao Lao',
                         // 'nodeContentPro': 'general manager',
@@ -2756,11 +2753,13 @@ myApp.controller('HomeCtrl', function ($scope,$rootScope, TemplateService, Navig
                         "data-script":"Sir/Madam , May I please request you to fill up the DD Request Form",
                         'parentNodeSymbol':'',
                         "data-text":"",
+                        'collapsed': true,
                         children: [
                             {
                                 name:"Demand Draft  Issuance - Customer / Bearer",
+                                'collapsed': true,
                                 title:"",
-                                'collapsed': false,
+                                
                                 "data-system":"1.Use <HXFER> to credit KMBL DD Payable Nos. - 06320121001001. 2. Use <HDDMI> if beneficiary name exceeds 70 characters.3.Print using <HDDPRNT> option after verification.",
                                 "data-checks":"",
                                 "data-information":"",
@@ -2769,68 +2768,73 @@ myApp.controller('HomeCtrl', function ($scope,$rootScope, TemplateService, Navig
                                 children: [
                                     {
                                         name:"Customer Documentation",
+                                        'collapsed': true,
                                         "data-text":"## Customer Visits in Person:1. DD Request Form   <DD Request Form> <br>2. KMBL Cheque favoring 'Yourself for DD -  <beneficiary name>'<br>3. Cheque mandatory for amount >= Rs. 10,000",
                                         "data-checks":"",
                                         "data-information":"",
                                         "data-script":"",
                                         "data-system":"",
                                         title:"",
-                                        'collapsed': false,
+                                        
                                     },
                                     {
                                         name:"Reporting Requirement: 1 crore and above",
+                                        'collapsed': true,
                                         title:"",
                                         "data-checks":"",
                                         "data-information":"",
                                         "data-script":"",
                                         "data-system":"",
                                         "data-text":"",
-                                        'collapsed': false,
+                                        
                                     },
                                     {
                                         name:"Exception Handling for DD value  > 4,99,999",
+                                        'collapsed': true,
                                         title:"",  
                                         "data-checks":"",
                                         "data-information":"",
                                         "data-script":"",
                                         "data-system":"",
                                         "data-text":"",       
-                                        'collapsed': false,                                   
+                                                                           
                                     },
                                     {
                                         name: "Branch Process",
+                                        'collapsed': true,
                                         title:"",
                                         "data-checks":"",
                                         "data-information":"",
                                         "data-script":"",
                                         "data-system":"",
                                         "data-text":"",
-                                        'collapsed': false,
+                                        
                                     },
                                     {
                                         name:"Handover of DD to Customer/Bearer",
+                                        'collapsed': true,
                                         title:"",
                                         "data-checks":"",
                                         "data-information":"",
                                         "data-script":"",
                                         "data-system":"",
                                         "data-text":"",
-                                        'collapsed': false,
                                     },
                                     {
                                         name:"Login to Interact",
+                                        'collapsed': true,
                                         title:"",  
                                         "data-checks":"",
                                         "data-information":"",
                                         "data-script":"",
                                         "data-system":"",
                                         "data-text":"",  
-                                        'collapsed': false,
                                     },
                                 ]
                             },
                             {
                                 name: "Demand Draft Issuance - Non Customer",
+                                'collapsed': true,
                                 title:"",
                                 "data-checks":"",
                                 "data-information":"",
@@ -2840,6 +2844,7 @@ myApp.controller('HomeCtrl', function ($scope,$rootScope, TemplateService, Navig
                             },
                             {
                                 name: "Demand Draft Issuance - Bulk Demand Draft",
+                                'collapsed': true,
                                 title:"",
                                 "data-checks":"",
                                 "data-information":"",
@@ -2849,6 +2854,7 @@ myApp.controller('HomeCtrl', function ($scope,$rootScope, TemplateService, Navig
                             },
                             {
                                 name: "Demand Draft Issuance - Corporate",
+                                'collapsed': true,
                                 title:"",
                                 "data-checks":"",
                                 "data-information":"",
@@ -2858,6 +2864,7 @@ myApp.controller('HomeCtrl', function ($scope,$rootScope, TemplateService, Navig
                             },
                             {
                                 name:"Demand Draft Issuance - Disbursal by BBG",
+                                'collapsed': true,
                                 title:"", 
                                 "data-checks":"",
                                 "data-information":"",
@@ -2867,6 +2874,7 @@ myApp.controller('HomeCtrl', function ($scope,$rootScope, TemplateService, Navig
                             },
                             {
                                 name: "Demand Draft Issuance - Exceptions",
+                                'collapsed': true,
                                 title:"",
                                 "data-checks":"",
                                 "data-information":"",
@@ -2876,6 +2884,7 @@ myApp.controller('HomeCtrl', function ($scope,$rootScope, TemplateService, Navig
                             },
                             {
                                 name:"Demand Draft Issuance - Exceptions",
+                                'collapsed': true,
                                 title:"",
                                 "data-checks":"",
                                 "data-information":"",
@@ -2956,6 +2965,7 @@ myApp.controller('HomeCtrl', function ($scope,$rootScope, TemplateService, Navig
                         // },1000);
                         $(document).on('click', '.node.nodeExample1', function(){ 
                             $(".process_data").hide();
+                            
                             var checks = $(this).attr("data-checks");
                             var information = $(this).attr("data-information");
                             var system = $(this).attr("data-system");
@@ -2972,6 +2982,8 @@ myApp.controller('HomeCtrl', function ($scope,$rootScope, TemplateService, Navig
                             $(".scripts").text(script);
                             $(".texts").text(text);
                             $(".process_data").show();
+                            //hideSiblings($(this), direction);
+                            
                         });
                         $(document).on('click', '#rootNode', function(e){ 
                             $(this).find("div.title i").remove();
@@ -3001,7 +3013,14 @@ myApp.controller('HomeCtrl', function ($scope,$rootScope, TemplateService, Navig
                             $(this).find("div.title i").remove();
                             var title = $(this).find("div.title").text();
                             title=title.replace('"', "");
-                            console.log(title);
+                            
+                            var $node = $('#selected-node').data('node');
+                            console.log($node);
+                            //e.on('click', function(event) {
+                                $("#diagram-example").orgchart('hideSiblings',$node,'left');
+                                    //{ 'siblings': nodeVals.map(function(item) { return { 'name': item, 'relationship': '110' }; })
+                                
+                            //});
                             obj = {};
                             obj=_.find($scope.chart_config.children, function(o) { return o.name == title; });
                             obj = JSON.parse(decodeURIComponent($(this).attr("data-attr")));
@@ -3034,11 +3053,8 @@ myApp.controller('HomeCtrl', function ($scope,$rootScope, TemplateService, Navig
             $(document).on('click', 'li.Process.uib-tab', function(){
                 $("div.scriptData").show();
             });
-            $(document).on('click', 'a.popupdata', function(){
-                index = $(this).attr('data-index');
-                console.log($rootScope.popupdata[index]);
-                $rootScope.openpopupModal($rootScope.popupdata[index]);
-            });
+            //$('a.popupdata').click(function(){
+            
             $(document).on('click', 'li.Diagram.uib-tab', function(){
                 $("div.scriptData").hide();
                 $timeout(function(){
@@ -3055,6 +3071,11 @@ myApp.controller('HomeCtrl', function ($scope,$rootScope, TemplateService, Navig
                         'direction': 'l2r',
                         'createNode': function(node, data) {
                             // console.log(node);
+                            node.on('click', function(event) {
+                                if (!$(event.target).is('.edge')) {
+                                    $('#selected-node').val(data.name).data('node', node);
+                                }
+                            });
                             $(".node").find("div.title i").remove();
                             var title = node[0].children[0].innerText;
                             title=title.replace('"', "");
@@ -3077,7 +3098,8 @@ myApp.controller('HomeCtrl', function ($scope,$rootScope, TemplateService, Navig
                             secondMenu+='<p class="scriptdata"><span class="charttitle">Script:</span>'+data["data-script"]+'</p>';
                             secondMenu+='</div>';
                             node.append(secondMenuIcon).append(secondMenu);
-                        }
+                        },
+                        
                     });
                     console.log($scope.chart_config);
                 },1000);

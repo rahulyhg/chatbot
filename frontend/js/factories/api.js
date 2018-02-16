@@ -312,6 +312,14 @@ myApp.factory('apiService', function ($http, $q, $timeout,CsrfTokenService,$http
             
             
         },
+        getdiagram:function(formData, callback) {
+            
+            return $http({
+                url: adminUrl3 + 'Diagram/getdiagram',
+                method: 'POST',
+                data: formData
+            });
+        },
     };
     //return responsedata;
 });
