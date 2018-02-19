@@ -272,7 +272,7 @@ myApp.factory('apiService', function ($http, $q, $timeout,CsrfTokenService,$http
             // });
             // var fd = $.param(formData);
             // var ciphertext = CryptoJS.AES.encrypt(JSON.stringify(fd), 'k_123');
-            var fd = JSON.stringify($.param(formData));
+            var fd = JSON.stringify((formData));
             var encodedString = Base64.encode(fd);
             //console.log(fd);
             var ciphertext = CryptoJS.AES.encrypt((fd),'k_123').toString();
