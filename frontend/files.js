@@ -31,6 +31,7 @@ module.exports = [
   "bower_components/intro.js/minified/intro.min.js",
   // "bower_components/angular-intro.js/build/angular-intro.min.js",
   "bower_components/hopscotch/dist/js/hopscotch.min.js",
+  "bower_components/crypto-js/crypto-js.js",
   
   //App.js
   'frontend/js/app.js',
