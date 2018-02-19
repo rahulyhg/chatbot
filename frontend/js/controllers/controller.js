@@ -2070,7 +2070,7 @@ myApp.controller('HomeCtrl', function ($scope,$rootScope, TemplateService, Navig
                         }
                         else if(value.type=="DTHyperlink")
                         {
-                           $rootScope.DthResponse(0,data.data);  
+                           $rootScope.DthResponse(0,data.data,'');  
                            $timeout(function(){
                                 var textspeech = data.data.tiledlist[0].Text;
                                 _.each(data.data.tiledlist[0].DTHyperlink,function(v,k){
@@ -2159,7 +2159,7 @@ myApp.controller('HomeCtrl', function ($scope,$rootScope, TemplateService, Navig
                         }
                         else if(value.type=="DTHyperlink")
                         {
-                           $rootScope.DthResponse(0,data.data);  
+                           $rootScope.DthResponse(0,data.data,'');  
                            $timeout(function(){
                                 var textspeech = data.data.tiledlist[0].Text;
                                 _.each(data.data.tiledlist[0].DTHyperlink,function(v,k){
@@ -2244,7 +2244,7 @@ myApp.controller('HomeCtrl', function ($scope,$rootScope, TemplateService, Navig
                         }
                         else if(value.type=="DTHyperlink")
                         {
-                           $rootScope.DthResponse(0,data.data);  
+                           $rootScope.DthResponse(0,data.data,'');  
                            $timeout(function(){
                                 var textspeech = data.data.tiledlist[0].Text;
                                 _.each(data.data.tiledlist[0].DTHyperlink,function(v,k){
@@ -2308,7 +2308,7 @@ myApp.controller('HomeCtrl', function ($scope,$rootScope, TemplateService, Navig
                     angular.forEach(data.data.tiledlist, function(value, key) {
                         if(value.type=="DTHyperlink")
                         {
-                            $rootScope.DthResponse(0,data.data);
+                            $rootScope.DthResponse(0,data.data,dthlink);
                             if(data.data.tiledlist[0].sub_topic_list || data.data.tiledlist[0].sub_topic_list != null)
                             {
                                 $rootScope.openMenu(data.data.tiledlist[0].sub_topic_list);
@@ -2454,7 +2454,9 @@ myApp.controller('HomeCtrl', function ($scope,$rootScope, TemplateService, Navig
             $rootScope.viewmodalInstance2 = {};
         };
         $rootScope.popupdata=[];
-        $rootScope.DthResponse = function(id,data) {
+        $rootScope.DthResponse = function(id,data,dthlink) {
+            $rootScope.tabvalue.elements = [];
+            $rootScope.tabvalue.element_values=[];
 			if(data.tiledlist[0].DT )
 			{
 				if( data.tiledlist[0].DT.length > 0  || data.tiledlist[0].Text != "")
@@ -2579,10 +2581,7 @@ myApp.controller('HomeCtrl', function ($scope,$rootScope, TemplateService, Navig
 					$rootScope.tabvalue.elements = ele;
 					$rootScope.tabvalue.element_values=ele_val;
 					$rootScope.selectTabIndex = 0;
-					$timeout(function(){
-						$("#tab_data .nav-tabs li").first().addClass("active");
-						$("#tab_data .tab-content .tab-pane").first().addClass("active");
-					},4000);
+					
                 });
                 formData1 = {Journey_Name:data.tiledlist[0].Journey_Name};
 				apiService.getdiagram(formData1).then(function (d_data){
@@ -2821,8 +2820,8 @@ myApp.controller('HomeCtrl', function ($scope,$rootScope, TemplateService, Navig
                             });
                             $(document).on('click', '.nodes .node', function(e){ 
                                 $(this).find("div.title i").remove();
-                                $(this).find("i.edge.horizontalEdge.rightEdge.fa").click();
-                                $(this).find("i.edge.horizontalEdge.leftEdge.fa").click();
+                                // $(this).find("i.edge.horizontalEdge.rightEdge.fa").click();
+                                // $(this).find("i.edge.horizontalEdge.leftEdge.fa").click();
                                 var title = $(this).find("div.title").text();
                                 title=title.replace('"', "");
                                 
@@ -2833,15 +2832,15 @@ myApp.controller('HomeCtrl', function ($scope,$rootScope, TemplateService, Navig
                                         //{ 'siblings': nodeVals.map(function(item) { return { 'name': item, 'relationship': '110' }; })
                                     
                                 //});
-                                obj = {};
-                                obj=_.find($scope.chart_config.children, function(o) { return o.name == title; });
-                                obj = JSON.parse(decodeURIComponent($(this).attr("data-attr")));
-                                console.log(obj);
-                                var ooo=$("#diagram-example");
-                                ooo.orgchart('hideSiblings',$node,'left');
-                                ooo.orgchart('hideParent',$node);
-                                ooo.orgchart('hideSiblings',obj,'left');
-                                ooo.orgchart('hideParent',obj);
+                                // obj = {};
+                                // obj=_.find($scope.chart_config.children, function(o) { return o.name == title; });
+                                // obj = JSON.parse(decodeURIComponent($(this).attr("data-attr")));
+                                // console.log(obj);
+                                // var ooo=$("#diagram-example");
+                                // ooo.orgchart('hideSiblings',$node,'left');
+                                // ooo.orgchart('hideParent',$node);
+                                // ooo.orgchart('hideSiblings',obj,'left');
+                                // ooo.orgchart('hideParent',obj);
                                 // obj2 = {};
                                 // obj2 = JSON.parse(decodeURIComponent($("#selected-node").attr("data-node")));
                                 // ooo.orgchart('hideSiblings',obj2,'left');
@@ -2869,7 +2868,11 @@ myApp.controller('HomeCtrl', function ($scope,$rootScope, TemplateService, Navig
                         //console.log(Journey_Data);
                     }
                 });
-                
+                // $scope.activateTab = function (tab) {
+                //     $scope.activeTab = tab;
+                // };
+                // $scope.activeTab = 'Process';
+                // $scope.activateTab('Process');
             }
             ele.push('Old Process');
             ele_val.push(data.tiledlist[0]);
@@ -2890,12 +2893,30 @@ myApp.controller('HomeCtrl', function ($scope,$rootScope, TemplateService, Navig
                 }
                 return false;
             };
+            $scope.hides = function (n,d) {
+                var ooo=$("#diagram-example");
+                l_dir = 'left';
+                r_dir = 'right';
+                ooo.orgchart({'hideSiblings': function(n, l_dir) {
+                        
+                    }
+                });
+                ooo.orgchart({'hideSiblings': function(n, r_dir) {
+                        
+                    }
+                });
+            };
             $(document).on('click', 'li.Diagram.uib-tab', function(){
                 $("div.scriptData").hide();
                 $timeout(function(){
                     //tree = new Treant( $scope.chart_config );
                     //var oc = $('#diagram-example').orgchart($scope.chart_config);
                     $("#diagram-example").html("");
+                    $(".charts").css(
+                        'opacity','0'
+                    );
+                    var org_i = 0;
+                    var node_array = [];
                     var oc = $('#diagram-example').orgchart({
                         'data' : $scope.chart_config,
                         'depth': 0,
@@ -2916,12 +2937,28 @@ myApp.controller('HomeCtrl', function ($scope,$rootScope, TemplateService, Navig
                             $(".node").find("div.title i").remove();
                             var title = node[0].children[0].innerText;
                             title=title.replace('"', "");
+                            
                             // console.log(title);
                             // console.log(data.name);
                             if(data.name==title)
                             {
                                 $(node).attr('data-attr',encodeURIComponent(JSON.stringify(data)));
                             }
+                            if(org_i == 0)
+                                data.collapsed=false;
+                            else
+                            {
+                                if(title == dthlink)
+                                {
+                                    data.collapsed=false;
+                                    node_array.push({node,data});
+                                }
+                                else
+                                {
+                                    data.collapsed=true;
+                                }
+                            }
+                            org_i++;
                             //console.log(data);
                             var secondMenuIcon = $('<i>', {
                                 'class': 'fa fa-info-circle second-menu-icon',
@@ -2979,7 +3016,29 @@ myApp.controller('HomeCtrl', function ($scope,$rootScope, TemplateService, Navig
                         },
                         
                     });
-                    
+                    $timeout(function(){
+                        if(node_array.length > 0)
+                        {
+                            oc.hideSiblings(node_array[0].node,'left', {
+                                
+                            });
+                            
+                            $timeout(function(){
+                                oc.hideSiblings(node_array[0].node,'rigth', {
+                                        
+                                });
+                            },1000);
+                            $timeout(function () {
+                                $(".charts").css(
+                                    'opacity','1'
+                                );
+                            },3000);
+                        }
+                        else
+                            $(".charts").css(
+                                'opacity','1'
+                            );
+                    },2000);
                 },1000);
             });
             $rootScope.isCollapsed = true;
@@ -3009,7 +3068,10 @@ myApp.controller('HomeCtrl', function ($scope,$rootScope, TemplateService, Navig
                 
             //     //$rootScope.$emit("setTabData", $scope.node_data);
             // }
-            
+            $timeout(function(){
+                $("#tab_data .nav-tabs li").first().addClass("active");
+                $("#tab_data .tab-content .tab-pane").first().addClass("active");
+            },3000);
         };
         $rootScope.showdashboard = function() {
             $rootScope.minimizeChatwindow();
@@ -3093,9 +3155,9 @@ myApp.controller('HomeCtrl', function ($scope,$rootScope, TemplateService, Navig
             $rootScope.element_values2.dtstage = dtstage;
             $rootScope.selectTabIndex = 0;
             $timeout(function(){
-				$("#tab_data .nav-tabs li").first().addClass("active");
-				$("#tab_data .tab-content .tab-pane").first().addClass("active");
-			},4000);
+				// $("#tab_data .nav-tabs li").first().addClass("active");
+				// $("#tab_data .tab-content .tab-pane").first().addClass("active");
+			},2000);
 			// else
             // {
             //     var ele = new Array("Process");
@@ -3247,7 +3309,7 @@ myApp.controller('HomeCtrl', function ($scope,$rootScope, TemplateService, Navig
                         }
                         else if(value.type=="DTHyperlink")
                         {
-                           $rootScope.DthResponse(0,data.data);  
+                           $rootScope.DthResponse(0,data.data,'');  
                            $timeout(function(){
                                 var textspeech = data.data.tiledlist[0].Text;
                                 _.each(data.data.tiledlist[0].DTHyperlink,function(v,k){
