@@ -3266,17 +3266,17 @@ myApp.controller('HomeCtrl', function ($scope,$rootScope, TemplateService, Navig
                 apiService.getSysMsg($rootScope.formData).then(function (data){
                         //console.log(data);
                     
-                        if(data.data.tiledlist[0].topic)
-                             $("#topic").text(data.data.tiledlist[0].topic);
-                    angular.forEach(data.data.tiledlist, function(value, key) {
+                        if(data.data.data.tiledlist[0].topic)
+                             $("#topic").text(data.data.data.tiledlist[0].topic);
+                    angular.forEach(data.data.data.tiledlist, function(value, key) {
                         //console.log(value);
                         if(value.type=="text")
                         {
 							//console.log(data.data.tiledlist[0].text);
-                        	$rootScope.pushSystemMsg(0,data.data);
+                        	$rootScope.pushSystemMsg(0,data.data.data);
                             $rootScope.showMsgLoader = false;
                             $timeout(function(){
-                                var textspeech = data.data.tiledlist[0].Text;
+                                var textspeech = data.data.data.tiledlist[0].Text;
                                 
                                 
                                 $.jStorage.set("texttospeak",textspeech);
@@ -3289,7 +3289,7 @@ myApp.controller('HomeCtrl', function ($scope,$rootScope, TemplateService, Navig
                         }
                         if(value.type=="rate card")
                         {
-                            $rootScope.pushSystemMsg(0,data.data);
+                            $rootScope.pushSystemMsg(0,data.data.data);
                             $rootScope.showMsgLoader = false;
                             
                             // $(".r_c_col").val($(".r_c_col option:first").val());
@@ -3309,10 +3309,10 @@ myApp.controller('HomeCtrl', function ($scope,$rootScope, TemplateService, Navig
                         }
                         else if(value.type=="DTHyperlink")
                         {
-                           $rootScope.DthResponse(0,data.data,'');  
+                           $rootScope.DthResponse(0,data.data.data,'');  
                            $timeout(function(){
-                                var textspeech = data.data.tiledlist[0].Text;
-                                _.each(data.data.tiledlist[0].DTHyperlink,function(v,k){
+                                var textspeech = data.data.data.tiledlist[0].Text;
+                                _.each(data.data.data.tiledlist[0].DTHyperlink,function(v,k){
                                     textspeech += v;
                                 });
                                 $.jStorage.set("texttospeak",textspeech);
@@ -3324,12 +3324,12 @@ myApp.controller('HomeCtrl', function ($scope,$rootScope, TemplateService, Navig
                         else if(value.type=="Instruction")
                         {
 							
-                           $rootScope.InstructionResponse(0,data.data);  
+                           $rootScope.InstructionResponse(0,data.data.data);  
                            
                         }
                         if(value.type=="product listing")
                         {
-                            $rootScope.pushSystemMsg(0,data.data);
+                            $rootScope.pushSystemMsg(0,data.data.data);
                             $rootScope.showMsgLoader = false;
                             $timeout(function(){
                             $('.carousel').carousel({
@@ -3394,20 +3394,20 @@ myApp.controller('HomeCtrl', function ($scope,$rootScope, TemplateService, Navig
                     //     // $("#ttsaudio1").play();
                     // });
                         
-                    if(data.data.tiledlist[0].sub_topic_list || data.data.tiledlist[0].sub_topic_list != null)
+                    if(data.data.data.tiledlist[0].sub_topic_list || data.data.data.tiledlist[0].sub_topic_list != null)
                     {
                         $rootScope.openMenu(data.data.tiledlist[0].sub_topic_list);
                     }
-                    if(data.data.tiledlist[0].Script || data.data.tiledlist[0].Script != null)
+                    if(data.data.data.tiledlist[0].Script || data.data.data.tiledlist[0].Script != null)
                     {
-                        if(data.data.tiledlist[0].Script.length== 0)
+                        if(data.data.data.tiledlist[0].Script.length== 0)
                             $rootScope.tabHeight = window.innerHeight-53;
                         else
                             $rootScope.tabHeight = window.innerHeight-53;;
                         
                     }
-                    if(data.data.session_obj_data || data.data.session_obj_data != null)
-                        $.jStorage.set("sessiondata",data.data.session_obj_data);
+                    if(data.data.data.session_obj_data || data.data.data.session_obj_data != null)
+                        $.jStorage.set("sessiondata",data.data.data.session_obj_data);
                     // if($(".expandable2").hasClass('col-lg-8'))
                     //      $rootScope.rotateoutmenu();
                 }).catch(function (reason) {

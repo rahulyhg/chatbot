@@ -261,41 +261,41 @@ myApp.factory('apiService', function ($http, $q, $timeout,CsrfTokenService,$http
         },
         getSysMsg:function(formData,callback){
             //console.log(formData);
-            return    $http({
-                url:adminurl+'out/'+formData.user_id+"/",
-                //url: adminUrl3 + 'Chatbotautolist/getSysMsg',
-                method: 'POST',
-                data:$.param(formData),
-                headers: {'Content-Type': 'application/x-www-form-urlencoded;charset=utf-8','X-CSRFToken':formData.csrfmiddlewaretoken },
-                //withCredentials: false,
-                //headers: {'Content-Type': 'application/json','X-CSRFToken': "Vfpx6pWJYBx7dbX35vwXm7P9xj3xNPyUJbSx9IlwgcRHReN974ZC5rEbvgpRQdY2"},
-            });
-            // var fd = $.param(formData);
-            // var ciphertext = CryptoJS.AES.encrypt(JSON.stringify(fd), 'k_123');
-            // var fd = JSON.stringify((formData));
-            // var encodedString = Base64.encode(fd);
-            // //console.log(fd);
-            // var ciphertext = CryptoJS.AES.encrypt((fd),'k_123').toString();
-            // var a = ciphertext.toString().replace(" ", "+");
-            // var b=a.replace(" ", "+");
-            // var bytes = CryptoJS.AES.decrypt((b),'k_123');
-            // // console.log(ciphertext);
-            // // console.log(bytes);
-            // var decryptedData = JSON.parse(bytes.toString(CryptoJS.enc.Utf8));
-            // //console.log(decryptedData);
-            // var data = {data:ciphertext};
-            // //console.log(data);
-            // // var data = {data:encodedString};
-            // // console.log(data);
-            // // var decodedString = Base64.decode(encodedString);
-            // // console.log(JSON.parse(decodedString));
             // return    $http({
-            //     url: adminUrl3 + 'Api/out',
+            //     url:adminurl+'out/'+formData.user_id+"/",
+            //     //url: adminUrl3 + 'Chatbotautolist/getSysMsg',
             //     method: 'POST',
-            //     data: data
+            //     data:$.param(formData),
+            //     headers: {'Content-Type': 'application/x-www-form-urlencoded;charset=utf-8','X-CSRFToken':formData.csrfmiddlewaretoken },
             //     //withCredentials: false,
             //     //headers: {'Content-Type': 'application/json','X-CSRFToken': "Vfpx6pWJYBx7dbX35vwXm7P9xj3xNPyUJbSx9IlwgcRHReN974ZC5rEbvgpRQdY2"},
             // });
+            // var fd = $.param(formData);
+            // var ciphertext = CryptoJS.AES.encrypt(JSON.stringify(fd), 'k_123');
+            var fd = JSON.stringify((formData));
+            var encodedString = Base64.encode(fd);
+            //console.log(fd);
+            var ciphertext = CryptoJS.AES.encrypt((fd),'k_123').toString();
+            var a = ciphertext.toString().replace(" ", "+");
+            var b=a.replace(" ", "+");
+            var bytes = CryptoJS.AES.decrypt((b),'k_123');
+            // console.log(ciphertext);
+            // console.log(bytes);
+            var decryptedData = JSON.parse(bytes.toString(CryptoJS.enc.Utf8));
+            //console.log(decryptedData);
+            var data = {data:ciphertext};
+            //console.log(data);
+            // var data = {data:encodedString};
+            // console.log(data);
+            // var decodedString = Base64.decode(encodedString);
+            // console.log(JSON.parse(decodedString));
+            return    $http({
+                url: adminUrl3 + 'Api/out',
+                method: 'POST',
+                data: data
+                //withCredentials: false,
+                //headers: {'Content-Type': 'application/json','X-CSRFToken': "Vfpx6pWJYBx7dbX35vwXm7P9xj3xNPyUJbSx9IlwgcRHReN974ZC5rEbvgpRQdY2"},
+            });
             
         },
         ratecardsubmit : function(formData,callback){

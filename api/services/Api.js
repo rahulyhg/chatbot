@@ -13,7 +13,7 @@ module.exports = mongoose.model('Api', schema,'');
 var exports = _.cloneDeep(require("sails-wohlig-service")(schema, "api", "api"));
 //new RegExp(searchstring)
 //{ $regex: searchstring, $options: 'i' }
-var adminurl = "exponentiadata.co.in";
+var adminurl = "http://exponentiadata.co.in:8097";
 var CryptoJS = require("crypto-js");
 var param = require('jquery-param');
 var model = {
@@ -29,28 +29,38 @@ var model = {
         var decryptedData = JSON.parse(bytes.toString(CryptoJS.enc.Utf8));
         //console.log(decryptedData);
         //console.log(decryptedData.user_id);
+        var dataString = param(decryptedData);
         var post_options = {
-            host: adminurl,
+            host: 'exponentiadata.co.in',
+            //hostname:'exponentiadata.co.in',
             port: 8097,
             path: '/out/'+decryptedData.user_id+"/",
             method: 'POST',
-            data:param(decryptedData),
+            //data:param(decryptedData),
             headers: {
                 'Content-Type': 'application/x-www-form-urlencoded',
-                //'Content-Length': Buffer.byteLength(param(decryptedData))
-                'Content-Length': param(decryptedData).length
+                'Content-Length': Buffer.byteLength(param(decryptedData))
+                //'Content-Length': param(decryptedData).length
             }
         };
         //console.log(post_options);
-        http.request(post_options, function(res) { 
+        req=http.request(post_options, function(res) { 
+            res.setEncoding('utf8');
+        //http.request(adminurl+'/out/'+decryptedData.user_id+"/", function(res) { 
             //console.log("Got response: " + res.statusCode);
             //console.log("res",res);
+            var response1;
             res.on("data", function(chunk)
             {
+                console.log(chunk);
+                response1 = chunk;
                 found=JSON.parse(chunk);
-                callback(null, found);
+                //console.log(found);
+                //callback(null, found);
             });
             res.on('end', function () {
+                response1=JSON.parse(response1);
+                callback(null, response1);
                 console.log('No more data in response.');
             }); 
         }).on('error', function(e){ 
@@ -59,7 +69,8 @@ var model = {
                 message: "-1"
             }, null);
         });
-        
+        req.write(dataString);
+        req.end();
     },
 };
 module.exports = _.assign(module.exports, exports, model);
