@@ -30,7 +30,7 @@ var model = {
         //console.log(decryptedData);
         //console.log(decryptedData.user_id);
         var post_options = {
-            hostname: adminurl,
+            host: adminurl,
             port: 8097,
             path: '/out/'+decryptedData.user_id+"/",
             method: 'POST',
