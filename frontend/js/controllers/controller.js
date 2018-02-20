@@ -3404,7 +3404,7 @@ myApp.controller('HomeCtrl', function ($scope,$rootScope, TemplateService, Navig
                         
                     if(decryptedData.tiledlist[0].sub_topic_list || decryptedData.tiledlist[0].sub_topic_list != null)
                     {
-                        $rootScope.openMenu(data.data.tiledlist[0].sub_topic_list);
+                        $rootScope.openMenu(decryptedData.tiledlist[0].sub_topic_list);
                     }
                     if(decryptedData.tiledlist[0].Script || decryptedData.tiledlist[0].Script != null)
                     {
