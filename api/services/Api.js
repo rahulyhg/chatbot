@@ -60,7 +60,10 @@ var model = {
             });
             res.on('end', function () {
                 response1=JSON.parse(response1);
-                callback(null, response1);
+                //response1=param(response1);
+                response1 = JSON.stringify((response1));
+                var ciphertext = CryptoJS.AES.encrypt((response1),'k_123').toString();
+                callback(null, ciphertext);
                 console.log('No more data in response.');
             }); 
         }).on('error', function(e){ 

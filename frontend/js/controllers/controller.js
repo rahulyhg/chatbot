@@ -3265,18 +3265,26 @@ myApp.controller('HomeCtrl', function ($scope,$rootScope, TemplateService, Navig
                 
                 apiService.getSysMsg($rootScope.formData).then(function (data){
                         //console.log(data);
-                    
-                        if(data.data.data.tiledlist[0].topic)
-                             $("#topic").text(data.data.data.tiledlist[0].topic);
-                    angular.forEach(data.data.data.tiledlist, function(value, key) {
+                    var ci_t = data.data.data;
+                    var a = ci_t.toString().replace(" ", "+");
+                    var b=a.replace(" ", "+");
+                    var bytes = CryptoJS.AES.decrypt((b),'k_123');
+                    // console.log(ciphertext);
+                    console.log(bytes);
+                    var decryptedData = JSON.parse(bytes.toString(CryptoJS.enc.Utf8));
+                     console.log(decryptedData);
+                    data = decryptedData;
+                        if(decryptedData.tiledlist[0].topic)
+                             $("#topic").text(decryptedData.tiledlist[0].topic);
+                    angular.forEach(decryptedData.tiledlist, function(value, key) {
                         //console.log(value);
                         if(value.type=="text")
                         {
 							//console.log(data.data.tiledlist[0].text);
-                        	$rootScope.pushSystemMsg(0,data.data.data);
+                        	$rootScope.pushSystemMsg(0,decryptedData);
                             $rootScope.showMsgLoader = false;
                             $timeout(function(){
-                                var textspeech = data.data.data.tiledlist[0].Text;
+                                var textspeech = decryptedData.tiledlist[0].Text;
                                 
                                 
                                 $.jStorage.set("texttospeak",textspeech);
@@ -3289,7 +3297,7 @@ myApp.controller('HomeCtrl', function ($scope,$rootScope, TemplateService, Navig
                         }
                         if(value.type=="rate card")
                         {
-                            $rootScope.pushSystemMsg(0,data.data.data);
+                            $rootScope.pushSystemMsg(0,decryptedData);
                             $rootScope.showMsgLoader = false;
                             
                             // $(".r_c_col").val($(".r_c_col option:first").val());
@@ -3309,10 +3317,10 @@ myApp.controller('HomeCtrl', function ($scope,$rootScope, TemplateService, Navig
                         }
                         else if(value.type=="DTHyperlink")
                         {
-                           $rootScope.DthResponse(0,data.data.data,'');  
+                           $rootScope.DthResponse(0,decryptedData,'');  
                            $timeout(function(){
-                                var textspeech = data.data.data.tiledlist[0].Text;
-                                _.each(data.data.data.tiledlist[0].DTHyperlink,function(v,k){
+                                var textspeech = decryptedData.tiledlist[0].Text;
+                                _.each(decryptedData.tiledlist[0].DTHyperlink,function(v,k){
                                     textspeech += v;
                                 });
                                 $.jStorage.set("texttospeak",textspeech);
@@ -3324,12 +3332,12 @@ myApp.controller('HomeCtrl', function ($scope,$rootScope, TemplateService, Navig
                         else if(value.type=="Instruction")
                         {
 							
-                           $rootScope.InstructionResponse(0,data.data.data);  
+                           $rootScope.InstructionResponse(0,decryptedData);  
                            
                         }
                         if(value.type=="product listing")
                         {
-                            $rootScope.pushSystemMsg(0,data.data.data);
+                            $rootScope.pushSystemMsg(0,decryptedData);
                             $rootScope.showMsgLoader = false;
                             $timeout(function(){
                             $('.carousel').carousel({
@@ -3394,20 +3402,20 @@ myApp.controller('HomeCtrl', function ($scope,$rootScope, TemplateService, Navig
                     //     // $("#ttsaudio1").play();
                     // });
                         
-                    if(data.data.data.tiledlist[0].sub_topic_list || data.data.data.tiledlist[0].sub_topic_list != null)
+                    if(decryptedData.tiledlist[0].sub_topic_list || decryptedData.tiledlist[0].sub_topic_list != null)
                     {
                         $rootScope.openMenu(data.data.tiledlist[0].sub_topic_list);
                     }
-                    if(data.data.data.tiledlist[0].Script || data.data.data.tiledlist[0].Script != null)
+                    if(decryptedData.tiledlist[0].Script || decryptedData.tiledlist[0].Script != null)
                     {
-                        if(data.data.data.tiledlist[0].Script.length== 0)
+                        if(decryptedData.tiledlist[0].Script.length== 0)
                             $rootScope.tabHeight = window.innerHeight-53;
                         else
                             $rootScope.tabHeight = window.innerHeight-53;;
                         
                     }
-                    if(data.data.data.session_obj_data || data.data.data.session_obj_data != null)
-                        $.jStorage.set("sessiondata",data.data.data.session_obj_data);
+                    if(decryptedData.session_obj_data || decryptedData.session_obj_data != null)
+                        $.jStorage.set("sessiondata",decryptedData.session_obj_data);
                     // if($(".expandable2").hasClass('col-lg-8'))
                     //      $rootScope.rotateoutmenu();
                 }).catch(function (reason) {
