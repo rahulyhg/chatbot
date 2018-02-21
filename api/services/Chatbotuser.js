@@ -179,7 +179,7 @@ var model = {
         //http.request(adminurl+'/out/'+decryptedData.user_id+"/", function(res) { 
             //console.log("Got response: " + res.statusCode);
             //console.log("res",res);
-            var response1;
+            var response1="";
             res.on("data", function(chunk)
             {
                 console.log(chunk);
