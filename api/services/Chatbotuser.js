@@ -189,7 +189,7 @@ var model = {
                 //callback(null, found);
             });
             res.on('end', function () {
-                //response1=JSON.parse(response1);
+                response1=JSON.parse(response1);
                 //response1=param(response1);
                 // response1 = JSON.stringify((response1));
                 // var ciphertext = CryptoJS.AES.encrypt((response1),'k_123').toString();
