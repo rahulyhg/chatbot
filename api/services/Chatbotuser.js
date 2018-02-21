@@ -202,8 +202,8 @@ var model = {
                 message: "-1"
             }, null);
         });
-        req.write(data.search);
-        req.end();
+        // req.write(data.search);
+        // req.end();
         // var spawn = require("child_process").spawn;
         // var process = spawn('python',["./script/kotaksearch.py", data.search]);
         // var textChunk;
