@@ -1625,7 +1625,28 @@ myApp.controller('HomeCtrl', function ($scope,$rootScope, TemplateService, Navig
 				}
 			}
 			return "";
-		};
+        };
+        $rootScope.searchapi = function() {
+            topic=$rootScope.chatText;
+            encoded=Base64.encode(topic);
+            // $.ajax({
+            //     url: "https://www.kotak.com/content/kotakcl/en/search/_jcr_content/mid_par/search.filterclick.all.0.10.esc.json/"+encoded,
+            //     dataType: "json",
+            //     async: true,
+            //     cache: false,
+            //     timeout: 3000,
+            //     //type: "GET",
+            //     success: function (data) {
+            //         console.log(data,"Data");
+                    
+            //     },
+            // });
+            formData={search:encoded};
+            apiService.searchapi(formData).then(function (response){
+                    //console.log(response.data);
+                $rootScope.autocompletelist = response.data.data;
+            });
+        };
         $rootScope.findTopic = function(topic) {
             var prev = "";
             if(topic == "")
@@ -1644,24 +1665,7 @@ myApp.controller('HomeCtrl', function ($scope,$rootScope, TemplateService, Navig
                 //if (keyword.test(topic))
                 if($(this).find("a").text().search(new RegExp(topic, "i"))<0)
                 {
-                    encoded=Base64.encode(topic);
-                    // $.ajax({
-                    //     url: "https://www.kotak.com/content/kotakcl/en/search/_jcr_content/mid_par/search.filterclick.all.0.10.esc.json/"+encoded,
-                    //     dataType: "json",
-                    //     async: true,
-                    //     cache: false,
-                    //     timeout: 3000,
-                    //     //type: "GET",
-                    //     success: function (data) {
-                    //         console.log(data,"Data");
-                            
-                    //     },
-                    // });
-                    formData={search:encoded};
-                    apiService.searchapi(formData).then(function (response){
-                            //console.log(response.data);
-                        $rootScope.autocompletelist = response.data.data;
-                    });
+                    
                 }
                 else
                 {
