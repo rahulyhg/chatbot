@@ -160,7 +160,7 @@ var model = {
         //     callback(null, JSON.parse(found));
         // });
         var post_options = {
-            host: 'https://www.kotak.com',
+            host: 'www.kotak.com',
             //hostname:'exponentiadata.co.in',
             // port: 8097,
             path: '/content/kotakcl/en/search/_jcr_content/mid_par/search.filterclick.all.0.10.esc.json/'+data.search+"/",
@@ -172,8 +172,9 @@ var model = {
             //     //'Content-Length': param(decryptedData).length
             // }
         };
+        var http = require('http');
         //console.log(post_options);
-        req=http.request(post_options, function(res) { 
+        req=https.request(post_options, function(res) { 
             res.setEncoding('utf8');
         //http.request(adminurl+'/out/'+decryptedData.user_id+"/", function(res) { 
             //console.log("Got response: " + res.statusCode);
