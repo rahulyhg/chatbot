@@ -160,8 +160,8 @@ var model = {
         //     callback(null, JSON.parse(found));
         // });
         var post_options = {
-            //host: 'www.kotak.com',
-            hostname:'www.kotak.com',
+            host: 'www.kotak.com',
+            //hostname:'www.kotak.com',
             // port: 8097,
             path: '/content/kotakcl/en/search/_jcr_content/mid_par/search.filterclick.all.0.10.esc.json/'+data.search+"/",
             method: 'POST',
