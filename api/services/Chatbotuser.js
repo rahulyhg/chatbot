@@ -153,6 +153,97 @@ var model = {
 
         });
     },
+    searchapi:function (data, callback){
+        // exec('python kotaksearch.py "'+data.search+'"', function(err, found) {
+        //     console.log(err)
+        //     console.log(found.toString());
+        //     callback(null, JSON.parse(found));
+        // });
+        var post_options = {
+            host: 'https://www.kotak.com',
+            //hostname:'exponentiadata.co.in',
+            // port: 8097,
+            path: '/content/kotakcl/en/search/_jcr_content/mid_par/search.filterclick.all.0.10.esc.json/'+data.search+"/",
+            method: 'POST',
+            //data:param(decryptedData),
+            // headers: {
+            //     'Content-Type': 'application/x-www-form-urlencoded',
+            //     'Content-Length': Buffer.byteLength(param(decryptedData))
+            //     //'Content-Length': param(decryptedData).length
+            // }
+        };
+        //console.log(post_options);
+        req=http.request(post_options, function(res) { 
+            res.setEncoding('utf8');
+        //http.request(adminurl+'/out/'+decryptedData.user_id+"/", function(res) { 
+            //console.log("Got response: " + res.statusCode);
+            //console.log("res",res);
+            var response1;
+            res.on("data", function(chunk)
+            {
+                console.log(chunk);
+                response1 = chunk;
+                found=JSON.parse(chunk);
+                //console.log(found);
+                //callback(null, found);
+            });
+            res.on('end', function () {
+                response1=JSON.parse(response1);
+                //response1=param(response1);
+                // response1 = JSON.stringify((response1));
+                // var ciphertext = CryptoJS.AES.encrypt((response1),'k_123').toString();
+                callback(null, response1);
+                console.log('No more data in response.');
+            }); 
+        }).on('error', function(e){ 
+            console.log("Got error: " + e.message); 
+            callback({
+                message: "-1"
+            }, null);
+        });
+        req.write(data.string);
+        req.end();
+        // var spawn = require("child_process").spawn;
+        // var process = spawn('python',["./script/kotaksearch.py", data.search]);
+        // var textChunk;
+        // process.stdout.on('data',function(chunk){
+
+        //     textChunk = chunk.toString('utf8');// buffer to string
+		// 	//console.log("data", textChunk);
+        //     //json_data = JSON.parse(chunk);
+        //     //console.log("tts",json_data);
+        //     //console.log("chunk",chunk);
+        //     //util.log(chunk);
+        //     //console.log("data", chunk);
+        //     // dataa={d:json_data};
+        //     // console.log("data", dataa);
+        //     //callback(null,textChunk );
+            
+        // });
+
+        // process.on('close', function (code) {
+        //     console.log("close",code);
+        // });
+		
+        // process.stderr.on('data', function (data) {
+        //     console.log('stderr: ' + data);
+        // });
+        // process.stdout.on('error', function( err ) {
+        //     if (err.code == "EPIPE") {
+        //         console.log("error",err);
+                
+        //     }
+		// 	callback(err,null);
+        // });
+        // process.stdout.on('end', function(){
+        // 	//var str = dataString.substring(1,dataString.length);
+        //     console.log("end",textChunk.text);
+        //     //callback(null,JSON.parse(textChunk) );
+        // });
+        // process.stdin.write();
+
+        // process.stdin.end();
+    },
     forgotpassword: function (data, callback) {
         var today = new Date();
         var tomorrow = new Date();
