@@ -172,7 +172,7 @@ var model = {
             //     //'Content-Length': param(decryptedData).length
             // }
         };
-        var https = require('http');
+        var https = require('https');
         //console.log(post_options);
         req=https.get("https://www.kotak.com/content/kotakcl/en/search/_jcr_content/mid_par/search.filterclick.all.0.10.esc.json/"+data.search+"/", function(res) { 
             res.setEncoding('utf8');
