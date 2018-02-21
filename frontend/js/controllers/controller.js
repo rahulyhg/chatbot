@@ -1627,7 +1627,8 @@ myApp.controller('HomeCtrl', function ($scope,$rootScope, TemplateService, Navig
 			return "";
         };
         $rootScope.searchapi = function() {
-            topic=$rootScope.chatText;
+            topic=$('.searchTerm').val();
+            console.log(topic);
             encoded=Base64.encode(topic);
             // $.ajax({
             //     url: "https://www.kotak.com/content/kotakcl/en/search/_jcr_content/mid_par/search.filterclick.all.0.10.esc.json/"+encoded,
