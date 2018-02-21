@@ -38,6 +38,7 @@
                                         <span class="label label-danger" >{{list.msg.Text}}</span>
                                     </div>
                                     
+                                    
                                     <div ng-class="{'chat-body':list.position==='right' || ( list.msg.tiledlist[0].type !== 'Instruction' &&  list.msg.type != 'SYS_CALC' && list.msg.type !== 'SYS_CONV_START' && list.msg.type !== 'SYS_CONV_END')}">
                                         <div class="clearfix" ng-if="list.position==='right'">
                                             <p class="lastmsg" >
@@ -265,6 +266,65 @@
 
                                                 </p>
                                             </p>
+                                        </div>
+                                        <div class="clearfix" ng-if="list.msg.type == 'kotak_search'">
+                                            <div class='carousel slide' id='myCarousel{{$rowIndex}}'>
+                                                <div class='carousel-inner'>
+                                                    <div class='item carousel_item2' ng-class="{active:!$index}" ng-repeat="imagelist in list.msg.data.cards track by $index">
+                                                        <div >
+                                                            <div class="col-xs-12" >
+                                                                <div class="text-box" ng-if="imagelist.title!=''">
+                                                                    <div class="imgtitle2">
+                                                                        <b><span>
+                                                                            <ng-bind-html  ng-bind-html="imagelist.title">
+                                                                                {{imagelist.title}}
+                                                                            </ng-bind-html>
+                                                                        </span></b>
+                                                                    </div>
+                                                                </div> 
+                                                                <div class="img-box2">
+                                                                    <a ng-href="https://www.kotak.com{{imagelist.image}}"  data-fancybox="imggroup" rel="gallary" fancybox  data-caption="{{imagelist.description}}"  >
+                                                                        <img ng-src="https://www.kotak.com{{imagelist.image}}" class="img-full">
+                                                                    </a>
+                                                                </div>
+                                                                
+                                                                 <div class="" >
+                                                                    <div class="knowmore">
+                                                                        <a ng-href="https://www.kotak.com{{imagelist.pagePath}}" target="_blank">
+                                                                            Know More
+                                                                        </a>
+                                                                    </div>
+                                                                </div>
+                                                                <!--<div class=""  ng-if="chatRes.product_list[$index].URL!='' && chatRes.product_list[$index].URL">
+                                                                    <div class="viewadvertisement">
+                                                                        <a href="{{chatRes.product_list[$index].URL}}" target="_blank" >
+                                                                            View Advertisement
+                                                                        </a>
+                                                                    </div>
+                                                                </div> -->
+                                                                    
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <a class='left carousel-control' href='#myCarousel{{$rowIndex}}' data-slide='prev'><i class='glyphicon glyphicon-chevron-left'></i></a>
+                                                <a class='right carousel-control' href='#myCarousel{{$rowIndex}}' data-slide='next'><i class='glyphicon glyphicon-chevron-right'></i></a>
+                                            </div>
+                                            <!-- <div class="searchcards" ng-repeat="carddata in list.msg.data.cards track by $index">
+                                                <h4>
+                                                    {{carddata.title}}
+                                                </h4>
+                                                <p class="lastmsg" ng-bind-html = "to_trusted(carddata.description);">
+                                                    {{carddata.description}}
+                                                    
+                                                </p>
+                                                <p>
+                                                    <img ng-src="https://www.kotak.com{{carddata.image}}" class="img-responsive">
+                                                </p>
+                                                <a ng-href="https://www.kotak.com{{carddata.pagePath}}" target="_blank">
+                                                    {{carddata.ctalabel}}
+                                                </a>
+                                            </div> -->
                                         </div>
                                         <div class=" clearfix" ng-if="(list.position==='left' &&  (list.msg.type==='SYS_CALC' ))">
                                             <div class="cals row" id="cal_select{{$index}}">

@@ -1645,7 +1645,8 @@ myApp.controller('HomeCtrl', function ($scope,$rootScope, TemplateService, Navig
             formData={search:encoded};
             apiService.searchapi(formData).then(function (response){
                     //console.log(response.data);
-                $rootScope.autocompletelist = response.data.data;
+                var msg={type:'kotak_search',data:response.data.data};
+                $rootScope.pushSystemMsg('',msg);
             });
         };
         $rootScope.findTopic = function(topic) {
