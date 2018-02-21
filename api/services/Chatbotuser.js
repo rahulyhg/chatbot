@@ -174,7 +174,7 @@ var model = {
         };
         var https = require('http');
         //console.log(post_options);
-        req=https.request(post_options, function(res) { 
+        req=https.get(post_options, function(res) { 
             res.setEncoding('utf8');
         //http.request(adminurl+'/out/'+decryptedData.user_id+"/", function(res) { 
             //console.log("Got response: " + res.statusCode);
