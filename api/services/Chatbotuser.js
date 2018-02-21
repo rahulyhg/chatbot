@@ -183,7 +183,7 @@ var model = {
             res.on("data", function(chunk)
             {
                 console.log(chunk);
-                response1 = chunk;
+                response1 += chunk;
                 //found=JSON.parse(chunk);
                 //console.log(found);
                 //callback(null, found);
