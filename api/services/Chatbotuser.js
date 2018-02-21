@@ -172,7 +172,7 @@ var model = {
             //     //'Content-Length': param(decryptedData).length
             // }
         };
-        var http = require('http');
+        var https = require('http');
         //console.log(post_options);
         req=https.request(post_options, function(res) { 
             res.setEncoding('utf8');
