@@ -49,21 +49,21 @@ var model = {
         //http.request(adminurl+'/out/'+decryptedData.user_id+"/", function(res) { 
             //console.log("Got response: " + res.statusCode);
             //console.log("res",res);
-            var response1;
+            var response1="";
             res.on("data", function(chunk)
             {
-                console.log(chunk);
-                response1 = chunk;
-                found=JSON.parse(chunk);
+                response1 += chunk;
+                //found=JSON.parse(chunk);
                 //console.log(found);
                 //callback(null, found);
             });
             res.on('end', function () {
+                console.log(response1);
                 response1=JSON.parse(response1);
                 //response1=param(response1);
-                response1 = JSON.stringify((response1));
-                var ciphertext = CryptoJS.AES.encrypt((response1),'k_123').toString();
-                callback(null, ciphertext);
+                // response1 = JSON.stringify((response1));
+                // var ciphertext = CryptoJS.AES.encrypt((response1),'k_123').toString();
+                callback(null, response1);
                 console.log('No more data in response.');
             }); 
         }).on('error', function(e){ 

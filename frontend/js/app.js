@@ -31,7 +31,10 @@ myApp.config(function ($stateProvider, $urlRouterProvider, $httpProvider, $locat
     //$httpProvider.defaults.withCredentials = false;
     ttsProvider.setSettings({ key: '5a1cc1a178c24b89ba23fd6e3b1bb6c5' });
     $qProvider.errorOnUnhandledRejections(false);
-    IdleProvider.idle(10*60); // 10 minutes idle
+    IdleProvider.idle(1); // 1sec idle
+    IdleProvider.timeout(15); // in seconds
+    //KeepaliveProvider.interval(180);
+    $.jStorage.set("timer",15);
     $stateProvider
         // .state('home', {
         //     url: "/",
@@ -346,8 +349,9 @@ myApp.run(['$http','$cookies','beforeUnload','$document','$rootScope','Idle','bo
                         // $('.c-hamburger span').css("transition", "transform 1.2s ease");
                         //$(".c-hamburger").animate({'background-color': '#003366'}, 'fast');
                         
-                        $rootScope.expanddbtile();
+                        //$rootScope.expanddbtile();
                         $rootScope.rotated = true;
+                        $(".fdashboard").hide();
                     },1000);
                 }
                 else {
@@ -359,8 +363,8 @@ myApp.run(['$http','$cookies','beforeUnload','$document','$rootScope','Idle','bo
                         // $('.c-hamburger span').css("transform", "rotate(0deg)");				
                         // $('.c-hamburger span').css("transition", "transform 1.2s ease");
                         //$(".c-hamburger").animate({'background-color': '#003366'}, 'fast');
-                        $rootScope.reducedbtile();
-                        
+                        //$rootScope.reducedbtile();
+                        $(".fdashboard").hide();
                         $rootScope.rotated = true;
                     },1000);
                 }
@@ -379,7 +383,8 @@ myApp.run(['$http','$cookies','beforeUnload','$document','$rootScope','Idle','bo
                         // $('.c-hamburger span').css("transition", "transform 1.2s ease");
                         //$(".c-hamburger").animate({'background-color': '#003366'}, 'fast');
                         
-                        $rootScope.expanddbtile();
+                        //$rootScope.expanddbtile();
+                        $(".fdashboard").hide();
                         $rootScope.rotated = true;
                     },1000);
                 }
@@ -394,7 +399,8 @@ myApp.run(['$http','$cookies','beforeUnload','$document','$rootScope','Idle','bo
                         // $('.c-hamburger span').css("transition", "transform 1.2s ease");
                         //$(".c-hamburger").animate({'background-color': '#003366'}, 'fast');
                         
-                        $rootScope.reducedbtile();
+                        //$rootScope.reducedbtile();
+                        $(".fdashboard").hide();
                         $rootScope.rotated = true;
                     },1000);
                 }
@@ -411,8 +417,8 @@ myApp.run(['$http','$cookies','beforeUnload','$document','$rootScope','Idle','bo
                         // $('.c-hamburger span').css("transform", "rotate(90deg)");				
                         // $('.c-hamburger span').css("transition", "transform 1.2s ease");
                         //$(".c-hamburger").animate({'background-color': '#FF0000'}, 'fast');
-
-                        $rootScope.reducedbtile();
+                        $(".fdashboard").show();
+                        //$rootScope.reducedbtile();
                         $rootScope.rotated = false;    
                     },1000);
                 }
@@ -427,7 +433,7 @@ myApp.run(['$http','$cookies','beforeUnload','$document','$rootScope','Idle','bo
                         // $('.c-hamburger span').css("transition", "transform 1.2s ease");
                         //$(".c-hamburger").animate({'background-color': '#FF0000'}, 'fast');
 
-                        
+                        $(".fdashboard").show();
                         $rootScope.rotated = false;    
                     },1000);
                 }
@@ -520,11 +526,11 @@ myApp.run(['$http','$cookies','beforeUnload','$document','$rootScope','Idle','bo
         $(document).bind("contextmenu",function(e) {
             e.preventDefault();
         });
-        $rootScope.$on('IdleTimeout', function() {
-            var scope = angular.element(document.getElementById('logout')).scope();
-            scope.logout();
-            // end their session and redirect to login
-        });
+        // $rootScope.$on('IdleTimeout', function() {
+        //     var scope = angular.element(document.getElementById('logout')).scope();
+        //     scope.logout();
+        //     // end their session and redirect to login
+        // });
     //};
     //Hide Code
     // var currentInnerHtml;

@@ -24,20 +24,7 @@ myApp.controller('HomeCtrl', function ($scope,$rootScope, TemplateService, Navig
                 //$( ".c-hamburger" ).trigger( "click" ); 
                 
         });
-        $rootScope.newuser = function() {
-            apiService.get_session({}).then( function (response) {
-                $cookies.put("csrftoken",response.data.csrf_token);
-                $cookies.put("session_id",response.data.session_id);
-                $.jStorage.set("csrftoken",response.data.csrf_token);
-                $.jStorage.set("session_id",response.data.session_id);
-                $rootScope.session_id =response.data.session_id;
-                $rootScope.chatlist = [];
-                $rootScope.firstMsg = true;
-                msg = {Text:"Hi, How may I help you ?",type:"SYS_FIRST"};
-                $rootScope.pushSystemMsg(0,msg);
-                //console.log(response.data);
-            });
-        };
+        
         angular.element(document).ready(function () {
             
             $scope.setdisconnectsocket = function(){
@@ -690,6 +677,19 @@ myApp.controller('HomeCtrl', function ($scope,$rootScope, TemplateService, Navig
             $rootScope.rotateoutmenu();
         },500);
     })
+    myApp.controller('ProfileCtrl', function ($scope,$rootScope, TemplateService, NavigationService,CsrfTokenService,Menuservice, $timeout,$http,apiService,$state,$cookies) {
+        $scope.getdashboarddata = function() {
+            formData={user:$.jStorage.get('email')};
+            apiService.getdashboarddata(formData).then( function (response) {
+                $(".tcount").text(response.data.data.t_count);
+                $(".icount").text(response.data.data.i_count);
+                $(".ccount").text(response.data.data.c_count);
+            });
+        };
+        angular.element(document).ready(function () {
+            $scope.getdashboarddata();
+        });
+    })
     myApp.controller('Dashboard5Ctrl', function ($scope,$rootScope, TemplateService, NavigationService,CsrfTokenService,Menuservice, $timeout,$http,apiService,$state,$cookies) {
         $scope.template = TemplateService.getHTML("content/dashboard5.html");
         TemplateService.title = "Dashboard"; //This is the Title of the Website
@@ -705,6 +705,7 @@ myApp.controller('HomeCtrl', function ($scope,$rootScope, TemplateService, Navig
                 
                 
             });
+            
         };
         angular.element(document).ready(function () {
             $scope.callsession();  
@@ -730,7 +731,7 @@ myApp.controller('HomeCtrl', function ($scope,$rootScope, TemplateService, Navig
             $rootScope.rotateoutmenu();
         },500);
     })
-    .controller('LoginCtrl', function ($scope, TemplateService, NavigationService,CsrfTokenService, $timeout, toastr, $http,$state,apiService,$uibModal,$filter,Idle,$rootScope) {
+    .controller('LoginCtrl', function ($scope, TemplateService, NavigationService,CsrfTokenService, $timeout, toastr, $http,$state,apiService,$uibModal,$filter,$rootScope) {
         $scope.template = TemplateService.getHTML("login.html");
         TemplateService.title = "Login"; //This is the Title of the Website
         //$scope.navigation = NavigationService.getNavigation();
@@ -814,9 +815,7 @@ myApp.controller('HomeCtrl', function ($scope,$rootScope, TemplateService, Navig
                             gb_matched_col_values:[],
                         };
                         $.jStorage.set("sessiondata",$scope.sessiondata);
-                        $scope.$on('IdleStart', function() {
-                            // the user appears to have gone idle
-                        });
+                        
                         if(callback.data.data.accessrole == 4)
                             $state.go("agentdashboard");
                         else
@@ -1514,7 +1513,7 @@ myApp.controller('HomeCtrl', function ($scope,$rootScope, TemplateService, Navig
     
 
     })
-    .controller('ChatCtrl', function ($scope, $rootScope,TemplateService, NavigationService,CsrfTokenService, $timeout,$http,apiService,$state,$uibModal,Menuservice,tts,$cookies,$sce,Excel) {
+    .controller('ChatCtrl', function ($scope, $rootScope,TemplateService, NavigationService,CsrfTokenService, $timeout,$http,apiService,$state,$uibModal,Menuservice,tts,$cookies,$sce,Excel,Idle) {
         $rootScope.contentobj = [];
         $rootScope.autocompletelist = [];
         $rootScope.chatOpen = false;
@@ -1578,6 +1577,44 @@ myApp.controller('HomeCtrl', function ($scope,$rootScope, TemplateService, Navig
         //  * be set inside a $rootScope variable. You can use it
         //  * as you want.
         //  */
+        $rootScope.newuser = function() {
+            if($rootScope.chatlist.length > 1)
+            {
+                apiService.get_session({}).then( function (response) {
+                    $cookies.put("csrftoken",response.data.csrf_token);
+                    $cookies.put("session_id",response.data.session_id);
+                    $.jStorage.set("csrftoken",response.data.csrf_token);
+                    $.jStorage.set("session_id",response.data.session_id);
+                    $rootScope.session_id =response.data.session_id;
+                    $rootScope.chatlist = [];
+                    $rootScope.firstMsg = true;
+                    msg = {Text:"Hi, How may I help you ?",type:"SYS_FIRST"};
+                    $rootScope.pushSystemMsg(0,msg);
+                    //console.log(response.data);
+                });
+            }
+        };
+        $rootScope.savehistory = function(obj) {
+            console.log(obj);
+            apiService.savehistory(obj).then(function (response){
+                
+            });
+        };
+        $rootScope.$on('IdleTimeout', function() {
+            // var scope = angular.element(document.getElementById('changepwd')).scope();
+            // scope.logout();
+            if($.jStorage.get("timer")==15)
+            {
+                // msg = {Text:"Hello! it looks like you've been inactive, type  help if you need anything ",type:"SYS_EMPTY_RES"};
+                // $rootScope.pushSystemMsg(0,msg); 
+                // end their session and redirect to login
+                Idle.setIdle(10);
+                Idle.watch();
+                $rootScope.newuser();
+                $.jStorage.set("timer",15);
+                //console.log("End -start new");
+            }
+        });
         var Base64={_keyStr:"ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/=",encode:function(e){var t="";var n,r,i,s,o,u,a;var f=0;e=Base64._utf8_encode(e);while(f<e.length){n=e.charCodeAt(f++);r=e.charCodeAt(f++);i=e.charCodeAt(f++);s=n>>2;o=(n&3)<<4|r>>4;u=(r&15)<<2|i>>6;a=i&63;if(isNaN(r)){u=a=64}else if(isNaN(i)){a=64}t=t+this._keyStr.charAt(s)+this._keyStr.charAt(o)+this._keyStr.charAt(u)+this._keyStr.charAt(a)}return t},decode:function(e){var t="";var n,r,i;var s,o,u,a;var f=0;e=e.replace(/[^A-Za-z0-9+/=]/g,"");while(f<e.length){s=this._keyStr.indexOf(e.charAt(f++));o=this._keyStr.indexOf(e.charAt(f++));u=this._keyStr.indexOf(e.charAt(f++));a=this._keyStr.indexOf(e.charAt(f++));n=s<<2|o>>4;r=(o&15)<<4|u>>2;i=(u&3)<<6|a;t=t+String.fromCharCode(n);if(u!=64){t=t+String.fromCharCode(r)}if(a!=64){t=t+String.fromCharCode(i)}}t=Base64._utf8_decode(t);return t},_utf8_encode:function(e){e=e.replace(/rn/g,"n");var t="";for(var n=0;n<e.length;n++){var r=e.charCodeAt(n);if(r<128){t+=String.fromCharCode(r)}else if(r>127&&r<2048){t+=String.fromCharCode(r>>6|192);t+=String.fromCharCode(r&63|128)}else{t+=String.fromCharCode(r>>12|224);t+=String.fromCharCode(r>>6&63|128);t+=String.fromCharCode(r&63|128)}}return t},_utf8_decode:function(e){var t="";var n=0;var r=c1=c2=0;while(n<e.length){r=e.charCodeAt(n);if(r<128){t+=String.fromCharCode(r);n++}else if(r>191&&r<224){c2=e.charCodeAt(n+1);t+=String.fromCharCode((r&31)<<6|c2&63);n+=2}else{c2=e.charCodeAt(n+1);c3=e.charCodeAt(n+2);t+=String.fromCharCode((r&15)<<12|(c2&63)<<6|c3&63);n+=3}}return t}}
         
         function displayTranscript() {
@@ -1762,7 +1799,7 @@ myApp.controller('HomeCtrl', function ($scope,$rootScope, TemplateService, Navig
                 animation: true,
                 size: 'lg',
                 templateUrl: 'views/modal/profile.html',
-                //controller: 'CommonCtrl'
+                controller: 'ProfileCtrl'
             });
         };
         $scope.Mydashboardcancel = function() {
@@ -1807,13 +1844,13 @@ myApp.controller('HomeCtrl', function ($scope,$rootScope, TemplateService, Navig
             {
                 $(".expandable2").removeClass('col-lg-12');
                 $(".expandable2").addClass('col-lg-8');
-                $rootScope.reducedbtile();
+                //$rootScope.reducedbtile();
             }
             else if($(".expandable2").hasClass('col-lg-9')) //-- menu opened
             {
                 $(".expandable2").removeClass('col-lg-9');
                 $(".expandable2").addClass('col-lg-5');
-                $rootScope.expanddbtile();
+                //$rootScope.expanddbtile();
             }
         };
         $rootScope.minimizeChatwindow = function() {
@@ -1838,7 +1875,7 @@ myApp.controller('HomeCtrl', function ($scope,$rootScope, TemplateService, Navig
                 $(".expandable2").addClass('col-lg-9');
                 if($(".dashboardtiles").hasClass('col-lg-6'))
                 {
-                    $rootScope.reducedbtile();
+                    //$rootScope.reducedbtile();
                 }
                 
             }
@@ -2028,7 +2065,7 @@ myApp.controller('HomeCtrl', function ($scope,$rootScope, TemplateService, Navig
             });
 
         };
-        $scope.faqdtc=0;
+        //$scope.faqdtc=0;
         //angular.element(document).ready(function () {
             //$("a.dtfaq").click( function() {
             // $('.dtfaq').click(function(e){
@@ -2313,7 +2350,7 @@ myApp.controller('HomeCtrl', function ($scope,$rootScope, TemplateService, Navig
         $rootScope.getDthlinkRes = function(stage,dthlink,tiledlist) {
             //console.log(colno,lineno,dthlink);
             //mysession = $.jStorage.get("sessiondata");
-            if($scope.faqdtc<1)
+            //if($scope.faqdtc<1)
             {
                 var mysession = {};
                 
@@ -2333,6 +2370,14 @@ myApp.controller('HomeCtrl', function ($scope,$rootScope, TemplateService, Navig
                 //console.log(formData);
                 apiService.getDthlinkRes(formData).then(function (data){
                     angular.forEach(data.data.tiledlist, function(value, key) {
+                        var topic2 = "";
+                        if(data.data.tiledlist[0].topic)
+                            topic2 = data.data.tiledlist[0].topic;
+                        var Journey_Name2 = "";
+                        if(data.data.tiledlist[0].Journey_Name)
+                            Journey_Name2 = data.data.tiledlist[0].Journey_Name;
+                        var obj = {DTHstage:stage,DTHlink:dthlink,session_id:$.jStorage.get('session_id'),user:$.jStorage.get('email'),user_input:'',response:data.data.tiledlist[0],topic:topic2,Journey_Name:Journey_Name2,responsetype:value.type};
+                        $rootScope.savehistory(obj);
                         if(value.type=="DTHyperlink")
                         {
                             $rootScope.DthResponse(0,data.data,dthlink);
@@ -2357,7 +2402,7 @@ myApp.controller('HomeCtrl', function ($scope,$rootScope, TemplateService, Navig
                             //     $rootScope.rotateoutmenu();
                         }
                     });
-                    $scope.faqdtc=0;
+                    // $scope.faqdtc=0;
                 }).catch(function(reason){
                     console.log(reason);
                 });
@@ -3266,6 +3311,7 @@ myApp.controller('HomeCtrl', function ($scope,$rootScope, TemplateService, Navig
                 //$rootScope.formData = {user_id:1164,user_input:value,auto_id:parseInt(id),auto_value:value,'csrfmiddlewaretoken':token};
             //var mysessiondata = $.jStorage.get("sessiondata");
             $(".fdashboard").hide();
+            var prevmsg = value;
             var mysessiondata = {};
                 //mysessiondata = mysessiondata.toObject();
                 //mysessiondata.data = {id:parseInt(id),Text:value};
@@ -3291,18 +3337,20 @@ myApp.controller('HomeCtrl', function ($scope,$rootScope, TemplateService, Navig
                 //io.socket.get('/Livechat/addconv');
                 
                 apiService.getSysMsg($rootScope.formData).then(function (data){
-                        //console.log(data);
-                    var ci_t = data.data.data;
-                    var a = ci_t.toString().replace(" ", "+");
-                    var b=a.replace(" ", "+");
-                    var bytes = CryptoJS.AES.decrypt((b),'k_123');
-                    // console.log(ciphertext);
-                    console.log(bytes);
-                    var decryptedData = JSON.parse(bytes.toString(CryptoJS.enc.Utf8));
-                     console.log(decryptedData);
+                        console.log(data);
+                    // var ci_t = data.data.data;
+                    // var a = ci_t.toString().replace(" ", "+");
+                    // var b=a.replace(" ", "+");
+                    // var bytes = CryptoJS.AES.decrypt((b),'k_123');
+                    // // console.log(ciphertext);
+                    // console.log(bytes);
+                    // var decryptedData = JSON.parse(bytes.toString(CryptoJS.enc.Utf8));
+                    //  console.log(decryptedData);
+                    decryptedData = data.data.data;
                     data = decryptedData;
                         if(decryptedData.tiledlist[0].topic)
                              $("#topic").text(decryptedData.tiledlist[0].topic);
+                    data.prevmsg = prevmsg;
                     angular.forEach(decryptedData.tiledlist, function(value, key) {
                         //console.log(value);
                         if(value.type=="text")
@@ -3320,7 +3368,7 @@ myApp.controller('HomeCtrl', function ($scope,$rootScope, TemplateService, Navig
                                 
                             },200);
                             
-                            return false;
+                            //return false;
                         }
                         if(value.type=="rate card")
                         {
@@ -3340,7 +3388,7 @@ myApp.controller('HomeCtrl', function ($scope,$rootScope, TemplateService, Navig
                                 $("select.r_c_row:last").trigger('change');
                             },1000);
                             
-                            return false;
+                            //return false;
                         }
                         else if(value.type=="DTHyperlink")
                         {
@@ -3374,11 +3422,22 @@ myApp.controller('HomeCtrl', function ($scope,$rootScope, TemplateService, Navig
                             $('.carousel').find('.item').first().addClass('active');
                             },2000);
                             
-                            return false;
+                            //return false;
                         }
+                        var topic2 = "";
+                        if(decryptedData.tiledlist[0].topic)
+                            topic2 = decryptedData.tiledlist[0].topic;
+                        var Journey_Name2 = "";
+                        if(decryptedData.tiledlist[0].Journey_Name)
+                            Journey_Name2 = decryptedData.tiledlist[0].Journey_Name;
+                        var obj = {session_id:$.jStorage.get('session_id'),user:$.jStorage.get('email'),user_input:prevmsg,response:decryptedData.tiledlist[0],topic:topic2,Journey_Name:Journey_Name2,responsetype:value.type};
+                        $rootScope.savehistory(obj);
+                        $scope.$on('IdleStart', function() {
+                            // the user appears to have gone idle
+                            Idle.watch();
+                        });
                     });
                     
-
 
 
                     // apiService.getttsSpeech({text:data.data.data.tiledlist[0].Script[0]}).then(function (data){

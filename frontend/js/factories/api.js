@@ -31,6 +31,24 @@ myApp.factory('apiService', function ($http, $q, $timeout,CsrfTokenService,$http
                 data: formData
             })
         },
+        getdashboarddata:function(formData, callback) {
+            
+            return $http({
+                url:adminUrl3+ "Chathistory/getdashboarddata",
+                method: 'POST',
+                data: formData,
+            });
+           
+        },
+        savehistory:function(formData, callback) {
+            
+            return $http({
+                url:adminUrl3+ "Chathistory/savehistory",
+                method: 'POST',
+                data: formData,
+            });
+           
+        },
         saveagentchat:function(formData, callback) {
             
             return $http({
@@ -280,6 +298,11 @@ myApp.factory('apiService', function ($http, $q, $timeout,CsrfTokenService,$http
             // });
             // var fd = $.param(formData);
             // var ciphertext = CryptoJS.AES.encrypt(JSON.stringify(fd), 'k_123');
+            
+            
+            
+            
+            
             var fd = JSON.stringify((formData));
             //var encodedString = Base64.encode(fd);
             //console.log(fd);
