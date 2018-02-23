@@ -11,9 +11,16 @@
                                 Script <i class="pull-right glyphicon" ng-class="{'glyphicon-chevron-down': status.open, 'glyphicon-chevron-right': !status.open}"></i>
                             </div>
                         </uib-accordion-heading>
-                        <p class="redtext" ng-repeat="scrpttext in tabvalue.element_values[0].Script track by $index">
-                            Script {{$index+1}} : <br>
-                            <ng-bind-html ng-bind-html="scrpttext|newlines">
+                        <ul class="pagination" ng-init=" showscript1(0); ">
+                                
+                            <li data-index="{{$index}}" ng-repeat="scrpttext in tabvalue.element_values[0].Script track by $index"  >
+                                <a href="#" ng-click=" showscript($index); ">{{$index+1}}</a>
+                            </li>
+                                
+                        </ul>
+                        <p style="display:none;" class="redtext redtext{{$index}}" ng-repeat="scrpttext in tabvalue.element_values[0].Script track by $index" >
+                            
+                            <ng-bind-html  ng-bind-html="scrpttext|newlines">
                                 {{scrpttext}}
                             </ng-bind-html>
                         </p>
@@ -345,7 +352,7 @@
                                 </div>
                             </div>
                         </div> -->
-                        <div class="col-lg-3 dashboardtiles">
+                        <div class="col-lg-4 dashboardtiles">
                             <div class="widgetcard card " >
                                 <div class="card-header" data-background-color="kotakblue">
                                     <div class="">
@@ -374,7 +381,7 @@
                         </div>
                     </div>
                     <div class="row cards">
-                        <div class="col-lg-3 dashboardtiles">
+                        <div class="col-lg-4 dashboardtiles">
                             <div class="widgetcard card " >
                                 <div class="card-header" data-background-color="kotakblue">
                                     <div class="">
@@ -395,7 +402,7 @@
                         </div>
                     </div>
                     <div class="row cards">
-                        <div class="col-lg-3 dashboardtiles">
+                        <div class="col-lg-4 dashboardtiles">
                             <div class="widgetcard card " >
                                 <div class="card-header" data-background-color="kotakblue">
                                     <div class="">

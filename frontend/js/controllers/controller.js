@@ -707,6 +707,22 @@ myApp.controller('HomeCtrl', function ($scope,$rootScope, TemplateService, Navig
             });
             
         };
+        $scope.showscript = function(index) {
+            console.log(index);
+            $(".redtext").hide();
+            $(".redtext"+index).show();
+            $('ul.pagination li').removeClass('active');
+            $('ul.pagination li[data-index='+index+']').addClass('active');
+        };
+        $scope.showscript1 = function(index) {
+            $timeout(function(){
+                $(".redtext").hide();
+                $(".redtext"+index).show();
+                $('ul.pagination li').removeClass('active');
+                $('ul.pagination li[data-index='+index+']').addClass('active');
+            },1000);
+            
+        };
         angular.element(document).ready(function () {
             $scope.callsession();  
             if(!$.jStorage.get('firstreload'))
@@ -1603,7 +1619,7 @@ myApp.controller('HomeCtrl', function ($scope,$rootScope, TemplateService, Navig
         $rootScope.$on('IdleTimeout', function() {
             // var scope = angular.element(document.getElementById('changepwd')).scope();
             // scope.logout();
-            if($.jStorage.get("timer")==15)
+            if($.jStorage.get("timer")==45)
             {
                 // msg = {Text:"Hello! it looks like you've been inactive, type  help if you need anything ",type:"SYS_EMPTY_RES"};
                 // $rootScope.pushSystemMsg(0,msg); 
@@ -1611,7 +1627,7 @@ myApp.controller('HomeCtrl', function ($scope,$rootScope, TemplateService, Navig
                 Idle.setIdle(10);
                 Idle.watch();
                 $rootScope.newuser();
-                $.jStorage.set("timer",15);
+                $.jStorage.set("timer",45);
                 //console.log("End -start new");
             }
         });
@@ -2401,6 +2417,20 @@ myApp.controller('HomeCtrl', function ($scope,$rootScope, TemplateService, Navig
                             // if($(".expandable2").hasClass('col-lg-8'))
                             //     $rootScope.rotateoutmenu();
                         }
+                        if(value.type=="product listing")
+                        {
+                            $rootScope.pushSystemMsg(0,data.data);
+                            $rootScope.showMsgLoader = false;
+                            $timeout(function(){
+                            $('.carousel').carousel({
+                                interval: false,
+                                wrap: false
+                            });
+                            $('.carousel').find('.item').first().addClass('active');
+                            },2000);
+                            
+                            //return false;
+                        }
                     });
                     // $scope.faqdtc=0;
                 }).catch(function(reason){
@@ -2408,6 +2438,7 @@ myApp.controller('HomeCtrl', function ($scope,$rootScope, TemplateService, Navig
                 });
             }
         };
+        
         $rootScope.getDthlinkRes2 = function(stage,dthlink,index) {
             //console.log(colno,lineno,dthlink);
             //mysession = $.jStorage.get("sessiondata");
@@ -3346,7 +3377,7 @@ myApp.controller('HomeCtrl', function ($scope,$rootScope, TemplateService, Navig
                     // console.log(bytes);
                     // var decryptedData = JSON.parse(bytes.toString(CryptoJS.enc.Utf8));
                     //  console.log(decryptedData);
-                    decryptedData = data.data.data;
+                    decryptedData = data.data;
                     data = decryptedData;
                         if(decryptedData.tiledlist[0].topic)
                              $("#topic").text(decryptedData.tiledlist[0].topic);
