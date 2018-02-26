@@ -17,18 +17,18 @@ div.processviews.ng-enter-active {
     opacity: 1;
 }
 .processviews.ng-enter {
-    -webkit-animation: zoomIn 0.2s;
-    animation: zoomIn 0.2s;
-    opacity: 0;
+    // -webkit-animation: zoomIn 0.2s;
+    // animation: zoomIn 0.2s;
+    // opacity: 0;
 }
 .processviews.ng-leave {
-  animation: fadeOut 2s;
-  opacity: 1;
+//   animation: fadeOut 2s;
+//   opacity: 1;
 }
 .processviews.ng-hide-add {
-    -webkit-animation: fadeOut 2.5s;
-    animation: fadeOut 2.5s;
-    display: block !important;
+    // -webkit-animation: fadeOut 2.5s;
+    // animation: fadeOut 2.5s;
+    // display: block !important;
 }
 @keyframes zoomIn {
   from {
