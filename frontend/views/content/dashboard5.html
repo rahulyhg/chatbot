@@ -25,7 +25,7 @@
                             </ng-bind-html>
                         </p> -->
                         <p  class="redtext redtext{{$index}}" ng-repeat="scrpttext in tabvalue.element_values[0].Script track by $index" >
-                            Script {{$index}}<br>
+                            Script {{$index+1}}<br>
                             <ng-bind-html  ng-bind-html="scrpttext|newlines">
                                 {{scrpttext}}
                             </ng-bind-html>
