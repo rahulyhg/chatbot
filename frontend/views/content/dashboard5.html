@@ -11,7 +11,7 @@
                                 Script <i class="pull-right glyphicon" ng-class="{'glyphicon-chevron-down': status.open, 'glyphicon-chevron-right': !status.open}"></i>
                             </div>
                         </uib-accordion-heading>
-                        <ul class="pagination" ng-init=" showscript1(0); ">
+                        <!-- <ul class="pagination" ng-init=" showscript1(0); ">
                                 
                             <li data-index="{{$index}}" ng-repeat="scrpttext in tabvalue.element_values[0].Script track by $index"  >
                                 <a href="#" ng-click=" showscript($index); ">{{$index+1}}</a>
@@ -20,6 +20,12 @@
                         </ul>
                         <p style="display:none;" class="redtext redtext{{$index}}" ng-repeat="scrpttext in tabvalue.element_values[0].Script track by $index" >
                             
+                            <ng-bind-html  ng-bind-html="scrpttext|newlines">
+                                {{scrpttext}}
+                            </ng-bind-html>
+                        </p> -->
+                        <p  class="redtext redtext{{$index}}" ng-repeat="scrpttext in tabvalue.element_values[0].Script track by $index" >
+                            Script {{$index}}<br>
                             <ng-bind-html  ng-bind-html="scrpttext|newlines">
                                 {{scrpttext}}
                             </ng-bind-html>
