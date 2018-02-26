@@ -695,6 +695,9 @@ myApp.controller('HomeCtrl', function ($scope,$rootScope, TemplateService, Navig
         TemplateService.title = "Dashboard"; //This is the Title of the Website
         $scope.navigation = NavigationService.getNavigation();
         $rootScope.uipage="dashboard";
+        $scope.isCollapsed_c = true;
+        $scope.isCollapsed_c1 = true;
+        $scope.isCollapsed_c2 = true;
         $scope.callsession = function() {
             apiService.get_session({}).then( function (response) {
                 $cookies.put("csrftoken",response.data.csrf_token);

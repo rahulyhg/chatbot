@@ -127,7 +127,8 @@
                                                         <a class='right carousel-control' href='#myCarousel{{$rowIndex}}' data-slide='next'><i class='glyphicon glyphicon-chevron-right'></i></a>
                                                     </div>
                                                 </div> 
-                                                <div class="chatType animated fadeIn boxme" ng-if="list.msg.tiledlist[0].type==='DTHyperlink'">
+                                                <!-- animated fadeIn -->
+                                                <div class="chatType  boxme" ng-if="list.msg.tiledlist[0].type==='DTHyperlink'">
                                                     
                                                     <ng-bind-html ng-if="chatRes.Text != '' && chatRes.Text" ng-bind-html="chatRes.Text|newlines">
                                                         <p class="lastmsg" >
