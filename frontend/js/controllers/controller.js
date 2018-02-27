@@ -4006,6 +4006,7 @@ myApp.controller('HomeCtrl', function ($scope,$rootScope, TemplateService, Navig
     .controller('View2Ctrl', function ($scope,$rootScope, $uibModalInstance, items) {
         $scope.items = items;
         $scope.data=items.viewdata;
+        $scope.img=items.image;
         // _.each(items.contentobj,function(v,k){
         //     if(v.type == items.viewdata)
         //     {
