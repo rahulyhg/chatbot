@@ -2420,6 +2420,26 @@ myApp.controller('HomeCtrl', function ($scope,$rootScope, TemplateService, Navig
                             // if($(".expandable2").hasClass('col-lg-8'))
                             //     $rootScope.rotateoutmenu();
                         }
+                        if(value.type=="rate card")
+                        {
+                            $rootScope.pushSystemMsg(0,data.data);
+                            $rootScope.showMsgLoader = false;
+                            
+                            // $(".r_c_col").val($(".r_c_col option:first").val());
+                            // $(".r_c_row").val($(".r_c_row option:first").val());
+
+                            // var firstOption = $('.r_c_col option:first');
+                            // firstOption.attr('selected', true);
+                            // $('.r_c_col').attr('selectedIndex', 0);
+                            $timeout(function(){
+                                $('select.r_c_col:last option:nth-child(2)').attr("selected", "selected");
+                                $('select.r_c_row:last option:nth-child(2)').attr("selected", "selected");
+                                $("select.r_c_col:last").trigger('change');
+                                $("select.r_c_row:last").trigger('change');
+                            },1000);
+                            
+                            return false;
+                        }
                         if(value.type=="product listing")
                         {
                             $rootScope.pushSystemMsg(0,data.data);
@@ -2529,10 +2549,10 @@ myApp.controller('HomeCtrl', function ($scope,$rootScope, TemplateService, Navig
         };
         $rootScope.viewdata1 = "";
         $rootScope.viewmodalInstance2 = {};
-        $rootScope.openpopupModal = function(d) {
+        $rootScope.openpopupModal = function(d,image) {
             
             $rootScope.viewdata = d;
-            $rootScope.sendobj = {viewdata : $rootScope.viewdata};
+            $rootScope.sendobj = {viewdata : $rootScope,img:image};
             //if(angular.equals({}, $rootScope.viewmodalInstance2))
             console.log($(".modal-dialog").is(':visible'));
             if(!$(".modal-dialog").is(':visible'))
@@ -2980,8 +3000,8 @@ myApp.controller('HomeCtrl', function ($scope,$rootScope, TemplateService, Navig
                 // $scope.activeTab = 'Process';
                 // $scope.activateTab('Process');
             }
-            ele.push('Old Process');
-            ele_val.push(data.tiledlist[0]);
+            // ele.push('Old Process');
+            // ele_val.push(data.tiledlist[0]);
             $(document).on('click', 'li.Process.uib-tab', function(){
                 $("div.scriptData").show();
             });

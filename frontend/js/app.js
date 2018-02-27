@@ -222,9 +222,10 @@ myApp.run(['$http','$cookies','beforeUnload','$document','$rootScope','Idle','bo
     angular.element(document).ready(function () {
         $(document).on('click','a.popupdata', function(){
             index = $(this).attr('data-index');
+            image = $(this).attr('data-image');
             //console.log($rootScope.popupdata[index]);
-            console.log('popup click');
-            $rootScope.openpopupModal($rootScope.popupdata[index]);
+            // console.log('popup click');
+            $rootScope.openpopupModal($rootScope.popupdata[index],image);
         });
         $(document).on('click', '.dtfaq', function(e){
         //$(document).unbind("click").on('click', '.dtfaq', function(){
