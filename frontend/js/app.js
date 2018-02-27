@@ -17,6 +17,7 @@ var myApp = angular.module('myApp', [
     'app.directives',
     'voiceRss',
     'jlareau.bowser',
+    'ui.select2',
     // 'angular-intro'
 ]);
 //angular.module('manage', ['ngResource']);
