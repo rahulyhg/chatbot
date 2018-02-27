@@ -27,6 +27,8 @@ li.initial {
 .select2-container.form-control {
     border: 0px !important;
     padding: 0px !important;
+    max-width: 200px;
+    overflow: hidden;
 }
 .nameinitial {
     width: 25px;
