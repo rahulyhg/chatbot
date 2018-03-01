@@ -10774,9 +10774,9 @@ div.scriptData .panel-body {
   float: left;
   text-align: center; }
 
-.card-title .card-header i.glyphicon {
-  font-size: 30px;
-  width: 36px; }
+.card-stats .card-header i.glyphicon {
+  font-size: 30px !important;
+  width: 36px !important; }
 
 .card-stats .card-header i {
   font-size: 36px;
