@@ -30,13 +30,54 @@ module.exports = mongoose.model('Chathistory', schema,'chathistory');
 var exports = _.cloneDeep(require("sails-wohlig-service")(schema, "chathistory", "chathistory"));
 //new RegExp(searchstring)
 //{ $regex: searchstring, $options: 'i' }
+function extend(target) {
+    var sources = [].slice.call(arguments, 1);
+    sources.forEach(function (source) {
+        for (var prop in source) {
+            target[prop] = source[prop];
+        }
+    });
+    return target;
+}
 var model = {
     getdashboarddata: function (data, callback) {
         var resobj = {};
-        Chathistory.count({user: data.user}, function(err, c) {
-           console.log('Count is ' + c);
-           Chathistory.aggregate([
-                { "$match": { "user": data.user } },
+        var search = {
+            user: data.user
+        };
+        var filterobj = {};
+        if(data.fromdata && data.todate) {
+            if(data.fromdate != "" && data.todate != "")
+            {
+                filterobj = {
+                    "createdAt": {"$gte": new Date(data.fromdate), "$lt": new Date(data.todate)}
+                };
+            }
+        }
+        else if(data.fromdate)
+        {
+            if(data.fromdate != "" )
+            {
+                filterobj = {
+                    "createdAt": {"$gte": new Date(data.fromdate)}
+                };
+            }
+        }   
+        else if(data.todate)
+        {
+            if(data.todate != "" )
+            {
+                filterobj = {
+                    "createdAt": {"$lt": new Date(data.todate)}
+                };
+            }
+        }
+        var object3 = extend({}, search, filterobj);
+        console.log(object3);
+        Chathistory.count(object3, function(err, c) {
+            //console.log('Count is ' + c);
+            Chathistory.aggregate([
+                { "$match": object3 },
                 {
                     "$project": {
                         "ticketsCount": {
@@ -53,10 +94,10 @@ var model = {
                     }
                 }
             ],function(err, results) {
-                console.log(results);
+                //console.log(results);
                 
                 Chathistory.aggregate([ 
-                    { "$match": { "user": data.user } },
+                    { "$match": object3 },
                     {
                         "$group":  { "_id": "$chatlist.topic" }
                     },
@@ -68,8 +109,15 @@ var model = {
                     }
                 ],
                 function(err, results2) {
-                    resobj ={c_count : c,i_count:results[0].count,t_count:results2[0].total};
-                    console.log(results2);
+                    var ccount = c;
+                    var icount = 0;
+                    if(results.length > 0)
+                        icount = results[0].count;
+                    var tcount = 0;
+                    if(results2.length > 0)
+                        tcount = results2[0].total;
+                    resobj ={c_count : ccount,i_count:icount,t_count:tcount};
+                    //console.log(results2);
                     callback(null,resobj);
                 }); 
                 

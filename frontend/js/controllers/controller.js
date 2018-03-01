@@ -679,12 +679,22 @@ myApp.controller('HomeCtrl', function ($scope,$rootScope, TemplateService, Navig
     })
     myApp.controller('ProfileCtrl', function ($scope,$rootScope, TemplateService, NavigationService,CsrfTokenService,Menuservice, $timeout,$http,apiService,$state,$cookies) {
         $scope.getdashboarddata = function() {
-            formData={user:$.jStorage.get('email')};
+            fromdate=$(".fromdate").val();
+            todate=$(".todate").val();
+            formData={user:$.jStorage.get('email'),fromdate:fromdate,todate:todate};
+
             apiService.getdashboarddata(formData).then( function (response) {
                 $(".tcount").text(response.data.data.t_count);
                 $(".icount").text(response.data.data.i_count);
                 $(".ccount").text(response.data.data.c_count);
             });
+        };
+        $scope.getfilterdb = function() {
+            fromdate=$(".fromdate").val();
+            todate=$(".todate").val();
+            console.log(fromdate);
+            console.log(todate);
+            $scope.getdashboarddata();
         };
         angular.element(document).ready(function () {
             $scope.getdashboarddata();
