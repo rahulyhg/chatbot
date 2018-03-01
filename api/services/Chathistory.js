@@ -42,37 +42,60 @@ function extend(target) {
 var model = {
     getdashboarddata: function (data, callback) {
         var resobj = {};
-        var search = {
-            user: data.user
-        };
+        var userfilter = {};
+        
         var filterobj = {};
-        if(data.fromdata && data.todate) {
-            if(data.fromdate != "" && data.todate != "")
+        var filter2 = {};
+        if(data.user)
+        {
+            if(data.user != '')
             {
-                filterobj = {
-                    "createdAt": {"$gte": new Date(data.fromdate), "$lt": new Date(data.todate)}
+                userfilter = {
+                    user: data.user
                 };
             }
         }
-        else if(data.fromdate)
-        {
-            if(data.fromdate != "" )
-            {
-                filterobj = {
-                    "createdAt": {"$gte": new Date(data.fromdate)}
-                };
+        if(data.date_filter_type=="") {
+            if(data.fromdata && data.todate) {
+                if(data.fromdate != "" && data.todate != "")
+                {
+                    filterobj = {
+                        "createdAt": {"$gte": new Date(data.fromdate), "$lt": new Date(data.todate)}
+                    };
+                }
             }
-        }   
-        else if(data.todate)
-        {
-            if(data.todate != "" )
+            else if(data.fromdate)
             {
-                filterobj = {
-                    "createdAt": {"$lt": new Date(data.todate)}
-                };
+                if(data.fromdate != "" )
+                {
+                    filterobj = {
+                        "createdAt": {"$gte": new Date(data.fromdate)}
+                    };
+                }
+            }   
+            else if(data.todate)
+            {
+                if(data.todate != "" )
+                {
+                    filterobj = {
+                        "createdAt": {"$lt": new Date(data.todate)}
+                    };
+                }
             }
         }
-        var object3 = extend({}, search, filterobj);
+        else if(data.date_filter_type=="1")
+        {
+            filterobj = {
+                "createdAt": {"$gte": new Date(data.date_filter)}
+            };
+        }
+        else if(data.date_filter_type=="2")
+        {
+            filterobj = {
+                "createdAt": {"$gte": new Date(data.date_filter2_fromdate), "$lt": new Date(data.date_filter2_todate)}
+            };
+        }
+        var object3 = extend({}, userfilter, filterobj);
         console.log(object3);
         Chathistory.count(object3, function(err, c) {
             //console.log('Count is ' + c);

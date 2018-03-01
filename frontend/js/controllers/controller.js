@@ -678,10 +678,40 @@ myApp.controller('HomeCtrl', function ($scope,$rootScope, TemplateService, Navig
         },500);
     })
     myApp.controller('ProfileCtrl', function ($scope,$rootScope, TemplateService, NavigationService,CsrfTokenService,Menuservice, $timeout,$http,apiService,$state,$cookies) {
+        $scope.myemail = $.jStorage.get('email');
         $scope.getdashboarddata = function() {
             fromdate=$(".fromdate").val();
             todate=$(".todate").val();
-            formData={user:$.jStorage.get('email'),fromdate:fromdate,todate:todate};
+            datefilter2=$(".datefilter2").val();
+            var date_filter = "";
+            var date_filter2 = "";
+            var today = new Date();
+            var dd = today.getDate();
+            var mm = today.getMonth()+1; //January is 0!
+
+            var yyyy = today.getFullYear();
+            if(dd<10){
+                dd='0'+dd;
+            } 
+            if(mm<10){
+                mm='0'+mm;
+            } 
+            var today = yyyy+'-'+mm+'-'+dd;
+            //datefilter 1= today, 2 = last 30 day 
+            if(datefilter2 == '')
+            {
+
+            }
+            else {
+                if(datefilter2=='1')
+                    date_filter=today;
+                else if(datefilter2=='2')
+                {
+                    date_filter2 = moment().subtract(30, "days").format("YYYY-MM-DD");
+                }
+            }
+            
+            formData={user:$('.userlist').val(),fromdate:fromdate,todate:todate,date_filter:date_filter,date_filter2_todate:today,date_filter2_fromdate:date_filter2,date_filter_type:datefilter2};
 
             apiService.getdashboarddata(formData).then( function (response) {
                 $(".tcount").text(response.data.data.t_count);

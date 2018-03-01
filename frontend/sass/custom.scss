@@ -914,14 +914,20 @@ div.scriptData .panel-body {
     float: left;
     text-align: center;
 }
-
+.card-title .card-header i.glyphicon {
+    font-size: 30px;
+    width: 36px;
+}
 .card-stats .card-header i {
     font-size: 36px;
     line-height: 56px;
     width: 56px;
     height: 56px;
 }
-
+.card-stats .card-header i.fa {
+    font-size: 36px;
+    width: 36px;
+}
 .card-stats .card-content {
     text-align: right;
     padding-top: 10px;

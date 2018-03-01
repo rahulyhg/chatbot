@@ -14,12 +14,16 @@
                         <input type="date" class="form-control fromdate" name="fromdate" id="fromdate" placeholder="">
                     </div>
                 </div>
-                <!-- <div class="form-group">
-                    <label for="inputEmail3" class="col-sm-2 control-label">From Date</label>
+                 <div class="form-group">
+                    <label for="datefilter2" class="col-sm-2 control-label">Date Filter</label>
                     <div class="col-sm-10">
-                        <input type="date" class="form-control fromdate" id="inputEmail3" placeholder="">
+                        <select class="datefilter2 form-control" name="datefilter2" id="datefilter2">
+                            <option value="">Select Filter</option>
+                            <option value="1">Today</option>
+                            <option value="2">Last 30 days</option>
+                        </select>
                     </div>
-                </div> -->
+                </div> 
                 <div class="form-group">
                     <div class="col-sm-offset-2 col-sm-10">
                         <button type="submit" class="btn btn-default" ng-click="getfilterdb();">Submit</button>
@@ -33,6 +37,15 @@
                         <input type="date" class="form-control todate" name="todate" id="todate" placeholder="">
                     </div>
                 </div>
+                <div class="form-group">
+                    <label for="userlist" class="col-sm-2 control-label">Users</label>
+                    <div class="col-sm-10">
+                        <select class="userlist form-control" name="userlist" id="userlist">
+                            <option value="">All</option>
+                            <option value="{{myemail}}">{{myemail}}</option>
+                        </select>
+                    </div>
+                </div>
             </div>
         </div>
     </form>
@@ -41,7 +54,8 @@
         <div class="col-lg-4 col-md-6 col-sm-6">
             <div class="card card-stats">
                 <div class="card-header" data-background-color="red">
-                    <i class="icon-bar-chart"></i>
+                    <!-- <i class="icon-bar-chart"></i> -->
+                    <i class="glyphicon glyphicon-comment"></i>
                 </div>
                 <div class="card-content">
                     <p class="category">Total Conversations</p>
@@ -57,7 +71,8 @@
         <div class="col-lg-4 col-md-6 col-sm-6">
             <div class="card card-stats">
                 <div class="card-header" data-background-color="orange">
-                    <i class="icon-comments"></i>
+                    <!-- <i class="icon-comments"></i> -->
+                    <i class="fa fa-commenting-o" aria-hidden="true"></i>
                 </div>
                 <div class="card-content">
                     <p class="category">Total Interactions &nbsp; &nbsp; &nbsp; &nbsp;</p>
@@ -76,7 +91,8 @@
         <div class="col-lg-4 col-md-6 col-sm-6">
             <div class="card card-stats">
                 <div class="card-header" data-background-color="green">
-                    <i class="icon-tags"></i>
+                    <!-- <i class="icon-tags"></i> -->
+                    <i class="fa fa-book"></i>
                 </div>
                 <div class="card-content">
                     <p class="category">No. of topics discussed</p>
