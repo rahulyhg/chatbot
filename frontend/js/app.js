@@ -354,7 +354,7 @@ myApp.run(['$http','$cookies','beforeUnload','$document','$rootScope','Idle','bo
                         //$rootScope.expanddbtile();
                         $rootScope.rotated = true;
                         $(".fdashboard").hide();
-                    },1000);
+                    },0);
                 }
                 else {
                     console.log("chat not visible");
@@ -368,7 +368,7 @@ myApp.run(['$http','$cookies','beforeUnload','$document','$rootScope','Idle','bo
                         //$rootScope.reducedbtile();
                         $(".fdashboard").hide();
                         $rootScope.rotated = true;
-                    },1000);
+                    },0);
                 }
             }
             else if($(".expandable2").hasClass('col-lg-12')) //-- menu closed
@@ -388,7 +388,7 @@ myApp.run(['$http','$cookies','beforeUnload','$document','$rootScope','Idle','bo
                         //$rootScope.expanddbtile();
                         $(".fdashboard").hide();
                         $rootScope.rotated = true;
-                    },1000);
+                    },0);
                 }
                 else {
                     console.log("chat not visible");
@@ -404,7 +404,7 @@ myApp.run(['$http','$cookies','beforeUnload','$document','$rootScope','Idle','bo
                         //$rootScope.reducedbtile();
                         $(".fdashboard").hide();
                         $rootScope.rotated = true;
-                    },1000);
+                    },0);
                 }
             }
             else { // menu is open
@@ -422,7 +422,7 @@ myApp.run(['$http','$cookies','beforeUnload','$document','$rootScope','Idle','bo
                         $(".fdashboard").show();
                         //$rootScope.reducedbtile();
                         $rootScope.rotated = false;    
-                    },1000);
+                    },0);
                 }
                 else {
                     $('.list-group').toggle('slide');
@@ -437,7 +437,7 @@ myApp.run(['$http','$cookies','beforeUnload','$document','$rootScope','Idle','bo
 
                         $(".fdashboard").show();
                         $rootScope.rotated = false;    
-                    },1000);
+                    },0);
                 }
                 
             }

@@ -1415,6 +1415,8 @@ myApp.controller('HomeCtrl', function ($scope,$rootScope, TemplateService, Navig
 
 
     .controller('CommonCtrl', function ($scope, TemplateService, NavigationService,CsrfTokenService, $timeout,$uibModal, toastr, $http,$state,apiService,$cookies,$rootScope) {
+        var date = new Date();
+        $scope.FromDate = ('0' + date.getDate()).slice(-2) + '-' + ('0' + (date.getMonth() + 1)).slice(-2) + '-' + date.getFullYear();
         $rootScope.logout = function() {
 
             CsrfTokenService.getCookie("csrftoken").then(function(token) {

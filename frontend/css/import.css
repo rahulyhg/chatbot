@@ -11815,6 +11815,13 @@ button.btn.useronline {
 .botname {
   font-weight: bold; }
 
+a.cur_date {
+  padding-bottom: 5px !important;
+  color: #fff !important; }
+
+.datelist {
+  margin-left: -150px; }
+
 .searchbar {
   padding-top: 5px; }
 
