@@ -727,7 +727,10 @@ myApp.controller('HomeCtrl', function ($scope,$rootScope, TemplateService, Navig
             $scope.getdashboarddata();
         };
         angular.element(document).ready(function () {
-            $scope.getdashboarddata();
+            $timeout(function(){
+                $scope.getdashboarddata();
+            },1000);
+            
         });
     })
     myApp.controller('Dashboard5Ctrl', function ($scope,$rootScope, TemplateService, NavigationService,CsrfTokenService,Menuservice, $timeout,$http,apiService,$state,$cookies) {

@@ -363,14 +363,20 @@
                                 </div>
                             </div>
                         </div> -->
+                        <!-- ng-click="isCollapsed_c = !isCollapsed_c" -->
+                        <!-- uib-collapse="isCollapsed_c" -->
                         <div class="col-lg-4 dashboardtiles">
-                            <div class="widgetcard card " ng-click="isCollapsed_c = !isCollapsed_c">
+                            <div class="widgetcard card " >
                                 <div class="card-header" data-background-color="kotakblue">
                                     <div class="">
-                                        <h3 class="card-title"><i class="icon-bell-alt"></i> New Process Releases
-                                            <i class="pull-right glyphicon" ng-class="{'glyphicon-chevron-right': isCollapsed_c, 'glyphicon-chevron-down': !isCollapsed_c}"></i>
+                                        <h3 class="card-title"><i class="fa fa-cogs"></i> New Process 
+                                            
+                                            <!-- <i class="pull-right glyphicon" ng-class="{'glyphicon-chevron-right': isCollapsed_c, 'glyphicon-chevron-down': !isCollapsed_c}"></i> -->
                                         </h3>
-                                        
+                                        <div class="notify-row">
+                                            <i class="fa fa-bell-o"></i>
+                                            <span class="badge bg-warning">2</span>
+                                        </div>
                                     </div>
                                     <!-- <div class="exporttoexcl">
                                         <button class="btn btn-primary btn-xs" ng-click="exportToExcel('#notificationtable')" type="button" >
@@ -378,7 +384,7 @@
                                         </button>
                                     </div> -->
                                 </div>
-                                <div class="table_panel" uib-collapse="isCollapsed_c">
+                                <div class="table_panel" >
                                     <table id="notificationtable" class="table table-hover  personal-task">
                                         <tbody>
                                             <tr>
@@ -395,16 +401,20 @@
                     </div>
                     <div class="row cards">
                         <div class="col-lg-4 dashboardtiles">
-                            <div class="widgetcard card " ng-click="isCollapsed_c1 = !isCollapsed_c1">
+                            <div class="widgetcard card " >
                                 <div class="card-header" data-background-color="kotakblue">
                                     <div class="">
-                                        <h3 class="card-title"><i class="icon-bell-alt"></i> Message Centre &nbsp; &nbsp;  &nbsp; &nbsp;
-                                            <i class="pull-right glyphicon" ng-class="{'glyphicon-chevron-right': isCollapsed_c1, 'glyphicon-chevron-down': !isCollapsed_c1}"></i>
+                                        <h3 class="card-title"><i class="fa fa-envelope-o"></i> Message Centre &nbsp; &nbsp;  &nbsp; &nbsp;
+                                            
+                                            <!-- <i class="pull-right glyphicon" ng-class="{'glyphicon-chevron-right': isCollapsed_c1, 'glyphicon-chevron-down': !isCollapsed_c1}"></i> -->
                                         </h3>
-                                        
+                                        <div class="notify-row">
+                                            <i class="fa fa-bell-o"></i>
+                                            <span class="badge bg-warning">1</span>
+                                        </div>
                                     </div>
                                 </div>
-                                <div class="table_panel" uib-collapse="isCollapsed_c1">
+                                <div class="table_panel" >
                                     <table id="posttable" class="table table-hover  personal-task">
                                         <tbody>
                                             <tr>
@@ -418,13 +428,17 @@
                     </div>
                     <div class="row cards">
                         <div class="col-lg-4 dashboardtiles">
-                            <div class="widgetcard card " ng-click="isCollapsed_c2 = !isCollapsed_c2">
+                            <div class="widgetcard card " >
                                 <div class="card-header" data-background-color="kotakblue">
                                     <div class="">
                                         <h3 class="card-title"><i class="icon-book"></i> Unanswered Queries
-                                            <i class="pull-right glyphicon" ng-class="{'glyphicon-chevron-right': isCollapsed_c2, 'glyphicon-chevron-down': !isCollapsed_c2}"></i>
+                                            
+                                            <!-- <i class="pull-right glyphicon" ng-class="{'glyphicon-chevron-right': isCollapsed_c2, 'glyphicon-chevron-down': !isCollapsed_c2}"></i> -->
                                         </h3>
-                                        
+                                        <div class="notify-row">
+                                            <i class="fa fa-bell-o"></i>
+                                            <span class="badge bg-warning">2</span>
+                                        </div>
                                     </div>
                                     <!-- <div class="exporttoexcl">
                                         <button class="btn btn-primary btn-xs" ng-click="exportToExcel('#unanstable')" type="button" >
@@ -432,7 +446,7 @@
                                         </button>
                                     </div> -->
                                 </div>
-                                <div class="table_panel" uib-collapse="isCollapsed_c2">
+                                <div class="table_panel" >
                                     <table id="unanstable" class="table table-hover  personal-task">
                                         <tbody>
                                             <tr>
