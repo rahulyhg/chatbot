@@ -11010,15 +11010,16 @@ h6.small.fw-600.text-uppercase.text-muted.mb-0, h6.small.fw-600.text-muted.mb-0.
   .widgetcard .progress-panel {
     border-bottom: 0px !important; }
   .widgetcard h3.card-title {
-    font-size: 15px; }
+    font-size: 15px;
+    margin-top: 10px; }
     .widgetcard h3.card-title i.pull-right.glyphicon.glyphicon-chevron-right, .widgetcard h3.card-title i.pull-right.glyphicon.glyphicon-chevron-down {
       position: absolute !important;
       top: 5px !important; }
 
 .notify-row {
   position: absolute;
-  right: 40px;
-  top: 0px;
+  right: 26px;
+  top: -19px;
   border: 1px solid #fff;
   padding: 2px 3px;
   border-radius: 3px; }
