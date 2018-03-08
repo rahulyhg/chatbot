@@ -1,9 +1,9 @@
 <div id="chat_window_1" ng-controller="ChatCtrl" chatbotHeight >
-        <div class="panel panel-primary " id="chat_panel" ng-init="chat_tab = 1">
+        <div class="panel panel-primary " id="chat_panel" ng-init="chat_tab = 1" ng-style="{'height':panelheight+ 'px'}">
             <div class="panel-heading container-fluid" id="accordion">
                 <!--<span class="glyphicon glyphicon-comment"></span> Chat-->
                 <ul class="nav nav-tabs" id="chatTabs">
-                    <li class="active" data-toggle="tab" ng-click="chat_tab=1"><a href="#chattab" class="botname">KAIRA</a></li>
+                    <li class="active" data-toggle="tab" ng-click="chat_tab=1"><a href="#chattab" class="">Chat</a></li>
                      <li ><a href="#crntab" data-toggle="tab" ng-click="chat_tab=2">CRN NO.</a></li>
                     <!-- <li ng-show="access_role == 2"><a href="#srtab" data-toggle="tab" ng-click="chat_tab=3">SR NO.</a></li>  -->
                 </ul>
@@ -23,7 +23,7 @@
                 <div class="tab-content chattab-content">
                     
                     <div class="tab-pane active row" id="chattab" ng-if="chat_tab === 1">
-                        <div class="panel-body"> 
+                        <div class="panel-body" ng-style="{'height':chatpanelheight+ 'px'}"> 
                             <ul class="chat">
                                 
                                 

@@ -11813,14 +11813,35 @@ button.btn.useronline {
   margin-right: 10px; }
 
 .botname {
-  font-weight: bold; }
+  font-weight: bold;
+  margin-left: 15px;
+  font-size: 14px;
+  /* margin-top: -10px; */
+  font-family: initial; }
+
+.tickermsgbar {
+  position: absolute;
+  top: 8%;
+  left: 0;
+  width: 100%; }
+
+.topic_col {
+  padding-top: 25px; }
+
+section.panel {
+  border: 0px solid transparent !important;
+  box-shadow: none !important;
+  margin-top: 25px; }
+
+.dashboard .panel-body {
+  background-color: #fff !important; }
 
 a.cur_date {
   padding-bottom: 5px !important;
   color: #fff !important; }
 
 .datelist {
-  margin-left: -150px; }
+  margin-left: -210px; }
 
 .searchbar {
   padding-top: 5px; }

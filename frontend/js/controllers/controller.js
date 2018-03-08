@@ -679,6 +679,25 @@ myApp.controller('HomeCtrl', function ($scope,$rootScope, TemplateService, Navig
     })
     myApp.controller('ProfileCtrl', function ($scope,$rootScope, TemplateService, NavigationService,CsrfTokenService,Menuservice, $timeout,$http,apiService,$state,$cookies) {
         $scope.myemail = $.jStorage.get('email');
+        angular.element(document).ready(function() {
+            $(document).on('change', '.fromdate', function(){
+            //$(".fromdate").change(function() {
+                $scope.getdashboarddata();
+            });
+            $(document).on('change', '.todate', function(){
+            //$(".todate").change(function() {
+                $scope.getdashboarddata();
+            });
+            $(document).on('change', '.datefilter2', function(){
+            //$(".datefilter2").change(function() {
+                $scope.getdashboarddata();
+            });
+            $(document).on('change', '.userlist', function(){
+            //$(".userlist").change(function() {
+                
+                $scope.getdashboarddata();
+            });
+        });
         $scope.getdashboarddata = function() {
             fromdate=$(".fromdate").val();
             todate=$(".todate").val();
@@ -741,6 +760,7 @@ myApp.controller('HomeCtrl', function ($scope,$rootScope, TemplateService, Navig
         $scope.isCollapsed_c = true;
         $scope.isCollapsed_c1 = true;
         $scope.isCollapsed_c2 = true;
+        
         $scope.callsession = function() {
             apiService.get_session({}).then( function (response) {
                 $cookies.put("csrftoken",response.data.csrf_token);
@@ -1600,7 +1620,12 @@ myApp.controller('HomeCtrl', function ($scope,$rootScope, TemplateService, Navig
         if($.jStorage.get("agentlist"))
             $rootScope.agentlist = $.jStorage.get("agentlist");
         
-        
+        angular.element(document).ready(function() { 
+            $timeout(function(){
+                $rootScope.panelheight = $(window).height()-80;
+            },0);
+            
+        });
         // var mylist = $.jStorage.get("chatlist");
         // if(!mylist || mylist == null)
         //     $rootScope.chatlist = [];
@@ -1916,6 +1941,11 @@ myApp.controller('HomeCtrl', function ($scope,$rootScope, TemplateService, Navig
                 $(".expandable2").addClass('col-lg-5');
                 //$rootScope.expanddbtile();
             }
+            angular.element(document).ready(function(){
+                $timeout(function(){
+                    $scope.chatpanelheight = $("#chat_window_1").height()-130;
+                },2000);
+            });
         };
         $rootScope.minimizeChatwindow = function() {
             $.jStorage.set("showchat",false);
