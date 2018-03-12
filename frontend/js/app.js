@@ -220,6 +220,17 @@ myApp.run(['$http','$cookies','beforeUnload','$document','$rootScope','Idle','bo
     //     //$('.mini-submenu').hide();
     // });
     angular.element(document).ready(function () {
+    //$timeout(function(){
+        //$(eventtr).closest('tr').remove();
+        $(document).on('click', 'a.answered', function(e){ 
+            $(e).closest('tr').remove();
+            $(e).parents('tr').remove();
+            // console.log("removing");
+            console.log(e);
+        });
+    //},1000);
+    });
+    angular.element(document).ready(function () {
         $(document).on('click','a.popupdata', function(){
             index = $(this).attr('data-index');
             image = $(this).attr('data-image');

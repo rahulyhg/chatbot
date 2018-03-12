@@ -1,0 +1,56 @@
+<div class="modal-header">
+    <h3 class="modal-title" id="modal-title">Unanswered Query</h3>
+    <button type="button" class="close"  aria-hidden="true" ng-click="unansCancel();">&times;</button>
+</div>
+<div class="modal-body" id="modal-body">
+    <p>
+        <b>Query : {{unans_q}}</b>
+    </p>
+    <!-- {{unansdata}} -->
+    <div class="chatType  boxme" ng-if="unansdata.tiledlist[0].type==='DTHyperlink'">
+                                                    
+        <ng-bind-html ng-if="unansdata.tiledlist[0].Text != '' && chatRes.Text" ng-bind-html="unansdata.tiledlist[0].Text|newlines">
+            <p class="lastmsg" >
+                {{unansdata.tiledlist[0].Text}}     
+            </p>
+        </ng-bind-html>
+        <!-- <p class="lastmsg redtext" ng-repeat="scrpttext in chatRes.Script">
+            <ng-bind-html ng-bind-html="scrpttext|newlines">
+                {{scrpttext}}
+            </ng-bind-html>
+        </p>
+        <p class="lastmsg" ng-repeat="processtext in chatRes.Process">
+            <ng-bind-html ng-bind-html="processtext|newlines">
+                {{processtext}}
+            </ng-bind-html>
+        </p> -->
+        
+        <!-- <div class="dthyperlink lastmsg" ng-repeat="dthlink in chatRes.DTHyperlink" data-id="{{dthlink}}" data-url-id="innerLink" data-line="{{chatRes.line_no[$index]}}" data-col="{{chatRes.col_no[$index]}}" ng-click="getDthlinkRes(chatRes.col_no[$index],chatRes.line_no[$index],dthlink);">
+            {{dthlink}}
+        </div> -->
+        <div class="container-fluid" ng-repeat="dthlink in unansdata.tiledlist[0].DT" ng-init="$dthindex = $index">
+            <div class="col-md-11 dthyperlink dthyperlink2 lastmsg changedthbg stage{{unansdata.tiledlist[0].bgstage}}"  data-id="{{dthlink}}" data-url-id="innerLink" data-stage="{{unansdata.tiledlist[0].Stage}}" data-bgstage="{{unansdata.tiledlist[0].bgstage}}" ng-if="unansdata.tiledlist[0].DT.length > 0 " data-index="{{$index}}"  ng-click="getDthlinkRes(unansdata.tiledlist[0].Stage,dthlink,unansdata.tiledlist[0]);" >
+                <span class="lefticon glyphicon glyphicon-chevron-left" style="display:none;"></span>
+                {{dthlink}}
+            </div>
+            <!-- <button type="button" class="btn btn-primary" ng-if="(chatRes.System[$dthindex] !== '' && chatRes.System[$dthindex])"  popover-placement="top" uib-popover="{{chatRes.System[$dthindex]}}" popover-title="{{dthlink}}" popover-class="dthpopover">
+                    <span class="glyphicon glyphicon-info-sign"></span>
+                </button> -->
+            <!-- <div class="col-md-1 popoverinfo">
+                
+                <span ng-if="(chatRes.System[$dthindex] !== '' && chatRes.System[$dthindex])"  popover-placement="left" uib-popover="{{chatRes.System[$dthindex]}}" popover-title="{{dthlink}}" popover-class="dthpopover" class="glyphicon glyphicon-info-sign"></span>
+                    
+            </div> -->
+        </div>
+        
+    </div>
+    <div class="chatType" ng-if="unansdata.tiledlist[0].type==='text'">
+        <p class="lastmsg" ng-bind-html = "to_trusted(unansdata.tiledlist[0].Text);">
+            
+        </p>
+    </div>
+</div>
+<div class="modal-footer hidden">
+    <!-- <button class="btn btn-primary" type="button" ng-click="">OK</button>
+    <button class="btn btn-warning" type="button" ng-click="">Cancel</button> -->
+</div>

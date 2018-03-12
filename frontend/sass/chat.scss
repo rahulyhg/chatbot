@@ -336,7 +336,7 @@ li.profileDetail small {
     padding-right: 0px;
 }
 a.headerbtns:hover { background-color: #0081d9 !important; }
-button.headerbtns:focus { background-color: #003366; outline: none; }
+button.headerbtns:focus { background-color: #003366; outline: none; border-color:#fff !important; }
 .autolist .highlighted { 
     color:#000;
     font-weight:bold;
@@ -486,6 +486,19 @@ background-color: #fafafa;
 .greybg3 {
     background-color: #ebebec !important;
 }
+.content {
+    margin-top: 15px;
+}
+.dthyperlink2 {
+    cursor: pointer;
+    // text-decoration: underline;
+    background: #eee;
+    color: #003366;
+    // font-style: italic;
+    padding: 0.5em 0.5em;
+    margin-bottom: 0.2em;
+    border-radius: 5px;
+}
 .chat-body .dthyperlink {
     cursor: pointer;
     // text-decoration: underline;
@@ -495,6 +508,13 @@ background-color: #fafafa;
     padding: 0.5em 0.5em;
     margin-bottom: 0.2em;
     border-radius: 5px;
+}
+a.answered {
+    color: #3c763d !important;
+}
+a.unanswered {
+    color:#a94442 !important;
+    pointer-events: none;
 }
 .pagination > .active > a, .pagination > .active > a:hover, .pagination > .active > a:focus, .pagination > .active > span, .pagination > .active > span:hover, .pagination > .active > span:focus {
     background-color: #003874 !important;

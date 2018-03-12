@@ -752,7 +752,7 @@ myApp.controller('HomeCtrl', function ($scope,$rootScope, TemplateService, Navig
             
         });
     })
-    myApp.controller('Dashboard5Ctrl', function ($scope,$rootScope, TemplateService, NavigationService,CsrfTokenService,Menuservice, $timeout,$http,apiService,$state,$cookies) {
+    myApp.controller('Dashboard5Ctrl', function ($scope,$rootScope, TemplateService, NavigationService,CsrfTokenService,Menuservice, $timeout,$http,apiService,$state,$cookies,$uibModal) {
         $scope.template = TemplateService.getHTML("content/dashboard5.html");
         TemplateService.title = "Dashboard"; //This is the Title of the Website
         $scope.navigation = NavigationService.getNavigation();
@@ -774,7 +774,7 @@ myApp.controller('HomeCtrl', function ($scope,$rootScope, TemplateService, Navig
             
         };
         $scope.showscript = function(index) {
-            console.log(index);
+            //console.log(index);
             $(".redtext").hide();
             $(".redtext"+index).show();
             $('ul.pagination li').removeClass('active');
@@ -788,6 +788,161 @@ myApp.controller('HomeCtrl', function ($scope,$rootScope, TemplateService, Navig
                 $('ul.pagination li[data-index='+index+']').addClass('active');
             },1000);
             
+        };
+        
+        $scope.unansdata={};
+        $rootScope.$unansInstance = {};
+        $rootScope.unansCancel = function() {
+            //console.log("dismissing");
+            $scope.$unansInstance.dismiss('cancel');
+        };
+        $(document).on('click', '.dthyperlink2', function(){ 
+            $(".fdashboard").hide();
+            $rootScope.unansCancel();
+        });
+        $scope.getunansq = function(query,eventtr) {
+            $scope.unans_q = query;
+            console.log(eventtr);
+            
+            // $(eventtr).parent().parents('tr').remove();
+            // $(eventtr).parents("tr").remove();
+            // $(eventtr).parent().parent().parent().parent("tr").remove();
+            mysessiondata = {};
+            formData1 = {csrfmiddlewaretoken:$rootScope.getCookie("csrftoken"),user_id:$rootScope.session_id,user_input:query,auto_id:"",auto_value:""};
+            var new_object = $.extend({}, mysessiondata, formData1);
+            //$.extend(formData1, mysessiondata);
+            var formData = new_object;
+            $timeout(function(){
+                $(".chatinput").val("");
+            });
+            
+                
+            apiService.getSysMsg(formData).then(function (data){
+                $scope.$unansInstance = $uibModal.open({
+                    scope: $scope,
+                    animation: true,
+                    size: 'sm',
+                    templateUrl: 'views/modal/unans.html',
+                    //controller: 'CommonCtrl'
+                });
+                // var ci_t = data.data.data;
+                // var a = ci_t.toString().replace(" ", "+");
+                // var b=a.replace(" ", "+");
+                // var bytes = CryptoJS.AES.decrypt((b),'k_123');
+                // // console.log(ciphertext);
+                // console.log(bytes);
+                // var decryptedData = JSON.parse(bytes.toString(CryptoJS.enc.Utf8));
+                //  console.log(decryptedData);
+                decryptedData = data.data;
+                $scope.unansdata = decryptedData;
+                data = decryptedData;
+                    if(decryptedData.tiledlist[0].topic)
+                            $("#topic").text(decryptedData.tiledlist[0].topic);
+                data.prevmsg = prevmsg;
+                angular.forEach(decryptedData.tiledlist, function(value, key) {
+                    //console.log(value);
+                    
+                    if(value.type=="text")
+                    {
+                        //console.log(data.data.tiledlist[0].text);
+                        //$rootScope.pushSystemMsg(0,decryptedData);
+                        $rootScope.showMsgLoader = false;
+                        // $timeout(function(){
+                        //     var textspeech = decryptedData.tiledlist[0].Text;
+                            
+                            
+                        //     $.jStorage.set("texttospeak",textspeech);
+
+                        //     $('#mybtn_trigger').trigger('click');
+                            
+                        // },200);
+                        
+                    }
+                    if(value.type=="rate card")
+                    {
+                        //$rootScope.pushSystemMsg(0,decryptedData);
+                        //$rootScope.showMsgLoader = false;
+                        
+                        // $(".r_c_col").val($(".r_c_col option:first").val());
+                        // $(".r_c_row").val($(".r_c_row option:first").val());
+
+                        // var firstOption = $('.r_c_col option:first');
+                        // firstOption.attr('selected', true);
+                        // $('.r_c_col').attr('selectedIndex', 0);
+                        $timeout(function(){
+                            $('select.r_c_col:last option:nth-child(2)').attr("selected", "selected");
+                            $('select.r_c_row:last option:nth-child(2)').attr("selected", "selected");
+                            $("select.r_c_col:last").trigger('change');
+                            $("select.r_c_row:last").trigger('change');
+                        },1000);
+                        
+                        //return false;
+                    }
+                    else if(value.type=="DTHyperlink")
+                    {
+                        // $rootScope.DthResponse(0,decryptedData,'');  
+                        // $timeout(function(){
+                        //     var textspeech = decryptedData.tiledlist[0].Text;
+                        //     _.each(decryptedData.tiledlist[0].DTHyperlink,function(v,k){
+                        //         textspeech += v;
+                        //     });
+                        //     $.jStorage.set("texttospeak",textspeech);
+
+                        //     $('#mybtn_trigger').trigger('click');
+                            
+                        // },200);
+                    }
+                    else if(value.type=="Instruction")
+                    {
+                        
+                        //$rootScope.InstructionResponse(0,decryptedData);  
+                        
+                    }
+                    if(value.type=="product listing")
+                    {
+                        // $rootScope.pushSystemMsg(0,decryptedData);
+                        // $rootScope.showMsgLoader = false;
+                        $timeout(function(){
+                        $('.carousel').carousel({
+                            interval: false,
+                            wrap: false
+                        });
+                        $('.carousel').find('.item').first().addClass('active');
+                        },2000);
+                        
+                        //return false;
+                    }
+                    // var topic2 = "";
+                    // if(decryptedData.tiledlist[0].topic)
+                    //     topic2 = decryptedData.tiledlist[0].topic;
+                    // var Journey_Name2 = "";
+                    // if(decryptedData.tiledlist[0].Journey_Name)
+                    //     Journey_Name2 = decryptedData.tiledlist[0].Journey_Name;
+                    // var obj = {session_id:$.jStorage.get('session_id'),user:$.jStorage.get('email'),user_input:prevmsg,response:decryptedData.tiledlist[0],topic:topic2,Journey_Name:Journey_Name2,responsetype:value.type};
+                    // $rootScope.savehistory(obj);
+                    // $scope.$on('IdleStart', function() {
+                    //     // the user appears to have gone idle
+                    //     Idle.watch();
+                    // });
+                });
+                
+                // if(decryptedData.tiledlist[0].sub_topic_list || decryptedData.tiledlist[0].sub_topic_list != null)
+                // {
+                //     $rootScope.openMenu(decryptedData.tiledlist[0].sub_topic_list);
+                // }
+                // if(decryptedData.tiledlist[0].Script || decryptedData.tiledlist[0].Script != null)
+                // {
+                //     if(decryptedData.tiledlist[0].Script.length== 0)
+                //         $rootScope.tabHeight = window.innerHeight-53;
+                //     else
+                //         $rootScope.tabHeight = window.innerHeight-53;;
+                    
+                // }
+                // if(decryptedData.session_obj_data || decryptedData.session_obj_data != null)
+                //     $.jStorage.set("sessiondata",decryptedData.session_obj_data);
+                // if($(".expandable2").hasClass('col-lg-8'))
+                //      $rootScope.rotateoutmenu();
+            });
         };
         angular.element(document).ready(function () {
             $scope.callsession();  
