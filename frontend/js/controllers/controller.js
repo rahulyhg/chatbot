@@ -2283,8 +2283,17 @@ myApp.controller('HomeCtrl', function ($scope,$rootScope, TemplateService, Navig
         // }
         // else
         //     $rootScope.minimizeChatwindow();
-
-        $rootScope.ratecardSubmit = function(coldata,rowdata,response_type,journey_name) {
+        $scope.rate_to_dt = function(stagedetails) {
+            //console.log(stagedetails);
+            var data = {};
+            tiledlist = Array();
+            tiledlist.push(stagedetails);
+            data.tiledlist = tiledlist;
+            // tiledlist = Array();
+            // tiledlist[0] = stagedetails;
+            $rootScope.pushSystemMsg(0,data);
+        };
+        $rootScope.ratecardSubmit = function(coldata,rowdata,response_type,journey_name,index) {
             $scope.formData = {csrfmiddlewaretoken:$rootScope.getCookie("csrftoken"),user_id:$rootScope.session_id,user_input:coldata+"|"+rowdata,auto_id:"",auto_value:"",coldata:coldata,rowdata:rowdata,type:"rate card",journey_name:journey_name,response_type:response_type};
             apiService.ratecardsubmit($scope.formData).then(function (data){
 				//console.log(data);
@@ -2292,22 +2301,24 @@ myApp.controller('HomeCtrl', function ($scope,$rootScope, TemplateService, Navig
                         //console.log(value);
 					if(value.type=="text")
 					{
+                        $(".ratecardresult_"+index+" b").text(data.data.tiledlist[0].Text);
 						//console.log(data.data.tiledlist[0].text);
 						if(data.data.tiledlist[0].Text != "-")
 						{
-							$rootScope.pushSystemMsg(0,data.data);
-							$rootScope.showMsgLoader = false;
-							$timeout(function(){
-								var textspeech = data.data.tiledlist[0].Text;
+                            $rootScope.showMsgLoader = false;
+							// $rootScope.pushSystemMsg(0,data.data);
+							// $rootScope.showMsgLoader = false;
+							// $timeout(function(){
+							// 	var textspeech = data.data.tiledlist[0].Text;
 								
 								
-								$.jStorage.set("texttospeak",textspeech);
+							// 	$.jStorage.set("texttospeak",textspeech);
 
-								$('#mybtn_trigger').trigger('click');
+							// 	$('#mybtn_trigger').trigger('click');
 								
-							},200);
+							// },200);
 							
-							return false;
+							// return false;
 						}
 					}
 				});
