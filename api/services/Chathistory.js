@@ -151,7 +151,7 @@ var model = {
         var dtobject = {};
         if(data.responsetype=='DTHyperlink')
             dtobject = {
-                Dthlink:data.Dthlink,
+                Dthlink:data.DTHlink,
                 DTHstage:data.DTHstage
             };
         Chathistory.findOne( {
