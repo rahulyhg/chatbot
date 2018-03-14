@@ -84,14 +84,22 @@
                                                         </small>-->
                                                     </div>
                                                     <div  class="container-fluid ">
-                                                        <div class="col-md-12 ratecardcontinue ratecardcontinue{{$rowIndex}}">
-                                                            <p class=" ratecardresult_{{$rowIndex}}">
-                                                                <b>Result</b>: <span></span>
-                                                            </p>
-                                                            <div  class="col-md-12">
-                                                                Do you want to continue ?
-                                                                <button class="btn btn-primary btn-xs continue" ng-if="chatRes.stage_details" ng-click="rate_to_dt(chatRes.stage_details);">Yes</button>
+                                                        <div class="col-md-12 ratecardresult ratecardresult{{$rowIndex}}">
+                                                            <div class=" ratecardresult_{{$rowIndex}}">
+                                                                <div class="row">
+                                                                    <div class="resultbar">
+                                                                        Result:
+                                                                    </div>
+                                                                </div>
+                                                                <p>
+                                                                 <span></span>
                                                             </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="container-fluid">
+                                                        <div class=" ratecardcontinue ratecardcontinue{{$rowIndex}}">
+                                                            <b>Do you want to continue ?</b><br>
+                                                            <button class="btn btn-primary  continue" ng-if="chatRes.stage_details" ng-click="rate_to_dt(chatRes.stage_details);">Yes</button>
                                                         </div>
                                                     </div>
                                                     <br>

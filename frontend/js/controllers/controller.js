@@ -2303,6 +2303,7 @@ myApp.controller('HomeCtrl', function ($scope,$rootScope, TemplateService, Navig
 					{
                         $(".ratecardresult_"+index+" span").text(data.data.tiledlist[0].Text);
                         $(".ratecardcontinue"+index).show();
+                        $(".ratecardresult"+index).show();
 						//console.log(data.data.tiledlist[0].text);
 						if(data.data.tiledlist[0].Text != "-")
 						{

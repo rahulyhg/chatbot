@@ -509,8 +509,19 @@ background-color: #fafafa;
     margin-bottom: 0.2em;
     border-radius: 5px;
 }
-.ratecardcontinue {
+.resultbar {
+    width:100%;
+    background: #003366;
+    color: #fff;
+    padding-left: 15px;
+}
+.ratecardresult {
     border : 1px solid #ccc;
+    display:none;
+    margin-top: 10px;
+}
+.ratecardcontinue {
+    
     display:none;
     margin-top: 10px;
 }
