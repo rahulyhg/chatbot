@@ -83,16 +83,19 @@
                                                             {{list.curTime | date: 'HH:mm:ss'}}
                                                         </small>-->
                                                     </div>
-                                                    <div  class="col-md-12">
-                                                        <br>
-                                                        <p class=" ratecardresult_{{$rowIndex}}">
-                                                            Output: <b></b>
-                                                        </p>
+                                                    <div  class="container-fluid ">
+                                                        <div class="col-md-12 ratecardcontinue ratecardcontinue{{$rowIndex}}">
+                                                            <p class=" ratecardresult_{{$rowIndex}}">
+                                                                <b>Result</b>: <span></span>
+                                                            </p>
+                                                            <div  class="col-md-12">
+                                                                Do you want to continue ?
+                                                                <button class="btn btn-primary btn-xs continue" ng-if="chatRes.stage_details" ng-click="rate_to_dt(chatRes.stage_details);">Yes</button>
+                                                            </div>
+                                                        </div>
                                                     </div>
                                                     <br>
-                                                    <div  class="col-md-12">
-                                                        <button class="btn btn-default continue" ng-if="chatRes.stage_details" ng-click="rate_to_dt(chatRes.stage_details);">Continue</button>
-                                                    </div>
+                                                    
                                                 </div>
                                                 <div class="chatType" ng-if="list.msg.tiledlist[0].type==='product listing'">
                                                     <div class='carousel slide' id='myCarousel{{$rowIndex}}'>

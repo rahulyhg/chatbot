@@ -2301,7 +2301,8 @@ myApp.controller('HomeCtrl', function ($scope,$rootScope, TemplateService, Navig
                         //console.log(value);
 					if(value.type=="text")
 					{
-                        $(".ratecardresult_"+index+" b").text(data.data.tiledlist[0].Text);
+                        $(".ratecardresult_"+index+" span").text(data.data.tiledlist[0].Text);
+                        $(".ratecardcontinue"+index).show();
 						//console.log(data.data.tiledlist[0].text);
 						if(data.data.tiledlist[0].Text != "-")
 						{
@@ -2611,6 +2612,9 @@ myApp.controller('HomeCtrl', function ($scope,$rootScope, TemplateService, Navig
             //console.log(colno,lineno,dthlink);
             //mysession = $.jStorage.get("sessiondata");
             //if($scope.faqdtc<1)
+            console.log($("#chat_window_1").height());
+            if($("#chat_window_1").height()==0)
+                $rootScope.showChatwindow();
             {
                 var mysession = {};
                 
