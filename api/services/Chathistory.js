@@ -16,7 +16,22 @@ var schema = new Schema({
     },
     dthyperlink: {
         type:Object
-    } 
+    },
+    inputDate : {
+        type:Date
+    }, 
+    outputDate: {
+        type:Date
+    },
+    respdiff : {
+        type:Number
+    },
+    like : {
+        type:Number
+    },
+    dislike : {
+        type:Number
+    }
 });
 
 schema.plugin(deepPopulate, {
@@ -179,6 +194,9 @@ var model = {
                                     dthyperlink:dtobject,
                                     Journey_Name:data.Journey_Name,
                                     topic:data.topic,
+                                    inputDate:data.inputDate,
+                                    outputDate:data.outputDate,
+                                    respdiff:data.respdiff
                                 }
                              
                         } }
@@ -210,6 +228,9 @@ var model = {
                                 dthyperlink:dtobject,
                                 Journey_Name:data.Journey_Name,
                                 topic:data.topic,
+                                inputDate:data.inputDate,
+                                outputDate:data.outputDate,
+                                respdiff:data.respdiff
                             }
                         ]
                     },function (err3, savefound) {
@@ -232,5 +253,65 @@ var model = {
             }
         });
     },
+    dislike: function (data, callback) {
+        var updateobj = { dislike:1 };
+        for(var i = 0; i < data.interactions.length ; i++)
+        {
+            var objstring = 'chatlist.'+parseInt(data.interactions[i])+'.dislike';
+            var listobj={};
+            var i_ind = parseInt(data.interactions[i])-1;
+            listobj['chatlist.'+i_ind+'.dislike']=1;
+            // listobj ={
+            //     //objstring:1,
+            //     feedback:data.feedback
+            // };
+            updateobj = extend({}, listobj, updateobj);
+            listobj['chatlist.'+i_ind+'.feedback']=data.feedback;
+            updateobj = extend({}, listobj, updateobj);
+        }
+        console.log(updateobj);
+        Chathistory.update(
+            { 
+                session_id:data.session_id,
+                user:data.user
+            },
+            { 
+                $set: updateobj 
+            }
+        ).exec(function (err, updatefound) {
+            if (err) {
+                callback(err, null);
+            } 
+            else {
+                //console.log(updatefound,"inside update");
+                if (updatefound) {
+                    callback(null, updatefound);
+                }
+            }
+        });
+    },
+    like: function (data, callback) {
+        var updateobj = { like:1 };
+        
+        Chathistory.update(
+            { 
+                session_id:data.session_id,
+                user:data.user
+            },
+            { 
+                $set: updateobj 
+            }
+        ).exec(function (err, updatefound) {
+            if (err) {
+                callback(err, null);
+            } 
+            else {
+                //console.log(updatefound,"inside update");
+                if (updatefound) {
+                    callback(null, updatefound);
+                }
+            }
+        });
+    }
 };
 module.exports = _.assign(module.exports, exports, model);

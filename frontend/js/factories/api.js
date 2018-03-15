@@ -49,6 +49,24 @@ myApp.factory('apiService', function ($http, $q, $timeout,CsrfTokenService,$http
             });
            
         },
+        dislike:function(formData, callback) {
+            
+            return $http({
+                url:adminUrl3+ "Chathistory/dislike",
+                method: 'POST',
+                data: formData,
+            });
+           
+        },
+        like:function(formData, callback) {
+            
+            return $http({
+                url:adminUrl3+ "Chathistory/like",
+                method: 'POST',
+                data: formData,
+            });
+           
+        },
         saveagentchat:function(formData, callback) {
             
             return $http({

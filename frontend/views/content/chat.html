@@ -40,7 +40,7 @@
                                     
                                     
                                     <div ng-class="{'chat-body':list.position==='right' || ( list.msg.tiledlist[0].type !== 'Instruction' &&  list.msg.type != 'SYS_CALC' && list.msg.type !== 'SYS_CONV_START' && list.msg.type !== 'SYS_CONV_END')}">
-                                        <div class="clearfix" ng-if="list.position==='right'">
+                                        <div class="clearfix" ng-if="list.position==='right' && !list.msg.type">
                                             <p class="lastmsg" >
                                                 <ng-bind-html ng-bind-html = "list.msg">
                                                     {{list.msg}}
@@ -279,6 +279,15 @@
                                                     </div>
                                                 </div>
                                             </div>
+                                        </div>
+                                        <div class=" clearfix" ng-if="(list.position==='right' &&  (list.msg.type==='SYS_DT_RES' || list.msg.type==='SYS_BTN_RES' ))">
+                                            <p class="lastmsg" >
+                                                <!-- <ng-bind-html ng-bind-html = "list.msg.Text"> -->
+                                                <!-- <span comp-translate="{{list.msg.Text}}"></span> -->
+                                                <!-- </ng-bind-html>  --> 
+                                                <!-- <span comp-translate="{{list.msg.Text}}"></span>  -->
+                                                {{list.msg.Text}}
+                                            </p>
                                         </div>
                                         <div class=" clearfix" ng-if="(list.position==='left' &&  (list.msg.type==='SYS_INACTIVE' || list.msg.type==='SYS_FIRST' || list.msg.type === 'SYS_EMPTY_RES' || list.msg.type === 'SYS_AUTO'))">
                                             <p class="lastmsg" >

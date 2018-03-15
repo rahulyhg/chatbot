@@ -408,7 +408,7 @@ myApp.controller('HomeCtrl', function ($scope,$rootScope, TemplateService, Navig
         }
 
         
-        console.log($.jStorage.get("notloggedin"));
+        //console.log($.jStorage.get("notloggedin"));
         angular.element(document).ready(function () {
             if(!$.jStorage.get('firstreload'))
             {
@@ -1839,7 +1839,7 @@ myApp.controller('HomeCtrl', function ($scope,$rootScope, TemplateService, Navig
             }
         };
         $rootScope.savehistory = function(obj) {
-            console.log(obj);
+            //console.log(obj);
             apiService.savehistory(obj).then(function (response){
                 
             });
@@ -1975,7 +1975,14 @@ myApp.controller('HomeCtrl', function ($scope,$rootScope, TemplateService, Navig
             });
         };
         $rootScope.iframeHeight = window.innerHeight-53;
-        
+        $rootScope.getcurrtime = function() {
+            var d = new Date(),
+            h=d.getHours(); 
+            m=d.getMinutes();
+            s=d.getSeconds();
+            time = h+":"+m+":"+s;
+            return time;
+        };
         $rootScope.getDatetime = function() {
             //return (new Date).toLocaleFormat("%A, %B %e, %Y");
             return currentTime = new Date();
@@ -2031,6 +2038,7 @@ myApp.controller('HomeCtrl', function ($scope,$rootScope, TemplateService, Navig
             $rootScope.autocompletelist = [];
             $rootScope.chatlist.push({id:"id",msg:value,position:"left",curTime: $rootScope.getDatetime()});
             $.jStorage.set("chatlist",$rootScope.chatlist);
+            //console.log($rootScope.chatlist);
             $timeout(function(){
                 $rootScope.scrollChatWindow();
             });
@@ -2295,10 +2303,19 @@ myApp.controller('HomeCtrl', function ($scope,$rootScope, TemplateService, Navig
         };
         $rootScope.ratecardSubmit = function(coldata,rowdata,response_type,journey_name,index) {
             $scope.formData = {csrfmiddlewaretoken:$rootScope.getCookie("csrftoken"),user_id:$rootScope.session_id,user_input:coldata+"|"+rowdata,auto_id:"",auto_value:"",coldata:coldata,rowdata:rowdata,type:"rate card",journey_name:journey_name,response_type:response_type};
+            var inputDate = new Date();
             apiService.ratecardsubmit($scope.formData).then(function (data){
-				//console.log(data);
+                //console.log(data);
+                var outputDate   = new Date();
+                var respdiff = (outputDate.getTime() - inputDate.getTime()) / 1000;
 				angular.forEach(data.data.tiledlist, function(value, key) {
                         //console.log(value);
+                    var topic2 = "";
+                    if(data.data.tiledlist[0].topic)
+                        topic2 = data.data.tiledlist[0].topic;
+                    var Journey_Name2 = "";
+                    if(data.data.tiledlist[0].Journey_Name)
+                        Journey_Name2 = data.data.tiledlist[0].Journey_Name;
 					if(value.type=="text")
 					{
                         $(".ratecardresult_"+index+" span").text(data.data.tiledlist[0].Text);
@@ -2322,7 +2339,9 @@ myApp.controller('HomeCtrl', function ($scope,$rootScope, TemplateService, Navig
 							
 							// return false;
 						}
-					}
+                    }
+                    var obj = {session_id:$.jStorage.get('session_id'),user:$.jStorage.get('email'),user_input:coldata+"|"+rowdata,response:data.data.tiledlist[0],topic:topic2,Journey_Name:Journey_Name2,responsetype:value.type,inputDate:inputDate,outputDate:outputDate,respdiff:respdiff};
+                    $rootScope.savehistory(obj);
 				});
             });
 
@@ -2612,8 +2631,10 @@ myApp.controller('HomeCtrl', function ($scope,$rootScope, TemplateService, Navig
         $rootScope.getDthlinkRes = function(stage,dthlink,tiledlist) {
             //console.log(colno,lineno,dthlink);
             //mysession = $.jStorage.get("sessiondata");
-            //if($scope.faqdtc<1)
-            console.log($("#chat_window_1").height());
+            var inputDate = new Date();
+            var dtmsg = {Text:dthlink,type:"SYS_DT_RES"};
+            $rootScope.chatlist.push({id:"id",msg:dtmsg,position:"right",curTime: $rootScope.getDatetime()});
+            $.jStorage.set("chatlist",$rootScope.chatlist);
             if($("#chat_window_1").height()==0)
                 $rootScope.showChatwindow();
             {
@@ -2636,12 +2657,14 @@ myApp.controller('HomeCtrl', function ($scope,$rootScope, TemplateService, Navig
                 apiService.getDthlinkRes(formData).then(function (data){
                     angular.forEach(data.data.tiledlist, function(value, key) {
                         var topic2 = "";
+                        var outputDate   = new Date();
+                        var respdiff = (outputDate.getTime() - inputDate.getTime()) / 1000;
                         if(data.data.tiledlist[0].topic)
                             topic2 = data.data.tiledlist[0].topic;
                         var Journey_Name2 = "";
                         if(data.data.tiledlist[0].Journey_Name)
                             Journey_Name2 = data.data.tiledlist[0].Journey_Name;
-                        var obj = {DTHstage:stage,DTHlink:dthlink,session_id:$.jStorage.get('session_id'),user:$.jStorage.get('email'),user_input:'',response:data.data.tiledlist[0],topic:topic2,Journey_Name:Journey_Name2,responsetype:value.type};
+                        var obj = {DTHstage:stage,DTHlink:dthlink,session_id:$.jStorage.get('session_id'),user:$.jStorage.get('email'),user_input:'',response:data.data.tiledlist[0],topic:topic2,Journey_Name:Journey_Name2,responsetype:value.type,inputDate:inputDate,outputDate:outputDate,respdiff:respdiff};
                         $rootScope.savehistory(obj);
                         if(value.type=="DTHyperlink")
                         {
@@ -3630,6 +3653,7 @@ myApp.controller('HomeCtrl', function ($scope,$rootScope, TemplateService, Navig
                     $(".chatinput").val("");
                 });
                 
+                var inputDate = new Date();
                 
                 // io.socket.on('user', function gotHelloMessage (data) {
                 // console.log('User alert!', data);
@@ -3637,7 +3661,10 @@ myApp.controller('HomeCtrl', function ($scope,$rootScope, TemplateService, Navig
                 //io.socket.get('/Livechat/addconv');
                 
                 apiService.getSysMsg($rootScope.formData).then(function (data){
-                        console.log(data);
+                    //console.log(data);
+                    // Do your operations
+                    var outputDate   = new Date();
+                    var respdiff = (outputDate.getTime() - inputDate.getTime()) / 1000;
                     // var ci_t = data.data.data;
                     // var a = ci_t.toString().replace(" ", "+");
                     // var b=a.replace(" ", "+");
@@ -3730,7 +3757,7 @@ myApp.controller('HomeCtrl', function ($scope,$rootScope, TemplateService, Navig
                         var Journey_Name2 = "";
                         if(decryptedData.tiledlist[0].Journey_Name)
                             Journey_Name2 = decryptedData.tiledlist[0].Journey_Name;
-                        var obj = {session_id:$.jStorage.get('session_id'),user:$.jStorage.get('email'),user_input:prevmsg,response:decryptedData.tiledlist[0],topic:topic2,Journey_Name:Journey_Name2,responsetype:value.type};
+                        var obj = {session_id:$.jStorage.get('session_id'),user:$.jStorage.get('email'),user_input:prevmsg,response:decryptedData.tiledlist[0],topic:topic2,Journey_Name:Journey_Name2,responsetype:value.type,inputDate:inputDate,outputDate:outputDate,respdiff:respdiff};
                         $rootScope.savehistory(obj);
                         $scope.$on('IdleStart', function() {
                             // the user appears to have gone idle
@@ -4172,15 +4199,21 @@ myApp.controller('HomeCtrl', function ($scope,$rootScope, TemplateService, Navig
                 $('span.thumbsup').css("color", "#008000");
                 $('.thumbsdown').css("color", "#444");
             },200);
+            var formData = {
+                session_id:$.jStorage.get('session_id'),user:$.jStorage.get('email')
+            };
+            apiService.like(formData).then(function (response){
+            
+            });
         };
         $rootScope.selectedFeedback = "";
         $rootScope.feedbacklist = [];
         $rootScope.feedbacklist =  [
             {id:"",name:"Choose a Feedback"},
-            {id:"0",name:"Incorrect Process"},
-            {id:"1",name:"Incomplete Process"},
-            {id:"2",name:"Unable to comprehend answer"},
-            {id:"3",name:"Free text"},
+            {id:"1",name:"Incorrect Process"},
+            {id:"2",name:"Incomplete Process"},
+            {id:"3",name:"Unable to comprehend answer"},
+            // {id:"3",name:"Free text"},
             {id:"4",name:"Received no reply"},
         ];
         $rootScope.selectedFeedback = $rootScope.feedbacklist[0];
@@ -4188,17 +4221,35 @@ myApp.controller('HomeCtrl', function ($scope,$rootScope, TemplateService, Navig
         $rootScope.$dislikemodalInstance = {};
         $rootScope.dislikesuggestionerror = 0;
         $rootScope.dislikeChatClick = function(){
-            $rootScope.$dislikemodalInstance = $uibModal.open({
-                scope: $rootScope,
-                animation: true,
-                size: 'sm',
-                templateUrl: 'views/modal/dislikechat.html',
-                //controller: 'CommonCtrl'
-            });
-            $timeout(function(){ 
-                $('span.thumbsdown').css("color", "#ed232b");
-                $('.thumbsup').css("color", "#444");
-            },200);
+            if($rootScope.chatlist.length > 1)
+            {
+                // var chatlist = $.jStorage.get('chatlist');
+                // //console.log(chatlist);
+                // var chat_list = _.remove(chatlist, function(n) {
+                //     return n.position  == 'right';
+                // });
+                // // console.log(chatlist);
+                // //console.log(chat_list);
+                // $rootScope.int_chat_list =chat_list;
+                $rootScope.$dislikemodalInstance = $uibModal.open({
+                    scope: $rootScope,
+                    animation: true,
+                    size: 'sm',
+                    templateUrl: 'views/modal/dislikechat.html',
+                    resolve: {
+                        items: function () {
+                            return $rootScope.chatlist;
+                        }
+                    },
+                    //controller: 'CommonCtrl'
+                });
+                $timeout(function(){ 
+                    $('span.thumbsdown').css("color", "#ed232b");
+                    $('.thumbsup').css("color", "#444");
+                },200);
+            }
+            else 
+                alert("No conversaion done.");
         };
         $rootScope.dislikeCancel = function() {
             //console.log("dismissing");
@@ -4206,13 +4257,31 @@ myApp.controller('HomeCtrl', function ($scope,$rootScope, TemplateService, Navig
             $('span.thumbsdown').css("color", "#444");
         };
         $rootScope.dislikesuggestionsubmit = function(suggestion){
-            console.log("suggestion",suggestion);
-            $rootScope.dislikesuggestionSuccess = 1;
-            $timeout(function(){
-                $rootScope.dislikesuggestionSuccess = 0;
-                $rootScope.dislikeCancel();
-            },500);
-            $('span.thumbsdown').css("color", "#444");
+            //console.log("suggestion",suggestion);
+            if($("input[name='interactions[]']:checked").length == 0)
+                alert("Please Select Interaction");
+            else {
+                var c_index = Array();
+                $.each($("input[name='interactions[]']:checked"), function(k,v) {
+                    // console.log(k);
+                    // console.log(v);
+                    // console.log($(v).attr('data-index'));
+                    
+                    c_index.push($(v).attr('data-index'));
+                });
+                var formData = {
+                    feedback:suggestion,interactions:c_index,session_id:$.jStorage.get('session_id'),user:$.jStorage.get('email')
+                };
+                apiService.dislike(formData).then(function (response){
+                
+                });
+                $rootScope.dislikesuggestionSuccess = 1;
+                $timeout(function(){
+                    $rootScope.dislikesuggestionSuccess = 0;
+                    $rootScope.dislikeCancel();
+                },500);
+                $('span.thumbsdown').css("color", "#444");
+            }
         };
         
        $timeout(function(){

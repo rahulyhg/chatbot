@@ -26,5 +26,31 @@ var controller = {
             })
         }
     },
+    like: function (req, res) {
+        if (req.body) {
+            Chathistory.like(req.body, res.callback);
+        }
+        else {
+            res.json({
+                value: false,
+                data: {
+                    message: "Invalid Request"
+                }
+            })
+        }
+    },
+    dislike: function (req, res) {
+        if (req.body) {
+            Chathistory.dislike(req.body, res.callback);
+        }
+        else {
+            res.json({
+                value: false,
+                data: {
+                    message: "Invalid Request"
+                }
+            })
+        }
+    },
 };
 module.exports = _.assign(module.exports, controller);

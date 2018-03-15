@@ -12,14 +12,25 @@
                                     
             </select>  -->
             <select id="dislikesuggestion" name="dislikesuggestion"   ng-model="selectedFeedbackval" class="form-control"  required>
-                <option ng-repeat="option in feedbacklist" value="{{option.id}}">{{option.name}}</option>
+                <option ng-repeat="option in feedbacklist" value="{{option.name}}">{{option.name}}</option>
             </select>
             <!-- <textarea class="form-control dislikesuggestion" id="dislikesuggestion"  name="dislikesuggestion" placeholder="Enter Suggestion" ng-model="user.dislikesuggestion" required></textarea> -->
             <div class="pull-right" ng-repeat="(field,value) in dislikesuggestion_form.selectedFeedbackval.$error" ng-show="dislikesuggestion_form.selectedFeedbackval.$touched">
                 <span class="label label-danger" ng-if="value">Please Select Feedback</span>
             </div>
             
-            
+            <label>Interaction</label>
+            <div>
+                <span ng-repeat="list in chatlist track by $index" ng-if="chatlist[$index].position==='right'">
+                    <span ng-if="list.msg.Text">
+                        <input type="checkbox" name="interactions[]" class="interactions"  data-index="{{$index}}" data-value="{{list.msg.Text}}"> {{list.msg.Text}}
+                    </span>
+                    <span ng-if="list.msg && list.msg !='' && !list.msg.Text">
+                        <input type="checkbox" name="interactions[]" class="interactions" data-index="{{$index}}" data-value="{{list.msg}}"> {{list.msg}}
+                    </span>
+                    <br>
+                </span>
+            </div>
             <div class="pull-right"  ng-if="dislikesuggestionerror==-1">
                 <span class="label label-danger">Please Select Suggestion</span>
             </div>
