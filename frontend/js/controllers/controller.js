@@ -2999,6 +2999,7 @@ myApp.controller('HomeCtrl', function ($scope,$rootScope, TemplateService, Navig
             var inputDate = new Date();
             var dtmsg = {Text:dthlink,type:"SYS_DT_RES"};
             $rootScope.chatlist.push({id:"id",msg:dtmsg,position:"right",curTime: $rootScope.getDatetime()});
+            $rootScope.scrollChatWindow();
             $.jStorage.set("chatlist",$rootScope.chatlist);
             if($("#chat_window_1").height()==0)
                 $rootScope.showChatwindow();
@@ -3279,8 +3280,16 @@ myApp.controller('HomeCtrl', function ($scope,$rootScope, TemplateService, Navig
             //     }
             // });
             data.tiledlist[0].Process = process;
-            var ele = new Array("Process");
-            var ele_val = new Array(data.tiledlist[0]);
+            // if((!data.tiledlist[0].Process || data.tiledlist[0].Process.length == 0))
+            // {
+            //     var ele = new Array();
+            //     var ele_val = new Array();
+            // }
+            // else 
+            {
+                var ele = new Array("Process");
+                var ele_val = new Array(data.tiledlist[0]);
+            }
             $rootScope.showMsgLoader = false; 
             
             $rootScope.contentobj = [];
@@ -3830,8 +3839,35 @@ myApp.controller('HomeCtrl', function ($scope,$rootScope, TemplateService, Navig
             //     //$rootScope.$emit("setTabData", $scope.node_data);
             // }
             $timeout(function(){
-                $("#tab_data .nav-tabs li").first().addClass("active");
-                $("#tab_data .tab-content .tab-pane").first().addClass("active");
+                if(ele[0]=='Process' )
+                {
+                    if(ele_val[0].Process)
+                    {
+                        if(ele_val[0].Process.length > 0)
+                        {
+                            console.log("length>0");
+                            $("#tab_data .nav-tabs li").first().addClass("active");
+                            $("#tab_data .tab-content .tab-pane").first().addClass("active");
+                        }
+                        else
+                        {
+                            console.log("length<0");
+                            $("#tab_data .nav-tabs li:nth-child(1)").hide();
+                            $("#tab_data .nav-tabs li:nth-child(2)").addClass("active");
+                            //$("#tab_data .tab-content .tab-pane").first().addClass("active");
+                            $("#tab_data .tab-content .tab-pane(1)").hide();
+                        }
+                    }
+                    else
+                    {
+                        $("#tab_data .nav-tabs li:nth-child(1)").hide();
+                        $("#tab_data .nav-tabs li:nth-child(2)").addClass("active");
+                        $("#tab_data .tab-content .tab-pane(1)").hide();
+                        //$("#tab_data .tab-content .tab-pane").first().addClass("active");
+                    }
+                    
+                }
+                
                 $(".processcontent").show();
             },1000);
         };
@@ -3995,6 +4031,18 @@ myApp.controller('HomeCtrl', function ($scope,$rootScope, TemplateService, Navig
         $rootScope.htmlToPlaintext=function(text) {
             return text ? String(text).replace(/<[^>]+>/gm, '') : '';
         };
+        $rootScope.hovered = function(hovering){
+            $timeout(function() {
+                console.log('update with timeout fired');
+                if(hovering.objHovered==true){
+                    hovering.popoverOpened2=true;
+                }
+            }, 500);
+        };
+        $rootScope.getSearch = function(searchtext){
+            console.log(searchtext);
+            $rootScope.pushMsg(0,searchtext,"");
+        };
         $rootScope.getSystemMsg = function(id,value){
             //console.log("id",id);
             //CsrfTokenService.getCookie("csrftoken").then(function(token) {
@@ -4097,6 +4145,11 @@ myApp.controller('HomeCtrl', function ($scope,$rootScope, TemplateService, Navig
                                 $('#mybtn_trigger').trigger('click');
                                 
                             },200);
+                        }
+                        if(value.type=="top_search")
+                        {
+                            $rootScope.pushSystemMsg(0,decryptedData);
+                            $rootScope.showMsgLoader = false;
                         }
                         else if(value.type=="Instruction")
                         {

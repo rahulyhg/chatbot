@@ -269,7 +269,7 @@ var model = {
             listobj['chatlist.'+i_ind+'.feedback']=data.feedback;
             updateobj = extend({}, listobj, updateobj);
         }
-        console.log(updateobj);
+        //console.log(updateobj);
         Chathistory.update(
             { 
                 session_id:data.session_id,

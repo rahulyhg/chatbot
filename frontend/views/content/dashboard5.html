@@ -41,8 +41,8 @@
 
             </div>
             <uib-tabset active="active" id="tab_data" ng-init="indextab = 1" ng-show="tabvalue.elements.length>0" ng-style="{height: tabHeight + 'px'}">
-                <uib-tab index="$index"  class="{{row}}"   ng-repeat="row in tabvalue.elements track by $index"  heading="{{row}}">
-                    <div class ="tab-con"  ng-if="row ==='Process'">
+                <uib-tab index="$index"  class="{{row}}"   ng-repeat="row in tabvalue.elements track by $index"  ng-init="$tIndex=$index"  heading="{{row}}">
+                    <div class ="tab-con"  ng-if="row ==='Process'  && tabvalue.element_values[$tIndex].Process.length>0 && tabvalue.element_values[$tIndex].Process" >
                         <br>
                         <div class="" ng-repeat="processtext in tabvalue.element_values[$index].Process track by $index">
                             

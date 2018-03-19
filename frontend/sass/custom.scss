@@ -3,7 +3,8 @@
 html{ margin-top: 1px; height: 100%; }
 body { font-family: 'Frutiger_LT_45_Light',"serif",Helvetica,Arial,sans-serif; font-size: 14px; color: #000;
     padding-top:0px !important; }
-a { color:#003366; }
+a { color:#003366;text-decoration: underline;
+font-weight: bold; }
 .hide { display: none; }
 .clear { clear: both; }
 .login{
