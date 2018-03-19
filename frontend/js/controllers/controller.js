@@ -424,7 +424,7 @@ myApp.controller('HomeCtrl', function ($scope,$rootScope, TemplateService, Navig
                  * Front-end code and event handling for sailsChat
                  *
                  */
-                //io.connect('http://exponentiadata.co.in:9161');
+                //io.connect('http://localhost:9161');
                 // if($.jStorage.get("socketId"))
                 //     io.socket.connected[$.jStorage.get("socketId")].disconnect();
                     //io.socket.get("/user/disconnect",{query:$.jStorage.get("sid")}, function(data){});
@@ -625,15 +625,15 @@ myApp.controller('HomeCtrl', function ($scope,$rootScope, TemplateService, Navig
 
             //io.socket.disconnect(false);
             //io.socket.reconnect();
-            // io.sails.url = 'http://exponentiadata.co.in:9161';
+            // io.sails.url = 'http://localhost:9161';
             // io.sails.connect(io.sails.url,{forceNew: true});
             // io.connect(io.sails.url,{forceNew: true});
             // io.socket.put(io.sails.url, {}, function (resData, jwres){
             //     console.log(resData);
             //     console.log(jwres);
             // });
-            // //io.sails.connect("http://exponentiadata.co.in:9161");
-            // io.connect("http://exponentiadata.co.in:9161", {'forceNew': true});
+            // //io.sails.connect("http://localhost:9161");
+            // io.connect("http://localhost:9161", {'forceNew': true});
             //console.log(window.me.id);
             // io.socket.delete('/users/'+window.me.id, function (resData) {
             // resData; // => {id:9, name: 'Timmy Mendez', occupation: 'psychic'}
@@ -760,7 +760,372 @@ myApp.controller('HomeCtrl', function ($scope,$rootScope, TemplateService, Navig
         $scope.isCollapsed_c = true;
         $scope.isCollapsed_c1 = true;
         $scope.isCollapsed_c2 = true;
+        angular.element(document).ready(function () {
+            
+            $scope.setdisconnectsocket = function(){
+                var formData= {from_id:$.jStorage.get("id")};
+                apiService.setdisconnectsocket(formData).then(function (data){
+
+                });
+            };
+        });
+
+        //window.me = {};
+        /* Chat start*/
+
+        // Privatemsg
+        // Start a private conversation with another user
+        function startPrivateConversation() {
+
+        // Get the user list
+        var select = $('#users-list');
+
+        // Make sure a user is selected in the list
+        if (select.val() === null) {
+            return alert('Please select a user to send a private message to.');
+        }
+
+        // Get the recipient's name from the text of the option in the <select>
+        var recipientName = $('option:selected', select).text();
+        var recipientId = select.val();
+
+        // Prompt for a message to send
+        var message = prompt("Enter a message to send to "+recipientName);
+
+        // Create the UI for the room if it doesn't exist
+        createPrivateConversationRoom({name:recipientName, id:recipientId});
+
+        // Add the message to the room
+        addMessageToConversation(window.me.id, recipientId, message);
+
+        // Send the private message
+        io.socket.post('/chat/private', {to:recipientId, msg: message});
+
+        }
+
+        // Create the HTML to hold a private conversation between two users
+        function createPrivateConversationRoom(penPal) {
+
+        // Get the ID of the HTML element for this private convo, if there is one
+        var roomName = 'private-room-'+penPal.id;
+
+        // If HTML for the room already exists, return.
+        if ($('#'+roomName).length) {
+            return;
+        }
+
+        var penPalName = penPal.name == "unknown" ? ("User #"+penPal.id) : penPal.name;
+
+        // Create a new div to contain the room
+        var roomDiv = $('<div id="'+roomName+'"></div>');
+
+        // Create the HTML for the room
+        var roomHTML = '<h2>Private conversation with <span id="private-username-'+penPal.id+'">'+penPalName+'</span></h2>\n' +
+                        '<div id="private-messages-'+penPal.id+'" style="width: 50%; height: 150px; overflow: auto; border: solid 1px #666; padding: 5px; margin: 5px"></div>'+
+                        '<input id="private-message-'+penPal.id+'"/> <button id="private-button-'+penPal.id+'">Send message</button">';
+
+        roomDiv.html(roomHTML);
+
+        // Add the room to the private conversation area
+        $('#convos').append(roomDiv);
+
+        // Hook up the "send message" button
+        $('#private-button-'+penPal.id).click(onClickSendPrivateMessage);
+
+        }
+
+        // Callback for when the user clicks the "Send message" button in a private conversation
+        function onClickSendPrivateMessage(e) {
+
+        // Get the button that was pressed
+        var button = e.currentTarget;
+
+        // Get the ID of the user we want to send to
+        var recipientId = button.id.split('-')[2];
+
+        // Get the message to send
+        var message = $('#private-message-'+recipientId).val();
+        $('#private-message-'+recipientId).val("");
+
+        // Add this message to the room
+        addMessageToConversation(window.me.id, recipientId, message);
+
+        // Send the message
+        io.socket.post('/chat/private', {to: recipientId, msg: message});
+
+        }
+
+        // Add HTML for a new message in a private conversation
+        function addMessageToConversation(senderId, recipientId, message) {
+            
+            var fromMe = senderId == window.me.id;
+            var roomName = 'private-messages-' + (fromMe ? recipientId : senderId);
+            $.jStorage.set('lastroom',roomName);
+            $.jStorage.set('lastroomid', (fromMe ? recipientId : senderId));
+            var senderName = fromMe ? "Me" : $('#private-username-'+senderId).html();
+            var justify = fromMe ? 'right' : 'left';
+
+            var div = $('<div style="text-align:'+justify+'"></div>');
+            div.html('<strong>'+senderName+'</strong>: '+message);
+            $('#'+roomName).append(div);
+
+        }
+
+        // Handle an incoming private message from the server.
+        function receivePrivateMessage(data) {
+
+            var sender = data.from;
+
+            // Create a room for this message if one doesn't exist
+             createPrivateConversationRoom(sender);
+
+            // Add a message to the room
+            //addMessageToConversation(sender.id, window.me.id, data.msg);
+            //$(".chat").append("<li class='left clearfix'><span class='chat-img pull-left'><img ng-src='img/Tenali.png' alt='BOT' class='img-circle  doneLoading' src='img/Tenali.png'></span><div class='chat-body'><p>"+data.msg+" </p></div></li>");
+            console.log(data,"recvdmsg");
+            mymsg = {Text:data.msg,type:"SYS_FIRST"};
+            //$rootScope.chatlist.push({id:"id",msg:mymsg,position:"left",curTime: $rootScope.getDatetime()});
+            $rootScope.pushSystemMsg(0,mymsg);  
+        }
+
         
+        //console.log($.jStorage.get("notloggedin"));
+        angular.element(document).ready(function () {
+            // if(!$.jStorage.get('firstreload'))
+            // {
+            //     $.jStorage.set('firstreload',true);
+            //     location.reload();
+            // }
+            // if(!$.jStorage.get("notloggedin"))
+            {
+                //Chatapp
+                    /**
+                 * app.js
+                 *
+                 * Front-end code and event handling for sailsChat
+                 *
+                 */
+                //io.connect('http://localhost:9161');
+                // if($.jStorage.get("socketId"))
+                //     io.socket.connected[$.jStorage.get("socketId")].disconnect();
+                    //io.socket.get("/user/disconnect",{query:$.jStorage.get("sid")}, function(data){});
+                // Attach a listener which fires when a connection is established:
+                //options: [SocketIOClientOption.ConnectParams(["__sails_io_sdk_version":"0.11.0"])]);
+                //var sk = io.sails.connect();
+                //io('http://localhost:8080');
+                // var CONNECTION_METADATA_PARAMS = {
+                //     version: '__sails_io_sdk_version',
+                //     platform: '__sails_io_sdk_platform',
+                //     language: '__sails_io_sdk_language'
+                // };
+
+                // var SDK_INFO = {
+                //     version: '0.11.0',
+                //     platform: 'browser',
+                //     language: 'javascript'
+                // };
+
+                // SDK_INFO.versionString =
+                //     CONNECTION_METADATA_PARAMS.version + '=' + SDK_INFO.version + '&' +
+                //     CONNECTION_METADATA_PARAMS.platform + '=' + SDK_INFO.platform + '&' +
+                //     CONNECTION_METADATA_PARAMS.language + '=' + SDK_INFO.language;
+
+                // var socket = io.connect({
+                //     query: SDK_INFO.versionString
+                // });
+            
+            //io.sails.connect('http://localhost:80');
+                io.socket.on('connect', function socketConnected() {
+
+                    // Show the main UI
+                    $('#disconnect').hide();
+                    $('#main').show();
+
+                    // Announce that a new user is online--in this somewhat contrived example,
+                    // this also causes the CREATION of the user, so each window/tab is a new user.
+                    userdata = {sid:$.jStorage.get("id"),name:$.jStorage.get("fname")+' '+$.jStorage.get("lname"),access_role:$.jStorage.get("access_role")};
+                    io.socket.get("/user/announce",{query:userdata}, function(data){
+                        //console.log(data);
+                        
+                        userdata.socketId = data.socketId;
+                        userdata.id = data.id;
+                        $.jStorage.set("socketId",userdata.socketId);
+                        $.jStorage.set("sid",userdata.sid);
+                        window.me = data;
+                        console.log(data,"sails userdata");
+                        updateMyName(data);
+
+                        // Get the current list of users online.  This will also subscribe us to
+                        // update and destroy events for the individual users.
+                        io.socket.get('/user', updateUserList);
+
+                        // Get the current list of chat rooms. This will also subscribe us to
+                        // update and destroy events for the individual rooms.
+                        io.socket.get('/room', updateRoomList);
+
+                    });
+                    
+                    // Listen for the "room" event, which will be broadcast when something
+                    // happens to a room we're subscribed to.  See the "autosubscribe" attribute
+                    // of the Room model to see which messages will be broadcast by default
+                    // to subscribed sockets.
+                    io.socket.on('room', function messageReceived(message) {
+
+                        switch (message.verb) {
+
+                            // Handle room creation
+                            case 'created':
+                            addRoom(message.data);
+                            break;
+
+                            // Handle a user joining a room
+                            case 'addedTo':
+                            // Post a message in the room
+                            postStatusMessage('room-messages-'+message.id, $('#user-'+message.addedId).text()+' has joined');
+                            // Update the room user count
+                            increaseRoomCount(message.id);
+                            break;
+
+                            // Handle a user leaving a room
+                            case 'removedFrom':
+                            // Post a message in the room
+                            postStatusMessage('room-messages-'+message.id, $('#user-'+message.removedId).text()+' has left');
+                            // Update the room user count
+                            decreaseRoomCount(message.id);
+                            break;
+
+                            // Handle a room being destroyed
+                            case 'destroyed':
+                            removeRoom(message.id);
+                            break;
+
+                            // Handle a public message in a room.  Only sockets subscribed to the "message" context of a
+                            // Room instance will get this message--see the "join" and "leave" methods of RoomController.js
+                            // to see where a socket gets subscribed to a Room instance's "message" context.
+                            case 'messaged':
+                            receiveRoomMessage(message.data);
+                            break;
+
+                            default:
+                            break;
+
+                        }
+
+                    });
+
+                    // Listen for the "user" event, which will be broadcast when something
+                    // happens to a user we're subscribed to.  See the "autosubscribe" attribute
+                    // of the User model to see which messages will be broadcast by default
+                    // to subscribed sockets.
+                    io.socket.on('user', function messageReceived(message) {
+                        console.log(message);
+                        switch (message.verb) {
+                            
+                            // Handle user creation
+                            case 'created':
+                            addUser(message.data);
+                            break;
+
+                            // Handle a user changing their name
+                            case 'updated':
+
+                            // Get the user's old name by finding the <option> in the list with their ID
+                            // and getting its text.
+                            var oldName = $('#user-'+message.id).text();
+
+                            // Update the name in the user select list
+                            $('#user-'+message.id).text(message.data.name);
+
+                            // If we have a private convo with them, update the name there and post a status message in the chat.
+                            if ($('#private-username-'+message.id).length) {
+                                $('#private-username-'+message.id).html(message.data.name);
+                                postStatusMessage('private-messages-'+message.id,oldName+' has changed their name to '+message.data.name);
+                            }
+
+                            break;
+
+                            // Handle user destruction
+                            case 'destroyed':
+                            {
+                                if($rootScope.lastagent == message.previous.sid && $rootScope.agentconnected)
+                                    $rootScope.endConversation(2);
+                                removeUser(message.id);
+                            }
+                            break;
+
+                            // Handle private messages.  Only sockets subscribed to the "message" context of a
+                            // User instance will get this message--see the onConnect logic in config/sockets.js
+                            // to see where a new user gets subscribed to their own "message" context
+                            case 'messaged':
+                            receivePrivateMessage(message.data);
+                            break;
+
+                            default:
+                            break;
+                        }
+
+                    });
+
+                    // Add a click handler for the "Update name" button, allowing the user to update their name.
+                    // updateName() is defined in user.js.
+                    $('#update-name').click(updateName);
+
+                    // Add a click handler for the "Send private message" button
+                    // startPrivateConversation() is defined in private_message.js.
+                    $('#private-msg-button').click(startPrivateConversation);
+
+                    // Add a click handler for the "Join room" button
+                    // joinRoom() is defined in public_message.js.
+                    $('#join-room').click(joinRoom);
+
+                    // Add a click handler for the "New room" button
+                    // newRoom() is defined in room.js.
+                    $('#new-room').click(newRoom);
+
+                    console.log('Socket is now connected!');
+
+                    // When the socket disconnects, hide the UI until we reconnect.
+                    io.socket.on('disconnect', function() {
+                    // Hide the main UI
+                        $('#main').hide();
+                        $('#disconnect').show();
+                    });
+                    
+                });
+            }
+        });
+        $rootScope.disconnect = function() {
+            // userdata = {sid:$.jStorage.get("id"),name:$.jStorage.get("fname")+' '+$.jStorage.get("lname"),access_role:$.jStorage.get("access_role"),id:window.me.id};
+            //     io.socket.post("/user/disconnect",{query:userdata}, function(data){
+            //         console.log(data);
+            //     });
+            //io.socket.reconnects = true;
+            // end of workaround
+            //io.sails.connect();
+
+
+            //io.socket.disconnect(false);
+            //io.socket.reconnect();
+            // io.sails.url = 'http://localhost:9161';
+            // io.sails.connect(io.sails.url,{forceNew: true});
+            // io.connect(io.sails.url,{forceNew: true});
+            // io.socket.put(io.sails.url, {}, function (resData, jwres){
+            //     console.log(resData);
+            //     console.log(jwres);
+            // });
+            // //io.sails.connect("http://localhost:9161");
+            // io.connect("http://localhost:9161", {'forceNew': true});
+            //console.log(window.me.id);
+            // io.socket.delete('/users/'+window.me.id, function (resData) {
+            // resData; // => {id:9, name: 'Timmy Mendez', occupation: 'psychic'}
+            // console.log(resData);
+            // });
+        };
+
+
+
+
+
         $scope.callsession = function() {
             apiService.get_session({}).then( function (response) {
                 $cookies.put("csrftoken",response.data.csrf_token);
@@ -1123,7 +1488,7 @@ myApp.controller('HomeCtrl', function ($scope,$rootScope, TemplateService, Navig
         $timeout(function(){
             $scope.agentpanelheight = $(window).height()-55;
         },3000);
-        io.sails.url = 'http://exponentiadata.co.in:9161';
+        io.sails.url = 'http://localhost:9161';
         function startPrivateConversation() {
 
         // Get the user list
@@ -3880,7 +4245,7 @@ myApp.controller('HomeCtrl', function ($scope,$rootScope, TemplateService, Navig
         $rootScope.lastagentmsg = false;
         $rootScope.sendMsgtoagent = function(msg) {
 
-            io.sails.url = 'http://exponentiadata.co.in:9161';
+            io.sails.url = 'http://localhost:9161';
             
             io.socket.get('/user', function (users){
                 var newuser = _.remove(users, function(n) {
@@ -3984,10 +4349,10 @@ myApp.controller('HomeCtrl', function ($scope,$rootScope, TemplateService, Navig
                 
             // });
             
-            //io.connect("http://exponentiadata.co.in:9161", {'forceNew': true});
+            //io.connect("http://localhost:9161", {'forceNew': true});
             //io.disconnect;
             //io.socket("disconnect");
-            // io.connect("http://exponentiadata.co.in:9161", {'forceNew': true});
+            // io.connect("http://localhost:9161", {'forceNew': true});
             // userdata = {sid:$.jStorage.get("id"),name:$.jStorage.get("fname")+' '+$.jStorage.get("lname"),access_role:$.jStorage.get("access_role")};
             //     io.socket.get("/user/disconnect",{query:userdata}, function(data){
             //     });
