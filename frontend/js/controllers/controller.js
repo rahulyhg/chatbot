@@ -2852,6 +2852,7 @@ myApp.controller('HomeCtrl', function ($scope,$rootScope, TemplateService, Navig
         $rootScope.DthResponse = function(id,data,dthlink) {
             $rootScope.tabvalue.elements = [];
             $rootScope.tabvalue.element_values=[];
+            $(".processcontent").hide();
 			if(data.tiledlist[0].DT )
 			{
 				if( data.tiledlist[0].DT.length > 0  || data.tiledlist[0].Text != "")
@@ -3466,7 +3467,8 @@ myApp.controller('HomeCtrl', function ($scope,$rootScope, TemplateService, Navig
             $timeout(function(){
                 $("#tab_data .nav-tabs li").first().addClass("active");
                 $("#tab_data .tab-content .tab-pane").first().addClass("active");
-            },3000);
+                $(".processcontent").show();
+            },1000);
         };
         $rootScope.showdashboard = function() {
             $rootScope.minimizeChatwindow();
