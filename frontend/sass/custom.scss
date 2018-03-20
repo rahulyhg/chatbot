@@ -5,6 +5,9 @@ body { font-family: 'Frutiger_LT_45_Light',"serif",Helvetica,Arial,sans-serif; f
     padding-top:0px !important; }
 a { color:#003366;text-decoration: underline;
 font-weight: bold; }
+ul.dropdown-menu.pdm li a, .profilelist li a {
+    text-decoration: none;
+}
 .hide { display: none; }
 .clear { clear: both; }
 .login{

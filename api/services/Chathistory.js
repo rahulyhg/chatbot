@@ -31,6 +31,9 @@ var schema = new Schema({
     },
     dislike : {
         type:Number
+    },
+	livechat : {
+        type:Number
     }
 });
 
@@ -164,6 +167,9 @@ var model = {
     },
     savehistory: function (data, callback) {
         var dtobject = {};
+		var livechat = 0;
+		if(data.livechat)
+			livechat = 1;
         if(data.responsetype=='DTHyperlink')
             dtobject = {
                 Dthlink:data.DTHlink,
@@ -185,8 +191,12 @@ var model = {
                             session_id:data.session_id,
                             user:data.user
                         },
-                        { $push: { 
-                            chatlist:
+                        {
+							$set:{
+								livechat:livechat
+							}, 
+							$push: { 
+								chatlist:
                                 {
                                     user_input:data.user_input,
                                     response:data.response,
@@ -196,10 +206,12 @@ var model = {
                                     topic:data.topic,
                                     inputDate:data.inputDate,
                                     outputDate:data.outputDate,
-                                    respdiff:data.respdiff
+                                    respdiff:data.respdiff,
+									livechat:livechat
                                 }
                              
-                        } }
+							} 
+						}
                     ).exec(function (err2, updatefound) {
                         if (err2) {
                             callback(err2, null);
@@ -220,6 +232,7 @@ var model = {
                         // Journey_Name: data.Journey_Name,
                         session_id:data.session_id,
                         user:data.user,
+						livechat:livechat,
                         chatlist:[
                             {
                                 user_input:data.user_input,
@@ -230,7 +243,8 @@ var model = {
                                 topic:data.topic,
                                 inputDate:data.inputDate,
                                 outputDate:data.outputDate,
-                                respdiff:data.respdiff
+                                respdiff:data.respdiff,
+								livechat:livechat
                             }
                         ]
                     },function (err3, savefound) {

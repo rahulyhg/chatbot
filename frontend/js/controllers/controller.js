@@ -891,11 +891,11 @@ myApp.controller('HomeCtrl', function ($scope,$rootScope, TemplateService, Navig
         
         //console.log($.jStorage.get("notloggedin"));
         angular.element(document).ready(function () {
-            // if(!$.jStorage.get('firstreload'))
-            // {
-            //     $.jStorage.set('firstreload',true);
-            //     location.reload();
-            // }
+            if(!$.jStorage.get('firstreload'))
+            {
+               $.jStorage.set('firstreload',true);
+               location.reload();
+            }
             // if(!$.jStorage.get("notloggedin"))
             {
                 //Chatapp
@@ -1575,19 +1575,79 @@ myApp.controller('HomeCtrl', function ($scope,$rootScope, TemplateService, Navig
             });
             $scope.scrollagentChatWindow(recipientId);
         }
-
+		function botconversation(senderId, recipientId, message,sender) {
+			/*_.remove(message, function(n) {
+				return n.msg.type == "SYS_FIRST";
+			});*/
+			var divstring="";
+			var fromMe = senderId == window.me.id;
+            var roomName = 'private-messages-' + (fromMe ? recipientId : senderId);
+            var senderName = fromMe ? "Me" : $('#private-username-'+senderId).html();
+			for(var i = 0; i<message.length; i++)
+			{
+				if(message[i].position=='right')
+				{
+					var div = $('<div style="text-align:left"></div>');
+					if(typeof(message[i].msg)=='string')
+					{
+						//divstring += ""message[i].msg;
+						
+						div.html('<strong>'+senderName+'</strong>: '+message[i].msg);
+						
+					}
+					else if(typeof(message[i].msg)=='object')
+					{
+						if(message[i].msg.type=='SYS_DT_RES')
+						{
+							div.html('<strong>'+senderName+'</strong>: '+message[i].msg.Text);
+						}
+					}
+					$('#'+roomName).append(div);
+					$scope.scrollagentChatWindow(senderId);
+				}
+				else if(message[i].position=='left') {
+					if(message[i].msg.tiledlist)
+					{
+						var div = $('<div style="text-align:right"></div>');
+						if(message[i].msg.tiledlist[0].type=='DTHyperlink' || message[i].msg.tiledlist[0].type=='Process Tree')
+						{
+							dtstring="";
+							for(var j=0;j<message[i].msg.tiledlist[0].DT.length;j++)
+							{
+								dtstring+="<div class='dthyperlink chatdt'>"+message[i].msg.tiledlist[0].DT[j]+"</div>";
+							}
+							
+							div.html('<strong>Bot</strong>: '+dtstring);
+							
+						}
+						else if(message[i].msg.tiledlist[0].type=='text')
+						{
+							div.html('<strong>Bot</strong>: '+message[i].msg.tiledlist[0].Text);
+						}
+						$('#'+roomName).append(div);
+						$scope.scrollagentChatWindow(senderId);
+					}
+				}
+			}
+		}
         // Add HTML for a new message in a private conversation
         function addMessageToConversation(senderId, recipientId, message,sender) {
-            console.log(sender);
+            //console.log(sender);
             var fromMe = senderId == window.me.id;
             var roomName = 'private-messages-' + (fromMe ? recipientId : senderId);
             var senderName = fromMe ? "Me" : $('#private-username-'+senderId).html();
-            var justify = fromMe ? 'right' : 'left';
+			if(typeof(message)=='string')
+			{
+				var justify = fromMe ? 'right' : 'left';
 
-            var div = $('<div style="text-align:'+justify+'"></div>');
-            div.html('<strong>'+senderName+'</strong>: '+message);
-            $('#'+roomName).append(div);
-            $scope.scrollagentChatWindow(senderId);
+				var div = $('<div style="text-align:'+justify+'"></div>');
+				div.html('<strong>'+senderName+'</strong>: '+message);
+				$('#'+roomName).append(div);
+				$scope.scrollagentChatWindow(senderId);
+			}
+			else {
+				botconversation(senderId, recipientId, message,sender);
+			}
         }
 
         // Handle an incoming private message from the server.
@@ -2135,6 +2195,7 @@ myApp.controller('HomeCtrl', function ($scope,$rootScope, TemplateService, Navig
         $rootScope.agentconnected = false;
         $rootScope.lastagent ="";
         $rootScope.agentlist = [];
+		$rootScope.agentdet = {};
         if($.jStorage.get("lastagent"))
             $rootScope.lastagent = $.jStorage.get("lastagent");
         if($.jStorage.get("agentlist"))
@@ -2595,7 +2656,13 @@ myApp.controller('HomeCtrl', function ($scope,$rootScope, TemplateService, Navig
             {
                 $rootScope.autocompletelist = [];
                 $rootScope.chatlist.push({id:"id",msg:value,position:"right",curTime: $rootScope.getDatetime()});
-                $rootScope.sendMsgtoagent(value);
+                //$rootScope.sendMsgtoagent(value);
+				addMessageToConversation(window.me.id, $scope.lastagentid, value);
+				io.socket.post('/chat/private', {to: $scope.lastagentid, msg: value});
+				var formData= {session_id:$.jStorage.get('session_id'),msg:value,from_id:$.jStorage.get("id"),fromid:window.me.id,fromname:($.jStorage.get("fname")+' '+$.jStorage.get("lname")),from_socketid:$.jStorage.get("socketId"),toid:$scope.lastagentid,toname:$rootScope.agentdet.sname,to_id:$rootScope.agentdet.sid,to_socketid:$rootScope.agentdet.socketId};
+				apiService.saveagentchat(formData).then(function (data){
+
+				});
                 $rootScope.scrollChatWindow(); 
             }
             else {
@@ -2996,6 +3063,9 @@ myApp.controller('HomeCtrl', function ($scope,$rootScope, TemplateService, Navig
         $rootScope.getDthlinkRes = function(stage,dthlink,tiledlist) {
             //console.log(colno,lineno,dthlink);
             //mysession = $.jStorage.get("sessiondata");
+			$rootScope.script_data=[];
+            $rootScope.tabvalue.elements = [];
+            $rootScope.tabvalue.element_values=[];
             var inputDate = new Date();
             var dtmsg = {Text:dthlink,type:"SYS_DT_RES"};
             $rootScope.chatlist.push({id:"id",msg:dtmsg,position:"right",curTime: $rootScope.getDatetime()});
@@ -3851,21 +3921,27 @@ myApp.controller('HomeCtrl', function ($scope,$rootScope, TemplateService, Navig
                             console.log("length>0");
                             $("#tab_data .nav-tabs li").first().addClass("active");
                             $("#tab_data .tab-content .tab-pane").first().addClass("active");
+							$("#tab_data").show();
                         }
                         else
                         {
                             console.log("length<0");
-                            $("#tab_data .nav-tabs li:nth-child(1)").hide();
-                            $("#tab_data .nav-tabs li:nth-child(2)").addClass("active");
-                            //$("#tab_data .tab-content .tab-pane").first().addClass("active");
-                            $("#tab_data .tab-content .tab-pane:nth-child(1)").hide();
+							$("#tab_data").hide();
+                            //$("#tab_data .nav-tabs li:nth-child(1)").hide();
+                            //$("#tab_data .nav-tabs li:nth-child(2)").addClass("active");
+                            ////$("#tab_data .tab-content .tab-pane").first().addClass("active");
+                            //$("#tab_data .tab-content .tab-pane:nth-child(1)").hide();
                         }
                     }
                     else
                     {
                         console.log("No process");
                         $("#tab_data .nav-tabs li:nth-child(1)").hide();
-                        $("#tab_data .nav-tabs li:nth-child(2)").addClass("active");
+                        if(ele.length>1)
+							$("#tab_data").show();
+						else
+							$("#tab_data").hide();
+						$("#tab_data .nav-tabs li:nth-child(2)").addClass("active");
                         $("#tab_data .tab-content .tab-:nth-child(1)").hide();
                         //$("#tab_data .tab-content .tab-pane").first().addClass("active");
                     }
@@ -3874,6 +3950,7 @@ myApp.controller('HomeCtrl', function ($scope,$rootScope, TemplateService, Navig
                 else {
                     $("#tab_data .nav-tabs li").first().addClass("active");
                     $("#tab_data .tab-content .tab-pane").first().addClass("active");
+					$("#tab_data").show();
                 }
                 $(".processcontent").show();
             },2000);
@@ -4055,13 +4132,15 @@ myApp.controller('HomeCtrl', function ($scope,$rootScope, TemplateService, Navig
             //CsrfTokenService.getCookie("csrftoken").then(function(token) {
                 //$rootScope.formData = {user_id:1164,user_input:value,auto_id:parseInt(id),auto_value:value,'csrfmiddlewaretoken':token};
             //var mysessiondata = $.jStorage.get("sessiondata");
-            $(".fdashboard").hide();
+            
+			$(".fdashboard").hide();
             var prevmsg = value;
             var mysessiondata = {};
                 //mysessiondata = mysessiondata.toObject();
                 //mysessiondata.data = {id:parseInt(id),Text:value};
                 //mysessiondata.data = {id:id,Text:value};
                 sess2 = {id:id,Text:value};
+				$rootScope.script_data=[];
                 $rootScope.tabvalue.elements = [];
                 $rootScope.tabvalue.element_values=[];
                 //console.log(mysessiondata);
@@ -4263,6 +4342,7 @@ myApp.controller('HomeCtrl', function ($scope,$rootScope, TemplateService, Navig
                     // var msg = {Text:"Sorry I could not understand",type:"SYS_EMPTY_RES"};
                     // $rootScope.pushSystemMsg(0,msg); 
                     $rootScope.showMsgLoader=false;
+					
                     io.socket.get('/user', function (users){
                         var newuser = _.remove(users, function(n) {
                             return n.access_role  == 4;
@@ -4273,6 +4353,10 @@ myApp.controller('HomeCtrl', function ($scope,$rootScope, TemplateService, Navig
                             if($rootScope.agentconnected)
                             {
                                 $rootScope.sendMsgtoagent(sess2.Text);
+								var outputDate   = new Date();
+								var respdiff = (outputDate.getTime() - inputDate.getTime()) / 1000;
+								var obj = {livechat:1,session_id:$.jStorage.get('session_id'),user:$.jStorage.get('email'),user_input:prevmsg,response:{},topic:"",Journey_Name:"",responsetype:"",inputDate:inputDate,outputDate:outputDate,respdiff:respdiff};
+								$rootScope.savehistory(obj);
                             }
 
                         }
@@ -4309,8 +4393,11 @@ myApp.controller('HomeCtrl', function ($scope,$rootScope, TemplateService, Navig
             
             io.socket.get('/user', function (users){
                 var newuser = _.remove(users, function(n) {
-                    return n.access_role  == 4;
+                    return (n.access_role  == 4 && n.id !=null);
                 });
+				_.sortBy(newuser, [function(o) { return o.id; }]);
+				_.reverse(newuser);
+				_.uniqBy(newuser,'id');
                 if(newuser.length > 0)
                 {
                     if(!$rootScope.lastagent || newuser.length==1) {
@@ -4341,12 +4428,27 @@ myApp.controller('HomeCtrl', function ($scope,$rootScope, TemplateService, Navig
                                 allconnected = false;
                                 $rootScope.lastagent = user.sid;
                                 $rootScope.agentlist.push(user.sid);
+								
                                 $.jStorage.set("agentlist",$rootScope.agentlist);
                             }
                         });
-                        if(allconnected)
+                        
+						if(allconnected)
                         {
-                            $rootScope.lastagent = newuser[0].sid;
+							var setid=false;
+							
+                            //$rootScope.lastagent = newuser[newuser.length-1].sid;
+							newuser.forEach(function(user) {
+								if($rootScope.lastagent == user.sid)
+								{
+									console.log("Lastconn");
+								}
+								else if(!setid){
+									setid = true;
+									$rootScope.lastagent = user.sid;
+									console.log("Lastconn false",user.sname);
+								}
+							});
                         }
                     }
                     console.log(newuser,"users");
@@ -4355,6 +4457,7 @@ myApp.controller('HomeCtrl', function ($scope,$rootScope, TemplateService, Navig
 
                     var arr_ind=_.findIndex(newuser, function(o) { return o.sid == $rootScope.lastagent; });
                     console.log(newuser[arr_ind].sname,"Agent");
+					$rootScope.agentdet = {sid:newuser[arr_ind].sid,sname:newuser[arr_ind].sname,id:newuser[arr_ind].id,socketid:newuser[arr_ind].socketId};
                     if(!$rootScope.lastagentmsg)
                     {
                         var msg1 = {Text:"I am a Bot,I am still learning. <br>We’re finding the best person to connect with you.Please stay online.",type:"SYS_EMPTY_RES"};
@@ -4366,8 +4469,8 @@ myApp.controller('HomeCtrl', function ($scope,$rootScope, TemplateService, Navig
                     }
                     $scope.lastagentid = newuser[arr_ind].id;
                     addMessageToConversation(window.me.id, newuser[arr_ind].id, msg);
-                    io.socket.post('/chat/private', {to: newuser[arr_ind].id, msg: msg});
-                    var formData= {msg:msg,from_id:$.jStorage.get("id"),fromid:window.me.id,fromname:($.jStorage.get("fname")+' '+$.jStorage.get("lname")),from_socketid:$.jStorage.get("socketId"),toid:newuser[arr_ind].id,toname:newuser[arr_ind].sname,to_id:newuser[arr_ind].sid,to_socketid:newuser[arr_ind].socketId};
+                    io.socket.post('/chat/private', {to: newuser[arr_ind].id, msg: $.jStorage.get("chatlist")});
+                    var formData= {session_id:$.jStorage.get('session_id'),msg:msg,from_id:$.jStorage.get("id"),fromid:window.me.id,fromname:($.jStorage.get("fname")+' '+$.jStorage.get("lname")),from_socketid:$.jStorage.get("socketId"),toid:newuser[arr_ind].id,toname:newuser[arr_ind].sname,to_id:newuser[arr_ind].sid,to_socketid:newuser[arr_ind].socketId};
                     apiService.saveagentchat(formData).then(function (data){
 
                     });

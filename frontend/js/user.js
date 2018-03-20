@@ -15,7 +15,7 @@ function updateName() {
 
 // Add a user to the list of available users to chat with
 function addUser(user) {
-  //console.log(user);
+  console.log(user);
   // Get a handle to the user list <select> element
   var select = $('#users-list');
   // if($.jStorage.get("socketId") == user.socketId)

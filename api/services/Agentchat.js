@@ -48,7 +48,10 @@ var schema = new Schema({
     },
     disconnectby:{
         type:Schema.Types.ObjectId,
-    }
+    },
+	session_id: {
+		type:Number
+	}
 });
 
 
@@ -173,6 +176,7 @@ var model = {
                         disconnected:false,
                         user1:mongoose.Types.ObjectId(data.from_id),
                         user2:mongoose.Types.ObjectId(data.to_id),
+						session_id:data.session_id,
                         chatlist:[
                             {
                                 from_id:mongoose.Types.ObjectId(data.from_id),
