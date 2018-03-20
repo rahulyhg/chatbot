@@ -175,10 +175,10 @@ myApp.run(['$http','$cookies','beforeUnload','$document','$rootScope','Idle','bo
         console.log("collapse click");
         //$(this).parent(".uibcollapsemain").find('.uibcollapsecontent.in.collapse').collapse('hide');
         if($(this).parent(".uibcollapsemain").find('.uibcollapsecontent').is(':visible'))
-            $(this).parent(".uibcollapsemain").find('.uibcollapsecontent').hide();
+            $(this).parent(".uibcollapsemain").find('.uibcollapsecontent').fadeOut( "fast" );
         else {
             $(".uibcollapsecontent").hide();
-            $(this).parent(".uibcollapsemain").find('.uibcollapsecontent').show();
+            $(this).parent(".uibcollapsemain").find('.uibcollapsecontent').fadeIn( "slow" );
         }
         // if($(this).parent(".uibcollapsemain").find('.uibcollapsecontent').hasClass('in'))
         // {   

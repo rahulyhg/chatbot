@@ -630,6 +630,34 @@ height:30px!important;
 .pvtmsg {
     margin-bottom: 10px; 
 }
+.accord_heading i.glyphicon {
+    -moz-transition: -moz-transform 0.5s ease-in-out;
+    -o-transition: -o-transform 0.5s ease-in-out;
+    -webkit-transition: -webkit-transform 0.5s ease-in-out;
+    transition: transform 0.5s ease-in-out;
+}
+uib-accordion.nestedprocess .panel-group {
+    margin-bottom: 0px;
+    .panel {
+        border: 0px;
+        border-bottom: 1px solid #00458a;
+        border-radius: 0px;
+    }
+    .panel-heading {
+        border-top-right-radius: 0px; 
+        border-top-left-radius: 0px; 
+    }
+}
+.nestedprocess .panel-default > .panel-heading {
+    background-color:#003874;
+    color:#fff; 
+    .panel-title a {
+        text-decoration: none;
+    }
+}
+.tab-con .processaccord:last-child {
+    border-bottom: 5px solid #00458a;
+}
 .img-box
 {
     height: 100px;

@@ -3214,8 +3214,10 @@ myApp.controller('HomeCtrl', function ($scope,$rootScope, TemplateService, Navig
             $rootScope.viewmodalInstance2.dismiss('cancel');
             $rootScope.viewmodalInstance2 = {};
         };
+        $rootScope.script_data = [];
         $rootScope.popupdata=[];
         $rootScope.DthResponse = function(id,data,dthlink) {
+            $rootScope.script_data = [];
             $rootScope.tabvalue.elements = [];
             $rootScope.tabvalue.element_values=[];
             $(".processcontent").hide();
@@ -3286,12 +3288,13 @@ myApp.controller('HomeCtrl', function ($scope,$rootScope, TemplateService, Navig
             //     var ele_val = new Array();
             // }
             // else 
-            {
+            //{
                 var ele = new Array("Process");
                 var ele_val = new Array(data.tiledlist[0]);
-            }
+            //}
             $rootScope.showMsgLoader = false; 
-            
+            if(data.tiledlist[0].Script)
+                $rootScope.script_data = data.tiledlist[0].Script;
             $rootScope.contentobj = [];
             if(data.tiledlist[0].Quik_Tip)
             {
@@ -3855,21 +3858,25 @@ myApp.controller('HomeCtrl', function ($scope,$rootScope, TemplateService, Navig
                             $("#tab_data .nav-tabs li:nth-child(1)").hide();
                             $("#tab_data .nav-tabs li:nth-child(2)").addClass("active");
                             //$("#tab_data .tab-content .tab-pane").first().addClass("active");
-                            $("#tab_data .tab-content .tab-pane(1)").hide();
+                            $("#tab_data .tab-content .tab-pane:nth-child(1)").hide();
                         }
                     }
                     else
                     {
+                        console.log("No process");
                         $("#tab_data .nav-tabs li:nth-child(1)").hide();
                         $("#tab_data .nav-tabs li:nth-child(2)").addClass("active");
-                        $("#tab_data .tab-content .tab-pane(1)").hide();
+                        $("#tab_data .tab-content .tab-:nth-child(1)").hide();
                         //$("#tab_data .tab-content .tab-pane").first().addClass("active");
                     }
                     
                 }
-                
+                else {
+                    $("#tab_data .nav-tabs li").first().addClass("active");
+                    $("#tab_data .tab-content .tab-pane").first().addClass("active");
+                }
                 $(".processcontent").show();
-            },1000);
+            },2000);
         };
         $rootScope.showdashboard = function() {
             $rootScope.minimizeChatwindow();
