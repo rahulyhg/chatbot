@@ -171,13 +171,32 @@ myApp.run(['$http','$cookies','beforeUnload','$document','$rootScope','Idle','bo
         e.preventDefault();
         $(this).tab('show');
     });
-    $(document).on('click','.uibcollapseheader',function(){
+    $(document).on('click','#tab_data .nav-tabs li a',function(e){
+        $("#tab_data .nav-tabs li").removeClass('active');
+        $(this).parent().addClass('active');
+        console.log($(this).parent().attr("indval"));
+        var tabind = $(this).parent().attr("indval");
+        // if(tabind==0)
+        tabind++;
+        $("#tab_data .tab-content .tab-pane").removeClass("active");
+        $("#tab_data .tab-content .tab-pane:nth-child("+tabind+")").addClass("active");
+    });
+    $(document).on('click','.uibcollapseheader',function(e){
         console.log("collapse click");
         //$(this).parent(".uibcollapsemain").find('.uibcollapsecontent.in.collapse').collapse('hide');
         if($(this).parent(".uibcollapsemain").find('.uibcollapsecontent').is(':visible'))
+        {
+            $(this).find("i").removeClass("glyphicon-chevron-down");
+            $(this).find("i").addClass("glyphicon-chevron-right");
             $(this).parent(".uibcollapsemain").find('.uibcollapsecontent').fadeOut( "fast" );
+        }
         else {
             $(".uibcollapsecontent").hide();
+            $(".uibcollapseheader").find("i").removeClass("glyphicon-chevron-down");
+            $(".uibcollapseheader").find("i").addClass("glyphicon-chevron-right");
+            $(this).find("i").removeClass("glyphicon-chevron-right");
+            $(this).find("i").addClass("glyphicon-chevron-down");
+            
             $(this).parent(".uibcollapsemain").find('.uibcollapsecontent').fadeIn( "slow" );
         }
         // if($(this).parent(".uibcollapsemain").find('.uibcollapsecontent').hasClass('in'))
