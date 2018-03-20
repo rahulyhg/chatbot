@@ -259,7 +259,12 @@ var model = {
         {
             var objstring = 'chatlist.'+parseInt(data.interactions[i])+'.dislike';
             var listobj={};
-            var i_ind = parseInt(data.interactions[i])-1;
+            var i_ind2 = parseInt(data.interactions[i]);
+            var i_ind = 0;
+            if(i_ind2 == 1)
+                i_ind = i_ind2-1;
+            else
+                i_ind = i_ind2-2;
             listobj['chatlist.'+i_ind+'.dislike']=1;
             // listobj ={
             //     //objstring:1,
@@ -267,6 +272,10 @@ var model = {
             // };
             updateobj = extend({}, listobj, updateobj);
             listobj['chatlist.'+i_ind+'.feedback']=data.feedback;
+            updateobj = extend({}, listobj, updateobj);
+            listobj['chatlist.'+i_ind+'.handle']=0;
+            updateobj = extend({}, listobj, updateobj);
+            listobj['chatlist.'+i_ind+'.handleview']=0;
             updateobj = extend({}, listobj, updateobj);
         }
         //console.log(updateobj);
