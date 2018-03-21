@@ -21,6 +21,9 @@
     // background-color: #003874;
     // color: #fff;
 }
+.fancybox-is-open .fancybox-bg {
+	opacity:0.65 !important;
+}
 li.initial {
     padding-top: 4px;
 }
@@ -152,7 +155,7 @@ a.cur_date {
     color: #fff !important;
 }
 .datelist {
-    margin-left: -150px;
+    margin-left: -210px;
 }
 .userimg {
     // margin-right:5px;    

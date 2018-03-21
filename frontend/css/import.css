@@ -11905,6 +11905,9 @@ span.bottom-info.redbg {
 .uibcollapsemain {
   margin-bottom: 10px; }
 
+.fancybox-is-open .fancybox-bg {
+  opacity: 0.65 !important; }
+
 li.initial {
   padding-top: 4px; }
 
@@ -12034,7 +12037,7 @@ a.cur_date {
   color: #fff !important; }
 
 .datelist {
-  margin-left: -150px; }
+  margin-left: -210px; }
 
 .searchbar {
   padding-top: 5px; }

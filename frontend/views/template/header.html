@@ -287,18 +287,25 @@
                             </button>
                         </div>
                     </li> -->
+					<li class="" ng-if="uipage!='agentdashboard'">
+                            
+						<a href="img/Kotak_Help.png" class="btn btn-primary headerbtns" ng-click="minimizeChatwindow();"  data-fancybox="imggroup" rel="gallary" fancybox  data-caption="Help"  >
+							<span >Help</span>
+						</a>
+					</li>
+
                     <li ng-controller="CommonCtrl" class="datelist">
                         <a href="#" class="cur_date">Date : {{FromDate}} 
                             <!-- <span class="botname">KAIRA</span> -->
                         </a>
                         
                     </li>
-                    <li role="" class="" ng-if="uipage!='agentdashboard'">
+                    <li role="" class="" >
                         <button id="" type="submit" class="btn btn-primary headerbtns" ng-click="showdashboard();">
                             <span class="glyphicon glyphicon-home"></span> Home
                         </button>
                     </li>
-                    <li ng-if="uipage!='agentdashboard'"><button id="logout" type="submit" class="btn btn-primary headerbtns"  ng-click="openMydashboard();">My Dashboard</button></li>
+					                    <li ng-if="uipage!='agentdashboard'"><button id="logout" type="submit" class="btn btn-primary headerbtns"  ng-click="openMydashboard();">My Dashboard</button></li>
                     <!-- <li class="profileDetail" ng-controller="LoginDetCtrl"><a><small>Name: </small><span >{{fullname}}</span></a></li>
                     <li class="profileDetail" ng-controller="LoginDetCtrl"><a><small>Branch: </small><span >{{branch}} Branch</span></a></li> -->
                     <!-- <li class="" ng-if="uipage != 'dashboard'"><a class="btn btn-primary btn-sm headerbtns" href="/dashboard"><i class="icon-dashboard"></i> &nbsp; Dashboard</a></li> -->
@@ -308,7 +315,8 @@
                             <strong>Name: </strong><span >{{fullname}}</span><br>
                             <strong>Branch: </strong><span >{{branch}} Branch</span>
                         </li> -->
-                        <li class="initial" ng-controller="LoginDetCtrl">
+                        
+						<li class="initial" ng-controller="LoginDetCtrl">
                             
                             <a href="#">
                                 <div class="nameinitial">{{fullname|limitTo:1}}</div>
