@@ -4397,7 +4397,7 @@ myApp.controller('HomeCtrl', function ($scope,$rootScope, TemplateService, Navig
                 });
 				_.sortBy(newuser, [function(o) { return o.id; }]);
 				_.reverse(newuser);
-				_.uniqBy(newuser,'id');
+				_.uniqBy(newuser,'sid');
                 if(newuser.length > 0)
                 {
                     if(!$rootScope.lastagent || newuser.length==1) {
