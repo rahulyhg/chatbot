@@ -760,8 +760,27 @@ myApp.controller('HomeCtrl', function ($scope,$rootScope, TemplateService, Navig
         $scope.isCollapsed_c = true;
         $scope.isCollapsed_c1 = true;
         $scope.isCollapsed_c2 = true;
+        $scope.tickers = [];
+        $scope.notifications = [];
+        $scope.postit = [];
+        $scope.images = [];
         angular.element(document).ready(function () {
-            
+            apiService.getticker({}).then(function (data){
+                //console.log(data);
+                $scope.tickers=data.data.data;
+            });
+            apiService.getnotification({}).then(function (data){
+                console.log(data);
+                $scope.notifications=data.data.data;
+            });
+            apiService.getpostit({}).then(function (data){
+                console.log(data);
+                $scope.postit=data.data.data;
+            });
+            apiService.getimages({}).then(function (data){
+                console.log(data);
+                $scope.images=data.data.data;
+            });
             $scope.setdisconnectsocket = function(){
                 var formData= {from_id:$.jStorage.get("id")};
                 apiService.setdisconnectsocket(formData).then(function (data){

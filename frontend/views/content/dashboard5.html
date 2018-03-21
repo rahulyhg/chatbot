@@ -1,5 +1,11 @@
 <div class="container-fluid tickermsgbar">
-     <marquee direction="left" speed="normal" behavior="loop"  class="news_text yellowbg">Important Notice : Please update your personal details before 1st July 2017</marquee>  
+    <div class="row">
+     <marquee direction="left" speed="normal" behavior="loop"  class="news_text yellowbg">
+        <span ng-repeat="ts in tickers">
+            {{ts.Title}}.
+        </span>
+    </marquee>  
+    </div>
 </div>
 <div class="col-lg-8 expandable2">
     <!-- <marquee direction="left" speed="normal" behavior="loop"  class="news_text yellowbg tickermsgbar2">Important Notice : Please update your personal details before 1st July 2017</marquee>  -->
@@ -391,12 +397,15 @@
                                 <div class="table_panel" >
                                     <table id="notificationtable" class="table table-hover  personal-task">
                                         <tbody>
-                                            <tr>
+                                            <tr ng-repeat="nt in notifications">
+                                                <td>{{nt.Title}}</td>
+                                            </tr>
+                                            <!-- <tr>
                                                 <td>Process to follow in-case of bad weather</td>
                                             </tr>
                                             <tr>
                                                 <td>Queries related to new Rs.200 notes</td>
-                                            </tr>
+                                            </tr> -->
                                         </tbody>
                                     </table>
                                 </div>
@@ -421,8 +430,11 @@
                                 <div class="table_panel" >
                                     <table id="posttable" class="table table-hover  personal-task">
                                         <tbody>
-                                            <tr>
+                                            <!-- <tr>
                                                 <td>Dummy text</td>
+                                            </tr> -->
+                                             <tr ng-repeat="nt in postit">
+                                                <td>{{nt.Title}}</td>
                                             </tr>
                                         </tbody>
                                     </table>
