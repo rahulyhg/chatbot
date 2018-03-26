@@ -2214,7 +2214,9 @@ myApp.controller('HomeCtrl', function ($scope,$rootScope, TemplateService, Navig
         $rootScope.agentconnected = false;
         $rootScope.lastagent ="";
         $rootScope.agentlist = [];
-		$rootScope.agentdet = {};
+        $rootScope.agentdet = {};
+        $rootScope.outprocessclick=0;
+        $rootScope.journeylist = [];
         if($.jStorage.get("lastagent"))
             $rootScope.lastagent = $.jStorage.get("lastagent");
         if($.jStorage.get("agentlist"))
@@ -2905,13 +2907,14 @@ myApp.controller('HomeCtrl', function ($scope,$rootScope, TemplateService, Navig
         angular.element(document).ready(function () {
             //$(document).unbind("click").on('click', 'a.productlisting', function(e){
             $(document).on('click', 'a.outprocess', function(){
-                
+                $rootScope.outprocessclick=1;
                 var dthlink = $(this).text();
                 var journey = $(this).attr('data-journey');
                 formData = {csrfmiddlewaretoken:$rootScope.getCookie("csrftoken"),user_id:$rootScope.session_id,user_input:dthlink,auto_id:'',auto_value:'',Journey_Name:journey};
                 apiService.outprocess(formData).then(function (data){
                         //console.log(data);
-                    
+                    // if(data.data.tiledlist[0].Journey_Name)
+                    //     $rootScope.journeylist.push(data.data.tiledlist[0].Journey_Name);
                         if(data.data.tiledlist[0].topic)
                              $("#topic").text(data.data.tiledlist[0].topic);
                     angular.forEach(data.data.tiledlist, function(value, key) {
@@ -2956,16 +2959,16 @@ myApp.controller('HomeCtrl', function ($scope,$rootScope, TemplateService, Navig
                         else if(value.type=="DTHyperlink")
                         {
                            $rootScope.DthResponse(0,data.data,'');  
-                           $timeout(function(){
-                                var textspeech = data.data.tiledlist[0].Text;
-                                _.each(data.data.tiledlist[0].DTHyperlink,function(v,k){
-                                    textspeech += v;
-                                });
-                                $.jStorage.set("texttospeak",textspeech);
+                        //    $timeout(function(){
+                        //         var textspeech = data.data.tiledlist[0].Text;
+                        //         _.each(data.data.tiledlist[0].DTHyperlink,function(v,k){
+                        //             textspeech += v;
+                        //         });
+                        //         $.jStorage.set("texttospeak",textspeech);
 
-                                $('#mybtn_trigger').trigger('click');
+                        //         $('#mybtn_trigger').trigger('click');
                                 
-                            },200);
+                        //     },200);
                         }
                         else if(value.type=="Instruction")
                         {
@@ -3083,8 +3086,8 @@ myApp.controller('HomeCtrl', function ($scope,$rootScope, TemplateService, Navig
             //console.log(colno,lineno,dthlink);
             //mysession = $.jStorage.get("sessiondata");
 			$rootScope.script_data=[];
-            $rootScope.tabvalue.elements = [];
-            $rootScope.tabvalue.element_values=[];
+            // $rootScope.tabvalue.elements = [];
+            // $rootScope.tabvalue.element_values=[];
             var inputDate = new Date();
             var dtmsg = {Text:dthlink,type:"SYS_DT_RES"};
             $rootScope.chatlist.push({id:"id",msg:dtmsg,position:"right",curTime: $rootScope.getDatetime()});
@@ -3307,8 +3310,8 @@ myApp.controller('HomeCtrl', function ($scope,$rootScope, TemplateService, Navig
         $rootScope.popupdata=[];
         $rootScope.DthResponse = function(id,data,dthlink) {
             $rootScope.script_data = [];
-            $rootScope.tabvalue.elements = [];
-            $rootScope.tabvalue.element_values=[];
+            // $rootScope.tabvalue.elements = [];
+            // $rootScope.tabvalue.element_values=[];
             $(".processcontent").hide();
 			if(data.tiledlist[0].DT )
 			{
@@ -3378,8 +3381,48 @@ myApp.controller('HomeCtrl', function ($scope,$rootScope, TemplateService, Navig
             // }
             // else 
             //{
-                var ele = new Array("Process");
-                var ele_val = new Array(data.tiledlist[0]);
+            var ele=$rootScope.tabvalue.elements;
+			var ele_val=$rootScope.tabvalue.element_values;
+            var jind = _.findIndex($rootScope.journeylist, function(o) { return o == data.tiledlist[0].Journey_Name; }); 
+            console.log(jind);
+            console.log($rootScope.journeylist);
+            if(jind == -1)
+            {
+                if(data.tiledlist[0].topic_mapped)
+                {
+                    if(data.tiledlist[0].topic_mapped==1)
+                    {
+                        var ele = new Array("Process");
+                        var ele_val = new Array(data.tiledlist[0]);
+                        $rootScope.journeylist.push(data.tiledlist[0].Journey_Name);
+                    }
+                    else {
+                        ele.push(data.tiledlist[0].Journey_Name);
+                        ele_val.push(data.tiledlist[0]);
+                        $rootScope.journeylist.push(data.tiledlist[0].Journey_Name);
+                    }
+                }
+                else {
+                    ele.push(data.tiledlist[0].Journey_Name);
+                    ele_val.push(data.tiledlist[0]);
+                    $rootScope.journeylist.push(data.tiledlist[0].Journey_Name);
+                }
+                
+            }
+            else
+            {
+                //if($rootScope.outprocessclick == 0)
+                if(data.tiledlist[0].Process)
+                {
+                    if(data.tiledlist[0].Process.length>0)
+                    {
+                        //var ele=$rootScope.tabvalue.elements[0]=;
+			            $rootScope.tabvalue.element_values[0]=data.tiledlist[0];
+                    }
+                }
+                
+                console.log(ele);
+            }
             //}
             $rootScope.showMsgLoader = false; 
             if(data.tiledlist[0].Script)
@@ -3429,7 +3472,8 @@ myApp.controller('HomeCtrl', function ($scope,$rootScope, TemplateService, Navig
                 // ele_val.push(data.tiledlist[0]);
                 $rootScope.tabHeight = window.innerHeight-120-53;
             }
-			if(data.tiledlist[0].Journey_Name && data.tiledlist[0].Journey_Name != '')
+            //if(data.tiledlist[0].Journey_Name && data.tiledlist[0].Journey_Name != '')
+            if(jind == -1)
 			{
 				formData1 = {Journey_Name:data.tiledlist[0].Journey_Name};
 				apiService.getguidelinedata(formData1).then(function (guidedata){
@@ -3438,11 +3482,11 @@ myApp.controller('HomeCtrl', function ($scope,$rootScope, TemplateService, Navig
 						ele.push('Guidelines');
 						ele_val.push(guidedata.data.data);
 					}
-					$rootScope.tabvalue.elements = [];
-					$rootScope.tabvalue.element_values=[];
+					// $rootScope.tabvalue.elements = [];
+					// $rootScope.tabvalue.element_values=[];
 					$rootScope.tabvalue.elements = ele;
 					$rootScope.tabvalue.element_values=ele_val;
-					$rootScope.selectTabIndex = 0;
+					// $rootScope.selectTabIndex = 0;
 					
                 });
                 formData1 = {Journey_Name:data.tiledlist[0].Journey_Name};
@@ -3930,6 +3974,7 @@ myApp.controller('HomeCtrl', function ($scope,$rootScope, TemplateService, Navig
                 
             //     //$rootScope.$emit("setTabData", $scope.node_data);
             // }
+            console.log(ele);
             $timeout(function(){
                 if(ele[0]=='Process' )
                 {
@@ -3938,6 +3983,7 @@ myApp.controller('HomeCtrl', function ($scope,$rootScope, TemplateService, Navig
                         if(ele_val[0].Process.length > 0)
                         {
                             console.log("length>0");
+                            $("#tab_data .nav-tabs li").first().show();
                             $("#tab_data .nav-tabs li").first().addClass("active");
                             $("#tab_data .tab-content .tab-pane").first().addClass("active");
 							$("#tab_data").show();
@@ -3978,6 +4024,7 @@ myApp.controller('HomeCtrl', function ($scope,$rootScope, TemplateService, Navig
             $rootScope.minimizeChatwindow();
             $rootScope.tabvalue.elements = [];
             $rootScope.tabvalue.element_values=[];
+            $rootScope.script_data=[];
             $(".fdashboard").show();
         };
         $rootScope.DthResponse2 = function(id,data,dlink) {
