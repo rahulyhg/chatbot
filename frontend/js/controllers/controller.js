@@ -3388,13 +3388,15 @@ myApp.controller('HomeCtrl', function ($scope,$rootScope, TemplateService, Navig
             console.log($rootScope.journeylist);
             if(jind == -1)
             {
-                if(data.tiledlist[0].topic_mapped)
+                console.log(data.tiledlist[0]);
+                //if(data.tiledlist[0].topic_mapped)
                 {
                     if(data.tiledlist[0].topic_mapped==1)
                     {
                         var ele = new Array("Process");
                         var ele_val = new Array(data.tiledlist[0]);
                         $rootScope.journeylist.push(data.tiledlist[0].Journey_Name);
+                        $rootScope.outprocessclick=0;
                     }
                     else {
                         ele.push(data.tiledlist[0].Journey_Name);
@@ -3402,11 +3404,17 @@ myApp.controller('HomeCtrl', function ($scope,$rootScope, TemplateService, Navig
                         $rootScope.journeylist.push(data.tiledlist[0].Journey_Name);
                     }
                 }
-                else {
-                    ele.push(data.tiledlist[0].Journey_Name);
-                    ele_val.push(data.tiledlist[0]);
-                    $rootScope.journeylist.push(data.tiledlist[0].Journey_Name);
-                }
+                // else {
+                //     var ele = new Array("Process");
+                //     var ele_val = new Array(data.tiledlist[0]);
+                //     $rootScope.journeylist=[];
+                //     $rootScope.journeylist.push(data.tiledlist[0].Journey_Name);
+                //     $rootScope.outprocessclick=0;
+                //     console.log("topicmapped not fobd");
+                //     // ele.push(data.tiledlist[0].Journey_Name);
+                //     // ele_val.push(data.tiledlist[0]);
+                //     // $rootScope.journeylist.push(data.tiledlist[0].Journey_Name);
+                // }
                 
             }
             else
@@ -3416,12 +3424,14 @@ myApp.controller('HomeCtrl', function ($scope,$rootScope, TemplateService, Navig
                 {
                     if(data.tiledlist[0].Process.length>0)
                     {
-                        //var ele=$rootScope.tabvalue.elements[0]=;
-			            $rootScope.tabvalue.element_values[0]=data.tiledlist[0];
+                        if($rootScope.outprocessclick==1)
+                            $rootScope.tabvalue.element_values[$rootScope.tabvalue.element_values.length-1]=data.tiledlist[0];
+                        else
+                            $rootScope.tabvalue.element_values[0]=data.tiledlist[0];
                     }
                 }
                 
-                console.log(ele);
+                //console.log(ele);
             }
             //}
             $rootScope.showMsgLoader = false; 
