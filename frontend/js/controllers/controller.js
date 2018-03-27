@@ -1111,6 +1111,7 @@ myApp.controller('HomeCtrl', function ($scope,$rootScope, TemplateService, Navig
                     });
                     
                 });
+                
             }
         });
         $rootScope.disconnect = function() {
@@ -4420,31 +4421,67 @@ myApp.controller('HomeCtrl', function ($scope,$rootScope, TemplateService, Navig
                     // var msg = {Text:"Sorry I could not understand",type:"SYS_EMPTY_RES"};
                     // $rootScope.pushSystemMsg(0,msg); 
                     $rootScope.showMsgLoader=false;
-					
-                    io.socket.get('/user', function (users){
-                        var newuser = _.remove(users, function(n) {
-                            return n.access_role  == 4;
-                        });
-                        if(newuser.length > 0)
-                        {
-                            $rootScope.agentconnected = true;
-                            if($rootScope.agentconnected)
+					var outputDate   = new Date();
+                    var respdiff = (outputDate.getTime() - inputDate.getTime()) / 1000;
+                    //console.log(io.socket);
+                    // var newSailsSocket = io.sails.connect();
+                    // console.log(newSailsSocket);
+                    
+                    // $rootScope.agentconnected = false;
+                    // var msg3 = {Text:"Sorry I could not understand",type:"SYS_EMPTY_RES"};
+                    // $rootScope.pushSystemMsg(0,msg3); 
+                    //     console.log(io.socket);
+                    // console.log("connect");
+                    var obj = {session_id:$.jStorage.get('session_id'),user:$.jStorage.get('email'),user_input:sess2.Text,response:{},topic:"",Journey_Name:"",responsetype:"",inputDate:inputDate,outputDate:outputDate,respdiff:respdiff,unanswered:1};
+                    $rootScope.savehistory(obj);
+                    
+                    // var socket = io(io.sails.url);
+                    // socket.on('connect_error', function(err) {
+                    // // notify user
+                    //     console.log("not connect");
+                    // });
+                    // if(!(newSailsSocket))
+                    // {
+                    //     $rootScope.agentconnected = false;
+                    //     var msg3 = {Text:"Sorry I could not understand",type:"SYS_EMPTY_RES"};
+                    //     $rootScope.pushSystemMsg(0,msg3); 
+                    //         console.log(io.socket);
+                    //     console.log("connect");
+                    //     var obj = {session_id:$.jStorage.get('session_id'),user:$.jStorage.get('email'),user_input:msg,response:msg3,topic:"",Journey_Name:"",responsetype:"",inputDate:inputDate,outputDate:outputDate,respdiff:respdiff};
+                    //     $rootScope.savehistory(obj);
+                    // }
+                    {
+                        io.socket.get('/user', function (users){
+                            var newuser = _.remove(users, function(n) {
+                                return n.access_role  == 4;
+                            });
+                            if(newuser.length > 0)
                             {
-                                $rootScope.sendMsgtoagent(sess2.Text);
-								var outputDate   = new Date();
-								var respdiff = (outputDate.getTime() - inputDate.getTime()) / 1000;
-								var obj = {livechat:1,session_id:$.jStorage.get('session_id'),user:$.jStorage.get('email'),user_input:prevmsg,response:{},topic:"",Journey_Name:"",responsetype:"",inputDate:inputDate,outputDate:outputDate,respdiff:respdiff};
-								$rootScope.savehistory(obj);
-                            }
+                                $rootScope.agentconnected = true;
+                                if($rootScope.agentconnected)
+                                {
+                                    
+                                    $rootScope.sendMsgtoagent(sess2.Text,inputDate);
+                                    var outputDate   = new Date();
+                                    var respdiff = (outputDate.getTime() - inputDate.getTime()) / 1000;
+                                    var obj = {livechat:1,session_id:$.jStorage.get('session_id'),user:$.jStorage.get('email'),user_input:prevmsg,response:{},topic:"",Journey_Name:"",responsetype:"",inputDate:inputDate,outputDate:outputDate,respdiff:respdiff,unanswered:1};
+                                    $rootScope.savehistory(obj);
+                                }
 
-                        }
-                        else
-                        {
-                            $rootScope.agentconnected = false;
-                            var msg3 = {Text:"Sorry I could not understand",type:"SYS_EMPTY_RES"};
-                            $rootScope.pushSystemMsg(0,msg3); 
-                        }
-                    });
+                            }
+                            else
+                            {
+                                $rootScope.agentconnected = false;
+                                var msg3 = {Text:"Sorry I could not understand",type:"SYS_EMPTY_RES"};
+                                $rootScope.pushSystemMsg(0,msg3); 
+                                console.log(io.socket);
+                                console.log("connect");
+                                var obj = {session_id:$.jStorage.get('session_id'),user:$.jStorage.get('email'),user_input:msg,response:msg3,topic:"",Journey_Name:"",responsetype:"",inputDate:inputDate,outputDate:outputDate,respdiff:respdiff,unanswered:1};
+                                $rootScope.savehistory(obj);
+                                
+                            }
+                        });
+                    }
                 });
             //});
             $rootScope.autocompletelist = [];
@@ -4465,17 +4502,20 @@ myApp.controller('HomeCtrl', function ($scope,$rootScope, TemplateService, Navig
         }
         $scope.lastagentid = "";
         $rootScope.lastagentmsg = false;
-        $rootScope.sendMsgtoagent = function(msg) {
+        $rootScope.sendMsgtoagent = function(msg,inputDate) {
 
             io.sails.url = 'http://exponentiadata.co.in:9161';
-            
+           
+            var outputDate   = new Date();
+            var respdiff = (outputDate.getTime() - inputDate.getTime()) / 1000;
             io.socket.get('/user', function (users){
                 var newuser = _.remove(users, function(n) {
                     return (n.access_role  == 4 && n.id !=null);
                 });
 				_.sortBy(newuser, [function(o) { return o.id; }]);
 				_.reverse(newuser);
-				_.uniqBy(newuser,'sid');
+                _.uniqBy(newuser,'sid');
+                
                 if(newuser.length > 0)
                 {
                     if(!$rootScope.lastagent || newuser.length==1) {
@@ -4535,7 +4575,8 @@ myApp.controller('HomeCtrl', function ($scope,$rootScope, TemplateService, Navig
 
                     var arr_ind=_.findIndex(newuser, function(o) { return o.sid == $rootScope.lastagent; });
                     console.log(newuser[arr_ind].sname,"Agent");
-					$rootScope.agentdet = {sid:newuser[arr_ind].sid,sname:newuser[arr_ind].sname,id:newuser[arr_ind].id,socketid:newuser[arr_ind].socketId};
+                    $rootScope.agentdet = {sid:newuser[arr_ind].sid,sname:newuser[arr_ind].sname,id:newuser[arr_ind].id,socketid:newuser[arr_ind].socketId};
+                    
                     if(!$rootScope.lastagentmsg)
                     {
                         var msg1 = {Text:"I am a Bot,I am still learning. <br>We’re finding the best person to connect with you.Please stay online.",type:"SYS_EMPTY_RES"};
@@ -4544,6 +4585,8 @@ myApp.controller('HomeCtrl', function ($scope,$rootScope, TemplateService, Navig
                         var msg2 = {Text:"You are now connected to our agent "+newuser[arr_ind].sname,type:"SYS_CONV_START"};
                         $rootScope.pushSystemMsg(0,msg2); 
                         $rootScope.lastagentmsg = true;
+                        var obj = {session_id:$.jStorage.get('session_id'),user:$.jStorage.get('email'),user_input:msg,response:msg2,topic:"",Journey_Name:"",responsetype:"",inputDate:inputDate,outputDate:outputDate,respdiff:respdiff};
+                        $rootScope.savehistory(obj);
                     }
                     $scope.lastagentid = newuser[arr_ind].id;
                     addMessageToConversation(window.me.id, newuser[arr_ind].id, msg);
@@ -4557,8 +4600,17 @@ myApp.controller('HomeCtrl', function ($scope,$rootScope, TemplateService, Navig
                     $rootScope.agentconnected = false;
                     var msg3 = {Text:"Sorry I could not understand",type:"SYS_EMPTY_RES"};
                     $rootScope.pushSystemMsg(0,msg3); 
+                    var obj = {session_id:$.jStorage.get('session_id'),user:$.jStorage.get('email'),user_input:msg,response:msg3,topic:"",Journey_Name:"",responsetype:"",inputDate:inputDate,outputDate:outputDate,respdiff:respdiff};
+                    $rootScope.savehistory(obj);
                 }
+            }).catch(function(){
+                $rootScope.agentconnected = false;
+                var msg3 = {Text:"Sorry I could not understand",type:"SYS_EMPTY_RES"};
+                $rootScope.pushSystemMsg(0,msg3); 
+                var obj = {session_id:$.jStorage.get('session_id'),user:$.jStorage.get('email'),user_input:msg,response:msg3,topic:"",Journey_Name:"",responsetype:"",inputDate:inputDate,outputDate:outputDate,respdiff:respdiff};
+                $rootScope.savehistory(obj);
             });
+            
             // addMessageToConversation(window.me.id, "5a0a81e8179172360420c966", msg);
 
             // // Send the message

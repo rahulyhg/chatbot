@@ -34,6 +34,9 @@ var schema = new Schema({
     },
 	livechat : {
         type:Number
+    },
+    unanswered:{
+        type:Number
     }
 });
 
@@ -167,14 +170,22 @@ var model = {
     },
     savehistory: function (data, callback) {
         var dtobject = {};
-		var livechat = 0;
+        var livechat = 0;
+        var unanswered=0;
 		if(data.livechat)
 			livechat = 1;
         if(data.responsetype=='DTHyperlink')
+        {
             dtobject = {
                 Dthlink:data.DTHlink,
                 DTHstage:data.DTHstage
             };
+        }
+        if(data.unanswered)
+        {
+
+            unanswered=1;
+        }
         Chathistory.findOne( {
             session_id:data.session_id,
             user:data.user,
@@ -193,7 +204,8 @@ var model = {
                         },
                         {
 							$set:{
-								livechat:livechat
+                                livechat:livechat,
+                                unanswered:unanswered
 							}, 
 							$push: { 
 								chatlist:
@@ -204,10 +216,11 @@ var model = {
                                     dthyperlink:dtobject,
                                     Journey_Name:data.Journey_Name,
                                     topic:data.topic,
-                                    inputDate:data.inputDate,
-                                    outputDate:data.outputDate,
+                                    inputDate:new Date(data.inputDate),
+                                    outputDate:new Date(data.outputDate),
                                     respdiff:data.respdiff,
-									livechat:livechat
+                                    livechat:livechat,
+                                    unanswered:unanswered
                                 }
                              
 							} 
@@ -232,7 +245,8 @@ var model = {
                         // Journey_Name: data.Journey_Name,
                         session_id:data.session_id,
                         user:data.user,
-						livechat:livechat,
+                        livechat:livechat,
+                        unanswered:unanswered,
                         chatlist:[
                             {
                                 user_input:data.user_input,
@@ -241,10 +255,11 @@ var model = {
                                 dthyperlink:dtobject,
                                 Journey_Name:data.Journey_Name,
                                 topic:data.topic,
-                                inputDate:data.inputDate,
-                                outputDate:data.outputDate,
+                                inputDate:new Date(data.inputDate),
+                                outputDate:new Date(data.outputDate),
                                 respdiff:data.respdiff,
-								livechat:livechat
+                                livechat:livechat,
+                                unanswered:unanswered
                             }
                         ]
                     },function (err3, savefound) {
