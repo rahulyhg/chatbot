@@ -3384,8 +3384,8 @@ myApp.controller('HomeCtrl', function ($scope,$rootScope, TemplateService, Navig
             var ele=$rootScope.tabvalue.elements;
 			var ele_val=$rootScope.tabvalue.element_values;
             var jind = _.findIndex($rootScope.journeylist, function(o) { return o == data.tiledlist[0].Journey_Name; }); 
-            console.log(jind);
-            console.log($rootScope.journeylist);
+            // console.log(jind);
+            // console.log($rootScope.journeylist);
             if(jind == -1)
             {
                 console.log(data.tiledlist[0]);
@@ -3984,8 +3984,10 @@ myApp.controller('HomeCtrl', function ($scope,$rootScope, TemplateService, Navig
                 
             //     //$rootScope.$emit("setTabData", $scope.node_data);
             // }
-            console.log(ele);
+            //console.log(ele);
             $timeout(function(){
+                $("#tab_data .nav-tabs li").removeClass("active");
+                $("#tab_data .tab-content .tab-pane").removeClass("active");
                 if(ele[0]=='Process' )
                 {
                     if(ele_val[0].Process)

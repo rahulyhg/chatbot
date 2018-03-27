@@ -181,6 +181,24 @@ myApp.run(['$http','$cookies','beforeUnload','$document','$rootScope','Idle','bo
         $("#tab_data .tab-content .tab-pane").removeClass("active");
         $("#tab_data .tab-content .tab-pane:nth-child("+tabind+")").addClass("active");
     });
+    
+    $(document).on('click','.uibcollapseheader2',function(e){
+        if($(this).parents(".processaccord").find('.uibcollapsecontent2').is(':visible'))
+        {
+            $(this).find("i").removeClass("glyphicon-chevron-down");
+            $(this).find("i").addClass("glyphicon-chevron-right");
+            $(this).parents(".processaccord").find('.uibcollapsecontent2').fadeOut( "fast" );
+        }
+        else {
+            $(".uibcollapsecontent2").hide();
+            $(".uibcollapseheader2").find("i").removeClass("glyphicon-chevron-down");
+            $(".uibcollapseheader2").find("i").addClass("glyphicon-chevron-right");
+            $(this).find("i").removeClass("glyphicon-chevron-right");
+            $(this).find("i").addClass("glyphicon-chevron-down");
+            
+            $(this).parents(".processaccord").find('.uibcollapsecontent2').fadeIn( "slow" );
+        }
+    });
     $(document).on('click','.uibcollapseheader',function(e){
         console.log("collapse click");
         //$(this).parent(".uibcollapsemain").find('.uibcollapsecontent.in.collapse').collapse('hide');

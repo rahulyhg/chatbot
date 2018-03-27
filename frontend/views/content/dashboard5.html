@@ -73,14 +73,14 @@
                             
                             <div ng-if="processtext.key">
                                 <!-- <br> -->
-                                <uib-accordion class="nestedprocess" close-others="true">
-                                    <div uib-accordion-group class="panel-default accord_heading"   data-index="{{0}}"    is-open="status.open">
-                                        <uib-accordion-heading class="">
+                                <div class="nestedprocess" close-others="true">
+                                    <div  class="panel-default accord_heading"   data-index="{{0}}"    is-open="status.open">
+                                        <div class="uibcollapseheader2" ng-class="{'evenheader':$even}">
                                             <div >
                                                 <i class=" glyphicon" ng-class="{'glyphicon-chevron-down': status.open, 'glyphicon-chevron-right': !status.open}"></i> {{processtext.key}} 
                                             </div>
-                                        </uib-accordion-heading>
-                                        <div class="" >
+                                        </div>
+                                        <div class="uibcollapsecontent2 collapse" style="displya:none;">
                                             <p class="" >
                                                  <ng-bind-html ng-bind-html="trustedHtml(processtext.value);"> 
                                                     {{processtext.value}}
@@ -145,7 +145,7 @@
                                             </p>
                                         </div>
                                     </div>
-                                </uib-accordion>
+                                </div>
                                 
                             </div>
                         </div> 
@@ -312,7 +312,7 @@
                             </p>
                         </div>
                     </div> 
-                    <div class="tab-con" ng-if="row !== 'Guidelines' || row !== 'Process' || row !== 'Diagram'">
+                    <div class="tab-con" ng-if="row !== 'Guidelines' && row !== 'Process' && row !== 'Diagram'">
                         <div class="processaccord" ng-repeat="processtext in tabvalue.element_values[$index].Process track by $index">
                             
                             <p ng-if="processtext.key ==='' && processtext.value">
@@ -336,14 +336,14 @@
                             
                             <div ng-if="processtext.key">
                                 <!-- <br> -->
-                                <uib-accordion class="nestedprocess" close-others="true">
-                                    <div uib-accordion-group class="panel-default accord_heading"   data-index="{{0}}"    is-open="status.open">
-                                        <uib-accordion-heading class="">
+                                <div class="nestedprocess" close-others="true">
+                                    <div  class="panel-default accord_heading"   data-index="{{0}}"    is-open="status.open">
+                                        <div class="uibcollapseheader2" ng-class="{'evenheader':$even}">
                                             <div >
                                                 <i class=" glyphicon" ng-class="{'glyphicon-chevron-down': status.open, 'glyphicon-chevron-right': !status.open}"></i> {{processtext.key}} 
                                             </div>
-                                        </uib-accordion-heading>
-                                        <div class="" >
+                                        </div>
+                                        <div class="uibcollapsecontent2 collapse" style="displya:none;">
                                             <p class="" >
                                                  <ng-bind-html ng-bind-html="trustedHtml(processtext.value);"> 
                                                     {{processtext.value}}
@@ -408,7 +408,7 @@
                                             </p>
                                         </div>
                                     </div>
-                                </uib-accordion>
+                                </div>
                                 
                             </div>
                         </div> 
