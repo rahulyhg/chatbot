@@ -12366,6 +12366,56 @@ a.unanswered {
   .nestedprocess .panel-default > .panel-heading .panel-title a, .uibcollapseheader2 .panel-title a {
     text-decoration: none; }
 
+.leftbubble {
+  border-top-left-radius: 0em !important;
+  background: #d9edf7;
+  background: #003874;
+  color: #2d2d2d;
+  color: #fff;
+  box-shadow: 1px 1px 1px 0px rgba(0, 0, 0, 0.4);
+  display: table;
+  left: 10px;
+  padding: 0.5em 1em;
+  border-radius: 2em;
+  margin: 0.2em 2em 0.1em;
+  position: relative; }
+
+.rightbubble {
+  background: #003874;
+  color: #e2e2e2;
+  color: #fff;
+  border-top-right-radius: 0em !important;
+  box-shadow: -1px 1px 1px 0px rgba(0, 0, 0, 0.4);
+  display: table;
+  float: right;
+  right: 0;
+  padding: 0.5em 1em;
+  border-radius: 2em;
+  margin: 0.2em 2em 0.1em;
+  position: relative; }
+
+.rightbubble:before {
+  content: "";
+  position: absolute;
+  top: 0px;
+  right: -10px;
+  width: 0;
+  height: 0;
+  border: 5px solid #003874;
+  border-right-color: transparent;
+  border-bottom-color: transparent; }
+
+.leftbubble:before {
+  content: "";
+  position: absolute;
+  top: 0px;
+  left: -10px;
+  width: 0;
+  height: 0;
+  border: 5px solid #003874;
+  border-left-color: transparent;
+  border-bottom-color: transparent; }
+
 .tab-con .processaccord:last-child {
   /*border-bottom: 5px solid #00458a;*/ }
 
