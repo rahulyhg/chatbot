@@ -3317,7 +3317,7 @@ myApp.controller('HomeCtrl', function ($scope,$rootScope, TemplateService, Navig
                 return false;
         };
         $rootScope.getdata2 = function(data) {
-            
+
         };
         $scope.getprocessdata = function(data) {
             
@@ -4086,46 +4086,55 @@ myApp.controller('HomeCtrl', function ($scope,$rootScope, TemplateService, Navig
             $timeout(function(){
                 $("#tab_data .nav-tabs li").removeClass("active");
                 $("#tab_data .tab-content .tab-pane").removeClass("active");
-                if(ele[0]=='Process' )
+                if(data.tiledlist[0].topic_mapped==0  && $rootScope.outprocessclick==1)
                 {
-                    if(ele_val[0].Process)
+                    $("#tab_data .nav-tabs li").last().show();
+                    $("#tab_data .nav-tabs li").last().addClass("active");
+                    $("#tab_data .tab-content .tab-pane").last().addClass("active");
+                    $("#tab_data").show();
+                }
+                else {
+                    if(ele[0]=='Process' )
                     {
-                        if(ele_val[0].Process.length > 0)
+                        if(ele_val[0].Process)
                         {
-                            console.log("length>0");
-                            $("#tab_data .nav-tabs li").first().show();
-                            $("#tab_data .nav-tabs li").first().addClass("active");
-                            $("#tab_data .tab-content .tab-pane").first().addClass("active");
-							$("#tab_data").show();
+                            if(ele_val[0].Process.length > 0)
+                            {
+                                console.log("length>0");
+                                $("#tab_data .nav-tabs li").first().show();
+                                $("#tab_data .nav-tabs li").first().addClass("active");
+                                $("#tab_data .tab-content .tab-pane").first().addClass("active");
+                                $("#tab_data").show();
+                            }
+                            else
+                            {
+                                console.log("length<0");
+                                $("#tab_data").hide();
+                                //$("#tab_data .nav-tabs li:nth-child(1)").hide();
+                                //$("#tab_data .nav-tabs li:nth-child(2)").addClass("active");
+                                ////$("#tab_data .tab-content .tab-pane").first().addClass("active");
+                                //$("#tab_data .tab-content .tab-pane:nth-child(1)").hide();
+                            }
                         }
                         else
                         {
-                            console.log("length<0");
-							$("#tab_data").hide();
-                            //$("#tab_data .nav-tabs li:nth-child(1)").hide();
-                            //$("#tab_data .nav-tabs li:nth-child(2)").addClass("active");
-                            ////$("#tab_data .tab-content .tab-pane").first().addClass("active");
-                            //$("#tab_data .tab-content .tab-pane:nth-child(1)").hide();
+                            console.log("No process");
+                            $("#tab_data .nav-tabs li:nth-child(1)").hide();
+                            if(ele.length>1)
+                                $("#tab_data").show();
+                            else
+                                $("#tab_data").hide();
+                            $("#tab_data .nav-tabs li:nth-child(2)").addClass("active");
+                            $("#tab_data .tab-content .tab-:nth-child(1)").hide();
+                            //$("#tab_data .tab-content .tab-pane").first().addClass("active");
                         }
+                        
                     }
-                    else
-                    {
-                        console.log("No process");
-                        $("#tab_data .nav-tabs li:nth-child(1)").hide();
-                        if(ele.length>1)
-							$("#tab_data").show();
-						else
-							$("#tab_data").hide();
-						$("#tab_data .nav-tabs li:nth-child(2)").addClass("active");
-                        $("#tab_data .tab-content .tab-:nth-child(1)").hide();
-                        //$("#tab_data .tab-content .tab-pane").first().addClass("active");
+                    else {
+                        $("#tab_data .nav-tabs li").first().addClass("active");
+                        $("#tab_data .tab-content .tab-pane").first().addClass("active");
+                        $("#tab_data").show();
                     }
-                    
-                }
-                else {
-                    $("#tab_data .nav-tabs li").first().addClass("active");
-                    $("#tab_data .tab-content .tab-pane").first().addClass("active");
-					$("#tab_data").show();
                 }
                 $(".processcontent").show();
             },2000);

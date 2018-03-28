@@ -486,9 +486,13 @@ body{
     margin: 10px auto;
 }
 div#tab_data {
-    height: 300px;
-    overflow-y: scroll;
+    // height: 300px;
+    // overflow-y: scroll;
     border-bottom: 1px solid #ccc;
+    .tab-content {
+        height: 300px;
+        overflow-y: scroll;
+    }
 }
 div.scriptData {
     padding-top:5px;
