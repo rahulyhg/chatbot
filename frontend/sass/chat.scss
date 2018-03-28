@@ -285,11 +285,14 @@ li.ui-menu-item {
 a.accordion-toggle {
     font-size: 14px;
 }
-a#outprocess {
+a#outprocess, .outprocess {
     font-weight: bold;
     text-decoration: underline; 
     // font-style: italic;
+    color:#003366;
+    cursor:pointer;
 }
+
 .panel-collapse.in.collapse .panel-body {
     height: auto !important;
 }

@@ -2907,7 +2907,7 @@ myApp.controller('HomeCtrl', function ($scope,$rootScope, TemplateService, Navig
         });
         angular.element(document).ready(function () {
             //$(document).unbind("click").on('click', 'a.productlisting', function(e){
-            $(document).on('click', 'a.outprocess', function(){
+            $(document).on('click', '.outprocess', function(){
                 $rootScope.outprocessclick=1;
                 var dthlink = $(this).text();
                 var journey = $(this).attr('data-journey');
@@ -3309,6 +3309,95 @@ myApp.controller('HomeCtrl', function ($scope,$rootScope, TemplateService, Navig
         };
         $rootScope.script_data = [];
         $rootScope.popupdata=[];
+        var code = "";
+        $rootScope.checkarray = function(data) {
+            if(data.constructor === Array)
+                return true;
+            else
+                return false;
+        };
+        $rootScope.getdata2 = function(data) {
+            
+        };
+        $scope.getprocessdata = function(data) {
+            
+            if(data.Process)
+            {
+                var index = 0;
+                _.forEach(data.Process, function(value) {
+                    if(value.constructor === Array)
+                    {
+
+                    }
+                    else if (value.key ==='' && value.value)
+                    {
+                        code += '<p ><ng-bind-html ng-bind-html="trustedHtml('+value.value+');" >'+value.value+'</ng-bind-html>';
+                        if(data.Steps[index] != '' && data.Steps[index])
+                            code += '<span id = "tooltip12" class="glyphicon glyphicon-plus-sign" href="#" tooltip-placement="right"   uib-tooltip="'+data.Steps[index]+'"></span>';
+                        if(data.Tooltip[index] !='' && data.Tooltip[index])
+                            code += '<span id = "tooltip12" class="glyphicon glyphicon-info-sign" href="#" tooltip-placement="right"  uib-tooltip="'+data.Tooltip[index]+'"></span>';
+                        if(data.System[index] !='' && data.System[index])
+                            code+='<span id = "tooltip12" class="glyphicon glyphicon-blackboard" href="#" tooltip-placement="right"  uib-tooltip="'+data.System[index]+'"></span>';
+                        if(data.Checks[index] !='' && data.Checks[index])
+                            code+='<span id = "tooltip12" class="glyphicon glyphicon-copyright-mark" href="#" tooltip-placement="right"  uib-tooltip="'+data.System[index]+'"></span>';
+                        code+='</p>';
+                    }
+                    else if (!value.key && !value.value)
+                    {
+                        code += '<p ><ng-bind-html ng-bind-html="trustedHtml('+value.value+');" >'+value.value+'</ng-bind-html>';
+                        if(data.Steps[index] != '' && data.Steps[index])
+                            code += '<span id = "tooltip12" class="glyphicon glyphicon-plus-sign" href="#" tooltip-placement="right"   uib-tooltip="'+data.Steps[index]+'"></span>';
+                        if(data.Tooltip[index] !='' && data.Tooltip[index])
+                            code += '<span id = "tooltip12" class="glyphicon glyphicon-info-sign" href="#" tooltip-placement="right"  uib-tooltip="'+data.Tooltip[index]+'"></span>';
+                        if(data.System[index] !='' && data.System[index])
+                            code+='<span id = "tooltip12" class="glyphicon glyphicon-blackboard" href="#" tooltip-placement="right"  uib-tooltip="'+data.System[index]+'"></span>';
+                        if(data.Checks[index] !='' && data.Checks[index])
+                            code+='<span id = "tooltip12" class="glyphicon glyphicon-copyright-mark" href="#" tooltip-placement="right"  uib-tooltip="'+data.System[index]+'"></span>';
+                        code+='</p>';
+                    }   
+                    else if (value.key)
+                    {
+                        // code+='<div class="nestedprocess" >';
+                        //     code+='<div  class="panel-default accord_heading"   data-index="0"    is-open="status.open">';
+                        //         <div class="uibcollapseheader2" ng-class="{'evenheader':$even}">
+                        //             <div >
+                        //                 <i class=" glyphicon" ng-class="{'glyphicon-chevron-down': status.open, 'glyphicon-chevron-right': !status.open}"></i> {{processtext.key}} 
+                        //             </div>
+                        //         </div>
+                        //         <div class="uibcollapsecontent2 collapse" style="display:none;">
+                        //             <p class="" >
+                        //                     <ng-bind-html ng-bind-html="trustedHtml(processtext.value);"> 
+                        //                     {{processtext.value}}
+                        //                     </ng-bind-html> 
+                                        
+                        //                 <span id = "tooltip12" class="glyphicon glyphicon-plus-sign" href="#" tooltip-placement="right" ng-if="tabvalue.element_values[0].Steps[$index] !== '' && tabvalue.element_values[0].Steps[$index]" ng-show="!!tabvalue.element_values[0].Steps.length && tabvalue.element_values[0].Steps[$index]" uib-tooltip="{{tabvalue.element_values[0].Steps[$index]}}"></span>
+                        //                 <span id = "tooltip12" class="glyphicon glyphicon-info-sign" href="#" tooltip-placement="right" ng-if="tabvalue.element_values[0].Tooltip[$index] !== '' && tabvalue.element_values[0].Tooltip[$index]" ng-show="!!tabvalue.element_values[0].Tooltip.length && tabvalue.element_values[0].Tooltip[$index]" uib-tooltip="{{tabvalue.element_values[0].Tooltip[$index]}}"></span>
+                        //                 <span id = "tooltip12" class="glyphicon glyphicon-blackboard" href="#" tooltip-placement="right" ng-if="tabvalue.element_values[0].System[$index] !== '' && tabvalue.element_values[0].System[$index]" ng-show="!!tabvalue.element_values[0].System.length && tabvalue.element_values[0].System[$index]" uib-tooltip="{{tabvalue.element_values[0].System[$index]}}"></span>
+                        //                 <span id = "tooltip12" class="glyphicon glyphicon-copyright-mark" href="#" tooltip-placement="right" ng-if="tabvalue.element_values[0].Checks[$index] !== '' && tabvalue.element_values[0].Checks[$index]" ng-show="!!tabvalue.element_values[0].Checks.length && tabvalue.element_values[0].Checks[$index]" uib-tooltip="{{tabvalue.element_values[0].Checks[$index]}}"></span>
+                        //                 <div ng-if="processtext.collapse">
+                                            
+                        //                     <div class="uibcollapsemain" ng-repeat="nest in processtext.collapse track by $index">
+                        //                         <div class="uibcollapseheader" type="button" class="btn btn-default"   >
+                        //                             {{nest.key}} <i class="pull-right glyphicon" ng-class="{'glyphicon-chevron-down': !isCollapsed, 'glyphicon-chevron-right': isCollapsed}"></i>
+                        //                         </div>
+                        //                         <div class="uibcollapsecontent collapse" style="display:none;">
+                        //                             <div class="well well-lg">
+                        //                                 <ng-bind-html ng-bind-html="trustedHtml(nest.value);"> 
+                        //                                     {{nest.value}}
+                        //                                 </ng-bind-html> 
+                        //                             </div>
+                        //                         </div>
+                        //                     </div> 
+                        //                 </div>
+                        //             </p>
+                        //         </div>
+                        //     </div>
+                        // </div>
+                    } 
+                    index++;   
+                });
+            }
+        };
         $rootScope.DthResponse = function(id,data,dthlink) {
             $rootScope.script_data = [];
             // $rootScope.tabvalue.elements = [];
@@ -3387,10 +3476,18 @@ myApp.controller('HomeCtrl', function ($scope,$rootScope, TemplateService, Navig
             var jind = _.findIndex($rootScope.journeylist, function(o) { return o == data.tiledlist[0].Journey_Name; }); 
             // console.log(jind);
             // console.log($rootScope.journeylist);
-            if(jind == -1)
+            if(jind == -1 )
             {
                 console.log(data.tiledlist[0]);
                 //if(data.tiledlist[0].topic_mapped)
+                if($rootScope.outprocessclick==0)
+                {
+                    var ele = new Array("Process");
+                    var ele_val = new Array(data.tiledlist[0]);
+                    //$scope.getprocessdata(data.tiledlist[0]);
+                    $rootScope.journeylist.push(data.tiledlist[0].Journey_Name);
+                }
+                else
                 {
                     if(data.tiledlist[0].topic_mapped==1)
                     {
@@ -3484,7 +3581,7 @@ myApp.controller('HomeCtrl', function ($scope,$rootScope, TemplateService, Navig
                 $rootScope.tabHeight = window.innerHeight-120-53;
             }
             //if(data.tiledlist[0].Journey_Name && data.tiledlist[0].Journey_Name != '')
-            if(jind == -1)
+            if(jind == -1 && data.tiledlist[0].topic_mapped==1)
 			{
 				formData1 = {Journey_Name:data.tiledlist[0].Journey_Name};
 				apiService.getguidelinedata(formData1).then(function (guidedata){

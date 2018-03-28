@@ -183,11 +183,11 @@ myApp.run(['$http','$cookies','beforeUnload','$document','$rootScope','Idle','bo
     });
     
     $(document).on('click','.uibcollapseheader2',function(e){
-        if($(this).parents(".processaccord").find('.uibcollapsecontent2').is(':visible'))
+        if($(this).parent().find('.uibcollapsecontent2').is(':visible'))
         {
             $(this).find("i").removeClass("glyphicon-chevron-down");
             $(this).find("i").addClass("glyphicon-chevron-right");
-            $(this).parents(".processaccord").find('.uibcollapsecontent2').fadeOut( "fast" );
+            $(this).parent().find('.uibcollapsecontent2').fadeOut( "fast" );
         }
         else {
             $(".uibcollapsecontent2").hide();
@@ -196,7 +196,7 @@ myApp.run(['$http','$cookies','beforeUnload','$document','$rootScope','Idle','bo
             $(this).find("i").removeClass("glyphicon-chevron-right");
             $(this).find("i").addClass("glyphicon-chevron-down");
             
-            $(this).parents(".processaccord").find('.uibcollapsecontent2').fadeIn( "slow" );
+            $(this).parent().find('.uibcollapsecontent2').fadeIn( "slow" );
         }
     });
     $(document).on('click','.uibcollapseheader',function(e){

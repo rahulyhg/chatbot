@@ -184,6 +184,16 @@ myApp.directive('img', function ($compile, $parse) {
         }
         }
     })
+    // app.directive('collection', function () {
+    //     return {
+    //         restrict: "E",
+    //         replace: true,
+    //         scope: {
+    //             collection: '='
+    //         },
+    //         template: "<ul><member ng-repeat='member in collection' member='member'></member></ul>"
+    //     }
+    //     })
     myApp.directive('ngRightClick', function($parse) {
         return function(scope, element, attrs) {
             var fn = $parse(attrs.ngRightClick);
