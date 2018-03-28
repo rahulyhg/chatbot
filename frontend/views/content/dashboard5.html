@@ -1,3 +1,91 @@
+<script type="text/ng-template" id="collapseTree">
+    <div class="uibcollapseheader" type="button" class="btn btn-default"   >
+        {{nest.key}} <i class="pull-right glyphicon" ng-class="{'glyphicon-chevron-down': !isCollapsed, 'glyphicon-chevron-right': isCollapsed}"></i>
+    </div>
+    <div class="uibcollapsecontent collapse" style="display:none;">
+        <div class="well well-lg">
+            <ng-bind-html ng-bind-html="trustedHtml(nest.value);"> 
+                {{nest.value}}
+            </ng-bind-html> 
+        </div>
+        <div ng-if="nest.collapse">
+            <div class="uibcollapsemain" ng-repeat="nest in nest.collapse track by $index" ng-include="'collapseTree'">
+
+            </div>
+        </div>
+    </div>
+</script>
+<script type="text/ng-template" id="categoryTree">
+    
+    <!-- <ul ng-if="processtext">
+        <li ng-repeat="category in category.categories" ng-include="'categoryTree'">           
+        </li>
+    </ul> -->
+    <p ng-if="processtext.key ==='' && processtext.value">
+        <ng-bind-html ng-bind-html="trustedHtml(processtext.value);" ng-if="processtext.key === ''">
+            {{processtext.value}}
+        </ng-bind-html>
+        <span id = "tooltip12" class="glyphicon glyphicon-plus-sign" href="#" tooltip-placement="right" ng-if="tabvalue.element_values[0].Steps[$index] !== '' && tabvalue.element_values[0].Steps[$index]" ng-show="!!tabvalue.element_values[0].Steps.length && tabvalue.element_values[0].Steps[$index]" uib-tooltip="{{tabvalue.element_values[0].Steps[$index]}}"></span>
+        <span id = "tooltip12" class="glyphicon glyphicon-info-sign" href="#" tooltip-placement="right" ng-if="tabvalue.element_values[0].Tooltip[$index] !== '' && tabvalue.element_values[0].Tooltip[$index]" ng-show="!!tabvalue.element_values[0].Tooltip.length && tabvalue.element_values[0].Tooltip[$index]" uib-tooltip="{{tabvalue.element_values[0].Tooltip[$index]}}"></span>
+        <span id = "tooltip12" class="glyphicon glyphicon-blackboard" href="#" tooltip-placement="right" ng-if="tabvalue.element_values[0].System[$index] !== '' && tabvalue.element_values[0].System[$index]" ng-show="!!tabvalue.element_values[0].System.length && tabvalue.element_values[0].System[$index]" uib-tooltip="{{tabvalue.element_values[0].System[$index]}}"></span>
+        <span id = "tooltip12" class="glyphicon glyphicon-copyright-mark" href="#" tooltip-placement="right" ng-if="tabvalue.element_values[0].Checks[$index] !== '' && tabvalue.element_values[0].Checks[$index]" ng-show="!!tabvalue.element_values[0].Checks.length && tabvalue.element_values[0].Checks[$index]" uib-tooltip="{{tabvalue.element_values[0].Checks[$index]}}"></span>
+    </p>
+    <p ng-if="!processtext.key && !processtext.value && !checkarray(processtext)">
+        <ng-bind-html ng-bind-html="trustedHtml(processtext);" ng-if="processtext !== ''">
+            {{processtext}}
+        </ng-bind-html>
+        <span id = "tooltip12" class="glyphicon glyphicon-plus-sign" href="#" tooltip-placement="right" ng-if="tabvalue.element_values[0].Steps[$index] !== '' && tabvalue.element_values[0].Steps[$index]" ng-show="!!tabvalue.element_values[0].Steps.length && tabvalue.element_values[0].Steps[$index]" uib-tooltip="{{tabvalue.element_values[0].Steps[$index]}}"></span>
+        <span id = "tooltip12" class="glyphicon glyphicon-info-sign" href="#" tooltip-placement="right" ng-if="tabvalue.element_values[0].Tooltip[$index] !== '' && tabvalue.element_values[0].Tooltip[$index]" ng-show="!!tabvalue.element_values[0].Tooltip.length && tabvalue.element_values[0].Tooltip[$index]" uib-tooltip="{{tabvalue.element_values[0].Tooltip[$index]}}"></span>
+        <span id = "tooltip12" class="glyphicon glyphicon-blackboard" href="#" tooltip-placement="right" ng-if="tabvalue.element_values[0].System[$index] !== '' && tabvalue.element_values[0].System[$index]" ng-show="!!tabvalue.element_values[0].System.length && tabvalue.element_values[0].System[$index]" uib-tooltip="{{tabvalue.element_values[0].System[$index]}}"></span>
+        <span id = "tooltip12" class="glyphicon glyphicon-copyright-mark" href="#" tooltip-placement="right" ng-if="tabvalue.element_values[0].Checks[$index] !== '' && tabvalue.element_values[0].Checks[$index]" ng-show="!!tabvalue.element_values[0].Checks.length && tabvalue.element_values[0].Checks[$index]" uib-tooltip="{{tabvalue.element_values[0].Checks[$index]}}"></span>
+    </p>
+    
+    <div ng-if="processtext.key">
+        <!-- <br> -->
+        <div class="nestedprocess" close-others="true">
+            <div  class="panel-default accord_heading"   data-index="{{0}}"    is-open="status.open">
+                <div class="uibcollapseheader2 nesteduibheading" ng-class="{'evenheader':$even}">
+                    <div >
+                        <i class=" glyphicon" ng-class="{'glyphicon-chevron-down': status.open, 'glyphicon-chevron-right': !status.open}"></i> <span>{{processtext.key}} </span>
+                    </div>
+                </div>
+                <div class="uibcollapsecontent2 collapse" style="display:none;">
+                    <p class="" >
+                            <ng-bind-html ng-bind-html="trustedHtml(processtext.value);"> 
+                            {{processtext.value}}
+                            </ng-bind-html> 
+                        
+                        <span id = "tooltip12" class="glyphicon glyphicon-plus-sign" href="#" tooltip-placement="right" ng-if="tabvalue.element_values[0].Steps[$index] !== '' && tabvalue.element_values[0].Steps[$index]" ng-show="!!tabvalue.element_values[0].Steps.length && tabvalue.element_values[0].Steps[$index]" uib-tooltip="{{tabvalue.element_values[0].Steps[$index]}}"></span>
+                        <span id = "tooltip12" class="glyphicon glyphicon-info-sign" href="#" tooltip-placement="right" ng-if="tabvalue.element_values[0].Tooltip[$index] !== '' && tabvalue.element_values[0].Tooltip[$index]" ng-show="!!tabvalue.element_values[0].Tooltip.length && tabvalue.element_values[0].Tooltip[$index]" uib-tooltip="{{tabvalue.element_values[0].Tooltip[$index]}}"></span>
+                        <span id = "tooltip12" class="glyphicon glyphicon-blackboard" href="#" tooltip-placement="right" ng-if="tabvalue.element_values[0].System[$index] !== '' && tabvalue.element_values[0].System[$index]" ng-show="!!tabvalue.element_values[0].System.length && tabvalue.element_values[0].System[$index]" uib-tooltip="{{tabvalue.element_values[0].System[$index]}}"></span>
+                        <span id = "tooltip12" class="glyphicon glyphicon-copyright-mark" href="#" tooltip-placement="right" ng-if="tabvalue.element_values[0].Checks[$index] !== '' && tabvalue.element_values[0].Checks[$index]" ng-show="!!tabvalue.element_values[0].Checks.length && tabvalue.element_values[0].Checks[$index]" uib-tooltip="{{tabvalue.element_values[0].Checks[$index]}}"></span>
+                        <div ng-if="processtext.collapse">
+                            
+                            <div class="uibcollapsemain" ng-repeat="nest in processtext.collapse track by $index" ng-include="'collapseTree'">
+                                <!-- <div class="uibcollapseheader" type="button" class="btn btn-default"   >
+                                    {{nest.key}} <i class="pull-right glyphicon" ng-class="{'glyphicon-chevron-down': !isCollapsed, 'glyphicon-chevron-right': isCollapsed}"></i>
+                                </div>
+                                <div class="uibcollapsecontent collapse" style="display:none;">
+                                    <div class="well well-lg">
+                                        <ng-bind-html ng-bind-html="trustedHtml(nest.value);"> 
+                                            {{nest.value}}
+                                        </ng-bind-html> 
+                                    </div>
+                                </div> -->
+                            </div> 
+                        </div>
+                    </p>
+                </div>
+            </div>
+        </div>
+        
+    </div>
+    <div ng-if="checkarray(processtext)" class="">
+        <div ng-repeat="processtext in processtext" ng-include="'categoryTree'">
+            
+        </div>
+    </div> 
+</script>
 <div class="container-fluid tickermsgbar">
     <div class="row">
      <marquee direction="left" speed="normal" behavior="loop"  class="news_text yellowbg">
@@ -50,8 +138,11 @@
                 <uib-tab index="$index"  class="collapseheading {{row}}"     ng-repeat="row in tabvalue.elements track by $index"  ng-init="$tIndex=$index" indval="{{$tIndex}}"  heading="{{row}}">
                     <div class ="tab-con"  ng-if="row ==='Process'" >
                         <!-- <br> -->
-                        <div class="processaccord" ng-repeat="processtext in tabvalue.element_values[$index].Process track by $index">
-                            
+                        <div class="processaccord" ng-include="'categoryTree'" ng-repeat="processtext in tabvalue.element_values[$tIndex].Process track by $index">  
+
+                        </div>
+                        <!-- <div class="processaccord" ng-repeat="processtext in tabvalue.element_values[$index].Process track by $index">
+                        
                             <p ng-if="processtext.key ==='' && processtext.value">
                                 <ng-bind-html ng-bind-html="trustedHtml(processtext.value);" ng-if="processtext.key === ''">
                                     {{processtext.value}}
@@ -72,7 +163,6 @@
                             </p>
                             
                             <div ng-if="processtext.key">
-                                <!-- <br> -->
                                 <div class="nestedprocess" close-others="true">
                                     <div  class="panel-default accord_heading"   data-index="{{0}}"    is-open="status.open">
                                         <div class="uibcollapseheader2 nesteduibheading" ng-class="{'evenheader':$even}">
@@ -91,27 +181,7 @@
                                                 <span id = "tooltip12" class="glyphicon glyphicon-blackboard" href="#" tooltip-placement="right" ng-if="tabvalue.element_values[0].System[$index] !== '' && tabvalue.element_values[0].System[$index]" ng-show="!!tabvalue.element_values[0].System.length && tabvalue.element_values[0].System[$index]" uib-tooltip="{{tabvalue.element_values[0].System[$index]}}"></span>
                                                 <span id = "tooltip12" class="glyphicon glyphicon-copyright-mark" href="#" tooltip-placement="right" ng-if="tabvalue.element_values[0].Checks[$index] !== '' && tabvalue.element_values[0].Checks[$index]" ng-show="!!tabvalue.element_values[0].Checks.length && tabvalue.element_values[0].Checks[$index]" uib-tooltip="{{tabvalue.element_values[0].Checks[$index]}}"></span>
                                                 <div ng-if="processtext.collapse">
-                                                    <!-- <uib-accordion close-others="false">
-                                                        <div uib-accordion-group class="panel-default"   data-index="{{$index}}" ng-repeat="nest in processtext.collapse track by $index"   is-open="status.open">
-                                                            <uib-accordion-heading >
-                                                                <div >
-                                                                    {{nest.key}} <i class="pull-right glyphicon" ng-class="{'glyphicon-chevron-down': status.open, 'glyphicon-chevron-right': !status.open}"></i>
-                                                                </div>
-                                                            </uib-accordion-heading>
-                                                            <div class="" >
-                                                                <p class="" >
-                                                                    <ng-bind-html ng-bind-html="trustedHtml(nest.value);"> 
-                                                                        {{nest.value}}
-                                                                    </ng-bind-html> 
-                                                                
-                                                                    <span id = "tooltip12" class="glyphicon glyphicon-plus-sign" href="#" tooltip-placement="bottom" ng-if="tabvalue.element_values[0].Steps[$index] !== '' && tabvalue.element_values[0].Steps[$index]" ng-show="!!tabvalue.element_values[0].Steps.length && tabvalue.element_values[0].Steps[$index]" uib-tooltip="{{tabvalue.element_values[0].Steps[$index]}}"></span>
-                                                                    <span id = "tooltip12" class="glyphicon glyphicon-info-sign" href="#" tooltip-placement="bottom" ng-if="tabvalue.element_values[0].Tooltip[$index] !== '' && tabvalue.element_values[0].Tooltip[$index]" ng-show="!!tabvalue.element_values[0].Tooltip.length && tabvalue.element_values[0].Tooltip[$index]" uib-tooltip="{{tabvalue.element_values[0].Tooltip[$index]}}"></span>
-                                                                    <span id = "tooltip12" class="glyphicon glyphicon-blackboard" href="#" tooltip-placement="bottom" ng-if="tabvalue.element_values[0].System[$index] !== '' && tabvalue.element_values[0].System[$index]" ng-show="!!tabvalue.element_values[0].System.length && tabvalue.element_values[0].System[$index]" uib-tooltip="{{tabvalue.element_values[0].System[$index]}}"></span>
-                                                                    <span id = "tooltip12" class="glyphicon glyphicon-copyright-mark" href="#" tooltip-placement="bottom" ng-if="tabvalue.element_values[0].Checks[$index] !== '' && tabvalue.element_values[0].Checks[$index]" ng-show="!!tabvalue.element_values[0].Checks.length && tabvalue.element_values[0].Checks[$index]" uib-tooltip="{{tabvalue.element_values[0].Checks[$index]}}"></span>
-                                                                </p>
-                                                            </div>
-                                                        </div>
-                                                    </uib-accordion> -->
+                                                    
                                                     <div class="uibcollapsemain" ng-repeat="nest in processtext.collapse track by $index">
                                                         <div class="uibcollapseheader" type="button" class="btn btn-default"   >
                                                             {{nest.key}} <i class="pull-right glyphicon" ng-class="{'glyphicon-chevron-down': !isCollapsed, 'glyphicon-chevron-right': isCollapsed}"></i>
@@ -124,23 +194,7 @@
                                                             </div>
                                                         </div>
                                                     </div> 
-                                                    <!-- <div class="uibcollapsemain" ng-repeat="nest in processtext.collapse track by $index"> -->
-                                                    <!-- <uib-accordion close-others="true">
-                                                        <uib-accordion-group class="panel-default"  ng-repeat="nest in processtext.collapse track by $index"   is-open="status.isopen">
-                                                            <uib-accordion-heading >
-                                                                <div >
-                                                                    {{nest.key}} <i class="pull-right glyphicon" ng-class="{'glyphicon-chevron-down': status.open, 'glyphicon-chevron-right': !status.open}"></i>
-                                                                </div>
-                                                            </uib-accordion-heading> 
-                                                                <p class="" >
-                                                                    <ng-bind-html ng-bind-html="trustedHtml(nest.value);"> 
-                                                                        {{nest.value}}
-                                                                    </ng-bind-html> 
-                                                                </p>
-                                                            
-                                                        </uib-accordion-group>
-                                                    </uib-accordion>  -->
-                                                    <!-- </div> -->
+                                                    
                                                 </div>
                                             </p>
                                         </div>
@@ -148,7 +202,7 @@
                                 </div>
                                 
                             </div>
-                        </div> 
+                        </div>  -->
                         <!-- <uib-accordion close-others="true" class="accordiondt">
                             <div uib-accordion-group class="panel-default dthyperlink changedthbg stage{{tabvalue.element_values[0].bgstage}}"  ng-repeat="dthlink in tabvalue.element_values[0].DT track by $index" data-id="{{dthlink}}" data-url-id="innerLink" data-stage="{{tabvalue.element_values[0].Stage}}" data-bgstage="{{tabvalue.element_values[0].bgstage}}" ng-if="tabvalue.element_values[0].DT.length > 0 && tabvalue.element_values[0].Stage!='0'" data-index="{{0}}"    is-open="status.open">
                                 <uib-accordion-heading >
@@ -313,9 +367,10 @@
                         </div>
                     </div> 
                     <div class="tab-con" ng-if="row !== 'Guidelines' && row !== 'Process' && row !== 'Diagram'">
-                        <div class="processaccord" ng-repeat="processtext in tabvalue.element_values[$tIndex].Process track by $index">
+                        <!-- <collection collection='tabvalue.element_values[$tIndex].Process' ></collection> -->
+                        <div class="processaccord" ng-include="'categoryTree'" ng-repeat="processtext in tabvalue.element_values[$tIndex].Process track by $index">
                             
-                            <p ng-if="processtext.key ==='' && processtext.value">
+                            <!-- <p ng-if="processtext.key ==='' && processtext.value">
                                 <ng-bind-html ng-bind-html="trustedHtml(processtext.value);" ng-if="processtext.key === ''">
                                     {{processtext.value}}
                                 </ng-bind-html>
@@ -335,7 +390,6 @@
                             </p>
                             
                             <div ng-if="processtext.key">
-                                <!-- <br> -->
                                 <div class="nestedprocess" close-others="true">
                                     <div  class="panel-default accord_heading"   data-index="{{0}}"    is-open="status.open">
                                         <div class="uibcollapseheader2 nesteduibheading" ng-class="{'evenheader':$even}">
@@ -380,23 +434,16 @@
                                         <ng-bind-html ng-bind-html="trustedHtml(pt.value);" ng-if="pt.key === ''">
                                             {{pt.value}}
                                         </ng-bind-html>
-                                        <!-- <span id = "tooltip12" class="glyphicon glyphicon-plus-sign" href="#" tooltip-placement="right" ng-if="tabvalue.element_values[0].Steps[$index] !== '' && tabvalue.element_values[0].Steps[$index]" ng-show="!!tabvalue.element_values[0].Steps.length && tabvalue.element_values[0].Steps[$index]" uib-tooltip="{{tabvalue.element_values[0].Steps[$index]}}"></span>
-                                        <span id = "tooltip12" class="glyphicon glyphicon-info-sign" href="#" tooltip-placement="right" ng-if="tabvalue.element_values[0].Tooltip[$index] !== '' && tabvalue.element_values[0].Tooltip[$index]" ng-show="!!tabvalue.element_values[0].Tooltip.length && tabvalue.element_values[0].Tooltip[$index]" uib-tooltip="{{tabvalue.element_values[0].Tooltip[$index]}}"></span>
-                                        <span id = "tooltip12" class="glyphicon glyphicon-blackboard" href="#" tooltip-placement="right" ng-if="tabvalue.element_values[0].System[$index] !== '' && tabvalue.element_values[0].System[$index]" ng-show="!!tabvalue.element_values[0].System.length && tabvalue.element_values[0].System[$index]" uib-tooltip="{{tabvalue.element_values[0].System[$index]}}"></span>
-                                        <span id = "tooltip12" class="glyphicon glyphicon-copyright-mark" href="#" tooltip-placement="right" ng-if="tabvalue.element_values[0].Checks[$index] !== '' && tabvalue.element_values[0].Checks[$index]" ng-show="!!tabvalue.element_values[0].Checks.length && tabvalue.element_values[0].Checks[$index]" uib-tooltip="{{tabvalue.element_values[0].Checks[$index]}}"></span> -->
+                                        
                                     </p>
                                     <p ng-if="!pt.key && !pt.value && !checkarray(pt)">
                                         <ng-bind-html ng-bind-html="trustedHtml(pt);" ng-if="pt !== ''">
                                             {{pt}}
                                         </ng-bind-html>
-                                        <!-- <span id = "tooltip12" class="glyphicon glyphicon-plus-sign" href="#" tooltip-placement="right" ng-if="tabvalue.element_values[0].Steps[$index] !== '' && tabvalue.element_values[0].Steps[$index]" ng-show="!!tabvalue.element_values[0].Steps.length && tabvalue.element_values[0].Steps[$index]" uib-tooltip="{{tabvalue.element_values[0].Steps[$index]}}"></span>
-                                        <span id = "tooltip12" class="glyphicon glyphicon-info-sign" href="#" tooltip-placement="right" ng-if="tabvalue.element_values[0].Tooltip[$index] !== '' && tabvalue.element_values[0].Tooltip[$index]" ng-show="!!tabvalue.element_values[0].Tooltip.length && tabvalue.element_values[0].Tooltip[$index]" uib-tooltip="{{tabvalue.element_values[0].Tooltip[$index]}}"></span>
-                                        <span id = "tooltip12" class="glyphicon glyphicon-blackboard" href="#" tooltip-placement="right" ng-if="tabvalue.element_values[0].System[$index] !== '' && tabvalue.element_values[0].System[$index]" ng-show="!!tabvalue.element_values[0].System.length && tabvalue.element_values[0].System[$index]" uib-tooltip="{{tabvalue.element_values[0].System[$index]}}"></span>
-                                        <span id = "tooltip12" class="glyphicon glyphicon-copyright-mark" href="#" tooltip-placement="right" ng-if="tabvalue.element_values[0].Checks[$index] !== '' && tabvalue.element_values[0].Checks[$index]" ng-show="!!tabvalue.element_values[0].Checks.length && tabvalue.element_values[0].Checks[$index]" uib-tooltip="{{tabvalue.element_values[0].Checks[$index]}}"></span> -->
+                                        
                                     </p>
                                     
                                     <div ng-if="pt.key">
-                                        <!-- <br> -->
                                         <div class="nestedprocess" close-others="true">
                                             <div  class="panel-default accord_heading"   data-index="{{0}}"    is-open="status.open">
                                                 <div class="uibcollapseheader2 nesteduibheading" ng-class="{'evenheader':$even}">
@@ -410,10 +457,7 @@
                                                             {{pt.value}}
                                                         </ng-bind-html> 
                                                     
-                                                        <!-- <span id = "tooltip12" class="glyphicon glyphicon-plus-sign" href="#" tooltip-placement="right" ng-if="tabvalue.element_values[0].Steps[$index] !== '' && tabvalue.element_values[0].Steps[$index]" ng-show="!!tabvalue.element_values[0].Steps.length && tabvalue.element_values[0].Steps[$index]" uib-tooltip="{{tabvalue.element_values[0].Steps[$index]}}"></span>
-                                                        <span id = "tooltip12" class="glyphicon glyphicon-info-sign" href="#" tooltip-placement="right" ng-if="tabvalue.element_values[0].Tooltip[$index] !== '' && tabvalue.element_values[0].Tooltip[$index]" ng-show="!!tabvalue.element_values[0].Tooltip.length && tabvalue.element_values[0].Tooltip[$index]" uib-tooltip="{{tabvalue.element_values[0].Tooltip[$index]}}"></span>
-                                                        <span id = "tooltip12" class="glyphicon glyphicon-blackboard" href="#" tooltip-placement="right" ng-if="tabvalue.element_values[0].System[$index] !== '' && tabvalue.element_values[0].System[$index]" ng-show="!!tabvalue.element_values[0].System.length && tabvalue.element_values[0].System[$index]" uib-tooltip="{{tabvalue.element_values[0].System[$index]}}"></span>
-                                                        <span id = "tooltip12" class="glyphicon glyphicon-copyright-mark" href="#" tooltip-placement="right" ng-if="tabvalue.element_values[0].Checks[$index] !== '' && tabvalue.element_values[0].Checks[$index]" ng-show="!!tabvalue.element_values[0].Checks.length && tabvalue.element_values[0].Checks[$index]" uib-tooltip="{{tabvalue.element_values[0].Checks[$index]}}"></span> -->
+                                                        
                                                         <div ng-if="pt.collapse">
                                                             
                                                             <div class="uibcollapsemain" ng-repeat="nest in pt.collapse track by $index">
@@ -435,7 +479,7 @@
                                         </div>
                                     </div>
                                 </div>
-                            </div> 
+                            </div>  -->
                         </div> 
                     </div>
                     <!-- <div class ="tab-con"  ng-if="row==='Address Change'">

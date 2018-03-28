@@ -184,16 +184,60 @@ myApp.directive('img', function ($compile, $parse) {
         }
         }
     })
-    // app.directive('collection', function () {
-    //     return {
-    //         restrict: "E",
-    //         replace: true,
-    //         scope: {
-    //             collection: '='
-    //         },
-    //         template: "<ul><member ng-repeat='member in collection' member='member'></member></ul>"
-    //     }
-    //     })
+    .directive('processtree', function ($compile) {
+        return {
+            restrict: 'E',
+            terminal: true,
+            scope: { val: '=', parentData:'=' },
+            link: function (scope, element, attrs) {
+                var template = '<span>{{val.text}}</span>';
+                template += '<button ng-click="deleteMe()" ng-show="val.text">delete</button>';
+
+                if (angular.isArray(scope.val.items)) {
+                    template += '<ul class="indent"><li ng-repeat="item in val.items"><tree val="item" parent-data="val.items"></tree></li></ul>';
+                }
+                // scope.deleteMe = function(index) {
+                //     if(scope.parentData) {
+                //         var itemIndex = scope.parentData.indexOf(scope.val);
+                //         scope.parentData.splice(itemIndex,1);
+                //     }
+                //     scope.val = {};
+                // };
+                var newElement = angular.element(template);
+                $compile(newElement)(scope);
+                element.replaceWith(newElement);
+            }
+        }
+    })
+    myApp.directive('collection', function () {
+        return {
+            restrict: "E",
+            replace: true,
+            scope: {
+                collection: '='
+            },
+            //template: "<ul><member ng-repeat='member in collection' member='member'></member></ul>"
+            template: "<div class='processaccord' ng-repeat='processtext in collection'><p ng-if='processtext.key ===\"\" && processtext.value'></p></member></div>"
+        }
+    })
+    myApp.directive('member', function ($compile) {
+        return {
+            restrict: "E",
+            replace: true,
+            scope: {
+                member: '='
+            },
+            template: "<li></li>",
+            link: function (scope, element, attrs) {
+                console.log(scope.member);
+                if (angular.isArray(scope.member)) {
+                    element.append("<collection collection='member'></collection>");
+                    $compile(element.contents())(scope)
+                }
+                //else if(scope.member.)
+            }
+        }
+    })
     myApp.directive('ngRightClick', function($parse) {
         return function(scope, element, attrs) {
             var fn = $parse(attrs.ngRightClick);
