@@ -196,7 +196,7 @@ var model = {
         Chathistory.findOne( {
             session_id:data.session_id,
             user:data.user,
-            
+            conversation_id:data.conversation_id
         },function(err,found){
             if (err) {
                 callback(err, null);
@@ -207,7 +207,8 @@ var model = {
                     Chathistory.update(
                         { 
                             session_id:data.session_id,
-                            user:data.user
+                            user:data.user,
+                            conversation_id:data.conversation_id
                         },
                         {
 							$set:{
@@ -244,7 +245,7 @@ var model = {
                                 if(unanswered==1)
                                 {
                                     var uns = require("./Unansweredquestion");
-                                    var sessiondata = uns({conversationid:found._id,old_question:data.user_input,new_question:"",session_id:data.session_id});
+                                    var sessiondata = uns({user:data.user,handle:0,conversationid:found._id,old_question:data.user_input,new_question:"",session_id:data.session_id});
                                     sessiondata.save(function (unserr,unsresult) {
 
                                     });
@@ -293,7 +294,7 @@ var model = {
                                 if(unanswered==1)
                                 {
                                     var uns = require("./Unansweredquestion");
-                                    var sessiondata = uns({conversationid:savefound._id,old_question:data.user_input,new_question:"",session_id:data.session_id});
+                                    var sessiondata = uns({user:data.user,handle:0,conversationid:savefound._id,old_question:data.user_input,new_question:"",session_id:data.session_id});
                                     sessiondata.save(function (unserr,unsresult) {
 
                                     });
@@ -340,19 +341,56 @@ var model = {
         Chathistory.update(
             { 
                 session_id:data.session_id,
-                user:data.user
+                user:data.user,
+                conversation_id:data.conversation_id
             },
             { 
                 $set: updateobj 
             }
         ).exec(function (err, updatefound) {
             if (err) {
+                
                 callback(err, null);
             } 
             else {
                 //console.log(updatefound,"inside update");
                 if (updatefound) {
-                    callback(null, updatefound);
+                    Chathistory.findOne( {
+                        session_id:data.session_id,
+                        user:data.user,
+                        conversation_id:data.conversation_id
+                    },function(err,datafound){
+                        var uns = require("./Feedbackquestion");
+                        var chatlist = datafound.chatlist;
+                        //console.log(updatefound);
+                        for(var i = 0; i < data.interactions.length ; i++)
+                        {
+                            var userinput="";
+                            var objstring = 'chatlist.'+parseInt(data.interactions[i])+'.dislike';
+                            var listobj={};
+                            var i_ind2 = parseInt(data.interactions[i]);
+                            var i_ind = 0;
+                            if(i_ind2 == 1)
+                                i_ind = i_ind2-1;
+                            else
+                                i_ind = i_ind2-2;
+                            
+                            var dthyperlink = 0;
+                            var interaction = chatlist[i_ind];
+                            if(interaction.user_input!='')
+                                userinput=interaction.user_input;
+                            else if(interaction.dthyperlink)
+                            {
+                                dthyperlink = 1;
+                                userinput=interaction.dthyperlink.Dthlink;
+                            }
+                            var sessiondata = uns({feedback:data.feedback,user:data.user,handle:0,conversationid:updatefound._id,old_question:userinput,dthyperlink:dthyperlink,new_question:"",session_id:data.session_id});
+                            sessiondata.save(function (unserr,unsresult) {
+
+                            });
+                        }
+                        callback(null, updatefound);
+                    });
                 }
             }
         });
@@ -363,7 +401,8 @@ var model = {
         Chathistory.update(
             { 
                 session_id:data.session_id,
-                user:data.user
+                user:data.user,
+                conversation_id:data.conversation_id
             },
             { 
                 $set: updateobj 

@@ -199,7 +199,7 @@
                                                             <span class="glyphicon glyphicon-info-sign"></span>
                                                         </button>  -->
                                                          <div class="col-md-1 popoverinfo">
-                                                            <span ng-init="hovering={objHovered:false, popoverOpened2:false}" ng-mouseover="hovering.objHovered=true;hovered(hovering);" ng-mouseleave="hovering.objHovered=false;hovering.popoverOpened2=false;">
+                                                            <span ng-init="hovering={objHovered:false, popoverOpened2:false}" ng-mouseover="hovering.objHovered=true;hovered(hovering);" ng-mouseleave="hovering.objHovered=false;hovering.popoverOpened2=false;" ng-if="chatRes.Decision_Icon[$dthindex]">
                                                                 <span ng-if="chatRes.Decision_Icon[$dthindex] !== '' && chatRes.Decision_Icon"  popover-placement="left" uib-popover="{{chatRes.Decision_Icon[$dthindex]}}" popover-title="{{dthlink}}" popover-trigger="'none'" popover-class="dthpopover" popover-is-open="hovering.popoverOpened2" class="glyphicon glyphicon-info-sign"></span>
                                                             </span>    
                                                         </div> 

@@ -22,6 +22,12 @@ var schema = new Schema({
     },
     handle: {
         type:Number
+    },
+    dthyperlink:{
+        type:Number
+    },
+    feedback:{
+        type:String
     }
 });
 
@@ -35,7 +41,7 @@ schema.plugin(deepPopulate, {
 });
 schema.plugin(uniqueValidator);
 schema.plugin(timestamps);
-module.exports = mongoose.model('Unansweredquestion', schema,'Unansweredquestion');
+module.exports = mongoose.model('Feedbackquestion', schema,'Feedbackquestion');
 
 var exports = _.cloneDeep(require("sails-wohlig-service")(schema));
 var model = {
