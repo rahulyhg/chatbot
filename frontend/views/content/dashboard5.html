@@ -1,14 +1,14 @@
 <script type="text/ng-template" id="collapseTree">
-    <div class="uibcollapseheader" type="button" class="btn btn-default"   >
+    <div class="uibcollapseheader uch{{$index}}" type="button" class="btn btn-default"  data-index="{{$index}}" >
         {{nest.key}} <i class="pull-right glyphicon" ng-class="{'glyphicon-chevron-down': !isCollapsed, 'glyphicon-chevron-right': isCollapsed}"></i>
     </div>
-    <div class="uibcollapsecontent collapse" style="display:none;">
+    <div class="uibcollapsecontent collapse ucc{{$index}}" style="display:none;">
         <div class="well well-lg">
             <ng-bind-html ng-bind-html="trustedHtml(nest.value);"> 
                 {{nest.value}}
             </ng-bind-html> 
             <div ng-if="nest.collapse">
-                <div class="uibcollapsemain" ng-repeat="nest in nest.collapse track by $index" ng-include="'collapseTree'">
+                <div class="uibcollapsemain ucm{{$index}}" ng-repeat="nest in nest.collapse track by $index" data-index="{{$index}}" ng-include="'collapseTree'">
 
                 </div>
             </div>
@@ -62,7 +62,7 @@
                         <span id = "tooltip12" class="glyphicon glyphicon-copyright-mark" href="#" tooltip-placement="right" ng-if="tabvalue.element_values[0].Checks[$index] !== '' && tabvalue.element_values[0].Checks[$index]" ng-show="!!tabvalue.element_values[0].Checks.length && tabvalue.element_values[0].Checks[$index]" uib-tooltip="{{tabvalue.element_values[0].Checks[$index]}}"></span>
                         <div ng-if="processtext.collapse">
                             
-                            <div class="uibcollapsemain" ng-repeat="nest in processtext.collapse track by $index" ng-include="'collapseTree'">
+                            <div class="uibcollapsemain ucm{{$index}}" ng-repeat="nest in processtext.collapse track by $index" ng-include="'collapseTree'" data-index="{{$index}}">
                                 <!-- <div class="uibcollapseheader" type="button" class="btn btn-default"   >
                                     {{nest.key}} <i class="pull-right glyphicon" ng-class="{'glyphicon-chevron-down': !isCollapsed, 'glyphicon-chevron-right': isCollapsed}"></i>
                                 </div>

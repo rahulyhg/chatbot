@@ -200,7 +200,8 @@ myApp.run(['$http','$cookies','beforeUnload','$document','$rootScope','Idle','bo
         }
     });
     $(document).on('click','.uibcollapseheader',function(e){
-        console.log("collapse click");
+        //console.log("collapse click");
+        var index = $(this).attr("data-index");
         //$(this).parent(".uibcollapsemain").find('.uibcollapsecontent.in.collapse').collapse('hide');
         if($(this).parent(".uibcollapsemain").find('.uibcollapsecontent').is(':visible'))
         {
@@ -209,12 +210,17 @@ myApp.run(['$http','$cookies','beforeUnload','$document','$rootScope','Idle','bo
             $(this).parent(".uibcollapsemain").find('.uibcollapsecontent').fadeOut( "fast" );
         }
         else {
-            if($(this).parents().hasClass(".uibcollapsecontent2"))
-                $(this).parents(".uibcollapsecontent2").find(".uibcollapsecontent").hide();
-            else if($(this).parents().hasClass(".uibcollapsecontent"))
-                $(this).parents(".uibcollapsecontent").find(".uibcollapsecontent").hide();
-            $(this).parents(".uibcollapsecontent").find(".uibcollapseheader").find("i").removeClass("glyphicon-chevron-down");
-            $(this).parents(".uibcollapsecontent").find(".uibcollapseheader").find("i").addClass("glyphicon-chevron-right");
+            // if($(this).parents().hasClass(".uibcollapsecontent2"))
+            //     $(this).parents(".uibcollapsecontent2").find(".uibcollapsecontent").hide();
+            // else if($(this).parents().hasClass(".uibcollapsecontent"))
+            //     $(this).parents(".uibcollapsecontent").find(".uibcollapsecontent").hide();
+            //$(".ucm"+index).parent().find("> .uibcollapsemain .uibcollapsecontent").hide();
+            $(this).parent(".uibcollapsemain").nextAll(".uibcollapsemain").find(".uibcollapsecontent").hide();
+            $(this).parent(".uibcollapsemain").prevAll(".uibcollapsemain").find(".uibcollapsecontent").hide();
+            $(this).parent(".uibcollapsemain").nextAll(".uibcollapsemain").find(".uibcollapseheader").find("i").removeClass("glyphicon-chevron-down");
+            $(this).parent(".uibcollapsemain").prevAll(".uibcollapsemain").find(".uibcollapseheader").find("i").removeClass("glyphicon-chevron-down");
+            $(this).parent(".uibcollapsemain").nextAll(".uibcollapsemain").find(".uibcollapseheader").find("i").addClass("glyphicon-chevron-right");
+            $(this).parent(".uibcollapsemain").prevAll(".uibcollapsemain").find(".uibcollapseheader").find("i").addClass("glyphicon-chevron-right");
             $(this).find("i").removeClass("glyphicon-chevron-right");
             $(this).find("i").addClass("glyphicon-chevron-down");
             
