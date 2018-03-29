@@ -1,9 +1,9 @@
 module.exports = _.cloneDeep(require("sails-wohlig-controller"));
 var controller = {
-    logoutuser: function (req, res) {
+    getunans: function (req, res) {
         //console.log(req);
         if (req.body) {
-            Feedbackquestion.getquestion(req.body, res.callback);
+            Feedbackquestion.getunans(req.body, res.callback);
         }
         else {
             res.json({

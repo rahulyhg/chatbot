@@ -179,6 +179,7 @@ var model = {
         var livechat = 0;
         var unanswered=0;
         var unshandled=0;
+        var unansview = -1;
 		if(data.livechat)
 			livechat = 1;
         if(data.responsetype=='DTHyperlink')
@@ -190,7 +191,7 @@ var model = {
         }
         if(data.unanswered)
         {
-
+            unansview=0;
             unanswered=1;
         }
         Chathistory.findOne( {
@@ -231,7 +232,8 @@ var model = {
                                     livechat:livechat,
                                     unanswered:unanswered,
                                     unshandled:unshandled,
-                                    context_id:data.context_id
+                                    context_id:data.context_id,
+                                    unansview:unansview
                                 }
 							} 
 						}
@@ -281,7 +283,8 @@ var model = {
                                 livechat:livechat,
                                 unanswered:unanswered,
                                 unshandled:unshandled,
-                                context_id:data.context_id
+                                context_id:data.context_id,
+                                unansview:unansview
                             }
                         ]
                     },function (err3, savefound) {
@@ -408,6 +411,34 @@ var model = {
                 $set: updateobj 
             }
         ).exec(function (err, updatefound) {
+            if (err) {
+                callback(err, null);
+            } 
+            else {
+                //console.log(updatefound,"inside update");
+                if (updatefound) {
+                    callback(null, updatefound);
+                }
+            }
+        });
+    },
+    getunans: function (data, callback) {
+        var updateobj = { like:1 };
+        
+        Chathistory.find(
+            { 
+                $and:[{user:data.user}],
+                $or:[{
+                    "chatlist.unansview":0,
+                    "chatlist.unanswered":1
+                }],
+                $or:[{
+                    //"chatlist.handle":0,
+                    "chatlist.handleview":0,
+                    "chatlist.dislike":1
+                }],
+            }
+        ).sort({createdAt: -1}).exec(function (err, updatefound) {
             if (err) {
                 callback(err, null);
             } 

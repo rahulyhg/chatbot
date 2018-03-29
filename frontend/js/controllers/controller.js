@@ -764,9 +764,15 @@ myApp.controller('HomeCtrl', function ($scope,$rootScope, TemplateService, Navig
         $scope.notifications = [];
         $scope.postit = [];
         $scope.images = [];
+        $scope.unansqueries = [];
         $rootScope.context_id ="";
         $rootScope.conversation_id ="";
         angular.element(document).ready(function () {
+            apiService.getunans({user:$.jStorage.get("email")}).then(function (data){
+                //console.log(data);
+                $scope.unansqueries = data.data.data;
+                //$scope.tickers=data.data.data;
+            });
             apiService.getticker({}).then(function (data){
                 //console.log(data);
                 $scope.tickers=data.data.data;
@@ -1206,13 +1212,21 @@ myApp.controller('HomeCtrl', function ($scope,$rootScope, TemplateService, Navig
             $(".fdashboard").hide();
             $rootScope.unansCancel();
         });
-        $scope.getunansq = function(query,eventtr) {
+        $scope.old_q="";
+        $scope.getunansq = function(query,type,index,old_question,eventtr) {
             $scope.unans_q = query;
-            console.log(eventtr);
+            $scope.old_q=old_question;
+            console.log(index);
+            //console.log(eventtr);
             
             // $(eventtr).parent().parents('tr').remove();
             // $(eventtr).parents("tr").remove();
-            // $(eventtr).parent().parent().parent().parent("tr").remove();
+            $timeout(function(){
+                $(eventtr).parents().find("tr").remove();
+                angular.element("#unanstable").find("tr[data-index="+index+"]").remove();
+            },1000);
+            console.log(eventtr);
+            
             mysessiondata = {};
             formData1 = {csrfmiddlewaretoken:$rootScope.getCookie("csrftoken"),user_id:$rootScope.session_id,user_input:query,auto_id:"",auto_value:""};
             var new_object = $.extend({}, mysessiondata, formData1);
