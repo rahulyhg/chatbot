@@ -305,6 +305,24 @@ myApp.factory('apiService', function ($http, $q, $timeout,CsrfTokenService,$http
                 data: formData
             });
         },
+        get_conversationid:function(formData,callback){
+            return    $http({
+                url:adminurl+'get_conversationid/',
+                method: 'POST',
+                data:$.param(formData),
+                withCredentials: true,
+                headers: {'Content-Type': 'application/x-www-form-urlencoded;charset=utf-8','X-CSRFToken':formData.csrfmiddlewaretoken },
+            });
+        },
+        get_contextid:function(formData,callback){
+            return    $http({
+                url:adminurl+'get_contextid/',
+                method: 'POST',
+                data:$.param(formData),
+                withCredentials: true,
+                headers: {'Content-Type': 'application/x-www-form-urlencoded;charset=utf-8','X-CSRFToken':formData.csrfmiddlewaretoken },
+            });
+        },
         crnsubmit:function(formData,callback){
             return    $http({
                 url:adminurl+'srandcrn/',

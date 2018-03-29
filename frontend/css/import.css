@@ -12416,6 +12416,21 @@ a.unanswered {
   border-left-color: transparent;
   border-bottom-color: transparent; }
 
+.floatright {
+  width: 100%;
+  float: right; }
+
+.floatleft {
+  width: 100%;
+  float: left; }
+
+.dthyperlink.chatdt {
+  background: #eee;
+  color: #000;
+  padding: 0.5em 0.5em;
+  margin-bottom: 0.2em;
+  border-radius: 5px; }
+
 .tab-con .processaccord:last-child {
   /*border-bottom: 5px solid #00458a;*/ }
 

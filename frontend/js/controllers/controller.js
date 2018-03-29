@@ -764,21 +764,23 @@ myApp.controller('HomeCtrl', function ($scope,$rootScope, TemplateService, Navig
         $scope.notifications = [];
         $scope.postit = [];
         $scope.images = [];
+        $rootScope.context_id ="";
+        $rootScope.conversation_id ="";
         angular.element(document).ready(function () {
             apiService.getticker({}).then(function (data){
                 //console.log(data);
                 $scope.tickers=data.data.data;
             });
             apiService.getnotification({}).then(function (data){
-                console.log(data);
+                //console.log(data);
                 $scope.notifications=data.data.data;
             });
             apiService.getpostit({}).then(function (data){
-                console.log(data);
+                //console.log(data);
                 $scope.postit=data.data.data;
             });
             apiService.getimages({}).then(function (data){
-                console.log(data);
+                //console.log(data);
                 $scope.images=data.data.data;
             });
             $scope.setdisconnectsocket = function(){
@@ -1145,7 +1147,21 @@ myApp.controller('HomeCtrl', function ($scope,$rootScope, TemplateService, Navig
 
 
 
-
+        $rootScope.getconversationid = function() {
+            apiService.get_conversationid({user_id:$.jStorage.get("email")}).then( function (response) {
+                $.jStorage.set("conversation_id",response.data.conversation_id);
+                $rootScope.conversation_id =response.data.conversation_id;
+            });
+            
+        };
+        $rootScope.getcontextid = function() {
+            apiService.get_contextid({user_id:$.jStorage.get("email")}).then( function (response) {
+                $.jStorage.set("context_id",response.data.context_id);
+                $rootScope.context_id =response.data.context_id;
+                
+            });
+            
+        };
         $scope.callsession = function() {
             apiService.get_session({}).then( function (response) {
                 $cookies.put("csrftoken",response.data.csrf_token);
@@ -1331,6 +1347,8 @@ myApp.controller('HomeCtrl', function ($scope,$rootScope, TemplateService, Navig
         };
         angular.element(document).ready(function () {
             $scope.callsession();  
+            $rootScope.getcontextid();  
+            $rootScope.getconversationid();  
             if(!$.jStorage.get('firstreload'))
                 $.jStorage.set('firstreload',false);
         });
@@ -1504,10 +1522,13 @@ myApp.controller('HomeCtrl', function ($scope,$rootScope, TemplateService, Navig
             $.jStorage.set("firstreload",true);
             location.reload();
         }
+        angular.element(document).ready(function(){
+            $timeout(function(){
+                // $scope.chatpanelheight = $("#chat_window_1").height()-130;
+                $scope.agentpanelheight = $(window).height()-55-90;
+            },2000);
+        });
         
-        $timeout(function(){
-            $scope.agentpanelheight = $(window).height()-55;
-        },3000);
         io.sails.url = 'http://localhost:9161';
         function startPrivateConversation() {
 
@@ -1557,7 +1578,7 @@ myApp.controller('HomeCtrl', function ($scope,$rootScope, TemplateService, Navig
 
         // Create the HTML for the room
         var roomHTML = '<div class="userlist"><button type="button" class="btn useronline" data-toggle="collapse" data-target="#collapseExample'+roomName+'" aria-expanded="false" aria-controls="collapseExample'+roomName+'"> <span id="private-username-'+penPal.id+'"><span class="userimg"><img src="img/logo7.png" class="img-fluid"></span>'+penPalName+'</span><span class="pull-right onlinesymbol"><i class="fa fa-circle" aria-hidden="true"></i></span></button></div>';
-        var chatconv = '<div class="collapse in" id="collapseExample'+roomName+'"><div id="private-messages-'+penPal.id+'" class="private_conv"></div>'+
+        var chatconv = '<div class="collapse in" id="collapseExample'+roomName+'"><div id="private-messages-'+penPal.id+'" style="height:'+$scope.agentpanelheight+'px;" class="private_conv"></div>'+
                         '<div class="row"><div class="col-md-9"><input id="private-message-'+penPal.id+'" placeholder="Enter Message"  class="form-control pvtmsg"/></div><div class="col-md-3"> <button class="btn btn-primary" id="private-button-'+penPal.id+'" data-sname="'+penPal.sname+'" data_id="'+penPal.sid+'" data-socketid="'+penPal.socketId+'"><i class="fa fa-paper-plane" aria-hidden="true"></i></button"></div></div></div>';
         roomDiv.html(roomHTML);
 
@@ -1603,32 +1624,41 @@ myApp.controller('HomeCtrl', function ($scope,$rootScope, TemplateService, Navig
 			var fromMe = senderId == window.me.id;
             var roomName = 'private-messages-' + (fromMe ? recipientId : senderId);
             var senderName = fromMe ? "Me" : $('#private-username-'+senderId).html();
+            var alignclass = fromMe ? 'pull-right' : 'pull-left';
+            var bubbleclass=fromMe ? 'rightbubble' : 'leftbubble';
+            var floatclass = fromMe ? 'floatright' : 'floatleft';
 			for(var i = 0; i<message.length; i++)
 			{
-				if(message[i].position=='right')
+                if(message[i].position=='right')
 				{
-					var div = $('<div style="text-align:left"></div>');
+                    floatclass = "floatleft";
+                    alignclass = "pull-left";
+                    bubbleclass = "leftbubble";
+					var div = $('<div class="'+floatclass+'"></div>');
 					if(typeof(message[i].msg)=='string')
 					{
 						//divstring += ""message[i].msg;
 						
-						div.html('<strong>'+senderName+'</strong>: '+message[i].msg);
+						div.html('<strong class="'+alignclass+'">'+senderName+'</strong>  <div  class="'+bubbleclass+'">'+message[i].msg+'</div>');
 						
 					}
 					else if(typeof(message[i].msg)=='object')
 					{
 						if(message[i].msg.type=='SYS_DT_RES')
 						{
-							div.html('<strong>'+senderName+'</strong>: '+message[i].msg.Text);
+							div.html('<strong class="'+alignclass+'">'+senderName+'</strong><div  class="'+bubbleclass+'">'+message[i].msg.Text+"</div>");
 						}
 					}
 					$('#'+roomName).append(div);
 					$scope.scrollagentChatWindow(senderId);
 				}
 				else if(message[i].position=='left') {
+                    floatclass = "floatright";
+                    bubbleclass = "rightbubble";
+                    alignclass = "pull-right";
 					if(message[i].msg.tiledlist)
 					{
-						var div = $('<div style="text-align:right"></div>');
+						var div = $('<div class="'+floatclass+'"></div>');
 						if(message[i].msg.tiledlist[0].type=='DTHyperlink' || message[i].msg.tiledlist[0].type=='Process Tree')
 						{
 							dtstring="";
@@ -1637,12 +1667,12 @@ myApp.controller('HomeCtrl', function ($scope,$rootScope, TemplateService, Navig
 								dtstring+="<div class='dthyperlink chatdt'>"+message[i].msg.tiledlist[0].DT[j]+"</div>";
 							}
 							
-							div.html('<strong>Bot</strong>: '+dtstring);
+							div.html('<strong class="'+alignclass+'">Bot</strong><div  class="'+bubbleclass+'">'+dtstring+'</div>');
 							
 						}
 						else if(message[i].msg.tiledlist[0].type=='text')
 						{
-							div.html('<strong>Bot</strong>: '+message[i].msg.tiledlist[0].Text);
+							div.html('<strong class="'+alignclass+'">Bot</strong> <div  class="'+bubbleclass+'">'+message[i].msg.tiledlist[0].Text+'</div>');
 						}
 						$('#'+roomName).append(div);
 						$scope.scrollagentChatWindow(senderId);
@@ -1661,7 +1691,8 @@ myApp.controller('HomeCtrl', function ($scope,$rootScope, TemplateService, Navig
 				var justify = fromMe ? 'right' : 'left';
                 var alignclass = fromMe ? 'pull-right' : 'pull-left';
                 var bubbleclass=fromMe ? 'rightbubble' : 'leftbubble';
-				var div = $('<div style="text-align:'+justify+'" ></div>');
+                var floatclass = fromMe ? 'floatright' : 'floatleft';
+				var div = $('<div class="'+floatclass+'" ></div>');
 				div.html('<strong class="'+alignclass+'">'+senderName+'</strong> <div  class="'+bubbleclass+'">'+message+'</div>');
 				$('#'+roomName).append(div);
 				$scope.scrollagentChatWindow(senderId);
@@ -2285,6 +2316,8 @@ myApp.controller('HomeCtrl', function ($scope,$rootScope, TemplateService, Navig
                     $rootScope.pushSystemMsg(0,msg);
                     //console.log(response.data);
                 });
+                $rootScope.getconversationid();
+                $rootScope.getcontextid();
             }
         };
         $rootScope.savehistory = function(obj) {
@@ -2303,7 +2336,8 @@ myApp.controller('HomeCtrl', function ($scope,$rootScope, TemplateService, Navig
                 // end their session and redirect to login
                 Idle.setIdle(10);
                 Idle.watch();
-                $rootScope.newuser();
+                //$rootScope.newuser();
+                $rootScope.getcontextid();
                 $.jStorage.set("timer",45);
                 //console.log("End -start new");
             }
@@ -3098,7 +3132,7 @@ myApp.controller('HomeCtrl', function ($scope,$rootScope, TemplateService, Navig
             if($("#chat_window_1").height()==0)
                 $rootScope.showChatwindow();
             {
-                var mysession = {};
+                var mysession = {user:$.jStorage.get("email"),context_id:$.jStorage.get("context_id"),conversation_id:$.jStorage.get("conversation_id")};
                 
                 
                 mysession.DTHlink=dthlink;
@@ -4332,7 +4366,7 @@ myApp.controller('HomeCtrl', function ($scope,$rootScope, TemplateService, Navig
                 //console.log(mysessiondata);
                 //$rootScope.formData = mysessiondata;
                 //console.log($rootScope.session_id);
-                formData1 = {csrfmiddlewaretoken:$rootScope.getCookie("csrftoken"),user_id:$rootScope.session_id,user_input:value,auto_id:id,auto_value:$rootScope.autolistvalue};
+                formData1 = {user:$.jStorage.get("email"),context_id:$.jStorage.get("context_id"),conversation_id:$.jStorage.get("conversation_id"),csrfmiddlewaretoken:$rootScope.getCookie("csrftoken"),user_id:$rootScope.session_id,user_input:value,auto_id:id,auto_value:$rootScope.autolistvalue};
                 var new_object = $.extend({}, mysessiondata, formData1);
                 //$.extend(formData1, mysessiondata);
                 $rootScope.formData = new_object;
