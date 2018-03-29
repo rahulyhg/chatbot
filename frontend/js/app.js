@@ -209,13 +209,16 @@ myApp.run(['$http','$cookies','beforeUnload','$document','$rootScope','Idle','bo
             $(this).parent(".uibcollapsemain").find('.uibcollapsecontent').fadeOut( "fast" );
         }
         else {
-            $(".uibcollapsecontent").hide();
-            $(".uibcollapseheader").find("i").removeClass("glyphicon-chevron-down");
-            $(".uibcollapseheader").find("i").addClass("glyphicon-chevron-right");
+            if($(this).parents().hasClass(".uibcollapsecontent2"))
+                $(this).parents(".uibcollapsecontent2").find(".uibcollapsecontent").hide();
+            else if($(this).parents().hasClass(".uibcollapsecontent"))
+                $(this).parents(".uibcollapsecontent").find(".uibcollapsecontent").hide();
+            $(this).parents(".uibcollapsecontent").find(".uibcollapseheader").find("i").removeClass("glyphicon-chevron-down");
+            $(this).parents(".uibcollapsecontent").find(".uibcollapseheader").find("i").addClass("glyphicon-chevron-right");
             $(this).find("i").removeClass("glyphicon-chevron-right");
             $(this).find("i").addClass("glyphicon-chevron-down");
             
-            $(this).parent(".uibcollapsemain").find('.uibcollapsecontent').fadeIn( "slow" );
+            $(this).parent().find('> .uibcollapsecontent').fadeIn( "slow" );
         }
         // if($(this).parent(".uibcollapsemain").find('.uibcollapsecontent').hasClass('in'))
         // {   
