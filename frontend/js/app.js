@@ -33,9 +33,9 @@ myApp.config(function ($stateProvider, $urlRouterProvider, $httpProvider, $locat
     ttsProvider.setSettings({ key: '5a1cc1a178c24b89ba23fd6e3b1bb6c5' });
     $qProvider.errorOnUnhandledRejections(false);
     IdleProvider.idle(1); // 1sec idle
-    IdleProvider.timeout(30*60); // in seconds
+    IdleProvider.timeout(15); // in seconds
     //KeepaliveProvider.interval(180);
-    $.jStorage.set("timer",45);
+    $.jStorage.set("timer",15);
     $stateProvider
         // .state('home', {
         //     url: "/",

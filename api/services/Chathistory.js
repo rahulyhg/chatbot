@@ -40,6 +40,9 @@ var schema = new Schema({
     },
     unshandled : {
         type:Number
+    },
+    conversation_id:{
+        type:Number
     }
 });
 
@@ -226,7 +229,8 @@ var model = {
                                     respdiff:data.respdiff,
                                     livechat:livechat,
                                     unanswered:unanswered,
-                                    unshandled:unshandled
+                                    unshandled:unshandled,
+                                    context_id:data.context_id
                                 }
 							} 
 						}
@@ -261,6 +265,7 @@ var model = {
                         livechat:livechat,
                         unanswered:unanswered,
                         unshandled:unshandled,
+                        conversation_id:data.conversation_id,
                         chatlist:[
                             {
                                 user_input:data.user_input,
@@ -274,7 +279,8 @@ var model = {
                                 respdiff:data.respdiff,
                                 livechat:livechat,
                                 unanswered:unanswered,
-                                unshandled:unshandled
+                                unshandled:unshandled,
+                                context_id:data.context_id
                             }
                         ]
                     },function (err3, savefound) {

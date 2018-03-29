@@ -1148,14 +1148,16 @@ myApp.controller('HomeCtrl', function ($scope,$rootScope, TemplateService, Navig
 
 
         $rootScope.getconversationid = function() {
-            apiService.get_conversationid({user_id:$.jStorage.get("email")}).then( function (response) {
+            apiService.get_conversationid({user:$.jStorage.get("email")}).then( function (response) {
                 $.jStorage.set("conversation_id",response.data.conversation_id);
                 $rootScope.conversation_id =response.data.conversation_id;
+                $.jStorage.set("context_id",response.data.context_id);
+                $rootScope.context_id =response.data.context_id;
             });
             
         };
         $rootScope.getcontextid = function() {
-            apiService.get_contextid({user_id:$.jStorage.get("email")}).then( function (response) {
+            apiService.get_contextid({session_id:$.jStorage.get("session_id"),user:$.jStorage.get("email"),context_id:$.jStorage.get("context_id"),conversation_id:$.jStorage.get("conversation_id")}).then( function (response) {
                 $.jStorage.set("context_id",response.data.context_id);
                 $rootScope.context_id =response.data.context_id;
                 
@@ -1163,13 +1165,16 @@ myApp.controller('HomeCtrl', function ($scope,$rootScope, TemplateService, Navig
             
         };
         $scope.callsession = function() {
-            apiService.get_session({}).then( function (response) {
+            apiService.get_session({user:$.jStorage.get("email")}).then( function (response) {
                 $cookies.put("csrftoken",response.data.csrf_token);
                 $cookies.put("session_id",response.data.session_id);
                 $.jStorage.set("csrftoken",response.data.csrf_token);
                 $.jStorage.set("session_id",response.data.session_id);
                 $rootScope.session_id =response.data.session_id;
-                
+                $.jStorage.set("conversation_id",response.data.conversation_id);
+                $rootScope.conversation_id =response.data.conversation_id;
+                $.jStorage.set("context_id",response.data.context_id);
+                $rootScope.context_id =response.data.context_id;
                 
             });
             
@@ -1347,8 +1352,8 @@ myApp.controller('HomeCtrl', function ($scope,$rootScope, TemplateService, Navig
         };
         angular.element(document).ready(function () {
             $scope.callsession();  
-            $rootScope.getcontextid();  
-            $rootScope.getconversationid();  
+            // $rootScope.getcontextid();  
+            // $rootScope.getconversationid();  
             if(!$.jStorage.get('firstreload'))
                 $.jStorage.set('firstreload',false);
         });
@@ -2304,21 +2309,22 @@ myApp.controller('HomeCtrl', function ($scope,$rootScope, TemplateService, Navig
         $rootScope.newuser = function() {
             if($rootScope.chatlist.length > 1)
             {
-                apiService.get_session({}).then( function (response) {
-                    $cookies.put("csrftoken",response.data.csrf_token);
-                    $cookies.put("session_id",response.data.session_id);
-                    $.jStorage.set("csrftoken",response.data.csrf_token);
-                    $.jStorage.set("session_id",response.data.session_id);
-                    $rootScope.session_id =response.data.session_id;
-                    $rootScope.chatlist = [];
-                    $rootScope.firstMsg = true;
-                    msg = {Text:"Hi, How may I help you ?",type:"SYS_FIRST"};
-                    $rootScope.pushSystemMsg(0,msg);
-                    //console.log(response.data);
-                });
-                $rootScope.getconversationid();
-                $rootScope.getcontextid();
+                // apiService.get_session({}).then( function (response) {
+                //     $cookies.put("csrftoken",response.data.csrf_token);
+                //     $cookies.put("session_id",response.data.session_id);
+                //     $.jStorage.set("csrftoken",response.data.csrf_token);
+                //     $.jStorage.set("session_id",response.data.session_id);
+                //     $rootScope.session_id =response.data.session_id;
+                //     $rootScope.chatlist = [];
+                //     $rootScope.firstMsg = true;
+                //     msg = {Text:"Hi, How may I help you ?",type:"SYS_FIRST"};
+                //     $rootScope.pushSystemMsg(0,msg);
+                //     //console.log(response.data);
+                // });
+                
+                // $rootScope.getcontextid();
             }
+            $rootScope.getconversationid();
         };
         $rootScope.savehistory = function(obj) {
             //console.log(obj);
@@ -2329,7 +2335,7 @@ myApp.controller('HomeCtrl', function ($scope,$rootScope, TemplateService, Navig
         $rootScope.$on('IdleTimeout', function() {
             // var scope = angular.element(document.getElementById('changepwd')).scope();
             // scope.logout();
-            if($.jStorage.get("timer")==45)
+            if($.jStorage.get("timer")==15)
             {
                 // msg = {Text:"Hello! it looks like you've been inactive, type  help if you need anything ",type:"SYS_EMPTY_RES"};
                 // $rootScope.pushSystemMsg(0,msg); 
@@ -2338,7 +2344,7 @@ myApp.controller('HomeCtrl', function ($scope,$rootScope, TemplateService, Navig
                 Idle.watch();
                 //$rootScope.newuser();
                 $rootScope.getcontextid();
-                $.jStorage.set("timer",45);
+                $.jStorage.set("timer",15);
                 //console.log("End -start new");
             }
         });
@@ -2791,7 +2797,7 @@ myApp.controller('HomeCtrl', function ($scope,$rootScope, TemplateService, Navig
             $rootScope.pushSystemMsg(0,data);
         };
         $rootScope.ratecardSubmit = function(coldata,rowdata,response_type,journey_name,index) {
-            $scope.formData = {csrfmiddlewaretoken:$rootScope.getCookie("csrftoken"),user_id:$rootScope.session_id,user_input:coldata+"|"+rowdata,auto_id:"",auto_value:"",coldata:coldata,rowdata:rowdata,type:"rate card",journey_name:journey_name,response_type:response_type};
+            $scope.formData = {context_id:$.jStorage.get("context_id"),conversation_id:$.jStorage.get("conversation_id"),csrfmiddlewaretoken:$rootScope.getCookie("csrftoken"),user_id:$rootScope.session_id,user_input:coldata+"|"+rowdata,auto_id:"",auto_value:"",coldata:coldata,rowdata:rowdata,type:"rate card",journey_name:journey_name,response_type:response_type};
             var inputDate = new Date();
             apiService.ratecardsubmit($scope.formData).then(function (data){
                 //console.log(data);
@@ -2829,7 +2835,7 @@ myApp.controller('HomeCtrl', function ($scope,$rootScope, TemplateService, Navig
 							// return false;
 						}
                     }
-                    var obj = {session_id:$.jStorage.get('session_id'),user:$.jStorage.get('email'),user_input:coldata+"|"+rowdata,response:data.data.tiledlist[0],topic:topic2,Journey_Name:Journey_Name2,responsetype:value.type,inputDate:inputDate,outputDate:outputDate,respdiff:respdiff};
+                    var obj = {context_id:$.jStorage.get("context_id"),conversation_id:$.jStorage.get("conversation_id"),session_id:$.jStorage.get('session_id'),user:$.jStorage.get('email'),user_input:coldata+"|"+rowdata,response:data.data.tiledlist[0],topic:topic2,Journey_Name:Journey_Name2,responsetype:value.type,inputDate:inputDate,outputDate:outputDate,respdiff:respdiff};
                     $rootScope.savehistory(obj);
 				});
             });
@@ -2857,7 +2863,7 @@ myApp.controller('HomeCtrl', function ($scope,$rootScope, TemplateService, Navig
             $(document).on('click', 'a.ratecard', function(){
                 
                 var dthlink = $(this).text();
-                formData = {csrfmiddlewaretoken:$rootScope.getCookie("csrftoken"),user_id:$rootScope.session_id,user_input:dthlink,auto_id:'',auto_value:''};
+                formData = {csrfmiddlewaretoken:$rootScope.getCookie("csrftoken"),user_id:$rootScope.session_id,user_input:dthlink,auto_id:'',auto_value:'',session_id:$.jStorage.get("session_id"),user:$.jStorage.get("email"),context_id:$.jStorage.get("context_id"),conversation_id:$.jStorage.get("conversation_id")};
                 apiService.outprocess(formData).then(function (data){
                         //console.log(data);
                     
@@ -2946,7 +2952,7 @@ myApp.controller('HomeCtrl', function ($scope,$rootScope, TemplateService, Navig
                 $rootScope.outprocessclick=1;
                 var dthlink = $(this).text();
                 var journey = $(this).attr('data-journey');
-                formData = {csrfmiddlewaretoken:$rootScope.getCookie("csrftoken"),user_id:$rootScope.session_id,user_input:dthlink,auto_id:'',auto_value:'',Journey_Name:journey};
+                formData = {csrfmiddlewaretoken:$rootScope.getCookie("csrftoken"),user_id:$rootScope.session_id,user_input:dthlink,auto_id:'',auto_value:'',Journey_Name:journey,session_id:$.jStorage.get("session_id"),user:$.jStorage.get("email"),context_id:$.jStorage.get("context_id"),conversation_id:$.jStorage.get("conversation_id")};
                 apiService.outprocess(formData).then(function (data){
                         //console.log(data);
                     // if(data.data.tiledlist[0].Journey_Name)
@@ -3158,7 +3164,7 @@ myApp.controller('HomeCtrl', function ($scope,$rootScope, TemplateService, Navig
                         var Journey_Name2 = "";
                         if(data.data.tiledlist[0].Journey_Name)
                             Journey_Name2 = data.data.tiledlist[0].Journey_Name;
-                        var obj = {DTHstage:stage,DTHlink:dthlink,session_id:$.jStorage.get('session_id'),user:$.jStorage.get('email'),user_input:'',response:data.data.tiledlist[0],topic:topic2,Journey_Name:Journey_Name2,responsetype:value.type,inputDate:inputDate,outputDate:outputDate,respdiff:respdiff};
+                        var obj = {DTHstage:stage,DTHlink:dthlink,session_id:$.jStorage.get('session_id'),user:$.jStorage.get('email'),user_input:'',response:data.data.tiledlist[0],topic:topic2,Journey_Name:Journey_Name2,responsetype:value.type,inputDate:inputDate,outputDate:outputDate,respdiff:respdiff,context_id:$.jStorage.get("context_id"),conversation_id:$.jStorage.get("conversation_id")};
                         $rootScope.savehistory(obj);
                         if(value.type=="DTHyperlink")
                         {
@@ -4483,7 +4489,7 @@ myApp.controller('HomeCtrl', function ($scope,$rootScope, TemplateService, Navig
                         var Journey_Name2 = "";
                         if(decryptedData.tiledlist[0].Journey_Name)
                             Journey_Name2 = decryptedData.tiledlist[0].Journey_Name;
-                        var obj = {session_id:$.jStorage.get('session_id'),user:$.jStorage.get('email'),user_input:prevmsg,response:decryptedData.tiledlist[0],topic:topic2,Journey_Name:Journey_Name2,responsetype:value.type,inputDate:inputDate,outputDate:outputDate,respdiff:respdiff};
+                        var obj = {context_id:$.jStorage.get("context_id"),conversation_id:$.jStorage.get("conversation_id"),session_id:$.jStorage.get('session_id'),user:$.jStorage.get('email'),user_input:prevmsg,response:decryptedData.tiledlist[0],topic:topic2,Journey_Name:Journey_Name2,responsetype:value.type,inputDate:inputDate,outputDate:outputDate,respdiff:respdiff};
                         $rootScope.savehistory(obj);
                         $scope.$on('IdleStart', function() {
                             // the user appears to have gone idle
@@ -4573,7 +4579,7 @@ myApp.controller('HomeCtrl', function ($scope,$rootScope, TemplateService, Navig
                     // $rootScope.pushSystemMsg(0,msg3); 
                     //     console.log(io.socket);
                     // console.log("connect");
-                    var obj = {session_id:$.jStorage.get('session_id'),user:$.jStorage.get('email'),user_input:sess2.Text,response:{},topic:"",Journey_Name:"",responsetype:"",inputDate:inputDate,outputDate:outputDate,respdiff:respdiff,unanswered:1};
+                    var obj = {context_id:$.jStorage.get("context_id"),conversation_id:$.jStorage.get("conversation_id"),session_id:$.jStorage.get('session_id'),user:$.jStorage.get('email'),user_input:sess2.Text,response:{},topic:"",Journey_Name:"",responsetype:"",inputDate:inputDate,outputDate:outputDate,respdiff:respdiff,unanswered:1};
                     $rootScope.savehistory(obj);
                     
                     // var socket = io(io.sails.url);
@@ -4605,7 +4611,7 @@ myApp.controller('HomeCtrl', function ($scope,$rootScope, TemplateService, Navig
                                     $rootScope.sendMsgtoagent(sess2.Text,inputDate);
                                     var outputDate   = new Date();
                                     var respdiff = (outputDate.getTime() - inputDate.getTime()) / 1000;
-                                    var obj = {livechat:1,session_id:$.jStorage.get('session_id'),user:$.jStorage.get('email'),user_input:prevmsg,response:{},topic:"",Journey_Name:"",responsetype:"",inputDate:inputDate,outputDate:outputDate,respdiff:respdiff,unanswered:1};
+                                    var obj = {context_id:$.jStorage.get("context_id"),conversation_id:$.jStorage.get("conversation_id"),livechat:1,session_id:$.jStorage.get('session_id'),user:$.jStorage.get('email'),user_input:prevmsg,response:{},topic:"",Journey_Name:"",responsetype:"",inputDate:inputDate,outputDate:outputDate,respdiff:respdiff,unanswered:1};
                                     $rootScope.savehistory(obj);
                                 }
 
@@ -4617,7 +4623,7 @@ myApp.controller('HomeCtrl', function ($scope,$rootScope, TemplateService, Navig
                                 $rootScope.pushSystemMsg(0,msg3); 
                                 console.log(io.socket);
                                 console.log("connect");
-                                var obj = {session_id:$.jStorage.get('session_id'),user:$.jStorage.get('email'),user_input:msg,response:msg3,topic:"",Journey_Name:"",responsetype:"",inputDate:inputDate,outputDate:outputDate,respdiff:respdiff,unanswered:1};
+                                var obj = {context_id:$.jStorage.get("context_id"),conversation_id:$.jStorage.get("conversation_id"),session_id:$.jStorage.get('session_id'),user:$.jStorage.get('email'),user_input:msg,response:msg3,topic:"",Journey_Name:"",responsetype:"",inputDate:inputDate,outputDate:outputDate,respdiff:respdiff,unanswered:1};
                                 $rootScope.savehistory(obj);
                                 
                             }
@@ -4726,7 +4732,7 @@ myApp.controller('HomeCtrl', function ($scope,$rootScope, TemplateService, Navig
                         var msg2 = {Text:"You are now connected to our agent "+newuser[arr_ind].sname,type:"SYS_CONV_START"};
                         $rootScope.pushSystemMsg(0,msg2); 
                         $rootScope.lastagentmsg = true;
-                        var obj = {session_id:$.jStorage.get('session_id'),user:$.jStorage.get('email'),user_input:msg,response:msg2,topic:"",Journey_Name:"",responsetype:"",inputDate:inputDate,outputDate:outputDate,respdiff:respdiff};
+                        var obj = {context_id:$.jStorage.get("context_id"),conversation_id:$.jStorage.get("conversation_id"),session_id:$.jStorage.get('session_id'),user:$.jStorage.get('email'),user_input:msg,response:msg2,topic:"",Journey_Name:"",responsetype:"",inputDate:inputDate,outputDate:outputDate,respdiff:respdiff};
                         $rootScope.savehistory(obj);
                     }
                     $scope.lastagentid = newuser[arr_ind].id;
@@ -4741,14 +4747,14 @@ myApp.controller('HomeCtrl', function ($scope,$rootScope, TemplateService, Navig
                     $rootScope.agentconnected = false;
                     var msg3 = {Text:"Sorry I could not understand",type:"SYS_EMPTY_RES"};
                     $rootScope.pushSystemMsg(0,msg3); 
-                    var obj = {session_id:$.jStorage.get('session_id'),user:$.jStorage.get('email'),user_input:msg,response:msg3,topic:"",Journey_Name:"",responsetype:"",inputDate:inputDate,outputDate:outputDate,respdiff:respdiff};
+                    var obj = {context_id:$.jStorage.get("context_id"),conversation_id:$.jStorage.get("conversation_id"),session_id:$.jStorage.get('session_id'),user:$.jStorage.get('email'),user_input:msg,response:msg3,topic:"",Journey_Name:"",responsetype:"",inputDate:inputDate,outputDate:outputDate,respdiff:respdiff};
                     $rootScope.savehistory(obj);
                 }
             }).catch(function(){
                 $rootScope.agentconnected = false;
                 var msg3 = {Text:"Sorry I could not understand",type:"SYS_EMPTY_RES"};
                 $rootScope.pushSystemMsg(0,msg3); 
-                var obj = {session_id:$.jStorage.get('session_id'),user:$.jStorage.get('email'),user_input:msg,response:msg3,topic:"",Journey_Name:"",responsetype:"",inputDate:inputDate,outputDate:outputDate,respdiff:respdiff};
+                var obj = {context_id:$.jStorage.get("context_id"),conversation_id:$.jStorage.get("conversation_id"),session_id:$.jStorage.get('session_id'),user:$.jStorage.get('email'),user_input:msg,response:msg3,topic:"",Journey_Name:"",responsetype:"",inputDate:inputDate,outputDate:outputDate,respdiff:respdiff};
                 $rootScope.savehistory(obj);
             });
             
