@@ -37,6 +37,9 @@ var schema = new Schema({
     },
     unanswered:{
         type:Number
+    },
+    unshandled : {
+        type:Number
     }
 });
 
@@ -172,6 +175,7 @@ var model = {
         var dtobject = {};
         var livechat = 0;
         var unanswered=0;
+        var unshandled=0;
 		if(data.livechat)
 			livechat = 1;
         if(data.responsetype=='DTHyperlink')
@@ -205,7 +209,8 @@ var model = {
                         {
 							$set:{
                                 livechat:livechat,
-                                unanswered:unanswered
+                                unanswered:unanswered,
+                                unshandled:unshandled
 							}, 
 							$push: { 
 								chatlist:
@@ -220,9 +225,9 @@ var model = {
                                     outputDate:new Date(data.outputDate),
                                     respdiff:data.respdiff,
                                     livechat:livechat,
-                                    unanswered:unanswered
+                                    unanswered:unanswered,
+                                    unshandled:unshandled
                                 }
-                             
 							} 
 						}
                     ).exec(function (err2, updatefound) {
@@ -232,6 +237,14 @@ var model = {
                         else {
                             console.log(updatefound,"inside update");
                             if (updatefound) {
+                                if(unanswered==1)
+                                {
+                                    var uns = require("./Unansweredquestion");
+                                    var sessiondata = uns({conversationid:found._id,old_question:data.user_input,new_question:"",session_id:data.session_id});
+                                    sessiondata.save(function (unserr,unsresult) {
+
+                                    });
+                                }
                                 callback(null, updatefound);
                             } else {
                                 callback({
@@ -247,6 +260,7 @@ var model = {
                         user:data.user,
                         livechat:livechat,
                         unanswered:unanswered,
+                        unshandled:unshandled,
                         chatlist:[
                             {
                                 user_input:data.user_input,
@@ -259,7 +273,8 @@ var model = {
                                 outputDate:new Date(data.outputDate),
                                 respdiff:data.respdiff,
                                 livechat:livechat,
-                                unanswered:unanswered
+                                unanswered:unanswered,
+                                unshandled:unshandled
                             }
                         ]
                     },function (err3, savefound) {
@@ -269,6 +284,14 @@ var model = {
                         else {
                             if (savefound) {
                                 console.log(savefound,"inside save");
+                                if(unanswered==1)
+                                {
+                                    var uns = require("./Unansweredquestion");
+                                    var sessiondata = uns({conversationid:savefound._id,old_question:data.user_input,new_question:"",session_id:data.session_id});
+                                    sessiondata.save(function (unserr,unsresult) {
+
+                                    });
+                                }
                                 callback(null, savefound);
                             } else {
                                 callback({
