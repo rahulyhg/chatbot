@@ -364,6 +364,7 @@ var model = {
                         conversation_id:data.conversation_id
                     },function(err,datafound){
                         var uns = require("./Feedbackquestion");
+						console.log(datafound);
                         var chatlist = datafound.chatlist;
                         //console.log(updatefound);
                         for(var i = 0; i < data.interactions.length ; i++)
@@ -387,7 +388,7 @@ var model = {
                                 dthyperlink = 1;
                                 userinput=interaction.dthyperlink.Dthlink;
                             }
-                            var sessiondata = uns({feedback:data.feedback,user:data.user,handle:0,conversationid:updatefound._id,old_question:userinput,dthyperlink:dthyperlink,new_question:"",session_id:data.session_id});
+                            var sessiondata = uns({feedback:data.feedback,user:data.user,handle:0,conversationid:datafound._id,old_question:userinput,dthyperlink:dthyperlink,new_question:"",session_id:data.session_id});
                             sessiondata.save(function (unserr,unsresult) {
 
                             });
