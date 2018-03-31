@@ -428,43 +428,7 @@ myApp.controller('HomeCtrl', function ($scope, $rootScope, TemplateService, Navi
             location.reload();
         }
         if (!$.jStorage.get("notloggedin")) {
-            //Chatapp
-            /**
-             * app.js
-             *
-             * Front-end code and event handling for sailsChat
-             *
-             */
-            //io.connect('http://exponentiadata.co.in:9161');
-            // if($.jStorage.get("socketId"))
-            //     io.socket.connected[$.jStorage.get("socketId")].disconnect();
-            //io.socket.get("/user/disconnect",{query:$.jStorage.get("sid")}, function(data){});
-            // Attach a listener which fires when a connection is established:
-            //options: [SocketIOClientOption.ConnectParams(["__sails_io_sdk_version":"0.11.0"])]);
-            //var sk = io.sails.connect();
-            //io('http://localhost:8080');
-            // var CONNECTION_METADATA_PARAMS = {
-            //     version: '__sails_io_sdk_version',
-            //     platform: '__sails_io_sdk_platform',
-            //     language: '__sails_io_sdk_language'
-            // };
 
-            // var SDK_INFO = {
-            //     version: '0.11.0',
-            //     platform: 'browser',
-            //     language: 'javascript'
-            // };
-
-            // SDK_INFO.versionString =
-            //     CONNECTION_METADATA_PARAMS.version + '=' + SDK_INFO.version + '&' +
-            //     CONNECTION_METADATA_PARAMS.platform + '=' + SDK_INFO.platform + '&' +
-            //     CONNECTION_METADATA_PARAMS.language + '=' + SDK_INFO.language;
-
-            // var socket = io.connect({
-            //     query: SDK_INFO.versionString
-            // });
-
-            //io.sails.connect('http://localhost:80');
             io.socket.on('connect', function socketConnected() {
 
                 // Show the main UI
@@ -938,43 +902,7 @@ myApp.controller('Dashboard5Ctrl', function ($scope, $rootScope, TemplateService
         }
         // if(!$.jStorage.get("notloggedin"))
         {
-            //Chatapp
-            /**
-             * app.js
-             *
-             * Front-end code and event handling for sailsChat
-             *
-             */
-            //io.connect('http://exponentiadata.co.in:9161');
-            // if($.jStorage.get("socketId"))
-            //     io.socket.connected[$.jStorage.get("socketId")].disconnect();
-            //io.socket.get("/user/disconnect",{query:$.jStorage.get("sid")}, function(data){});
-            // Attach a listener which fires when a connection is established:
-            //options: [SocketIOClientOption.ConnectParams(["__sails_io_sdk_version":"0.11.0"])]);
-            //var sk = io.sails.connect();
-            //io('http://localhost:8080');
-            // var CONNECTION_METADATA_PARAMS = {
-            //     version: '__sails_io_sdk_version',
-            //     platform: '__sails_io_sdk_platform',
-            //     language: '__sails_io_sdk_language'
-            // };
 
-            // var SDK_INFO = {
-            //     version: '0.11.0',
-            //     platform: 'browser',
-            //     language: 'javascript'
-            // };
-
-            // SDK_INFO.versionString =
-            //     CONNECTION_METADATA_PARAMS.version + '=' + SDK_INFO.version + '&' +
-            //     CONNECTION_METADATA_PARAMS.platform + '=' + SDK_INFO.platform + '&' +
-            //     CONNECTION_METADATA_PARAMS.language + '=' + SDK_INFO.language;
-
-            // var socket = io.connect({
-            //     query: SDK_INFO.versionString
-            // });
-
-            //io.sails.connect('http://localhost:80');
             io.socket.on('connect', function socketConnected() {
 
                 // Show the main UI
@@ -4703,15 +4631,7 @@ myApp.controller('Dashboard3Ctrl', function ($scope, $rootScope, TemplateService
                 $rootScope.showMsgLoader = false;
                 var outputDate = new Date();
                 var respdiff = (outputDate.getTime() - inputDate.getTime()) / 1000;
-                //console.log(io.socket);
-                // var newSailsSocket = io.sails.connect();
-                // console.log(newSailsSocket);
 
-                // $rootScope.agentconnected = false;
-                // var msg3 = {Text:"Sorry I could not understand",type:"SYS_EMPTY_RES"};
-                // $rootScope.pushSystemMsg(0,msg3); 
-                //     console.log(io.socket);
-                // console.log("connect");
                 var obj = {
                     context_id: $.jStorage.get("context_id"),
                     conversation_id: $.jStorage.get("conversation_id"),
@@ -4974,24 +4894,7 @@ myApp.controller('Dashboard3Ctrl', function ($scope, $rootScope, TemplateService
                 type: "SYS_CONV_END"
             };
             $rootScope.pushSystemMsg(0, msg);
-            //io.sails.sockets.leave($.jStorage.get("socketId"), $.jStorage.get("lastroom"));
-            //removeUser(window.menubar.id);
-            // roomdata = {roomId:$.jStorage.get("lastroomid"),roomName : $.jStorage.get("lastroom"),socketId:$.jStorage.get("socketId"),sid:$.jStorage.get("sid")};
-            // console.log(roomdata);
-            //io.socket.post('/room/leave',{query:roomdata}, function(data){
-            // io.socket.delete('/room/:'+roomdata.roomId+'/users',{id:roomdata.roomId,query:roomdata}, function(data){
-            //     console.log(data);
 
-            // });
-
-            //io.connect("http://exponentiadata.co.in:9161", {'forceNew': true});
-            //io.disconnect;
-            //io.socket("disconnect");
-            // io.connect("http://exponentiadata.co.in:9161", {'forceNew': true});
-            // userdata = {sid:$.jStorage.get("id"),name:$.jStorage.get("fname")+' '+$.jStorage.get("lname"),access_role:$.jStorage.get("access_role")};
-            //     io.socket.get("/user/disconnect",{query:userdata}, function(data){
-            //     });
-            //$rootScope.disconnect();
 
             io.socket.post('/chat/private', {
                 to: $scope.lastagentid,

@@ -34,7 +34,7 @@ module.exports = [
   "bower_components/crypto-js/crypto-js.js",
   "bower_components/select2/select2.js",
   "bower_components/angular-ui-select2/src/select2.js",
-  
+
   //App.js
   'frontend/js/app.js',
 
@@ -69,7 +69,6 @@ module.exports = [
   'frontend/js/controllers/controller.js',
   'frontend/js/controllers/header-controller.js',
   'frontend/js/controllers/language-controller.js',
-  'frontend/js/sails.io.js',
   'frontend/js/private_message.js',
   'frontend/js/public_message.js',
   'frontend/js/room.js',
