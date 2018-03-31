@@ -31,7 +31,7 @@ module.exports.routes = {
      * `assets` directory)                                                      *
      *                                                                          *
      ***************************************************************************/
-
+/**
     '/': {
         controller: "WebController",
         action: "index",
@@ -54,6 +54,7 @@ module.exports.routes = {
         controller: "WebController",
         action: "download"
     },
+     */
     /***************************************************************************
      *                                                                          *
      * Custom routes here...                                                    *
