@@ -1072,10 +1072,6 @@ myApp.controller('Dashboard5Ctrl', function ($scope, $rootScope, TemplateService
     $rootScope.disconnect = function () {
 
     };
-
-
-
-
     $rootScope.getconversationid = function () {
         apiService.get_conversationid({
             user: $.jStorage.get("email")
@@ -1085,8 +1081,8 @@ myApp.controller('Dashboard5Ctrl', function ($scope, $rootScope, TemplateService
             $.jStorage.set("context_id", response.data.context_id);
             $rootScope.context_id = response.data.context_id;
         });
-
     };
+
     $rootScope.getcontextid = function () {
         apiService.get_contextid({
             session_id: $.jStorage.get("session_id"),
